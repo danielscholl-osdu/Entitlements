@@ -1,0 +1,29 @@
+# This file contains the essential configs for the osdu on azure helm chart
+global:
+
+  # Service(s) Replica Count
+  replicaCount: 2
+
+################################################################################
+# Specify the Gitlab branch being used for image creation
+# ie: community.opengroup.org:5555/osdu/platform/security-and-compliance/entitlements-v2/{{ .Values.global.branch }}/entitlements-v2:latest
+#
+image:
+  repository: #{container-registry}#.azurecr.io
+  branch: #{ENVIRONMENT_NAME}#
+  tag: #{Build.SourceVersion}#
+
+server:
+  servlet:
+    contextPath: /entitlements/v2
+
+app:
+  gremlin:
+    endpoint: #{GREMLIN_ENDPOINT}#
+    username: #{GREMLIN_USERNAME}#
+  cosmosdb:
+    cosmosDbAccountName: #{COSMOS_DB_ACCOUNT_NAME}#
+    resourceGroup: #{AZURE_RESOURCE_GROUP}#
+    subscriptionId: #{AZURE_SUBSCRIPTION_ID}#
+  integration:
+    tester: #{INTEGRATION_TESTER}#
