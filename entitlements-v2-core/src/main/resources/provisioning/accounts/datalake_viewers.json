@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "email": "SLISVCEMAIL",
+      "role": "OWNER"
+    }
+  ],
+  "ownersOf": [
+    {
+      "groupName": "users.datalake.viewers"
+    },
+    {
+      "groupName": "users"
+    }
+  ]
+}

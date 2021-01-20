@@ -1,0 +1,23 @@
+variables:
+  AZURE_SERVICE: entitlements
+  AZURE_BUILD_SUBDIR: provider/entitlements-v2-azure
+  AZURE_TEST_SUBDIR: testing/entitlements-v2-test-azure
+
+include:
+  - project: "osdu/platform/ci-cd-pipelines"
+    file: "standard-setup.yml"
+
+  - project: "osdu/platform/ci-cd-pipelines"
+    file: "build/maven.yml"
+
+  - project: "osdu/platform/ci-cd-pipelines"
+    file: "scanners/fossa-maven.yml"
+
+  - project: "osdu/platform/ci-cd-pipelines"
+    file: "scanners/gitlab-ultimate.yml"
+
+  - project: "osdu/platform/ci-cd-pipelines"
+    file: "cloud-providers/azure.yml"
+
+  - project: "osdu/platform/ci-cd-pipelines"
+    file: "publishing/pages.yml"

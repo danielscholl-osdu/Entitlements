@@ -1,0 +1,67 @@
+{
+  "users": [
+    {
+      "email": "DATAFIEREMAIL",
+      "role": "OWNER"
+    }
+  ],
+  "ownersOf": [
+    {
+      "groupName": "users"
+    },
+    {
+      "groupName": "users.datalake.ops"
+    },
+    {
+      "groupName": "service.storage.admin"
+    },
+    {
+      "groupName": "service.legal.admin"
+    },
+    {
+      "groupName": "users.datalake.admins"
+    },
+    {
+      "groupName": "users.datalake.editors"
+    },
+    {
+      "groupName": "users.datalake.viewers"
+    },
+    {
+      "groupName": "service.entitlements.admin"
+    },
+    {
+      "groupName": "service.legal.editor"
+    },
+    {
+      "groupName": "service.plugin.admin"
+    },
+    {
+      "groupName": "service.messaging.admin"
+    },
+    {
+      "groupName": "service.storage.creator"
+    },
+    {
+      "groupName": "service.legal.user"
+    },
+    {
+      "groupName": "service.messaging.user"
+    },
+    {
+      "groupName": "service.plugin.user"
+    },
+    {
+      "groupName": "service.entitlements.user"
+    },
+    {
+      "groupName": "service.search.user"
+    },
+    {
+      "groupName": "service.storage.viewer"
+    },
+    {
+      "groupName": "service.search.admin"
+    }
+  ]
+}

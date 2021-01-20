@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <properties>
+        <os-core-common.version>0.3.6</os-core-common.version>
+        <java.version>1.8</java.version>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <os-core-common.version>0.3.12</os-core-common.version>
+        <spring-boot-dependencies.version>2.4.0</spring-boot-dependencies.version>
+    </properties>
+
+    <groupId>org.opengroup.osdu.entitlements.v2</groupId>
+    <artifactId>entitlements-v2-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>entitlements-v2-service</name>
+    <description>Entitlements V2 service</description>
+
+    <modules>
+        <module>entitlements-v2-core</module>
+        <module>provider/entitlements-v2-azure</module>
+        <module>provider/entitlements-v2-gcp</module>
+    </modules>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.opengroup.osdu</groupId>
+                <artifactId>os-core-common</artifactId>
+                <version>${os-core-common.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>${repo.releases.id}</id>
+            <!--suppress UnresolvedMavenProperty -->
+            <url>${repo.releases.url}</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>${publish.releases.id}</id>
+            <!--suppress UnresolvedMavenProperty -->
+            <url>${publish.releases.url}</url>
+        </repository>
+        <snapshotRepository>
+            <id>${publish.snapshots.id}</id>
+            <!--suppress UnresolvedMavenProperty -->
+            <url>${publish.snapshots.url}</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>Default</id>
+            <activation>
+                <property>
+                    <name>!repo.releases.id</name>
+                </property>
+            </activation>
+            <properties>
+                <repo.releases.id>community-maven-repo</repo.releases.id>
+                <publish.snapshots.id>community-maven-via-job-token</publish.snapshots.id>
+                <publish.releases.id>community-maven-via-job-token</publish.releases.id>
+                <repo.releases.url>https://community.opengroup.org/api/v4/groups/17/-/packages/maven</repo.releases.url>
+                <publish.snapshots.url>https://community.opengroup.org/api/v4/projects/400/packages/maven</publish.snapshots.url>
+                <publish.releases.url>https://community.opengroup.org/api/v4/projects/400/packages/maven</publish.releases.url>
+            </properties>
+        </profile>
+    </profiles>
+
+</project>

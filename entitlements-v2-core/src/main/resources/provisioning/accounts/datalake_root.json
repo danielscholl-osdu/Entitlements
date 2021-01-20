@@ -1,0 +1,13 @@
+{
+  "users": [
+    {
+      "email": "DATAFIEREMAIL",
+      "role": "OWNER"
+    }
+  ],
+  "ownersOf": [
+    {
+      "groupName": "users.data.root"
+    }
+  ]
+}
