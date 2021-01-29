@@ -1,3 +1,14 @@
+TODO: please remove these instructions, when these changes will be migrated to
+https://community.opengroup.org/osdu/platform/deployment-and-operations/infra-azure-provisioning/-/tree/master/tools/test_data
+
+How to get id of integration tester:
+UNIQUE - is the id of the environment, for example: "dev"
+GROUP=$(az group list --query "[?contains(name, 'cr${UNIQUE}')].name" -otsv)
+ENV_VAULT=$(az keyvault list --resource-group $GROUP --query [].name -otsv)
+INT_TESTER_ID=$(az keyvault secret show --id https://${ENV_VAULT}.vault.azure.net/secrets/app-dev-sp-id --query value -otsv)
+
+TODO: refactor this script to add all the groups needed for the environment in correct hierarchy.
+
 Bootstrap data to run integration tests:
 g.addV('GROUP').property('nodeId', 'users.data.root@opendes.contoso.com').property('name', 'users.data.root').property('description', '').property('dataPartitionId','opendes').property('appIds','[]')
 g.addV('USER').property('nodeId', 'user1@desid.com').property('dataPartitionId', 'opendes')
@@ -6,10 +17,12 @@ g.addV('GROUP').property('nodeId', 'service.entitlements.user@opendes.contoso.co
 g.addV('GROUP').property('nodeId', 'service.entitlements.admin@opendes.contoso.com').property('name', 'service.entitlements.admin').property('description', '').property('dataPartitionId','opendes').property('appIds','[]')
 g.addV('GROUP').property('nodeId', 'users.datalake.ops@opendes.contoso.com').property('name', 'users.datalake.ops').property('description', '').property('dataPartitionId','opendes').property('appIds','[]')
 g.addV('GROUP').property('nodeId', 'users@opendes.contoso.com').property('name', 'users').property('description', '').property('dataPartitionId','opendes').property('appIds','[]')
-g.addV('USER').property('nodeId', 'integration_tester_entitlements@desid.com').property('dataPartitionId', 'opendes')
-g.V().has('nodeId','service.entitlements.user@opendes.contoso.com').addE('child').property('role', 'OWNER').to(g.V().has('nodeId','integration_tester_entitlements@desid.com'))
-g.V().has('nodeId','service.entitlements.admin@opendes.contoso.com').addE('child').property('role', 'OWNER').to(g.V().has('nodeId','integration_tester_entitlements@desid.com'))
-g.V().has('nodeId','users.datalake.ops@opendes.contoso.com').addE('child').property('role', 'OWNER').to(g.V().has('nodeId','integration_tester_entitlements@desid.com'))
-g.V().has('nodeId','users@opendes.contoso.com').addE('child').property('role', 'OWNER').to(g.V().has('nodeId','integration_tester_entitlements@desid.com'))
+
+g.addV('USER').property('nodeId', '$INT_TESTER_ID').property('dataPartitionId', 'opendes')
+g.V().has('nodeId','service.entitlements.user@opendes.contoso.com').addE('child').property('role', 'OWNER').to(g.V().has('nodeId','$INT_TESTER_ID'))
+g.V().has('nodeId','service.entitlements.admin@opendes.contoso.com').addE('child').property('role', 'OWNER').to(g.V().has('nodeId','$INT_TESTER_ID'))
+g.V().has('nodeId','users.datalake.ops@opendes.contoso.com').addE('child').property('role', 'OWNER').to(g.V().has('nodeId','$INT_TESTER_ID'))
+g.V().has('nodeId','users@opendes.contoso.com').addE('child').property('role', 'OWNER').to(g.V().has('nodeId','$INT_TESTER_ID'))
+
 g.addV('USER').property('nodeId', 'testMember@test.com').property('dataPartitionId', 'opendes')
 g.addV('USER').property('nodeId', 'testmMemberOwner@test.com').property('dataPartitionId', 'opendes')

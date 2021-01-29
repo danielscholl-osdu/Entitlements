@@ -23,16 +23,3 @@ image:
 server:
   servlet:
     contextPath: /entitlements/v2
-
-app:
-  gremlin:
-    endpoint: ""
-    port: 8901
-    username: ""
-    sslEnabled: true
-  cosmosdb:
-    cosmosDbAccountName: ""
-    resourceGroup: ""
-    subscriptionId: ""
-  integration:
-    tester: ""

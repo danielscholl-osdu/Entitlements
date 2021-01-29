@@ -71,19 +71,7 @@ spec:
                   key: appinsights
             - name: partition_service_endpoint
               value: http://partition/api/partition/v1
-            - name: GREMLIN_ENDPOINT
-              value: {{ .Values.app.gremlin.endpoint }}
-            - name: GREMLIN_USERNAME
-              value: {{ .Values.app.gremlin.username }}
             - name: cosmosdb_database
               value: osdu-db
-            - name: COSMOS_DB_ACCOUNT_NAME
-              value: {{ .Values.app.cosmosdb.cosmosDbAccountName }}
-            - name: AZURE_RESOURCE_GROUP
-              value: {{ .Values.app.cosmosdb.resourceGroup }}
-            - name: AZURE_SUBSCRIPTION_ID
-              value: {{ .Values.app.cosmosdb.subscriptionId }}
-            - name: INTEGRATION_TESTER
-              value: {{ .Values.app.integration.tester}}
             - name: azure_istioauth_enabled
               value: "true"

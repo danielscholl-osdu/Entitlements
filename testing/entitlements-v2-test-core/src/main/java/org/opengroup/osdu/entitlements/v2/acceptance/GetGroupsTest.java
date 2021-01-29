@@ -27,7 +27,7 @@ public abstract class GetGroupsTest extends AcceptanceBaseTest {
         Token noAccessToken = tokenService.getNoDataAccessToken();
         return RequestData.builder()
                 .method("GET").dataPartitionId(configurationService.getTenantId())
-                .relativePath("/groups")
+                .relativePath("groups")
                 .token(noAccessToken.getValue())
                 .build();
     }
@@ -36,7 +36,7 @@ public abstract class GetGroupsTest extends AcceptanceBaseTest {
     protected RequestData getRequestDataForNoTokenTest() {
         return RequestData.builder()
                 .method("GET").dataPartitionId(configurationService.getTenantId())
-                .relativePath("/groups")
+                .relativePath("groups")
                 .build();
     }
 
@@ -45,7 +45,7 @@ public abstract class GetGroupsTest extends AcceptanceBaseTest {
         Token token = tokenService.getToken();
         return RequestData.builder()
                 .method("GET").dataPartitionId(configurationService.getUnauthorizedTenantId())
-                .relativePath("/groups")
+                .relativePath("groups")
                 .token(token.getValue())
                 .build();
     }

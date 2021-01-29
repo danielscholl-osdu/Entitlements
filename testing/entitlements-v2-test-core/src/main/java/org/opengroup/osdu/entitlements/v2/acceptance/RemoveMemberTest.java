@@ -22,7 +22,7 @@ public abstract class RemoveMemberTest extends AcceptanceBaseTest {
         final String groupEmail = configurationService.getIdOfGroup("group");
         return RequestData.builder()
                 .method("DELETE").dataPartitionId(configurationService.getTenantId())
-                .relativePath(String.format("/groups/%s/members/%s", groupEmail, "member@test.com"))
+                .relativePath(String.format("groups/%s/members/%s", groupEmail, "member@test.com"))
                 .token(noAccessToken.getValue())
                 .build();
     }
@@ -32,7 +32,7 @@ public abstract class RemoveMemberTest extends AcceptanceBaseTest {
         final String groupEmail = configurationService.getIdOfGroup("group");
         return RequestData.builder()
                 .method("DELETE").dataPartitionId(configurationService.getTenantId())
-                .relativePath(String.format("/groups/%s/members/%s", groupEmail, "member@test.com"))
+                .relativePath(String.format("groups/%s/members/%s", groupEmail, "member@test.com"))
                 .build();
     }
 
@@ -42,7 +42,7 @@ public abstract class RemoveMemberTest extends AcceptanceBaseTest {
         final String groupEmail = configurationService.getIdOfGroup("group");
         return RequestData.builder()
                 .method("DELETE").dataPartitionId(configurationService.getUnauthorizedTenantId())
-                .relativePath(String.format("/groups/%s/members/%s", groupEmail, "member@test.com"))
+                .relativePath(String.format("groups/%s/members/%s", groupEmail, "member@test.com"))
                 .token(token.getValue())
                 .build();
     }

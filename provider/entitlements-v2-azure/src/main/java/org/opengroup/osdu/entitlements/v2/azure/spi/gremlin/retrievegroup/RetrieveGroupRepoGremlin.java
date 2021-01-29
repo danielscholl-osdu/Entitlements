@@ -139,7 +139,7 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
     }
 
     /*
-      TODO: US 599488 - Research on Gremlin solution to optimize AppId filter
+      TODO: US https://dev.azure.com/slb-swt/data-at-rest/_workitems/edit/599488 - Research on Gremlin solution to optimize AppId filter
      */
     @Override
     public Set<ParentReference> filterParentsByAppID(

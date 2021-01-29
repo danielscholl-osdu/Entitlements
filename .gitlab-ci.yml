@@ -1,5 +1,5 @@
 variables:
-  AZURE_SERVICE: entitlements
+  AZURE_SERVICE: entitlements-v2
   AZURE_BUILD_SUBDIR: provider/entitlements-v2-azure
   AZURE_TEST_SUBDIR: testing/entitlements-v2-test-azure
 

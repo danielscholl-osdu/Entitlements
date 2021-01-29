@@ -1,0 +1,9 @@
+{
+  "tool": "Credential Scanner",
+  "suppressions": [
+    {
+      "file": "JwtClaimExtractorTest.java",
+      "_justification": "Unit test contains fake tokens."
+    }
+  ]
+}

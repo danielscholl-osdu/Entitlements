@@ -56,7 +56,7 @@ public abstract class CreateGroupTest extends AcceptanceBaseTest {
     private void verifyConflictException(String groupName, String token) throws Exception {
         RequestData requestData = RequestData.builder()
                 .method("POST").dataPartitionId(configurationService.getTenantId())
-                .relativePath("/groups")
+                .relativePath("groups")
                 .token(token)
                 .body(new Gson().toJson(GroupItem.builder().name(groupName).description("desc").build())).build();
         ClientResponse conflictResponse = httpClientService.send(requestData);
@@ -69,7 +69,7 @@ public abstract class CreateGroupTest extends AcceptanceBaseTest {
         Token noAccessToken = tokenService.getNoDataAccessToken();
         return RequestData.builder()
                 .method("POST").dataPartitionId(configurationService.getTenantId())
-                .relativePath("/groups")
+                .relativePath("groups")
                 .body(new Gson().toJson(GroupItem.builder().name("groupName-" + System.currentTimeMillis())
                 .description("desc").build()))
                 .token(noAccessToken.getValue())
@@ -80,7 +80,7 @@ public abstract class CreateGroupTest extends AcceptanceBaseTest {
     protected RequestData getRequestDataForNoTokenTest() {
         return RequestData.builder()
                 .method("POST").dataPartitionId(configurationService.getTenantId())
-                .relativePath("/groups")
+                .relativePath("groups")
                 .body(new Gson().toJson(GroupItem.builder().name("groupName-" + System.currentTimeMillis())
                         .description("desc").build()))
                 .build();
@@ -91,7 +91,7 @@ public abstract class CreateGroupTest extends AcceptanceBaseTest {
         Token token = tokenService.getToken();
         return RequestData.builder()
                 .method("POST").dataPartitionId(configurationService.getUnauthorizedTenantId())
-                .relativePath("/groups")
+                .relativePath("groups")
                 .body(new Gson().toJson(GroupItem.builder().name("groupName-" + System.currentTimeMillis())
                         .description("desc").build()))
                 .token(token.getValue())

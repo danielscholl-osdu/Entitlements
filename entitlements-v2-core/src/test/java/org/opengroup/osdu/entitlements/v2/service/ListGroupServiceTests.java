@@ -1,6 +1,7 @@
 package org.opengroup.osdu.entitlements.v2.service;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
@@ -132,6 +133,8 @@ public class ListGroupServiceTests {
         verify(auditLogger).listGroup(eq(AuditStatus.SUCCESS), any());
     }
 
+    // TODO: Unignore when AppId filter is enabled. US https://dev.azure.com/slb-swt/data-at-rest/_workitems/edit/599488
+    @Ignore
     @Test
     public void should_filterByAppId_ifNormalCaller() {
         List<String> partitionIds = Arrays.asList("dp", "dp1");

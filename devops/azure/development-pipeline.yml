@@ -47,14 +47,15 @@ variables:
     value: $[ resources.repositories['FluxRepo'].name ]
   - name: SKIP_TESTS
     value: 'false'
+  - name: 'MAVEN_CACHE_FOLDER'
+    value: $(Pipeline.Workspace)/.m2/repository
 
 stages:
   - template: /devops/build-stage.yml@TemplateRepo
     parameters:
       mavenGoal: 'package'
       mavenPublishJUnitResults: true
-      serviceCoreMavenOptions: '-P entitlements-v2-core'
-      mavenOptions: '-P entitlements-v2-azure'
+      mavenOptions: '-pl provider/entitlements-v2-azure -am -Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
       copyFileContents: |
         pom.xml
         provider/entitlements-v2-azure/maven/settings.xml

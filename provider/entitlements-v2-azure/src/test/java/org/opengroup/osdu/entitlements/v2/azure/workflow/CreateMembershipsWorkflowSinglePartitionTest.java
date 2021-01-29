@@ -149,7 +149,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "users.myusers.operators@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA));
 
-        updateGroupMetadata();
+        // TODO: Uncomment when AppId filter is enabled again US https://dev.azure.com/slb-swt/data-at-rest/_workitems/edit/599488
+        // updateGroupMetadata();
 
         //add data groups to users group
         performCreateGroupRequest("data.mydata2.operators", jwtA);

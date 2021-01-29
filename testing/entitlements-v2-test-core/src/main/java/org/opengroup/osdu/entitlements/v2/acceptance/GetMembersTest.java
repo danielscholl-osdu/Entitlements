@@ -22,7 +22,7 @@ public abstract class GetMembersTest extends AcceptanceBaseTest {
         final String groupEmail = configurationService.getIdOfGroup("group");
         return RequestData.builder()
                 .method("GET").dataPartitionId(configurationService.getTenantId())
-                .relativePath(String.format("/groups/%s/members", groupEmail))
+                .relativePath(String.format("groups/%s/members", groupEmail))
                 .token(noAccessToken.getValue())
                 .build();
     }
@@ -32,7 +32,7 @@ public abstract class GetMembersTest extends AcceptanceBaseTest {
         final String groupEmail = configurationService.getIdOfGroup("group");
         return RequestData.builder()
                 .method("GET").dataPartitionId(configurationService.getTenantId())
-                .relativePath(String.format("/groups/%s/members", groupEmail))
+                .relativePath(String.format("groups/%s/members", groupEmail))
                 .build();
     }
 
@@ -42,7 +42,7 @@ public abstract class GetMembersTest extends AcceptanceBaseTest {
         final String groupEmail = configurationService.getIdOfGroup("group");
         return RequestData.builder()
                 .method("GET").dataPartitionId(configurationService.getUnauthorizedTenantId())
-                .relativePath(String.format("/groups/%s/members", groupEmail))
+                .relativePath(String.format("groups/%s/members", groupEmail))
                 .token(token.getValue())
                 .build();
     }

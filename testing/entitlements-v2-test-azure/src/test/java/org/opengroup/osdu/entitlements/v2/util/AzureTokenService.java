@@ -6,7 +6,6 @@ import org.opengroup.osdu.entitlements.v2.acceptance.model.Token;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.TokenService;
 
 public class AzureTokenService implements TokenService {
-    private static final String INTEGRATION_TESTER = "integration_tester_entitlements@desid.com";
     private static final String CLIENT_ID =
             System.getProperty("INTEGRATION_TESTER", System.getenv("INTEGRATION_TESTER"));
     private static final String CLIENT_SECRET =
@@ -31,7 +30,7 @@ public class AzureTokenService implements TokenService {
         }
         return Token.builder()
                 .value(TOKEN)
-                .userId(INTEGRATION_TESTER)
+                .userId(CLIENT_ID)
                 .build();
     }
 

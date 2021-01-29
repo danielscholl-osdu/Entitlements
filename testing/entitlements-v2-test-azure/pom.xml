@@ -26,13 +26,6 @@
         <netty-all.version>4.1.50.Final</netty-all.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>gitlab-server</id>
-            <url>https://community.opengroup.org/api/v4/groups/17/-/packages/maven</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>org.opengroup.osdu.entitlements.v2</groupId>

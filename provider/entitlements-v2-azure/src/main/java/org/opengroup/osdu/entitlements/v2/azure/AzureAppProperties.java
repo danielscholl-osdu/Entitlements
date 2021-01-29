@@ -1,73 +1,35 @@
 package org.opengroup.osdu.entitlements.v2.azure;
 
+import com.azure.security.keyvault.secrets.SecretClient;
+import lombok.Getter;
+import org.opengroup.osdu.azure.KeyVaultFacade;
 import org.opengroup.osdu.entitlements.v2.AppProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
+@Getter
 public class AzureAppProperties extends AppProperties {
-    @Value("${app.gremlin.endpoint}")
-    private String gremlinEndpoint;
-    @Value("${app.gremlin.port}")
-    private int gremlinPort;
-    @Value("${app.gremlin.username}")
-    private String gremlinUsername;
-    @Value("${app.gremlin.password}")
-    private String gremlinPassword;
-    @Value("${app.gremlin.sslEnabled}")
-    private boolean gremlinSslEnabled;
+
+    @Autowired
+    private SecretClient secretClient;
+    @Value("${app.graph.db.port}")
+    private int graphDbPort;
+    @Value("${app.graph.db.username}")
+    private String graphDbUsername;
+    @Value("${app.graph.db.sslEnabled}")
+    private boolean graphDbSslEnabled;
     @Value("${tenantInfo.container.name}")
     private String tenantInfoContainerName;
     @Value("${azure.cosmosdb.database}")
     private String cosmosDbName;
-    @Value("${app.cosmosdb.subscriptionId}")
-    private String subscriptionId;
-    @Value("${app.cosmosdb.resourceGroup}")
-    private String resourceGroup;
-    @Value("${app.cosmosdb.cosmosDbAccountName}")
-    private String cosmosDbAccountName;
 
-    public boolean hasCosmosDbConfig() {
-        return !(subscriptionId.isEmpty() && resourceGroup.isEmpty() && cosmosDbAccountName.isEmpty());
+    public String getGraphDbPassword() {
+        return KeyVaultFacade.getSecretWithValidation(secretClient, "graph-db-primary-key");
     }
 
-    public String getGremlinEndpoint() {
-        return gremlinEndpoint;
-    }
-
-    public int getGremlinPort() {
-        return gremlinPort;
-    }
-
-    public String getGremlinUsername() {
-        return gremlinUsername;
-    }
-
-    public String getGremlinPassword() {
-        return gremlinPassword;
-    }
-
-    public boolean isGremlinSslEnabled() {
-        return gremlinSslEnabled;
-    }
-
-    public String getTenantInfoContainerName() {
-        return tenantInfoContainerName;
-    }
-
-    public String getCosmosDbName() {
-        return cosmosDbName;
-    }
-
-    public String getSubscriptionId() {
-        return subscriptionId;
-    }
-
-    public String getResourceGroup() {
-        return resourceGroup;
-    }
-
-    public String getCosmosDbAccountName() {
-        return cosmosDbAccountName;
+    public String getGraphDbEndpoint() {
+        return KeyVaultFacade.getSecretWithValidation(secretClient, "graph-db-endpoint");
     }
 }

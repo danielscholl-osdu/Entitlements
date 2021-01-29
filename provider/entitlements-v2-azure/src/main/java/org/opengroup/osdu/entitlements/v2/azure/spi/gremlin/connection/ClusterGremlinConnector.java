@@ -1,11 +1,5 @@
 package org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection;
 
-import com.azure.core.http.HttpClient;
-import com.azure.core.http.HttpMethod;
-import com.azure.core.http.HttpRequest;
-import com.azure.core.http.HttpResponse;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.apache.tinkerpop.gremlin.driver.Client;
 import org.apache.tinkerpop.gremlin.driver.Cluster;
@@ -26,12 +20,10 @@ import org.opengroup.osdu.entitlements.v2.azure.model.NodeVertex;
 import org.opengroup.osdu.entitlements.v2.azure.service.VertexUtilService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -43,11 +35,16 @@ public class ClusterGremlinConnector implements GremlinConnector {
     private static final int MAX_IN_PROCESS = 16;
     private static final String TRAVERSAL_SUBMIT_ERROR_MESSAGE = "Error submitting traversal";
     private static final String RETRIEVING_RESULT_SET_ERROR_MESSAGE = "Error retrieving ResultSet object";
-    private static final String MSI_HOST = "http://169.254.169.254/";
-    private static final String MSI_PATH = "metadata/identity/oauth2/token?api-version=2018-02-01&resource=";
-    private static final String ARM_HOST = "https://management.azure.com/";
-    private static final String ARM_PATH_FORMAT = "subscriptions/%s/resourceGroups/%s/providers/Microsoft.DocumentDb/" +
-            "databaseAccounts/%s/listKeys/?api-version=2016-03-31";
+    private static final String HTTPS_SCHEME = "https://";
+    private static final String ENDPOINT_PORT = ":443/";
+    /**
+     * .NET SDK URI comes in form https://xxx.documents.azure.com:443/
+     */
+    private static final String NET_HOST_POSTFIX = "documents.azure.com";
+    /**
+     * Gremlin Endpoint comes in form wss://xxx.gremlin.cosmos.azure.com:443/
+     */
+    private static final String GREMLIN_HOST_POSTFIX = "gremlin.cosmos.azure.com";
     private static final String G = "g";
     private final AzureAppProperties config;
     private final VertexUtilService vertexUtilService;
@@ -121,16 +118,10 @@ public class ClusterGremlinConnector implements GremlinConnector {
 
     private Cluster buildCluster() {
         try {
-            String accessKey;
-            if (config.hasCosmosDbConfig()) {
-                accessKey = getAccessKey(config.getSubscriptionId(), config.getResourceGroup(), config.getCosmosDbAccountName());
-            } else {
-                accessKey = config.getGremlinPassword();
-            }
-            return Cluster.build(config.getGremlinEndpoint())
-                    .port(config.getGremlinPort())
-                    .credentials(config.getGremlinUsername(), accessKey)
-                    .enableSsl(config.isGremlinSslEnabled())
+            return Cluster.build(getHost(config.getGraphDbEndpoint()))
+                    .port(config.getGraphDbPort())
+                    .credentials(config.getGraphDbUsername(), config.getGraphDbPassword())
+                    .enableSsl(config.isGraphDbSslEnabled())
                     .maxSimultaneousUsagePerConnection(MAX_IN_PROCESS)
                     .maxInProcessPerConnection(MAX_IN_PROCESS)
                     .maxContentLength(MAX_CONTENT_LENGTH)
@@ -142,6 +133,16 @@ public class ClusterGremlinConnector implements GremlinConnector {
                     HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
                     "Invalid configuration of Gremlin cluster", e);
         }
+    }
+
+    /**
+     *  Extracts host from endpoint,
+     *  Note: keyvault has value: https://host:443/
+     */
+    private String getHost(String graphDbEndpoint) {
+        return graphDbEndpoint.replace(HTTPS_SCHEME, "")
+                .replace(ENDPOINT_PORT, "")
+                .replace(NET_HOST_POSTFIX, GREMLIN_HOST_POSTFIX);
     }
 
     private List<Result> getResultList(ResultSet resultSet) {
@@ -175,43 +176,5 @@ public class ClusterGremlinConnector implements GremlinConnector {
                     HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
                     TRAVERSAL_SUBMIT_ERROR_MESSAGE);
         }
-    }
-
-    private String getAccessToken() {
-        final String msiEndpoint = MSI_HOST + MSI_PATH + ARM_HOST;
-        HttpRequest httpRequest = new HttpRequest(HttpMethod.GET, msiEndpoint);
-        httpRequest.setHeader("Metadata", "true");
-
-        String content = performAadRequest(httpRequest);
-        Gson gson = new Gson();
-        JsonObject jsonObject = gson.fromJson(content, JsonObject.class);
-        return jsonObject.get("access_token").getAsString();
-    }
-
-    private String getAccessKey(String subscriptionId, String resourceGroup, String cosmosDbAccountName) {
-        final String armEndpoint = ARM_HOST + String.format(ARM_PATH_FORMAT,
-                subscriptionId, resourceGroup, cosmosDbAccountName);
-        HttpRequest httpRequest = new HttpRequest(HttpMethod.POST, armEndpoint);
-        httpRequest.setHeader("Authorization", "Bearer " + getAccessToken());
-
-        String content = performAadRequest(httpRequest);
-        Gson gson = new Gson();
-        JsonObject jsonObject = gson.fromJson(content, JsonObject.class);
-        return jsonObject.get("primaryMasterKey").getAsString();
-    }
-
-    private String performAadRequest(HttpRequest httpRequest) {
-        HttpClient httpClient = HttpClient.createDefault();
-        Mono<HttpResponse> response = httpClient.send(httpRequest);
-        String responseBody;
-        try {
-            responseBody = Objects.requireNonNull(response.block()).getBodyAsString().block();
-        } catch (RuntimeException e) {
-            throw new AppException(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                    HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                    "Error calling AAD", e);
-        }
-        return responseBody;
     }
 }
