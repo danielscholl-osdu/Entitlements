@@ -26,13 +26,7 @@ public class RequestInfoUtilService {
     }
 
     public String getUserId(final DpsHeaders dpsHeaders) {
-        String userId = jwtClaimExtractor.extract(dpsHeaders.getAuthorization()).getUserId();
-        // TODO: remove this temporary logic after integration tester's permission is properly set up
-        String integrationTesterId = appProperties.getIntegrationTester();
-        if (userId.equalsIgnoreCase(integrationTesterId)) {
-            userId = "integration_tester_entitlements@desid.com";
-        }
-        return userId;
+        return jwtClaimExtractor.extract(dpsHeaders.getAuthorization()).getUserId();
     }
 
     public String getDomain(final String partitionId) {

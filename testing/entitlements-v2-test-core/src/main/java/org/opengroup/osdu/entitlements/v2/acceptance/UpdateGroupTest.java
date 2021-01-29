@@ -83,7 +83,7 @@ public abstract class UpdateGroupTest extends AcceptanceBaseTest {
                 .value(Collections.singletonList("newGroupName")).build();
         return RequestData.builder()
                 .method("PATCH").dataPartitionId(configurationService.getTenantId())
-                .relativePath("/groups/" + configurationService.getIdOfGroup("test"))
+                .relativePath("groups/" + configurationService.getIdOfGroup("test"))
                 .body(new Gson().toJson(Collections.singletonList(requestBody)))
                 .token(noAccessToken.getValue())
                 .build();
@@ -97,7 +97,7 @@ public abstract class UpdateGroupTest extends AcceptanceBaseTest {
                 .value(Collections.singletonList("newGroupName")).build();
         return RequestData.builder()
                 .method("PATCH").dataPartitionId(configurationService.getTenantId())
-                .relativePath("/groups/" + configurationService.getIdOfGroup("test"))
+                .relativePath("groups/" + configurationService.getIdOfGroup("test"))
                 .body(new Gson().toJson(Collections.singletonList(requestBody)))
                 .build();
     }
@@ -111,7 +111,7 @@ public abstract class UpdateGroupTest extends AcceptanceBaseTest {
                 .value(Collections.singletonList("newGroupName")).build();
         return RequestData.builder()
                 .method("PATCH").dataPartitionId(configurationService.getUnauthorizedTenantId())
-                .relativePath("/groups/" + configurationService.getIdOfGroup("test"))
+                .relativePath("groups/" + configurationService.getIdOfGroup("test"))
                 .body(new Gson().toJson(Collections.singletonList(requestBody)))
                 .token(token.getValue())
                 .build();
@@ -124,7 +124,7 @@ public abstract class UpdateGroupTest extends AcceptanceBaseTest {
                 .value(Collections.singletonList(newGroupName)).build();
         return RequestData.builder()
                 .method("PATCH").dataPartitionId(configurationService.getTenantId())
-                .relativePath("/groups/" + configurationService.getIdOfGroup(oldGroupName))
+                .relativePath("groups/" + configurationService.getIdOfGroup(oldGroupName))
                 .token(token)
                 .body(new Gson().toJson(Collections.singletonList(requestBody))).build();
     }
@@ -136,7 +136,7 @@ public abstract class UpdateGroupTest extends AcceptanceBaseTest {
                 .value(new ArrayList<>(newAppIds)).build();
         return RequestData.builder()
                 .method("PATCH").dataPartitionId(configurationService.getTenantId())
-                .relativePath("/groups/" + configurationService.getIdOfGroup(groupName))
+                .relativePath("groups/" + configurationService.getIdOfGroup(groupName))
                 .token(token)
                 .body(new Gson().toJson(Collections.singletonList(requestBody))).build();
     }

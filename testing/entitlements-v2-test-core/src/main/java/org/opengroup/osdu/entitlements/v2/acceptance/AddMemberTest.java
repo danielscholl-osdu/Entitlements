@@ -71,7 +71,7 @@ public abstract class AddMemberTest extends AcceptanceBaseTest {
         requestBody.put("email", "memberName-" + System.currentTimeMillis() + "@test.com");
         return RequestData.builder()
                 .method("POST").dataPartitionId(configurationService.getTenantId())
-                .relativePath(String.format("/groups/%s/members", configurationService.getIdOfGroup("users")))
+                .relativePath(String.format("groups/%s/members", configurationService.getIdOfGroup("users")))
                 .body(new Gson().toJson(requestBody))
                 .token(noAccessToken.getValue())
                 .build();
@@ -84,7 +84,7 @@ public abstract class AddMemberTest extends AcceptanceBaseTest {
         requestBody.put("email", "memberName-" + System.currentTimeMillis() + "@test.com");
         return RequestData.builder()
                 .method("POST").dataPartitionId(configurationService.getTenantId())
-                .relativePath(String.format("/groups/%s/members", configurationService.getIdOfGroup("users")))
+                .relativePath(String.format("groups/%s/members", configurationService.getIdOfGroup("users")))
                 .body(new Gson().toJson(requestBody))
                 .build();
     }
@@ -97,7 +97,7 @@ public abstract class AddMemberTest extends AcceptanceBaseTest {
         requestBody.put("email", "memberName-" + System.currentTimeMillis() + "@test.com");
         return RequestData.builder()
                 .method("POST").dataPartitionId(configurationService.getUnauthorizedTenantId())
-                .relativePath(String.format("/groups/%s/members", configurationService.getIdOfGroup("users")))
+                .relativePath(String.format("groups/%s/members", configurationService.getIdOfGroup("users")))
                 .body(new Gson().toJson(requestBody))
                 .token(token.getValue())
                 .build();
@@ -116,7 +116,7 @@ public abstract class AddMemberTest extends AcceptanceBaseTest {
         requestBody.put("email", addMemberRequestData.getMemberEmail());
         RequestData requestData = RequestData.builder()
                 .method("POST").dataPartitionId(configurationService.getTenantId())
-                .relativePath(String.format("/groups/%s/members", addMemberRequestData.getGroupEmail()))
+                .relativePath(String.format("groups/%s/members", addMemberRequestData.getGroupEmail()))
                 .token(token)
                 .body(new Gson().toJson(requestBody)).build();
         ClientResponse response = httpClientService.send(requestData);

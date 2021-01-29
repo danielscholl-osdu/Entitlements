@@ -36,12 +36,14 @@ public class ListGroupService {
         log.info(String.format("ListGroupService#run cache look up done timestamp: %d", System.currentTimeMillis()));
         try {
             String serviceAccount = requestInfo.getTenantInfo().getServiceAccount();
-            if (serviceAccount.equalsIgnoreCase(requesterId) || Strings.isNullOrEmpty(listGroupServiceDto.getAppId())) {
+            // TODO: Uncomment when AppId filter is optimized. The current logic is RU expensive,
+            //  so we temporarily disable for now. US https://dev.azure.com/slb-swt/data-at-rest/_workitems/edit/599488
+//            if (serviceAccount.equalsIgnoreCase(requesterId) || Strings.isNullOrEmpty(listGroupServiceDto.getAppId())) {
                 auditLogger.listGroup(AuditStatus.SUCCESS, fetchParentIds(groups));
                 return groups;
-            } else {
-                return filterGroupsByAppId(groups, listGroupServiceDto);
-            }
+//            } else {
+//                return filterGroupsByAppId(groups, listGroupServiceDto);
+//            }
         } catch (Exception e) {
             auditLogger.listGroup(AuditStatus.FAILURE, new ArrayList<>());
             throw e;

@@ -20,7 +20,7 @@ public abstract class DeleteGroupTest extends AcceptanceBaseTest {
         Token noAccessToken = tokenService.getNoDataAccessToken();
         return RequestData.builder()
                 .method("DELETE")
-                .relativePath("/groups/" + configurationService.getIdOfGroup("test"))
+                .relativePath("groups/" + configurationService.getIdOfGroup("test"))
                 .dataPartitionId(configurationService.getTenantId())
                 .token(noAccessToken.getValue())
                 .build();
@@ -30,7 +30,7 @@ public abstract class DeleteGroupTest extends AcceptanceBaseTest {
     protected RequestData getRequestDataForNoTokenTest() {
         return RequestData.builder()
                 .method("DELETE")
-                .relativePath("/groups/" + configurationService.getIdOfGroup("test"))
+                .relativePath("groups/" + configurationService.getIdOfGroup("test"))
                 .dataPartitionId(configurationService.getTenantId())
                 .build();
     }
@@ -40,7 +40,7 @@ public abstract class DeleteGroupTest extends AcceptanceBaseTest {
         Token token = tokenService.getToken();
         return RequestData.builder()
                 .method("DELETE")
-                .relativePath("/groups/" + configurationService.getIdOfGroup("test"))
+                .relativePath("groups/" + configurationService.getIdOfGroup("test"))
                 .dataPartitionId(configurationService.getUnauthorizedTenantId())
                 .token(token.getValue())
                 .build();
@@ -63,7 +63,7 @@ public abstract class DeleteGroupTest extends AcceptanceBaseTest {
     private void verifyGroupDoesNotExist(String email, String value) throws Exception {
         RequestData getGroupsRequestData = RequestData.builder()
                 .method("GET").dataPartitionId(configurationService.getTenantId())
-                .relativePath(String.format("/groups/%s/members", email))
+                .relativePath(String.format("groups/%s/members", email))
                 .token(value).build();
         ClientResponse response = httpClientService.send(getGroupsRequestData);
         Assert.assertEquals(404, response.getStatus());

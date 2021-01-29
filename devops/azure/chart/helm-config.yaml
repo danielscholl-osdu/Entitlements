@@ -16,14 +16,3 @@ image:
 server:
   servlet:
     contextPath: /entitlements/v2
-
-app:
-  gremlin:
-    endpoint: #{GREMLIN_ENDPOINT}#
-    username: #{GREMLIN_USERNAME}#
-  cosmosdb:
-    cosmosDbAccountName: #{COSMOS_DB_ACCOUNT_NAME}#
-    resourceGroup: #{AZURE_RESOURCE_GROUP}#
-    subscriptionId: #{AZURE_SUBSCRIPTION_ID}#
-  integration:
-    tester: #{INTEGRATION_TESTER}#

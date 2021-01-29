@@ -23,7 +23,7 @@ public class AzureConfigurationService implements ConfigurationService {
     @Override
     public synchronized String getServiceUrl() {
         if (Strings.isNullOrEmpty(SERVICE_URL)) {
-            String serviceUrl = System.getProperty("HOST_URL", System.getenv("HOST_URL"));
+            String serviceUrl = System.getProperty("ENTITLEMENT_V2_URL", System.getenv("ENTITLEMENT_V2_URL"));
             if (serviceUrl == null || serviceUrl.contains("-null")) {
                 serviceUrl = "http://localhost:8080/entitlements/v2";
             }

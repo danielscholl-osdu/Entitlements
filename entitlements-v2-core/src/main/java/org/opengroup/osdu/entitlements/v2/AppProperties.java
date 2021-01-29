@@ -16,8 +16,6 @@ public abstract class AppProperties {
     private String domain;
     @Value("${ACCEPT_HTTP:false}")
     private boolean httpAccepted;
-    @Value("${app.integration.tester}")
-    private String integrationTester;
 
     public String getProjectId() {
         return projectId;
@@ -29,10 +27,6 @@ public abstract class AppProperties {
 
     public boolean isHttpAccepted() {
         return httpAccepted;
-    }
-
-    public String getIntegrationTester() {
-        return integrationTester;
     }
 
     public List<String> getInitialGroups() {

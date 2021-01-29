@@ -26,7 +26,7 @@ public class EntitlementsV2Service {
     public ListGroupResponse getGroups(String token) throws Exception {
         RequestData getGroupsRequestData = RequestData.builder()
                 .method("GET").dataPartitionId(configurationService.getTenantId())
-                .relativePath("/groups")
+                .relativePath("groups")
                 .token(token).build();
         ClientResponse response = httpClientService.send(getGroupsRequestData);
         Assert.assertEquals(200, response.getStatus());
@@ -37,7 +37,7 @@ public class EntitlementsV2Service {
     public GroupItem createGroup(String groupName, String token) throws Exception {
         RequestData requestData = RequestData.builder()
                 .method("POST").dataPartitionId(configurationService.getTenantId())
-                .relativePath("/groups")
+                .relativePath("groups")
                 .token(token)
                 .body(new Gson().toJson(GroupItem.builder().name(groupName).description("desc").build())).build();
         ClientResponse response = httpClientService.send(requestData);
@@ -48,7 +48,7 @@ public class EntitlementsV2Service {
     public void deleteGroup(String groupEmail, String token) throws Exception {
         RequestData requestData = RequestData.builder()
                 .method("DELETE")
-                .relativePath("/groups/" + groupEmail)
+                .relativePath("groups/" + groupEmail)
                 .dataPartitionId(configurationService.getTenantId())
                 .token(token)
                 .build();
@@ -59,7 +59,7 @@ public class EntitlementsV2Service {
     public ListMemberResponse getMembers(String groupEmail, String token) throws Exception {
         RequestData getGroupsRequestData = RequestData.builder()
                 .method("GET").dataPartitionId(configurationService.getTenantId())
-                .relativePath(String.format("/groups/%s/members", groupEmail))
+                .relativePath(String.format("groups/%s/members", groupEmail))
                 .token(token).build();
         ClientResponse response = httpClientService.send(getGroupsRequestData);
         Assert.assertEquals(200, response.getStatus());
@@ -73,7 +73,7 @@ public class EntitlementsV2Service {
         requestBody.put("email", addMemberRequestData.getMemberEmail());
         RequestData requestData = RequestData.builder()
                 .method("POST").dataPartitionId(configurationService.getTenantId())
-                .relativePath(String.format("/groups/%s/members", addMemberRequestData.getGroupEmail()))
+                .relativePath(String.format("groups/%s/members", addMemberRequestData.getGroupEmail()))
                 .token(token)
                 .body(new Gson().toJson(requestBody)).build();
         ClientResponse response = httpClientService.send(requestData);
@@ -84,7 +84,7 @@ public class EntitlementsV2Service {
     public void removeMember(String groupEmail, String memberEmail, String token) throws Exception {
         RequestData requestData = RequestData.builder()
                 .method("DELETE").dataPartitionId(configurationService.getTenantId())
-                .relativePath(String.format("/groups/%s/members/%s", groupEmail, memberEmail))
+                .relativePath(String.format("groups/%s/members/%s", groupEmail, memberEmail))
                 .token(token).build();
         ClientResponse response = httpClientService.send(requestData);
         Assert.assertEquals(202, response.getStatus());
