@@ -38,7 +38,7 @@ variables:
   - group: 'Azure - OSDU Secrets'
 
   - name: serviceName
-    value: "entitlements-v2"
+    value: "entitlements"
   - name: chartPath
     value: "devops/azure/chart"
   - name: valuesFile
