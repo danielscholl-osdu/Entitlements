@@ -49,7 +49,7 @@ with these settings service expects "x-payload" header which contains Base64 enc
 
 | name | value | description | sensitive? | source |
 | ---  | ---   | ---         | ---        | ---    |
-| `HOST_URL` | ex `http://localhost:8080/api/entitlements/v2` | The host where the service is running | no | -- |
+| `ENTITLEMENT_V2_URL` | ex `http://localhost:8080/api/entitlements/v2` | The host where the service is running | no | -- |
 | `INTEGRATION_TESTER` | `********` | System identity to assume for API calls. Note: this user must have entitlements configured already | no | -- |
 | `AZURE_TESTER_SERVICEPRINCIPAL_SECRET` | `********` | Secret for `$INTEGRATION_TESTER` | yes | -- |
 | `AZURE_AD_TENANT_ID` | `********` | AD tenant to authenticate users from | yes | -- |

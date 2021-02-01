@@ -31,7 +31,7 @@
     app.gremlin.port to '8901'
 6. Run Entitlements V2 service from Azure provider
 7. Define 5 env variables for integration tests (e.g. maven options):
-   1. HOST_URL=`http://localhost:8080/api/entitlements/v2`
+   1. ENTITLEMENT_V2_URL=`http://localhost:8080/api/entitlements/v2`
    2. INTEGRATION_TESTER=`Keyvault > Choose 'app-dev-sp-username' -> Copy Secret value`
    3. AZURE_TESTER_SERVICEPRINCIPAL_SECRET=`Keyvault > Choose 'app-dev-sp-password' -> Copy Secret value`
    4. AZURE_AD_TENANT_ID=`Keyvault > Choose 'app-dev-sp-tenant-id' -> Copy Secret value`
