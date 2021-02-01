@@ -15,4 +15,4 @@ image:
 
 server:
   servlet:
-    contextPath: /entitlements/v2
+    contextPath: /api/entitlements/v2
