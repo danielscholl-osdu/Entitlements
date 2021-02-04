@@ -36,16 +36,6 @@ public abstract class RemoveMemberTest extends AcceptanceBaseTest {
                 .build();
     }
 
-    @Override
-    protected RequestData getRequestDataForUnauthorizedPartition() {
-        Token token = tokenService.getToken();
-        final String groupEmail = configurationService.getIdOfGroup("group");
-        return RequestData.builder()
-                .method("DELETE").dataPartitionId(configurationService.getUnauthorizedTenantId())
-                .relativePath(String.format("groups/%s/members/%s", groupEmail, "member@test.com"))
-                .token(token.getValue())
-                .build();
-    }
     /**
      * 1) create group
      * 2) create child group

@@ -102,21 +102,6 @@ public abstract class UpdateGroupTest extends AcceptanceBaseTest {
                 .build();
     }
 
-    @Override
-    protected RequestData getRequestDataForUnauthorizedPartition() {
-        Token token = tokenService.getToken();
-        UpdateGroupRequestData requestBody = UpdateGroupRequestData.builder()
-                .op("replace")
-                .path("/name")
-                .value(Collections.singletonList("newGroupName")).build();
-        return RequestData.builder()
-                .method("PATCH").dataPartitionId(configurationService.getUnauthorizedTenantId())
-                .relativePath("groups/" + configurationService.getIdOfGroup("test"))
-                .body(new Gson().toJson(Collections.singletonList(requestBody)))
-                .token(token.getValue())
-                .build();
-    }
-
     private RequestData getRenameGroupRequestData(String oldGroupName, String newGroupName, String token) {
         UpdateGroupRequestData requestBody = UpdateGroupRequestData.builder()
                 .op("replace")

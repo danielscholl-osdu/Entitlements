@@ -35,17 +35,6 @@ public abstract class DeleteGroupTest extends AcceptanceBaseTest {
                 .build();
     }
 
-    @Override
-    protected RequestData getRequestDataForUnauthorizedPartition() {
-        Token token = tokenService.getToken();
-        return RequestData.builder()
-                .method("DELETE")
-                .relativePath("groups/" + configurationService.getIdOfGroup("test"))
-                .dataPartitionId(configurationService.getUnauthorizedTenantId())
-                .token(token.getValue())
-                .build();
-    }
-
     /**
      * 1) create a group
      * 2) delete a group
