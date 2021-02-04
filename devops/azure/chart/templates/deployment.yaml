@@ -73,5 +73,7 @@ spec:
               value: http://partition/api/partition/v1
             - name: cosmosdb_database
               value: osdu-db
+            - name: service_domain_name
+              value: {{ .Values.config.domain }}
             - name: azure_istioauth_enabled
               value: "true"
