@@ -44,6 +44,7 @@ with these settings service expects "x-payload" header which contains Base64 enc
  name | value | description | sensitive? | source |
 | ---  | ---   | ---         | ---        | ---    |
 | `azure_istioauth_enabled` | `true` | Flag to Disable AAD auth | no | -- |
+| `service_domain_name` | ex `contoso.com` | The name of the domain for which the service will run | no | output of infrastructure deployment |
 
 **Required to run integration tests**
 

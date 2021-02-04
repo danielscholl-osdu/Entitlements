@@ -23,3 +23,6 @@ image:
 server:
   servlet:
     contextPath: /api/entitlements/v2
+
+config:
+  domain: contoso.com
