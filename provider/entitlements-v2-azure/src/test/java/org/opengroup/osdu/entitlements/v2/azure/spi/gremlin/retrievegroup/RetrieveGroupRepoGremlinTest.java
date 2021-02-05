@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.entitlements.v2.azure.service.AddEdgeDto;
 import org.opengroup.osdu.entitlements.v2.azure.service.GraphTraversalSourceUtilService;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.EdgePropertyNames;
@@ -155,13 +156,13 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
                 .next();
 
-        graphTraversalSourceUtilService.addEdgeAsMember("users.x@dp.domain.com", "data.x@dp.domain.com");
-        graphTraversalSourceUtilService.addEdgeAsMember("users.x@dp.domain.com", "data.y@dp.domain.com");
+        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("users.x@dp.domain.com", "data.x@dp.domain.com"));
+        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("users.x@dp.domain.com", "data.y@dp.domain.com"));
 
-        graphTraversalSourceUtilService.addEdgeAsMember("users.y@dp.domain.com", "data.y@dp.domain.com");
+        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("users.y@dp.domain.com", "data.y@dp.domain.com"));
 
-        graphTraversalSourceUtilService.addEdgeAsMember("member@xxx.com", "users.x@dp.domain.com");
-        graphTraversalSourceUtilService.addEdgeAsMember("member@xxx.com", "users.y@dp.domain.com");
+        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("member@xxx.com", "users.x@dp.domain.com"));
+        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("member@xxx.com", "users.y@dp.domain.com"));
 
         EntityNode memberNode = EntityNode.createMemberNodeForNewUser("member@xxx.com", "dp");
         ParentTreeDto parents = retrieveGroupRepo.loadAllParents(memberNode);
@@ -224,17 +225,17 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
                 .next();
 
-        graphTraversalSourceUtilService.addEdgeAsMember("member@xxx.com", "users.x@dp.domain.com");
-        graphTraversalSourceUtilService.addEdgeAsMember("member@xxx.com", "users.y@dp.domain.com");
+        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("member@xxx.com", "users.x@dp.domain.com"));
+        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("member@xxx.com", "users.y@dp.domain.com"));
 
-        graphTraversalSourceUtilService.addEdgeAsMember("users.x@dp.domain.com", "data.y@dp.domain.com");
+        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("users.x@dp.domain.com", "data.y@dp.domain.com"));
 
-        graphTraversalSourceUtilService.addEdgeAsMember("users.y@dp.domain.com", "data.y@dp.domain.com");
-        graphTraversalSourceUtilService.addEdgeAsMember("users.y@dp.domain.com", "data.z@dp.domain.com");
+        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("users.y@dp.domain.com", "data.y@dp.domain.com"));
+        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("users.y@dp.domain.com", "data.z@dp.domain.com"));
 
-        graphTraversalSourceUtilService.addEdgeAsMember("data.y@dp.domain.com", "data.x@dp.domain.com");
+        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("data.y@dp.domain.com", "data.x@dp.domain.com"));
 
-        graphTraversalSourceUtilService.addEdgeAsMember("data.z@dp.domain.com", "data.x@dp.domain.com");
+        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("data.z@dp.domain.com", "data.x@dp.domain.com"));
 
         EntityNode memberNode = EntityNode.createMemberNodeForNewUser("member@xxx.com", "dp");
         ParentTreeDto parents = retrieveGroupRepo.loadAllParents(memberNode);
@@ -459,10 +460,10 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.APP_IDS, "[appid, otherappid]").next();
 
         Set<ParentReference> parentReferences = new HashSet<>();
-        parentReferences.add(ParentReference.builder().id(group1Vertex.value(VertexPropertyNames.NODE_ID)).build());
-        parentReferences.add(ParentReference.builder().id(group2Vertex.value(VertexPropertyNames.NODE_ID)).build());
-        parentReferences.add(ParentReference.builder().id(group3Vertex.value(VertexPropertyNames.NODE_ID)).build());
-        parentReferences.add(ParentReference.builder().id(group4Vertex.value(VertexPropertyNames.NODE_ID)).build());
+        parentReferences.add(ParentReference.builder().id(group1Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
+        parentReferences.add(ParentReference.builder().id(group2Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
+        parentReferences.add(ParentReference.builder().id(group3Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
+        parentReferences.add(ParentReference.builder().id(group4Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
 
         Set<ParentReference> res = retrieveGroupRepo.filterParentsByAppID(parentReferences, "dp", "appid");
         Assert.assertEquals(3, res.size());
@@ -492,9 +493,9 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.APP_IDS, "[appid]").next();
 
         Set<ParentReference> parentReferences = new HashSet<>();
-        parentReferences.add(ParentReference.builder().id(group1Vertex.value(VertexPropertyNames.NODE_ID)).build());
-        parentReferences.add(ParentReference.builder().id(group2Vertex.value(VertexPropertyNames.NODE_ID)).build());
-        parentReferences.add(ParentReference.builder().id(group3Vertex.value(VertexPropertyNames.NODE_ID)).build());
+        parentReferences.add(ParentReference.builder().id(group1Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
+        parentReferences.add(ParentReference.builder().id(group2Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
+        parentReferences.add(ParentReference.builder().id(group3Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
 
         Set<ParentReference> res = retrieveGroupRepo.filterParentsByAppID(parentReferences, "dp", "appid");
         Assert.assertEquals(3, res.size());
@@ -523,9 +524,9 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.APP_IDS, "[]").next();
 
         Set<ParentReference> parentReferences = new HashSet<>();
-        parentReferences.add(ParentReference.builder().id(group1Vertex.value(VertexPropertyNames.NODE_ID)).build());
-        parentReferences.add(ParentReference.builder().id(group2Vertex.value(VertexPropertyNames.NODE_ID)).build());
-        parentReferences.add(ParentReference.builder().id(group3Vertex.value(VertexPropertyNames.NODE_ID)).build());
+        parentReferences.add(ParentReference.builder().id(group1Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
+        parentReferences.add(ParentReference.builder().id(group2Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
+        parentReferences.add(ParentReference.builder().id(group3Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
 
         Set<ParentReference> res = retrieveGroupRepo.filterParentsByAppID(parentReferences, "dp", null);
         Assert.assertEquals(3, res.size());
@@ -565,5 +566,14 @@ public class RetrieveGroupRepoGremlinTest {
         memberNode = EntityNode.createMemberNodeForNewUser("member@xxx.com", "dp2");
         parents = retrieveGroupRepo.loadAllParents(memberNode);
         Assert.assertEquals(1, parents.getParentReferences().size());
+    }
+
+    private AddEdgeDto createAddMemberRequest(String childNodeId, String parentNodeId) {
+        return AddEdgeDto.builder()
+                .childNodeId(childNodeId)
+                .roleOfChild(Role.MEMBER)
+                .parentNodeId(parentNodeId)
+                .dpOfChild("dp")
+                .build();
     }
 }

@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.opengroup.osdu.entitlements.v2.azure.service.AddEdgeDto;
 import org.opengroup.osdu.entitlements.v2.azure.service.GraphTraversalSourceUtilService;
 import org.opengroup.osdu.entitlements.v2.azure.service.VertexUtilService;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
@@ -124,13 +125,25 @@ public class RenameGroupRepoGremlinTest {
     private void addTestEdgeAsOwner(String childName, String parentName) {
         String childNodeId = childName + "@" + TEST_DOMAIN;
         String parentNodeId = parentName + "@" + TEST_DOMAIN;
-        graphTraversalSourceUtilService.addEdgeAsOwner(childNodeId, parentNodeId);
+        AddEdgeDto addEdgeDto = AddEdgeDto.builder()
+                .childNodeId(childNodeId)
+                .roleOfChild(Role.OWNER)
+                .parentNodeId(parentNodeId)
+                .dpOfChild("dp")
+                .build();
+        graphTraversalSourceUtilService.addEdge(addEdgeDto);
     }
 
     private void addTestEdgeAsMember(String childName, String parentName) {
         String childNodeId = childName + "@" + TEST_DOMAIN;
         String parentNodeId = parentName + "@" + TEST_DOMAIN;
-        graphTraversalSourceUtilService.addEdgeAsMember(childNodeId, parentNodeId);
+        AddEdgeDto addEdgeDto = AddEdgeDto.builder()
+                .childNodeId(childNodeId)
+                .roleOfChild(Role.MEMBER)
+                .parentNodeId(parentNodeId)
+                .dpOfChild("dp")
+                .build();
+        graphTraversalSourceUtilService.addEdge(addEdgeDto);
     }
 
     private void createTestVertex(String name, NodeType nodeType) {
@@ -153,7 +166,14 @@ public class RenameGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NODE_ID, "member@xxx.com")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
                 .next();
-        graphTraversalSourceUtilService.addEdgeAsOwner("member@xxx.com", "users.x@dp.contoso.com");
+
+        AddEdgeDto addEdgeDto = AddEdgeDto.builder()
+                .childNodeId("member@xxx.com")
+                .roleOfChild(Role.OWNER)
+                .parentNodeId("users.x@dp.contoso.com")
+                .dpOfChild("dp")
+                .build();
+        graphTraversalSourceUtilService.addEdge(addEdgeDto);
         addTestEdgeAsMember("users.x", "users.y");
         addTestEdgeAsMember("users.x", "users.data.root");
         addTestEdgeAsMember("users.y", "users.data.root");

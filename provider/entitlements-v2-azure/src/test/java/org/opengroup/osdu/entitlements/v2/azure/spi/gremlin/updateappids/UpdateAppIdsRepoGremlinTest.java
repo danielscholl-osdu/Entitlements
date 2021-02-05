@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.opengroup.osdu.entitlements.v2.azure.service.AddEdgeDto;
 import org.opengroup.osdu.entitlements.v2.azure.service.GraphTraversalSourceUtilService;
 import org.opengroup.osdu.entitlements.v2.azure.service.VertexUtilService;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
@@ -123,13 +124,13 @@ public class UpdateAppIdsRepoGremlinTest {
     private void addTestEdgeAsOwner(String childName, String parentName) {
         String childNodeId = childName + "@" + TEST_DOMAIN;
         String parentNodeId = parentName + "@" + TEST_DOMAIN;
-        graphTraversalSourceUtilService.addEdgeAsOwner(childNodeId, parentNodeId);
+        graphTraversalSourceUtilService.addEdge(createAddMemberRequest(childNodeId, parentNodeId, Role.OWNER));
     }
 
     private void addTestEdgeAsMember(String childName, String parentName) {
         String childNodeId = childName + "@" + TEST_DOMAIN;
         String parentNodeId = parentName + "@" + TEST_DOMAIN;
-        graphTraversalSourceUtilService.addEdgeAsMember(childNodeId, parentNodeId);
+        graphTraversalSourceUtilService.addEdge(createAddMemberRequest(childNodeId, parentNodeId, Role.MEMBER));
     }
 
     private void createTestVertex(String name, NodeType nodeType) {
@@ -152,7 +153,7 @@ public class UpdateAppIdsRepoGremlinTest {
                 .property(VertexPropertyNames.NODE_ID, "member@xxx.com")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
                 .next();
-        graphTraversalSourceUtilService.addEdgeAsOwner("member@xxx.com", "users.x@dp.contoso.com");
+        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("member@xxx.com", "users.x@dp.contoso.com", Role.OWNER));
         addTestEdgeAsMember("users.x", "users.y");
         addTestEdgeAsMember("users.x", "users.data.root");
         addTestEdgeAsMember("users.y", "users.data.root");
@@ -190,5 +191,14 @@ public class UpdateAppIdsRepoGremlinTest {
                 .map(vertexUtilService::createParentReference)
                 .map(ParentReference::getId)
                 .collect(Collectors.toSet()));
+    }
+
+    private AddEdgeDto createAddMemberRequest(String childNodeId, String parentNodeId, Role role) {
+        return AddEdgeDto.builder()
+                .childNodeId(childNodeId)
+                .roleOfChild(role)
+                .parentNodeId(parentNodeId)
+                .dpOfChild(TEST_PARTITION_ID)
+                .build();
     }
 }

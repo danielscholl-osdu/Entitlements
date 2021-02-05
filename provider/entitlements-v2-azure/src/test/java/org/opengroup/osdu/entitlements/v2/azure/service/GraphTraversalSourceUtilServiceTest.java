@@ -42,6 +42,53 @@ public class GraphTraversalSourceUtilServiceTest {
     }
 
     @Test
+    public void shouldAddEdgeAsOwnerSuccessfullyWhenTwoChildNodesWithSameNodeId() {
+        GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
+
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "data.x@dp.domain.com")
+                .property(VertexPropertyNames.NAME, "data.x")
+                .property(VertexPropertyNames.DESCRIPTION, "")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
+                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .next();
+
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "member1@domain.com")
+                .property(VertexPropertyNames.NAME, "member1")
+                .property(VertexPropertyNames.DESCRIPTION, "")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp1")
+                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .next();
+
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "member1@domain.com")
+                .property(VertexPropertyNames.NAME, "member1")
+                .property(VertexPropertyNames.DESCRIPTION, "")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp2")
+                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .next();
+
+
+        AddEdgeDto addEdgeDto = AddEdgeDto.builder()
+                .childNodeId("member1@domain.com")
+                .roleOfChild(Role.OWNER)
+                .parentNodeId("data.x@dp.domain.com")
+                .dpOfChild("dp2")
+                .build();
+        graphTraversalSourceUtilService.addEdge(addEdgeDto);
+
+        Vertex vertex = graphTraversalSource.V()
+                .has(VertexPropertyNames.NODE_ID, addEdgeDto.getChildNodeId())
+                .has(VertexPropertyNames.DATA_PARTITION_ID, addEdgeDto.getDpOfChild())
+                .next();
+
+        Edge edge = vertex.edges(Direction.IN).next();
+        Assert.assertEquals("data.x@dp.domain.com", edge.outVertex().value(VertexPropertyNames.NODE_ID));
+        Assert.assertEquals(Role.OWNER.getValue(), edge.value(EdgePropertyNames.ROLE));
+    }
+
+    @Test
     public void shouldAddEdgeAsOwnerSuccessfully() {
         GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
 
@@ -60,8 +107,13 @@ public class GraphTraversalSourceUtilServiceTest {
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
                 .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
                 .next();
-
-        graphTraversalSourceUtilService.addEdgeAsOwner("data.y@dp.domain.com", "data.x@dp.domain.com");
+        AddEdgeDto addEdgeDto = AddEdgeDto.builder()
+                .childNodeId("data.y@dp.domain.com")
+                .roleOfChild(Role.OWNER)
+                .parentNodeId("data.x@dp.domain.com")
+                .dpOfChild("dp")
+                .build();
+        graphTraversalSourceUtilService.addEdge(addEdgeDto);
 
         Vertex vertex = graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, "data.y@dp.domain.com").next();
 
@@ -90,7 +142,13 @@ public class GraphTraversalSourceUtilServiceTest {
                 .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
                 .next();
 
-        graphTraversalSourceUtilService.addEdgeAsMember("data.y@dp.domain.com", "data.x@dp.domain.com");
+        AddEdgeDto addEdgeDto = AddEdgeDto.builder()
+                .childNodeId("data.y@dp.domain.com")
+                .roleOfChild(Role.MEMBER)
+                .parentNodeId("data.x@dp.domain.com")
+                .dpOfChild("dp")
+                .build();
+        graphTraversalSourceUtilService.addEdge(addEdgeDto);
 
         Vertex vertex = graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, "data.y@dp.domain.com").next();
 
@@ -146,6 +204,22 @@ public class GraphTraversalSourceUtilServiceTest {
         } catch (Exception ex) {
             fail(String.format("should not throw exception: %s", ex.getMessage()));
         }
+    }
+
+    @Test
+    public void shouldNotThrowConflictErrorIfVertexExistsInOtherDp() {
+        EntityNode entityNode = EntityNode.builder()
+                .nodeId("groupId").name("name").description("desc").type(NodeType.GROUP)
+                .dataPartitionId("dp").appIds(new HashSet<>(Arrays.asList("App1", "App2"))).build();
+
+        graphTraversalSourceUtilService.createGroupVertexFromEntityNode(entityNode);
+
+        EntityNode otherEntityNode = EntityNode.builder()
+                .nodeId("groupId").name("name").description("desc").type(NodeType.GROUP)
+                .dataPartitionId("dp2").appIds(new HashSet<>(Arrays.asList("App1", "App2"))).build();
+
+
+        graphTraversalSourceUtilService.createGroupVertex(otherEntityNode);
     }
 
     @Test
