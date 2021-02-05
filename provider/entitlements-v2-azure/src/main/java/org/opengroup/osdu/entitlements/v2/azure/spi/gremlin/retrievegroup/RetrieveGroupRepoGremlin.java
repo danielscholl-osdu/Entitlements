@@ -147,7 +147,7 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
         Set<ParentReference> filteredParentReferences = new HashSet<>();
         Gson GSON = new Gson();
         for (ParentReference pr : parentReferences) {
-            NodeVertex parentNodeVertex = graphTraversalSourceUtilService.getVertex(pr.getId());
+            NodeVertex parentNodeVertex = graphTraversalSourceUtilService.getVertex(pr.getId(), pr.getDataPartitionId());
             Set<String> appIds = GSON.fromJson(parentNodeVertex.getAppIds(), Set.class);
             if (appIds.isEmpty()) {
                 filteredParentReferences.add(pr);

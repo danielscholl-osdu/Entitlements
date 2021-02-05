@@ -13,7 +13,6 @@ import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinCo
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.EdgePropertyNames;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPropertyNames;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
-import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -22,21 +21,14 @@ import org.springframework.stereotype.Service;
 public class GraphTraversalSourceUtilService {
     private final GremlinConnector gremlinConnector;
 
-    public void addEdgeAsOwner(String childNodeId, String parentNodeId) {
-        addEdge(parentNodeId, childNodeId, Role.OWNER);
-    }
-
-    public void addEdgeAsMember(String childNodeId, String parentNodeId) {
-        addEdge(parentNodeId, childNodeId, Role.MEMBER);
-    }
-
-    private void addEdge(String parentNodeId, String childNodeId, Role role) {
+    public void addEdge(AddEdgeDto addEdgeDto) {
         GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
         Traversal<Vertex, Edge> traversal = graphTraversalSource.V()
-                .has(VertexPropertyNames.NODE_ID, parentNodeId)
+                .has(VertexPropertyNames.NODE_ID, addEdgeDto.getParentNodeId())
                 .addE(EdgePropertyNames.EDGE_LB)
-                .property(EdgePropertyNames.ROLE, role.getValue())
-                .to(graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, childNodeId));
+                .property(EdgePropertyNames.ROLE, addEdgeDto.getRoleOfChild().getValue())
+                .to(graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, addEdgeDto.getChildNodeId())
+                        .has(VertexPropertyNames.DATA_PARTITION_ID, addEdgeDto.getDpOfChild()));
         gremlinConnector.addEdge(traversal);
     }
 
@@ -72,7 +64,7 @@ public class GraphTraversalSourceUtilService {
 
     public void createGroupVertex(EntityNode entityNode) {
         try {
-            getVertex(entityNode.getNodeId());
+            getVertex(entityNode.getNodeId(), entityNode.getDataPartitionId());
         } catch (AppException e) {
             if (e.getError().getCode() == HttpStatus.NOT_FOUND.value()) {
                 createGroupVertexFromEntityNode(entityNode);
@@ -84,18 +76,19 @@ public class GraphTraversalSourceUtilService {
 
     public NodeVertex createVertexFromEntityNodeIdempotent(EntityNode entityNode) {
         try {
-            return getVertex(entityNode.getNodeId());
+            return getVertex(entityNode.getNodeId(), entityNode.getDataPartitionId());
         } catch (AppException e) {
             if (e.getError().getCode() == HttpStatus.NOT_FOUND.value()) {
                 return entityNode.isUser() ? createUserVertexFromEntityNode(entityNode) : createGroupVertexFromEntityNode(entityNode);
             }
-            return getVertex(entityNode.getNodeId());
+            return getVertex(entityNode.getNodeId(), entityNode.getDataPartitionId());
         }
     }
 
-    public NodeVertex getVertex(String nodeId) {
+    public NodeVertex getVertex(String nodeId, String dataPartitionId) {
         Traversal<Vertex, Vertex> traversal = gremlinConnector.getGraphTraversalSource()
-                .V().has(VertexPropertyNames.NODE_ID, nodeId);
+                .V().has(VertexPropertyNames.NODE_ID, nodeId)
+                .has(VertexPropertyNames.DATA_PARTITION_ID, dataPartitionId);
         return gremlinConnector.getVertex(traversal).orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), "Cannot find Vertex"));
     }
 
