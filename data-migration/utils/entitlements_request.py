@@ -6,7 +6,7 @@ def create_group(group_name, partition_id, token, dns):
   print('creating group {}'.format(group_name))
   response = requests.post(entitlement_url(dns) + '/groups', headers=header, json=request_body, timeout=30)
   if response.status_code > 299 and response.status_code != 409:
-    raise Exception('error creating group with status_code {} and error_message {}'.format(response.status_code, response))
+    raise Exception('error creating group with status_code {} and error_message {}'.format(response.status_code, response.json()))
 
 
 def create_membership(group_id, user_id, partition_id, token, role, dns):
@@ -15,7 +15,7 @@ def create_membership(group_id, user_id, partition_id, token, role, dns):
   print('Adding {} into group {} as {}'.format(user_id, group_id, role))
   response = requests.post(entitlement_url(dns) + '/group/' + group_id + '/members', headers=header, json=request_body, timeout=30)
   if response.status_code > 299 and response.status_code != 409:
-    raise Exception('error creating group with status_code {} and error_message {}'.format(response.status_code, response))
+    raise Exception('error creating group with status_code {} and error_message {}'.format(response.status_code, response.json()))
 
 
 def request_header(partition_id, token):
