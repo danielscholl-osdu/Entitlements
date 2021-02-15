@@ -20,8 +20,6 @@ if __name__ == '__main__':
     service_pricipal_token = generate_service_principal_token(service_principal_id, service_principal_secret, azure_tenant_id, resource_id)
     all_partitions = get_all_partitions(service_pricipal_token, dns)
     for partition_id in all_partitions:
-      if partition_id != 'opendes':
-        continue
       # get partition info
       partition_info = get_partition_info(service_pricipal_token, partition_id, dns)
       cosmos_client = CosmosClient(get_secret(env_vault, partition_info['cosmos-endpoint']['value']), credential = get_secret(env_vault, partition_info['cosmos-primary-key']['value']))
