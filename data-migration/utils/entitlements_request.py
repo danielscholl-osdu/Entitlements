@@ -2,8 +2,6 @@ import requests
 
 def create_group(group_name, partition_id, token, dns):
   header = request_header(partition_id, token)
-  print(partition_id)
-  print(token)
   request_body = {'name': group_name, 'description': ''}
   print('creating group {}'.format(group_name))
   response = requests.post(entitlement_url(dns) + '/groups', headers=header, json=request_body, timeout=30)
