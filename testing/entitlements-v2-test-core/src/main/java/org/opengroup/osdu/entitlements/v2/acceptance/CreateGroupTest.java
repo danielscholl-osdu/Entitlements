@@ -86,15 +86,4 @@ public abstract class CreateGroupTest extends AcceptanceBaseTest {
                 .build();
     }
 
-    @Override
-    protected RequestData getRequestDataForUnauthorizedPartition() {
-        Token token = tokenService.getToken();
-        return RequestData.builder()
-                .method("POST").dataPartitionId(configurationService.getUnauthorizedTenantId())
-                .relativePath("groups")
-                .body(new Gson().toJson(GroupItem.builder().name("groupName-" + System.currentTimeMillis())
-                        .description("desc").build()))
-                .token(token.getValue())
-                .build();
-    }
 }

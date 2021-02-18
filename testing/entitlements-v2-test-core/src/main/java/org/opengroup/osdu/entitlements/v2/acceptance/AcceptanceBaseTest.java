@@ -27,7 +27,6 @@ public abstract class AcceptanceBaseTest {
 
     protected abstract RequestData getRequestDataForUnauthorizedTest();
     protected abstract RequestData getRequestDataForNoTokenTest();
-    protected abstract RequestData getRequestDataForUnauthorizedPartition();
 
     protected void cleanup() throws Exception {
     }
@@ -41,12 +40,6 @@ public abstract class AcceptanceBaseTest {
     @Test
     public void shouldReturn401WhenMakingHttpRequestWithoutToken() throws Exception {
         ClientResponse response = httpClientService.send(getRequestDataForNoTokenTest());
-        Assert.assertEquals(401, response.getStatus());
-    }
-
-    @Test
-    public void shouldReturn401WhenMakingHttpRequestToUnauthorizedPartition() throws Exception {
-        ClientResponse response = httpClientService.send(getRequestDataForUnauthorizedPartition());
         Assert.assertEquals(401, response.getStatus());
     }
 

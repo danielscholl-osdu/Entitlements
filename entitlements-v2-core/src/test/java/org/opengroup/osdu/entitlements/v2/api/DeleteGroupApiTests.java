@@ -13,7 +13,6 @@ import org.opengroup.osdu.entitlements.v2.auth.AuthorizationService;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.deletegroup.DeleteGroupServiceDto;
 import org.opengroup.osdu.entitlements.v2.service.DeleteGroupService;
-import org.opengroup.osdu.entitlements.v2.spi.tenantinfo.TenantInfoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -49,16 +48,13 @@ public class DeleteGroupApiTests {
     private ITenantFactory tenantFactory;
     @MockBean
     private AuthorizationService authService;
-    @MockBean
-    private TenantInfoRepo tenantInfoRepo;
 
     @Before
     public void setup() {
         final TenantInfo tenantInfo = new TenantInfo();
         tenantInfo.setDataPartitionId("common");
         tenantInfo.setServiceAccount("internal-service-account");
-        when(tenantFactory.listTenantInfo()).thenReturn(Collections.singletonList(tenantInfo));
-        when(tenantInfoRepo.getServiceAccountOrServicePrincipal(any())).thenReturn("serviceaccount");
+        when(tenantFactory.getTenantInfo("common")).thenReturn(tenantInfo);
         when(authService.isAuthorized(any(),any())).thenReturn(true);
     }
 

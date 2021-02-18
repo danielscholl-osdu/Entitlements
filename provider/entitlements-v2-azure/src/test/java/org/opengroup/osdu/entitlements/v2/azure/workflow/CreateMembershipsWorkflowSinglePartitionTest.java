@@ -26,7 +26,6 @@ import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupResponseDto;
 import org.opengroup.osdu.entitlements.v2.model.listmember.ListMemberResponseDto;
 import org.opengroup.osdu.entitlements.v2.model.listmember.MemberDto;
 import org.opengroup.osdu.entitlements.v2.model.updategroup.UpdateGroupOperation;
-import org.opengroup.osdu.entitlements.v2.spi.tenantinfo.TenantInfoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -59,7 +58,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ComponentScan("org.opengroup.osdu.entitlements.v2")
 @WebMvcTest(controllers = {CreateGroupApi.class, DeleteGroupApi.class})
 public class CreateMembershipsWorkflowSinglePartitionTest {
-    private static final String DATAFIER_JWT = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhQGIuY29tIiwiaXNzIjoi" +
+    /**
+     * JWT token of service principal
+     */
+    private static final String SERVICE_P_JWT = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhQGIuY29tIiwiaXNzIjoi" +
             "cHJldmlldy5jb20iLCJhdWQiOiJ0ZXN0LmNvbSIsImlhdCI6MTU5MDYwMDgyNCwiZXhwIjoxNTkzNzEzODI0LCJwcm92aWRlciI6ImEu" +
             "Y29tIiwiY2xpZW50IjoidGVzdC5jb20iLCJ1c2VyaWQiOiJkYXRhZmllckBldmQtZGRsLXVzLWNvbW1vbi5pYW0uZ3NlcnZpY2VhY2Nv" +
             "dW50LmNvbSIsImVtYWlsIjoiYUBiLmNvbSIsImF1dGh6IjoiIiwibGFzdG5hbWUiOiJCIiwiZmlyc3RuYW1lIjoiQSIsImNvdW50cnki" +
@@ -106,8 +108,6 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     private ITenantFactory tenantFactory;
     @MockBean
     private AuthorizationService authService;
-    @MockBean
-    private TenantInfoRepo tenantInfoRepo;
 
     @Before
     public void before() {
@@ -122,19 +122,18 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         TenantInfo tenantInfo = new TenantInfo();
         tenantInfo.setProjectId("evd-ddl-us-common");
         tenantInfo.setDataPartitionId("common");
-        tenantInfo.setServiceAccount("datafier@evd-ddl-us-common.iam.gserviceaccount.com");
+        tenantInfo.setServiceAccount("a@b.com");
         Mockito.when(tenantFactory.getTenantInfo("common")).thenReturn(tenantInfo);
-        when(tenantInfoRepo.getServiceAccountOrServicePrincipal(any())).thenReturn("serviceaccount");
-        when(authService.isAuthorized(any(),any())).thenReturn(true);
+        when(authService.isAuthorized(any(), any())).thenReturn(true);
     }
 
     @Test
     public void shouldRunWorkflowSuccessfully() throws Exception {
         bootstrapInitialGroups();
         String rootUserGroup = "users@common.contoso.com";
-        performAddMemberRequest(new AddMemberDto(userA, Role.MEMBER), rootUserGroup, DATAFIER_JWT);
-        performAddMemberRequest(new AddMemberDto(userB, Role.MEMBER), rootUserGroup, DATAFIER_JWT);
-        performAddMemberRequest(new AddMemberDto(userC, Role.MEMBER), rootUserGroup, DATAFIER_JWT);
+        performAddMemberRequest(new AddMemberDto(userA, Role.MEMBER), rootUserGroup, SERVICE_P_JWT);
+        performAddMemberRequest(new AddMemberDto(userB, Role.MEMBER), rootUserGroup, SERVICE_P_JWT);
+        performAddMemberRequest(new AddMemberDto(userC, Role.MEMBER), rootUserGroup, SERVICE_P_JWT);
 
         //create users group
         performCreateGroupRequest("users.myusers.operators", jwtA);
@@ -258,8 +257,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
      * TODO remove when tenant-init will be implemented
      */
     private void bootstrapInitialGroups() {
-        performCreateGroupRequest("users", DATAFIER_JWT);
-        performCreateGroupRequest("users.data.root", DATAFIER_JWT);
+        performCreateGroupRequest("users", SERVICE_P_JWT);
+        performCreateGroupRequest("users.data.root", SERVICE_P_JWT);
     }
 
     private void addDataGroup1ToDataGroup2(String dataGroup1, String dataGroup2) {
@@ -387,7 +386,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         checkBootstrappedGroupCannotBeRenamed(newUsersGroup1Name);
 
         performUpdateGroupRequest(Collections.singletonList(getRenameGroupOperation(newUsersGroup1Name)),
-                usersGroup1Email, DATAFIER_JWT);
+                usersGroup1Email, SERVICE_P_JWT);
         usersGroup1Email = newUsersGroup1Email;
         assertGroupsEquals(new String[]{
                 "data.mydata1.operators@common.contoso.com",
@@ -412,9 +411,9 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         }, performListMemberRequest(usersGroup1Email, jwtA)); // updated email
 
         // clean-up
-        performDeleteGroupRequest(dataGroupEmail, DATAFIER_JWT);
-        performDeleteGroupRequest(usersGroup1Email, DATAFIER_JWT);
-        performDeleteGroupRequest(usersGroup2Email, DATAFIER_JWT);
+        performDeleteGroupRequest(dataGroupEmail, SERVICE_P_JWT);
+        performDeleteGroupRequest(usersGroup1Email, SERVICE_P_JWT);
+        performDeleteGroupRequest(usersGroup2Email, SERVICE_P_JWT);
     }
 
     private void checkThatUsersGroupCannotBeRenamedByExistingName() throws Exception {
@@ -446,7 +445,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .content(objectMapper.writeValueAsString(Collections.singletonList(getRenameGroupOperation(usersGroup2Name))))
-                .header(DpsHeaders.AUTHORIZATION, "Bearer " + DATAFIER_JWT)
+                .header(DpsHeaders.AUTHORIZATION, "Bearer " + SERVICE_P_JWT)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"code\":400,\"reason\":\"Bad Request\"," +
@@ -461,8 +460,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         }, performListGroupRequest(jwtA));
 
         // clean-up
-        performDeleteGroupRequest(usersGroup1Email, DATAFIER_JWT);
-        performDeleteGroupRequest(usersGroup2Email, DATAFIER_JWT);
+        performDeleteGroupRequest(usersGroup1Email, SERVICE_P_JWT);
+        performDeleteGroupRequest(usersGroup2Email, SERVICE_P_JWT);
     }
 
     private void checkThatUsersGroupCannotBeRenamedToBootstrapGroup(final String existingGroupEmail) throws Exception {
@@ -473,7 +472,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .content(objectMapper.writeValueAsString(Collections.singletonList(getRenameGroupOperation(nameOfBootstrappedGroup))))
-                .header(DpsHeaders.AUTHORIZATION, "Bearer " + DATAFIER_JWT)
+                .header(DpsHeaders.AUTHORIZATION, "Bearer " + SERVICE_P_JWT)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"code\":400,\"reason\":\"Bad Request\"," +
@@ -497,7 +496,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .content(objectMapper.writeValueAsString(Collections.singletonList(getRenameGroupOperation(newGroupName))))
-                .header(DpsHeaders.AUTHORIZATION, "Bearer " + DATAFIER_JWT)
+                .header(DpsHeaders.AUTHORIZATION, "Bearer " + SERVICE_P_JWT)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"code\":400,\"reason\":\"Bad Request\"," +

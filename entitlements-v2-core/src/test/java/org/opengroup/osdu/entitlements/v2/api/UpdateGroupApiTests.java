@@ -14,7 +14,6 @@ import org.opengroup.osdu.entitlements.v2.model.updategroup.UpdateGroupOperation
 import org.opengroup.osdu.entitlements.v2.model.updategroup.UpdateGroupResponseDto;
 import org.opengroup.osdu.entitlements.v2.model.updategroup.UpdateGroupServiceDto;
 import org.opengroup.osdu.entitlements.v2.service.UpdateGroupService;
-import org.opengroup.osdu.entitlements.v2.spi.tenantinfo.TenantInfoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -53,8 +52,6 @@ public class UpdateGroupApiTests {
     private ObjectMapper objectMapper;
     @MockBean
     private AuthorizationService authService;
-    @MockBean
-    private TenantInfoRepo tenantInfoRepo;
 
     @Before
     public void setup() {
@@ -63,7 +60,6 @@ public class UpdateGroupApiTests {
         tenantInfo.setServiceAccount("a@desid.com");
         when(tenantFactory.listTenantInfo()).thenReturn(Collections.singletonList(tenantInfo));
         when(tenantFactory.getTenantInfo("common")).thenReturn(tenantInfo);
-        when(tenantInfoRepo.getServiceAccountOrServicePrincipal(any())).thenReturn("serviceaccount");
         when(authService.isAuthorized(any(),any())).thenReturn(true);
     }
 

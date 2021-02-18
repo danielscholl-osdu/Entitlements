@@ -14,7 +14,6 @@ import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberDto;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberServiceDto;
 import org.opengroup.osdu.entitlements.v2.service.AddMemberService;
-import org.opengroup.osdu.entitlements.v2.spi.tenantinfo.TenantInfoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -50,8 +49,6 @@ public class AddMemberApiTest {
     private ITenantFactory tenantFactory;
     @MockBean
     private AuthorizationService authService;
-    @MockBean
-    private TenantInfoRepo tenantInfoRepo;
 
     @Before
     public void setup() {
@@ -60,7 +57,6 @@ public class AddMemberApiTest {
         tenantInfo.setServiceAccount("internal-service-account");
         when(tenantFactory.listTenantInfo()).thenReturn(Collections.singletonList(tenantInfo));
         when(tenantFactory.getTenantInfo("common")).thenReturn(tenantInfo);
-        when(tenantInfoRepo.getServiceAccountOrServicePrincipal(any())).thenReturn("serviceaccount");
         when(authService.isAuthorized(any(),any())).thenReturn(true);
     }
 
