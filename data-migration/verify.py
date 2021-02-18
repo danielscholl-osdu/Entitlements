@@ -47,7 +47,6 @@ if __name__ == '__main__':
         sampled_groups = random.sample(all_groups, sample_count)
         for group_name in sampled_groups:
             group_id = '{}@{}.{}'.format(group_name, partition_id, domain)
-            group_id = 'data.mingyang-test1@opendes.contoso.com'
             all_v1_members = list_member_v1(group_id, partition_id, service_pricipal_token, dns)
             all_v2_members = list_member_v2(group_id, partition_id, service_pricipal_token, dns)
             if not v2_constains_all_v1_members(all_v1_members, all_v2_members):
