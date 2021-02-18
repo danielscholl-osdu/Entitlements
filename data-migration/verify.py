@@ -26,7 +26,7 @@ def v2_constains_all_v1_members(v1_members, v2_members):
     for member in v2_members:
         all_v2_members.append(member['email'])
     print(all_v2_members)
-    if all(x in all_v2_members for x in converted_v1_members):
+    if all(x in all_v2_members for x in all_v2_members):
         return True
 
 
