@@ -18,15 +18,15 @@ dns = os.environ['DNS']
 
 
 def v2_constains_all_v1_members(v1_members, v2_members):
-    all_v2_members = []
+    all_v1_members = []
     for member in v1_members:
-        all_v2_members.append(member)
-    print(all_v2_members)
+        all_v1_members.append(member)
+    print(all_v1_members)
     all_v2_members = []
     for member in v2_members:
         all_v2_members.append(member['email'])
     print(all_v2_members)
-    if all(x in all_v2_members for x in all_v2_members):
+    if all(x in all_v2_members for x in all_v1_members):
         return True
 
 
