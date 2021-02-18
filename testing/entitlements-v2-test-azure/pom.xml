@@ -41,7 +41,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Added depdencies Azure Service Principle  -->
+        <!-- Added depdencies Azure Service Principal  -->
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>

@@ -36,17 +36,6 @@ public abstract class GetMembersTest extends AcceptanceBaseTest {
                 .build();
     }
 
-    @Override
-    protected RequestData getRequestDataForUnauthorizedPartition() {
-        Token token = tokenService.getToken();
-        final String groupEmail = configurationService.getIdOfGroup("group");
-        return RequestData.builder()
-                .method("GET").dataPartitionId(configurationService.getUnauthorizedTenantId())
-                .relativePath(String.format("groups/%s/members", groupEmail))
-                .token(token.getValue())
-                .build();
-    }
-
     /**
      * 1) create group
      * 2) create child group

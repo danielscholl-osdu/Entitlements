@@ -18,7 +18,6 @@ import org.opengroup.osdu.entitlements.v2.model.listmember.ListMemberResponseDto
 import org.opengroup.osdu.entitlements.v2.model.listmember.ListMemberServiceDto;
 import org.opengroup.osdu.entitlements.v2.model.listmember.MemberDto;
 import org.opengroup.osdu.entitlements.v2.service.ListMemberService;
-import org.opengroup.osdu.entitlements.v2.spi.tenantinfo.TenantInfoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -59,8 +58,6 @@ public class ListMemberApiTest {
     private ITenantFactory tenantFactory;
     @MockBean
     private AuthorizationService authService;
-    @MockBean
-    private TenantInfoRepo tenantInfoRepo;
 
     @Before
     public void setup() {
@@ -73,8 +70,7 @@ public class ListMemberApiTest {
         final TenantInfo tenantInfo = new TenantInfo();
         tenantInfo.setDataPartitionId("common");
         tenantInfo.setServiceAccount("internal-service-account");
-        when(tenantFactory.listTenantInfo()).thenReturn(Collections.singletonList(tenantInfo));
-        when(tenantInfoRepo.getServiceAccountOrServicePrincipal(any())).thenReturn("serviceaccount");
+        when(tenantFactory.getTenantInfo("common")).thenReturn(tenantInfo);
         when(authService.isAuthorized(any(),any())).thenReturn(true);
     }
 

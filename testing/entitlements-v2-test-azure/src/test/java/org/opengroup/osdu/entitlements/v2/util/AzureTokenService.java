@@ -23,6 +23,9 @@ public class AzureTokenService implements TokenService {
     private static String TOKEN;
     private static String NODATAACEESSTOKEN;
 
+    /**
+     * Returns token of a service principal
+     */
     @Override
     public synchronized Token getToken() {
         if (Strings.isNullOrEmpty(TOKEN)) {

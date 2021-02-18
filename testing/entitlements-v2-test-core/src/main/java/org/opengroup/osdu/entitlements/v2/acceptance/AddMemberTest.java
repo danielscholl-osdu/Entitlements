@@ -89,20 +89,6 @@ public abstract class AddMemberTest extends AcceptanceBaseTest {
                 .build();
     }
 
-    @Override
-    protected RequestData getRequestDataForUnauthorizedPartition() {
-        Token token = tokenService.getToken();
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("role", "MEMBER");
-        requestBody.put("email", "memberName-" + System.currentTimeMillis() + "@test.com");
-        return RequestData.builder()
-                .method("POST").dataPartitionId(configurationService.getUnauthorizedTenantId())
-                .relativePath(String.format("groups/%s/members", configurationService.getIdOfGroup("users")))
-                .body(new Gson().toJson(requestBody))
-                .token(token.getValue())
-                .build();
-    }
-
     private void verifyMemberInResponse(ListMemberResponse listMemberResponse, String role, String memberEmail) {
         boolean isMemberCreated = listMemberResponse.getMembers().stream()
                 .filter(memberItem -> memberEmail.equals(memberItem.getEmail()))

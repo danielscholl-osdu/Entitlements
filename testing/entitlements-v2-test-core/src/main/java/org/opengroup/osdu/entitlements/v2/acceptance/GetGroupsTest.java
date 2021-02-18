@@ -39,14 +39,4 @@ public abstract class GetGroupsTest extends AcceptanceBaseTest {
                 .relativePath("groups")
                 .build();
     }
-
-    @Override
-    protected RequestData getRequestDataForUnauthorizedPartition() {
-        Token token = tokenService.getToken();
-        return RequestData.builder()
-                .method("GET").dataPartitionId(configurationService.getUnauthorizedTenantId())
-                .relativePath("groups")
-                .token(token.getValue())
-                .build();
-    }
 }
