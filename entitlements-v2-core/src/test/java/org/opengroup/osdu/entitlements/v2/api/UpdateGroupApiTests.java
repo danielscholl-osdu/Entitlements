@@ -90,7 +90,7 @@ public class UpdateGroupApiTests {
     public void shouldUpdateAppIdsMatchExpectedHttpRequest() throws Exception {
         String groupEmail = "users.common.test@common.contoso.com";
         List<UpdateGroupOperation> request = getRequestBody("replace", "/appIds", "app1", "app2");
-        performRequest(request, groupEmail).andExpect(status().isAccepted());
+        performRequest(request, groupEmail).andExpect(status().isOk());
     }
 
     @Test
@@ -98,7 +98,7 @@ public class UpdateGroupApiTests {
         String groupEmail = "users.common.test@common.contoso.com";
         String newGroupEmail = "users.test";
         List<UpdateGroupOperation> request = getRequestBody("replace", "/name", newGroupEmail);
-        performRequest(request, groupEmail).andExpect(status().isAccepted());
+        performRequest(request, groupEmail).andExpect(status().isOk());
     }
 
     @Test
@@ -112,7 +112,7 @@ public class UpdateGroupApiTests {
         when(service.updateGroup(any())).thenReturn(response);
         List<UpdateGroupOperation> request = getRequestBody("replace", "/name", newGroupEmail);
         String result = performRequest(request, groupEmail)
-                .andExpect(status().isAccepted())
+                .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         assertThat(result).isEqualToIgnoringWhitespace(objectMapper.writeValueAsString(response));
     }
@@ -138,7 +138,7 @@ public class UpdateGroupApiTests {
         String newGroupName = "users.TEST";
         ArgumentCaptor<UpdateGroupServiceDto> captor = ArgumentCaptor.forClass(UpdateGroupServiceDto.class);
         List<UpdateGroupOperation> request = getRequestBody("replace", "/name", newGroupName);
-        performRequest(request, groupEmail).andExpect(status().isAccepted());
+        performRequest(request, groupEmail).andExpect(status().isOk());
         verify(service, times(1)).updateGroup(captor.capture());
         assertThat(captor.getValue().getExistingGroupEmail()).isEqualTo("users.common.test@common.contoso.com");
         assertThat(captor.getValue().getRenameOperation().getValue().get(0)).isEqualTo("users.TEST");

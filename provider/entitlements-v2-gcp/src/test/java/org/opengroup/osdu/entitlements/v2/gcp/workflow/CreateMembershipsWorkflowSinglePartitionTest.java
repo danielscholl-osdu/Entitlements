@@ -554,7 +554,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common")
                 .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isCreated());
     }
 
     private ListGroupResponseDto performListGroupRequest(String jwt) throws Exception {
@@ -575,7 +575,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common")
                 .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
     }
 
     private ListMemberResponseDto performListMemberRequest(String groupEmail, String jwt) throws Exception {
@@ -597,7 +597,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common"))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isNoContent());
     }
 
     private void performDeleteGroupRequest(String groupEmail, String jwt) throws Exception {
@@ -606,7 +606,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common"))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isNoContent());
     }
 
     private void performUpdateGroupRequest(List<UpdateGroupOperation> operations, String groupEmail, String jwt) throws Exception {
@@ -616,7 +616,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common")
                 .content(objectMapper.writeValueAsString(operations)))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
     }
 
     private void assertMembersEquals(final String[] expectedMemberEmails, final ListMemberResponseDto dto) {
