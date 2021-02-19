@@ -621,7 +621,6 @@ The following software have components provided under the terms of this license:
 - Project Lombok (from https://projectlombok.org)
 - SLF4J API Module (from http://www.slf4j.org)
 - Spongy Castle (from http://rtyley.github.io/spongycastle/)
-- Spring Data Gremlin (from https://github.com/Microsoft/spring-data-gremlin)
 - Spring Data for Azure Cosmos DB SQL API (from https://github.com/Azure/azure-sdk-for-java/tree/master/sdk/cosmos/azure-spring-data-cosmos)
 - adal4j (from https://github.com/AzureAD/azure-activedirectory-library-for-java)
 - jbcrypt (from http://www.mindrot.org/)
