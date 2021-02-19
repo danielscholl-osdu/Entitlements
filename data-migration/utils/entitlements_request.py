@@ -1,28 +1,51 @@
+import logging
 import requests
 import urllib.parse
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+fileHandler = logging.FileHandler('migration_error.log')
+fileHandler.setLevel(logging.ERROR)
+logger.addHandler(fileHandler)
+consoleHandler = logging.StreamHandler()
+logger.addHandler(consoleHandler)
 
 
 def create_group_v2(group_name, partition_id, token, dns):
     header = request_header(partition_id, token)
     request_body = {'name': group_name, 'description': ''}
-    print('creating group {}'.format(group_name))
-    response = requests.post(urllib.parse.urljoin(entitlement_v2_url(dns), '/api/entitlements/v2/groups'),
-                             headers=header, json=request_body, timeout=30)
-    if response.status_code > 299 and response.status_code != 409:
-        raise Exception('error creating group with status_code {} and error_message {}'.format(response.status_code,
-                                                                                               response.json()))
+    logger.info('creating group {}'.format(group_name))
+    try:
+        response = requests.post(urllib.parse.urljoin(entitlement_v2_url(dns), '/api/entitlements/v2/groups'),
+                                 headers=header, json=request_body, timeout=30)
+        if response.status_code > 299 and response.status_code != 409:
+            logger.error(
+                'error creating group {} on partition {} with status_code {} and error_message {}'.format(group_name,
+                                                                                                          partition_id,
+                                                                                                          response.status_code,
+                                                                                                          response.json()))
+    except:
+        logger.error(
+            'error creating group {} on partition {} when sending request to entitlemens service'.format(group_name,
+                                                                                                         partition_id))
 
 
 def create_membership_v2(group_id, user_id, partition_id, token, role, dns):
     header = request_header(partition_id, token)
     request_body = {'email': user_id, 'role': role}
-    print('Adding {} into group {} as {}'.format(user_id, group_id, role))
-    response = requests.post(
-        urllib.parse.urljoin(entitlement_v2_url(dns), '/api/entitlements/v2/groups/{}/members'.format(group_id)),
-        headers=header, json=request_body, timeout=30)
-    if response.status_code > 299 and response.status_code != 409:
-        raise Exception('error adding member with status_code {} and error_message {}'.format(response.status_code,
-                                                                                              response.json()))
+    logger.info('Adding {} into group {} as {}'.format(user_id, group_id, role))
+    try:
+        response = requests.post(
+            urllib.parse.urljoin(entitlement_v2_url(dns), '/api/entitlements/v2/groups/{}/members'.format(group_id)),
+            headers=header, json=request_body, timeout=30)
+        if response.status_code > 299 and response.status_code != 409:
+            logger.error('error adding member {} into group {} with status_code {} and error_message {}'.format(user_id,
+                                                                                                                group_id,
+                                                                                                                response.status_code,
+                                                                                                                response.json()))
+    except:
+        logger.error('error adding member {} into group {} when sending request to entitlements service'.format(user_id,
+                                                                                                                group_id))
 
 
 def list_member_v2(group_id, partition_id, token, dns):
