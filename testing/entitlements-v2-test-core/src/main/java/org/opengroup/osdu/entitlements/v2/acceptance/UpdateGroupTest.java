@@ -37,7 +37,7 @@ public abstract class UpdateGroupTest extends AcceptanceBaseTest {
 
         ClientResponse response = httpClientService.send(getRenameGroupRequestData(oldGroupName, newGroupName, token.getValue()));
         UpdateGroupResponse updateGroupResponse = new Gson().fromJson(response.getEntity(String.class), UpdateGroupResponse.class);
-        Assert.assertEquals(202, response.getStatus());
+        Assert.assertEquals(200, response.getStatus());
         Assert.assertEquals(newGroupName.toLowerCase(), updateGroupResponse.getName());
         Assert.assertEquals(configurationService.getIdOfGroup(newGroupName).toLowerCase(), updateGroupResponse.getEmail());
 
@@ -61,7 +61,7 @@ public abstract class UpdateGroupTest extends AcceptanceBaseTest {
 
         ClientResponse response = httpClientService.send(getUpdateAppIdsRequestData(groupName, newAppIds, token.getValue()));
         UpdateGroupResponse updateGroupResponse = new Gson().fromJson(response.getEntity(String.class), UpdateGroupResponse.class);
-        Assert.assertEquals(202, response.getStatus());
+        Assert.assertEquals(200, response.getStatus());
         Assert.assertEquals(groupName.toLowerCase(), updateGroupResponse.getName());
         Assert.assertEquals(configurationService.getIdOfGroup(groupName).toLowerCase(), updateGroupResponse.getEmail());
         Assert.assertEquals(new HashSet<>(updateGroupResponse.getAppIds()), newAppIds);

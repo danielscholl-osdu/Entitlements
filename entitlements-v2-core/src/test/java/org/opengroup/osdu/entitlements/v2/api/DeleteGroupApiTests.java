@@ -61,7 +61,7 @@ public class DeleteGroupApiTests {
     @Test
     public void shouldMatchExpectedHttpRequest() throws Exception {
         String groupId = "service.viewers.users@common.contoso.com";
-        performDeleteGroupRequest(groupId).andExpect(status().isAccepted());
+        performDeleteGroupRequest(groupId).andExpect(status().isNoContent());
     }
 
     @Test
@@ -76,7 +76,7 @@ public class DeleteGroupApiTests {
         ArgumentCaptor<EntityNode> captor1 = ArgumentCaptor.forClass(EntityNode.class);
         ArgumentCaptor<DeleteGroupServiceDto> captor2 = ArgumentCaptor.forClass(DeleteGroupServiceDto.class);
         String groupId = "service.VIEWERS@common.contoso.com";
-        performDeleteGroupRequest(groupId).andExpect(status().isAccepted());
+        performDeleteGroupRequest(groupId).andExpect(status().isNoContent());
 
         verify(service, times(1)).run(captor1.capture(), captor2.capture());
         assertThat(captor1.getValue().getNodeId()).isEqualTo("service.viewers@common.contoso.com");

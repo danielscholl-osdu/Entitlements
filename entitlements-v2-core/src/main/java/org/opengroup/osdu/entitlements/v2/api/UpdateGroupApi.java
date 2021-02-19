@@ -56,7 +56,7 @@ public class UpdateGroupApi {
                 .build();
 
         UpdateGroupResponseDto result = updateGroupService.updateGroup(updateGroupServiceDto);
-        return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     private void performValidation(String groupEmail, String partitionId, String partitionDomain) {

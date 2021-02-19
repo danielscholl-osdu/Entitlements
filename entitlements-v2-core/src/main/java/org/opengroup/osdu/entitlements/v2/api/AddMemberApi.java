@@ -43,7 +43,7 @@ public class AddMemberApi {
                 .partitionId(partitionIdHeader)
                 .build();
         addMemberService.run(addMemberDto, addMemberServiceDto);
-        return new ResponseEntity<>(addMemberDto, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(addMemberDto, HttpStatus.OK);
     }
 
     private void performValidation(String groupEmail, AddMemberDto addMemberDto, String partitionId, String partitionDomain) {

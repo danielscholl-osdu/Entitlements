@@ -45,6 +45,6 @@ public class DeleteGroupApi {
                 .partitionId(requestInfo.getHeaders().getPartitionId())
                 .build();
         deleteService.run(groupNode, deleteGroupServiceDto);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

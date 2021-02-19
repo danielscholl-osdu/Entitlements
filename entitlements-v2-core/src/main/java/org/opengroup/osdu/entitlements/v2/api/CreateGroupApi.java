@@ -38,6 +38,6 @@ public class CreateGroupApi {
                 .partitionId(dataPartitionId).build();
         EntityNode outputGroupNode = createGroupService.run(inputGroupNode, createGroupServiceDto);
         GroupDto output = GroupDto.createFromEntityNode(outputGroupNode);
-        return new ResponseEntity<>(output, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(output, HttpStatus.CREATED);
     }
 }

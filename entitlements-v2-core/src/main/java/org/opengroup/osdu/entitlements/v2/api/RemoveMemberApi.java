@@ -37,6 +37,6 @@ public class RemoveMemberApi {
                 .requesterId(requestInfoUtilService.getUserId(requestInfo.getHeaders()))
                 .partitionId(partitionId).build();
         removeMemberService.removeMember(removeMemberServiceDto);
-        return new ResponseEntity<>("", HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("", HttpStatus.NO_CONTENT);
     }
 }

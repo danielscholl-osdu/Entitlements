@@ -41,7 +41,7 @@ public class EntitlementsV2Service {
                 .token(token)
                 .body(new Gson().toJson(GroupItem.builder().name(groupName).description("desc").build())).build();
         ClientResponse response = httpClientService.send(requestData);
-        Assert.assertEquals(202, response.getStatus());
+        Assert.assertEquals(201, response.getStatus());
         return new Gson().fromJson(response.getEntity(String.class), GroupItem.class);
     }
 
@@ -53,7 +53,7 @@ public class EntitlementsV2Service {
                 .token(token)
                 .build();
         ClientResponse response = httpClientService.send(requestData);
-        Assert.assertEquals(202, response.getStatus());
+        Assert.assertEquals(204, response.getStatus());
     }
 
     public ListMemberResponse getMembers(String groupEmail, String token) throws Exception {
@@ -77,7 +77,7 @@ public class EntitlementsV2Service {
                 .token(token)
                 .body(new Gson().toJson(requestBody)).build();
         ClientResponse response = httpClientService.send(requestData);
-        Assert.assertEquals(202, response.getStatus());
+        Assert.assertEquals(200, response.getStatus());
         return new Gson().fromJson(response.getEntity(String.class), GroupItem.class);
     }
 
@@ -87,6 +87,6 @@ public class EntitlementsV2Service {
                 .relativePath(String.format("groups/%s/members/%s", groupEmail, memberEmail))
                 .token(token).build();
         ClientResponse response = httpClientService.send(requestData);
-        Assert.assertEquals(202, response.getStatus());
+        Assert.assertEquals(204, response.getStatus());
     }
 }
