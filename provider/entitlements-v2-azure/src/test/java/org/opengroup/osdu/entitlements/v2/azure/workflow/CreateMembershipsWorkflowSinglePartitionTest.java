@@ -520,7 +520,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                     .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
                     .header(DpsHeaders.DATA_PARTITION_ID, "common")
                     .content(objectMapper.writeValueAsString(dto)))
-                    .andExpect(MockMvcResultMatchers.status().isAccepted());
+                    .andExpect(MockMvcResultMatchers.status().isCreated());
         } catch (Exception e) {
             Assert.fail("Exception shouldn't take place here");
         }
@@ -533,7 +533,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                     .characterEncoding(StandardCharsets.UTF_8.name())
                     .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
                     .header(DpsHeaders.DATA_PARTITION_ID, "common"))
-                    .andExpect(MockMvcResultMatchers.status().isAccepted());
+                    .andExpect(MockMvcResultMatchers.status().isNoContent());
         } catch (Exception e) {
             Assert.fail("Exception shouldn't take place here");
         }
@@ -547,7 +547,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                     .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
                     .header(DpsHeaders.DATA_PARTITION_ID, "common")
                     .content(objectMapper.writeValueAsString(dto)))
-                    .andExpect(MockMvcResultMatchers.status().isAccepted());
+                    .andExpect(MockMvcResultMatchers.status().isOk());
         } catch (Exception e) {
             Assert.fail("Exception shouldn't take place here");
         }
@@ -594,7 +594,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                     .characterEncoding(StandardCharsets.UTF_8.name())
                     .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
                     .header(DpsHeaders.DATA_PARTITION_ID, "common"))
-                    .andExpect(status().isAccepted());
+                    .andExpect(status().isNoContent());
         } catch (Exception e) {
             Assert.fail("Exception shouldn't take place here");
         }
@@ -607,7 +607,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common")
                 .content(objectMapper.writeValueAsString(operations)))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isOk());
     }
 
     private void assertGroupsEquals(String[] expectedGroupEmails, ListGroupResponseDto dto) {

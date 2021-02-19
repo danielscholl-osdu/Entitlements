@@ -67,7 +67,7 @@ public class CreateGroupApiTest {
     @Test
     public void shouldMatchExpectedHttpRequest() throws Exception {
         CreateGroupDto dto = new CreateGroupDto("service.viewers_123-{{tenant}}", "My viewers group");
-        performCreateGroupRequest(dto).andExpect(status().isAccepted());
+        performCreateGroupRequest(dto).andExpect(status().isCreated());
     }
 
     @Test
@@ -83,7 +83,7 @@ public class CreateGroupApiTest {
         CreateGroupDto dto = new CreateGroupDto("service.viewers", "My viewers group");
         GroupDto expectedResult = new GroupDto("service.viewers", "service.viewers@common.contoso.com", "My viewers group");
 
-        String result = performCreateGroupRequest(dto).andExpect(status().isAccepted())
+        String result = performCreateGroupRequest(dto).andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
 
         assertThat(result)
@@ -96,7 +96,7 @@ public class CreateGroupApiTest {
         ArgumentCaptor<EntityNode> captor1 = ArgumentCaptor.forClass(EntityNode.class);
         ArgumentCaptor<CreateGroupServiceDto> captor2 = ArgumentCaptor.forClass(CreateGroupServiceDto.class);
 
-        performCreateGroupRequest(dto).andExpect(status().isAccepted());
+        performCreateGroupRequest(dto).andExpect(status().isCreated());
 
         verify(createGroupService, times(1)).run(captor1.capture(), captor2.capture());
 
@@ -119,7 +119,7 @@ public class CreateGroupApiTest {
                 .header(DpsHeaders.DATA_PARTITION_ID, "common")
                 .content(body));
 
-        resultActions.andExpect(status().isAccepted());
+        resultActions.andExpect(status().isCreated());
 
         verify(createGroupService, times(1)).run(captor1.capture(), captor2.capture());
 

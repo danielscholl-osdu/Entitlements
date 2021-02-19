@@ -58,7 +58,7 @@ public class RemoveMemberApiTest {
     @Test
     public void shouldMatchExpectedHttpRequest() throws Exception {
         performRequest("a@common.com", "service.viewers.users@common.contoso.com")
-                .andExpect(status().isAccepted());
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class RemoveMemberApiTest {
         ArgumentCaptor<RemoveMemberServiceDto> captor = ArgumentCaptor.forClass(RemoveMemberServiceDto.class);
 
         performRequest("ABC@common.com", "service.VIEWERS.users@common.contoso.com")
-                .andExpect(status().isAccepted());
+                .andExpect(status().isNoContent());
 
         verify(service, times(1)).removeMember(captor.capture());
 

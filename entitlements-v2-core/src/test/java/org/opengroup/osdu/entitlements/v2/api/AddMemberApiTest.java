@@ -64,7 +64,7 @@ public class AddMemberApiTest {
     public void shouldMatchExpectedHttpRequest() throws Exception {
         AddMemberDto dto = new AddMemberDto("a@common.com", Role.OWNER);
         String group = "service.viewers.users@common.contoso.com";
-        performRequest(dto, group).andExpect(status().isAccepted());
+        performRequest(dto, group).andExpect(status().isOk());
     }
 
     @Test
@@ -79,7 +79,7 @@ public class AddMemberApiTest {
         AddMemberDto dto = new AddMemberDto("a@common.com", Role.OWNER);
         String group = "service.viewers.users@common.contoso.com";
 
-        String result = performRequest(dto, group).andExpect(status().isAccepted())
+        String result = performRequest(dto, group).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
         assertThat(result)
@@ -93,7 +93,7 @@ public class AddMemberApiTest {
 
         AddMemberDto dto = new AddMemberDto("MEMBER@xxx.com", Role.OWNER);
         String group = "service.viewers.users@common.contoso.com";
-        performRequest(dto, group).andExpect(status().isAccepted());
+        performRequest(dto, group).andExpect(status().isOk());
 
         verify(service, times(1)).run(captor1.capture(), captor2.capture());
 
@@ -119,7 +119,7 @@ public class AddMemberApiTest {
                 .header(DpsHeaders.DATA_PARTITION_ID, "common")
                 .content(body));
 
-        resultActions.andExpect(status().isAccepted());
+        resultActions.andExpect(status().isOk());
 
         verify(service, times(1)).run(captor1.capture(), captor2.capture());
 
@@ -145,7 +145,7 @@ public class AddMemberApiTest {
                 .header(DpsHeaders.DATA_PARTITION_ID, "common")
                 .content(body));
 
-        resultActions.andExpect(status().isAccepted());
+        resultActions.andExpect(status().isOk());
 
         verify(service, times(1)).run(captor1.capture(), captor2.capture());
 
