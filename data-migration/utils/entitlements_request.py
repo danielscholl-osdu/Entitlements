@@ -50,7 +50,7 @@ def create_membership_v2(group_id, user_id, partition_id, token, role, dns):
 
 def list_member_v2(group_id, partition_id, token, dns):
     header = request_header(partition_id, token)
-    print('listing group {}'.format(group_id))
+    logger.info('listing group {}'.format(group_id))
     response = requests.get(
         urllib.parse.urljoin(entitlement_v2_url(dns), '/api/entitlements/v2/groups/{}/members'.format(group_id)),
         headers=header, timeout=30)
@@ -63,7 +63,7 @@ def list_member_v2(group_id, partition_id, token, dns):
 
 def list_member_v1(group_id, partition_id, token, dns):
     header = request_header(partition_id, token)
-    print('listing group {}'.format(group_id))
+    logger.info('listing group {}'.format(group_id))
     response = requests.get(
         urllib.parse.urljoin(entitlement_v1_url(dns), '/entitlements/v1/groups/{}/members'.format(group_id)),
         headers=header, timeout=30)
