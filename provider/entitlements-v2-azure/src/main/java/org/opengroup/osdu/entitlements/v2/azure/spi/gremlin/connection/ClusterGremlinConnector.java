@@ -7,10 +7,10 @@ import org.apache.tinkerpop.gremlin.driver.Result;
 import org.apache.tinkerpop.gremlin.driver.ResultSet;
 import org.apache.tinkerpop.gremlin.driver.remote.DriverRemoteConnection;
 import org.apache.tinkerpop.gremlin.driver.ser.Serializers;
-import org.apache.tinkerpop.gremlin.groovy.jsr223.GroovyTranslator;
 import org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
+import org.apache.tinkerpop.gremlin.process.traversal.translator.GroovyTranslator;
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.opengroup.osdu.core.common.model.http.AppException;
@@ -32,6 +32,7 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 public class ClusterGremlinConnector implements GremlinConnector {
     private static final int MAX_CONTENT_LENGTH = 65536;
+    private static final long KEEP_ALIVE_TIME = 30000;
     private static final int MAX_IN_PROCESS = 16;
     private static final String TRAVERSAL_SUBMIT_ERROR_MESSAGE = "Error submitting traversal";
     private static final String RETRIEVING_RESULT_SET_ERROR_MESSAGE = "Error retrieving ResultSet object";
@@ -126,6 +127,7 @@ public class ClusterGremlinConnector implements GremlinConnector {
                     .maxInProcessPerConnection(MAX_IN_PROCESS)
                     .maxContentLength(MAX_CONTENT_LENGTH)
                     .serializer(Serializers.GRAPHSON_V2D0.toString())
+                    .keepAliveInterval(KEEP_ALIVE_TIME)
                     .create();
         } catch (IllegalArgumentException e) {
             throw new AppException(
