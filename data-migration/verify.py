@@ -1,5 +1,4 @@
 import os
-import random
 from azure.cosmos import CosmosClient
 
 from utils.entitlements_request import list_member_v1, list_member_v2
@@ -41,13 +40,10 @@ if __name__ == '__main__':
         cosmos_client = CosmosClient(get_secret(env_vault, partition_info['cosmos-endpoint']['value']),
                                      credential=get_secret(env_vault, partition_info['cosmos-primary-key']['value']))
         db = cosmos_client.get_database_client('osdu-db')
-        # sample 10%
         all_groups = get_all_groups(db, partition_id)
-        sample_count = round(0.1 * len(all_groups))
-        sampled_groups = random.sample(all_groups, sample_count)
-        for group_name in sampled_groups:
+        for group_name in all_groups:
             group_id = '{}@{}.{}'.format(group_name, partition_id, domain)
             all_v1_members = list_member_v1(group_id, partition_id, service_pricipal_token, dns)
             all_v2_members = list_member_v2(group_id, partition_id, service_pricipal_token, dns)
             if not v2_constains_all_v1_members(all_v1_members, all_v2_members):
-                raise Exception('{} groups in v2 does not contains all v1 members'.format(group_id))
+                raise Exception('{} groups in v2 does not contain all v1 members'.format(group_id))
