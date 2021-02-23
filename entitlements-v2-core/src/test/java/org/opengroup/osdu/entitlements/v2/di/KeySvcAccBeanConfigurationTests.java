@@ -37,27 +37,10 @@ public class KeySvcAccBeanConfigurationTests {
 
     private TenantInfo tenantInfo;
 
-    private final String GATEWAYSVCDESID = "{\n" +
+    private final String SERVICE_PRINCIPAL = "{\n" +
             "  \"users\": [\n" +
             "    {\n" +
-            "      \"email\": \"GATEWAYSVCDESID\",\n" +
-            "      \"role\": \"OWNER\"\n" +
-            "    }\n" +
-            "  ],\n" +
-            "  \"ownersOf\": [\n" +
-            "    {\n" +
-            "      \"groupName\": \"users.datalake.viewers\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"groupName\": \"users\"\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}";
-
-    private final String DATAFIEREMAIL = "{\n" +
-            "  \"users\": [\n" +
-            "    {\n" +
-            "      \"email\": \"DATAFIEREMAIL\",\n" +
+            "      \"email\": \"SERVICE_PRINCIPAL\",\n" +
             "      \"role\": \"OWNER\"\n" +
             "    }\n" +
             "  ],\n" +
@@ -71,25 +54,9 @@ public class KeySvcAccBeanConfigurationTests {
             "  ]\n" +
             "}";
 
-    private final String SLISVCEMAIL = "{\n" +
-            "  \"users\": [\n" +
-            "    {\n" +
-            "      \"email\": \"SLISVCEMAIL\",\n" +
-            "      \"role\": \"OWNER\"\n" +
-            "    }\n" +
-            "  ],\n" +
-            "  \"ownersOf\": [\n" +
-            "    {\n" +
-            "      \"groupName\": \"users.datalake.viewers\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"groupName\": \"users\"\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}";
-
     @Before
     public void setup() throws Exception {
+        when(appProperties.getGroupsOfServicePrincipal()).thenReturn("groups_of_service_principal.json");
         prepareFileReaderForUsersTesting();
         tenantInfo = Mockito.mock(TenantInfo.class);
         when(requestInfo.getTenantInfo()).thenReturn(tenantInfo);
@@ -97,16 +64,14 @@ public class KeySvcAccBeanConfigurationTests {
     }
 
     @Test
-    public void shouldReturnTrue_IfDatafierSvcAccount() throws Exception {
-        when(appProperties.getProjectId()).thenReturn("service-project-id");
+    public void shouldReturnTrue_IfServicePrincipalAccount() {
         when(tenantInfo.getServiceAccount()).thenReturn("datafier@xxx.iam.gserviceaccount.com");
         boolean res = sut.isKeyServiceAccount("datafier@xxx.iam.gserviceaccount.com");
         assertTrue(res);
     }
 
     @Test
-    public void shouldReturnFalse_IfDNonKeySvcAccount() throws Exception {
-        when(appProperties.getProjectId()).thenReturn("service-project-id");
+    public void shouldReturnFalse_IfDNonKeySvcAccount() {
         when(tenantInfo.getServiceAccount()).thenReturn("datafier@xxx.iam.gserviceaccount.com");
         boolean res = sut.isKeyServiceAccount("member@xxx.com");
         assertFalse(res);
@@ -114,7 +79,6 @@ public class KeySvcAccBeanConfigurationTests {
 
     @Test
     public void shouldReturnGroups_ifGivenDatafierAcc() {
-        when(appProperties.getProjectId()).thenReturn("service-project-id");
         when(tenantInfo.getServiceAccount()).thenReturn("datafier@xxx.iam.gserviceaccount.com");
         Set<String> res = sut.getServiceAccountGroups("datafier@xxx.iam.gserviceaccount.com");
         assertEquals(2, res.size());
@@ -124,7 +88,6 @@ public class KeySvcAccBeanConfigurationTests {
 
     @Test
     public void shouldReturnEmptyGroupSet_ifGivenEmailIsNotKeySvcAcc() {
-        when(appProperties.getProjectId()).thenReturn("service-project-id");
         when(tenantInfo.getServiceAccount()).thenReturn("datafier@xxx.iam.gserviceaccount.com");
         Set<String> res = sut.getServiceAccountGroups("member@xxx.com");
         assertEquals(0, res.size());
@@ -132,7 +95,6 @@ public class KeySvcAccBeanConfigurationTests {
 
     @Test
     public void shouldReturnTrue_ifKeySvcAccInBootstrapGroup() {
-        when(appProperties.getProjectId()).thenReturn("service-project-id");
         when(tenantInfo.getServiceAccount()).thenReturn("datafier@xxx.iam.gserviceaccount.com");
         boolean res = sut.isKeySvcAccountInBootstrapGroup("users.data.root", "datafier@xxx.iam.gserviceaccount.com");
         assertTrue(res);
@@ -140,7 +102,6 @@ public class KeySvcAccBeanConfigurationTests {
 
     @Test
     public void shouldReturnFalse_ifGivenNonKeySvcAccInBootstrapGroup() {
-        when(appProperties.getProjectId()).thenReturn("service-project-id");
         when(tenantInfo.getServiceAccount()).thenReturn("datafier@xxx.iam.gserviceaccount.com");
         boolean res = sut.isKeySvcAccountInBootstrapGroup("users.data.root", "member@xxx.iam.gserviceaccount.com");
         assertFalse(res);
@@ -148,16 +109,12 @@ public class KeySvcAccBeanConfigurationTests {
 
     @Test
     public void shouldReturnFalse_ifGivenKeySvcAccInNonBootstrapGroup() {
-        when(appProperties.getProjectId()).thenReturn("service-project-id");
         when(tenantInfo.getServiceAccount()).thenReturn("datafier@xxx.iam.gserviceaccount.com");
         boolean res = sut.isKeySvcAccountInBootstrapGroup("users.test", "service-project-id@appspot.gserviceaccount.com");
         assertFalse(res);
     }
 
     private void prepareFileReaderForUsersTesting() {
-        when(fileReaderService.readFile("/provisioning/accounts/datalake_ops.json")).thenReturn(DATAFIEREMAIL);
-        when(fileReaderService.readFile("/provisioning/accounts/datalake_viewers.json")).thenReturn(SLISVCEMAIL);
-        when(fileReaderService.readFile("/provisioning/accounts/datalake_root.json")).thenReturn(DATAFIEREMAIL);
-        when(fileReaderService.readFile("/provisioning/accounts/apigateway_serviceaccount.json")).thenReturn(GATEWAYSVCDESID);
+        when(fileReaderService.readFile("groups_of_service_principal.json")).thenReturn(SERVICE_PRINCIPAL);
     }
 }

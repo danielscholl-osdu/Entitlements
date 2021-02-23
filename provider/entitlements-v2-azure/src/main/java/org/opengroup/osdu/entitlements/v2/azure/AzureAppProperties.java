@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 @Getter
 public class AzureAppProperties extends AppProperties {
@@ -31,5 +34,19 @@ public class AzureAppProperties extends AppProperties {
 
     public String getGraphDbEndpoint() {
         return KeyVaultFacade.getSecretWithValidation(secretClient, "graph-db-endpoint");
+    }
+
+    @Override
+    public List<String> getInitialGroups() {
+        List<String> initialGroups = new ArrayList<>();
+        initialGroups.add("/provisioning/groups/datalake_user_groups.json");
+        initialGroups.add("/provisioning/groups/datalake_service_groups.json");
+        initialGroups.add("/provisioning/groups/data_groups.json");
+        return initialGroups;
+    }
+
+    @Override
+    public String getGroupsOfServicePrincipal() {
+        return "/provisioning/accounts/groups_of_service_principal.json";
     }
 }

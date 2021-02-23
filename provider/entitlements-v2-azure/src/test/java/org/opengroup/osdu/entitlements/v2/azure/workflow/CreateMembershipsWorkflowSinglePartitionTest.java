@@ -33,8 +33,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.nio.charset.StandardCharsets;
@@ -114,11 +116,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         Mockito.when(config.getDomain()).thenReturn("contoso.com");
         Mockito.when(config.getProjectId()).thenReturn("evd-ddl-us-services");
         Mockito.when(config.isHttpAccepted()).thenReturn(true);
-        List<String> list = new ArrayList<>();
-        list.add("/provisioning/groups/datalake_user_groups.json");
-        list.add("/provisioning/groups/datalake_service_groups.json");
-        list.add("/provisioning/groups/data_groups.json");
-        Mockito.when(config.getInitialGroups()).thenReturn(list);
+        Mockito.when(config.getInitialGroups()).thenCallRealMethod();
+        Mockito.when(config.getGroupsOfServicePrincipal()).thenCallRealMethod();
         TenantInfo tenantInfo = new TenantInfo();
         tenantInfo.setProjectId("evd-ddl-us-common");
         tenantInfo.setDataPartitionId("common");
@@ -129,7 +128,11 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
 
     @Test
     public void shouldRunWorkflowSuccessfully() throws Exception {
-        bootstrapInitialGroups();
+        performBootstrappingOfGroupsAndUsers();
+
+        //running second time to prove the the api is idempotent
+        performBootstrappingOfGroupsAndUsers();
+
         String rootUserGroup = "users@common.contoso.com";
         performAddMemberRequest(new AddMemberDto(userA, Role.MEMBER), rootUserGroup, SERVICE_P_JWT);
         performAddMemberRequest(new AddMemberDto(userB, Role.MEMBER), rootUserGroup, SERVICE_P_JWT);
@@ -138,13 +141,17 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         //create users group
         performCreateGroupRequest("users.myusers.operators", jwtA);
         assertGroupsEquals(new String[]{
+                "data.default.viewers@common.contoso.com",
                 "users@common.contoso.com",
+                "data.default.owners@common.contoso.com",
                 "users.myusers.operators@common.contoso.com"}, performListGroupRequest(jwtA));
 
         //create data group
         performCreateGroupRequest("data.mydata1.operators", jwtA);
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "users@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA));
 
@@ -154,7 +161,9 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         //add data groups to users group
         performCreateGroupRequest("data.mydata2.operators", jwtA);
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "users@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "data.mydata2.operators@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA));
@@ -172,7 +181,9 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         //create new root hierarchy
         performCreateGroupRequest("users.myusers2.operators", jwtC);
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "users@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "users.myusers2.operators@common.contoso.com"}, performListGroupRequest(jwtC));
 
         //add it to users operators
@@ -184,7 +195,9 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "users.data.root@common.contoso.com",
                 "users.myusers2.operators@common.contoso.com"}, performListMemberRequest(userGroup1, jwtA));
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "users@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "data.mydata2.operators@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
@@ -197,10 +210,18 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         performAddMemberRequest(new AddMemberDto(userB, Role.OWNER), userGroup2, jwtC);
         performDeleteGroupRequest(userGroup2, jwtB);
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "users@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA));
-        assertGroupsEquals(new String[]{"users@common.contoso.com"}, performListGroupRequest(jwtB));
-        assertGroupsEquals(new String[]{"users@common.contoso.com"}, performListGroupRequest(jwtC));
+        assertGroupsEquals(new String[]{
+                "users@common.contoso.com",
+                "data.default.owners@common.contoso.com",
+                "data.default.viewers@common.contoso.com"}, performListGroupRequest(jwtB));
+        assertGroupsEquals(new String[]{
+                "users@common.contoso.com",
+                "data.default.owners@common.contoso.com",
+                "data.default.viewers@common.contoso.com"}, performListGroupRequest(jwtC));
 
         testGroupUpdateApi();
     }
@@ -211,12 +232,16 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "users.data.root@common.contoso.com",
                 "users.myusers.operators@common.contoso.com"}, performListMemberRequest(dataGroup2, jwtA));
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "users@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "data.mydata2.operators@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtB));
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "users@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "data.mydata2.operators@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com",
@@ -226,15 +251,21 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     private void deleteDataGroup2(String dataGroup2) {
         performDeleteGroupRequest(dataGroup2, jwtA);
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "users@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA));
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "users@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtB));
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "users@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com",
                 "users.myusers2.operators@common.contoso.com"}, performListGroupRequest(jwtC));
@@ -245,52 +276,58 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         assertMembersEquals(new String[]{userA,
                 "users.data.root@common.contoso.com"}, performListMemberRequest(dataGroup1, jwtA));
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "users@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA));
-        assertGroupsEquals(new String[]{"users@common.contoso.com"}, performListGroupRequest(jwtB));
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
+                "data.default.owners@common.contoso.com",
+                "data.default.viewers@common.contoso.com"}, performListGroupRequest(jwtB));
+        assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
+                "users@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "users.myusers2.operators@common.contoso.com"}, performListGroupRequest(jwtC));
-    }
-
-    /**
-     * TODO remove when tenant-init will be implemented
-     */
-    private void bootstrapInitialGroups() {
-        performCreateGroupRequest("users", SERVICE_P_JWT);
-        performCreateGroupRequest("users.data.root", SERVICE_P_JWT);
     }
 
     private void addDataGroup1ToDataGroup2(String dataGroup1, String dataGroup2) {
         performAddMemberRequest(new AddMemberDto(dataGroup1, Role.MEMBER), dataGroup2, jwtA);
-        assertMembersEquals(new String[]{userA,
+        assertMembersEquals(new String[]{
+                userA,
                 "users.data.root@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com"}, performListMemberRequest(dataGroup2, jwtA));
-        assertMembersEquals(new String[]{userA,
+        assertMembersEquals(new String[]{
+                userA,
                 "users.data.root@common.contoso.com"}, performListMemberRequest(dataGroup1, jwtA));
     }
 
     private void addUserGroupToDataGroups(String userGroup, String dataGroup1, String dataGroup2) {
         performAddMemberRequest(new AddMemberDto(userGroup, Role.MEMBER), dataGroup1, jwtA);
         performAddMemberRequest(new AddMemberDto(userGroup, Role.MEMBER), dataGroup2, jwtA);
-        assertMembersEquals(new String[]{userA,
+        assertMembersEquals(new String[]{
+                userA,
                 "users.data.root@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com",
                 "users.myusers.operators@common.contoso.com"}, performListMemberRequest(dataGroup2, jwtA));
 
-        assertMembersEquals(new String[]{userA,
+        assertMembersEquals(new String[]{
+                userA,
                 "users.data.root@common.contoso.com",
                 "users.myusers.operators@common.contoso.com"}, performListMemberRequest(dataGroup1, jwtA));
     }
 
     private void addNewUserToUsersOperators(String newUser, String newUserJwt, String userGroup) {
         performAddMemberRequest(new AddMemberDto(newUser, Role.MEMBER), userGroup, jwtA);
-        assertMembersEquals(new String[]{userA,
+        assertMembersEquals(new String[]{
+                userA,
                 "users.data.root@common.contoso.com",
                 userB}, performListMemberRequest(userGroup, jwtA));
 
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "users@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "data.mydata2.operators@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(newUserJwt));
@@ -323,7 +360,9 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     private void testGroupUpdateApi() throws Exception {
         // there aren't new groups
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "users@common.contoso.com"
         }, performListGroupRequest(jwtA));
 
@@ -334,7 +373,9 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         String dataGroupEmail = dataGroupName + "@common.contoso.com";
         performCreateGroupRequest(dataGroupName, jwtA);
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "users@common.contoso.com",
                 dataGroupEmail
         }, performListGroupRequest(jwtA));
@@ -344,31 +385,32 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         String usersGroup1Email = usersGroup1Name + "@common.contoso.com";
         performCreateGroupRequest(usersGroup1Name, jwtA);
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "users@common.contoso.com",
                 dataGroupEmail,
-                usersGroup1Email
-        }, performListGroupRequest(jwtA));
+                usersGroup1Email}, performListGroupRequest(jwtA));
 
         // users group 2 was created
         String usersGroup2Name = "users.testusers2.operators";
         String usersGroup2Email = usersGroup2Name + "@common.contoso.com";
         performCreateGroupRequest(usersGroup2Name, jwtA);
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "users@common.contoso.com",
                 dataGroupEmail,
                 usersGroup1Email,
-                usersGroup2Email
-        }, performListGroupRequest(jwtA));
+                usersGroup2Email}, performListGroupRequest(jwtA));
 
         // users group 1 was added to data group
         performAddMemberRequest(new AddMemberDto(usersGroup1Email, Role.MEMBER), dataGroupEmail, jwtA);
         assertMembersEquals(new String[]{
                 userA,
                 "users.data.root@common.contoso.com",
-                usersGroup1Email
-        }, performListMemberRequest(dataGroupEmail, jwtA));
+                usersGroup1Email}, performListMemberRequest(dataGroupEmail, jwtA));
 
         // users group 2 was added to users group 1
         performAddMemberRequest(new AddMemberDto(usersGroup2Email, Role.MEMBER), usersGroup1Email, jwtA);
@@ -389,12 +431,13 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 usersGroup1Email, SERVICE_P_JWT);
         usersGroup1Email = newUsersGroup1Email;
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "users@common.contoso.com",
                 dataGroupEmail,
                 usersGroup1Email, // updated email
-                usersGroup2Email
-        }, performListGroupRequest(jwtA));
+                usersGroup2Email}, performListGroupRequest(jwtA));
 
         // data group has a member with updated email
         assertMembersEquals(new String[]{
@@ -407,8 +450,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         assertMembersEquals(new String[]{
                 userA,
                 "users.data.root@common.contoso.com",
-                usersGroup2Email
-        }, performListMemberRequest(usersGroup1Email, jwtA)); // updated email
+                usersGroup2Email}, performListMemberRequest(usersGroup1Email, jwtA)); // updated email
 
         // clean-up
         performDeleteGroupRequest(dataGroupEmail, SERVICE_P_JWT);
@@ -424,21 +466,23 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         //"users group 1 to be updated by a new email"
         performCreateGroupRequest(usersGroup1Name, jwtA);
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "users@common.contoso.com",
-                usersGroup1Email
-        }, performListGroupRequest(jwtA));
+                usersGroup1Email}, performListGroupRequest(jwtA));
 
         // users group 2 was created
         String usersGroup2Name = "users.testusers2.operators";
         String usersGroup2Email = usersGroup2Name + "@common.contoso.com";
         performCreateGroupRequest(usersGroup2Name, jwtA);
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "users@common.contoso.com",
                 usersGroup1Email,
-                usersGroup2Email
-        }, performListGroupRequest(jwtA));
+                usersGroup2Email}, performListGroupRequest(jwtA));
 
         // bad request when users group 1 email is updated by users group 2 name
         mockMvc.perform(patch("/groups/{group_email}", usersGroup1Email)
@@ -453,11 +497,12 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
 
         // nothing changed
         assertGroupsEquals(new String[]{
+                "data.default.owners@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "users@common.contoso.com",
                 usersGroup1Email,
-                usersGroup2Email
-        }, performListGroupRequest(jwtA));
+                usersGroup2Email}, performListGroupRequest(jwtA));
 
         // clean-up
         performDeleteGroupRequest(usersGroup1Email, SERVICE_P_JWT);
@@ -479,12 +524,13 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                         "\"message\":\"Invalid group, group update API cannot work with bootstrapped groups\"}"));
 
         // nothing changed
-        assertGroupsEquals(new String[]{"data.mydata1.operators@common.contoso.com",
-                        "users.testusers1.operators@common.contoso.com",
-                        "data.testdata.operators@common.contoso.com",
-                        "users.testusers2.operators@common.contoso.com",
-                        "users@common.contoso.com"},
-                performListGroupRequest(jwtA));
+        assertGroupsEquals(new String[]{
+                "data.mydata1.operators@common.contoso.com",
+                "users.testusers1.operators@common.contoso.com",
+                "data.default.owners@common.contoso.com",
+                "data.testdata.operators@common.contoso.com", "data.default.viewers@common.contoso.com",
+                "users.testusers2.operators@common.contoso.com",
+                "users@common.contoso.com"}, performListGroupRequest(jwtA));
     }
 
     private void checkBootstrappedGroupCannotBeRenamed(final String newGroupName) throws Exception {
@@ -503,12 +549,14 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                         "\"message\":\"Invalid group, group update API cannot work with bootstrapped groups\"}"));
 
         // nothing changed
-        assertGroupsEquals(new String[]{"data.mydata1.operators@common.contoso.com",
-                        "users.testusers1.operators@common.contoso.com",
-                        "data.testdata.operators@common.contoso.com",
-                        "users.testusers2.operators@common.contoso.com",
-                        "users@common.contoso.com"},
-                performListGroupRequest(jwtA));
+        assertGroupsEquals(new String[]{
+                "data.mydata1.operators@common.contoso.com",
+                "users.testusers1.operators@common.contoso.com",
+                "data.default.owners@common.contoso.com",
+                "data.testdata.operators@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
+                "users.testusers2.operators@common.contoso.com",
+                "users@common.contoso.com"}, performListGroupRequest(jwtA));
     }
 
     private void performCreateGroupRequest(String groupName, String jwt) {
@@ -633,5 +681,26 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 .operation("replace")
                 .path("/appIds")
                 .value(appIds).build();
+    }
+
+    private void performBootstrappingOfGroupsAndUsers() throws Exception {
+        final RequestBuilder request = MockMvcRequestBuilders.post("/tenant-provisioning")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding(StandardCharsets.UTF_8.name())
+                .header("authorization", "Bearer " + SERVICE_P_JWT)
+                .header("data-partition-id", "common");
+        mockMvc.perform(request).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk());
+        assertGroupsEquals(new String[]{"service.entitlements.user@common.contoso.com",
+                "users.datalake.viewers@common.contoso.com", "service.search.admin@common.contoso.com",
+                "data.default.owners@common.contoso.com", "users.datalake.editors@common.contoso.com",
+                "service.messaging.admin@common.contoso.com", "service.storage.creator@common.contoso.com",
+                "users.data.root@common.contoso.com", "service.search.user@common.contoso.com",
+                "users@common.contoso.com", "service.entitlements.admin@common.contoso.com",
+                "service.legal.user@common.contoso.com", "data.default.viewers@common.contoso.com",
+                "users.datalake.ops@common.contoso.com", "service.storage.admin@common.contoso.com",
+                "service.legal.admin@common.contoso.com", "users.datalake.admins@common.contoso.com",
+                "service.plugin.user@common.contoso.com", "service.plugin.admin@common.contoso.com",
+                "service.messaging.user@common.contoso.com", "service.storage.viewer@common.contoso.com",
+                "service.legal.editor@common.contoso.com"}, performListGroupRequest(SERVICE_P_JWT));
     }
 }
