@@ -2,7 +2,6 @@ package org.opengroup.osdu.entitlements.v2;
 
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AppProperties {
@@ -29,11 +28,13 @@ public abstract class AppProperties {
         return httpAccepted;
     }
 
-    public List<String> getInitialGroups() {
-        List<String> initialGroups = new ArrayList<>(3);
-        initialGroups.add("/provisioning/groups/datalake_user_groups.json");
-        initialGroups.add("/provisioning/groups/datalake_service_groups.json");
-        initialGroups.add("/provisioning/groups/data_groups.json");
-        return initialGroups;
-    }
+    /**
+     * @return a list containing paths of configuration files
+     */
+    public abstract List<String> getInitialGroups();
+
+    /**
+     * @return a path of configuration file
+     */
+    public abstract String getGroupsOfServicePrincipal();
 }

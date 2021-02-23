@@ -4,6 +4,9 @@ import org.opengroup.osdu.entitlements.v2.AppProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class GcpAppProperties extends AppProperties {
     public static final String USERS = "service.entitlements.user";
@@ -120,5 +123,19 @@ public class GcpAppProperties extends AppProperties {
 
     public String getTaskQueueLocation() {
         return taskQueueLocation;
+    }
+
+    @Override
+    public List<String> getInitialGroups() {
+        List<String> initialGroups = new ArrayList<>();
+        initialGroups.add("/provisioning/groups/datalake_user_groups.json");
+        initialGroups.add("/provisioning/groups/datalake_service_groups.json");
+        initialGroups.add("/provisioning/groups/data_groups.json");
+        return initialGroups;
+    }
+
+    @Override
+    public String getGroupsOfServicePrincipal() {
+        return "/provisioning/accounts/groups_of_service_principal.json";
     }
 }

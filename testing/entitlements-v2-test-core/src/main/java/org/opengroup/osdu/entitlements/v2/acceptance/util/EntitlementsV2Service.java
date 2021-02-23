@@ -89,4 +89,13 @@ public class EntitlementsV2Service {
         ClientResponse response = httpClientService.send(requestData);
         Assert.assertEquals(204, response.getStatus());
     }
+
+    public void provisionGroupsForNewTenant(String token) throws Exception {
+        RequestData requestData = RequestData.builder()
+                .method("POST").dataPartitionId(configurationService.getTenantId())
+                .relativePath("tenant-provisioning")
+                .token(token).build();
+        ClientResponse response = httpClientService.send(requestData);
+        Assert.assertEquals(200, response.getStatus());
+    }
 }

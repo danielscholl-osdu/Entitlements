@@ -135,11 +135,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         when(config.getDomain()).thenReturn("contoso.com");
         when(config.getProjectId()).thenReturn("evd-ddl-us-services");
         when(config.isHttpAccepted()).thenReturn(true);
-        List<String> list = new ArrayList<>();
-        list.add("/provisioning/groups/datalake_user_groups.json");
-        list.add("/provisioning/groups/datalake_service_groups.json");
-        list.add("/provisioning/groups/data_groups.json");
-        when(config.getInitialGroups()).thenReturn(list);
+        when(config.getInitialGroups()).thenCallRealMethod();
+        when(config.getGroupsOfServicePrincipal()).thenCallRealMethod();
         when(partitionRedisInstanceService.getHostOfRedisInstanceForPartition("common")).thenReturn("localhost");
         TenantInfo tenantInfo = new TenantInfo();
         tenantInfo.setProjectId("evd-ddl-us-common");

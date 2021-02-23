@@ -1,13 +1,16 @@
 {
   "users": [
     {
-      "email": "DATAFIEREMAIL",
+      "email": "SERVICE_PRINCIPAL",
       "role": "OWNER"
     }
   ],
   "ownersOf": [
     {
       "groupName": "users"
+    },
+    {
+      "groupName": "users.data.root"
     },
     {
       "groupName": "users.datalake.ops"
