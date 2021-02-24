@@ -27,6 +27,8 @@ export AZURE_CLIENT_SECRET=$(az keyvault secret show --id https://${ENV_VAULT}.v
 export AZURE_TENANT_ID=$(az keyvault secret show --id https://${ENV_VAULT}.vault.azure.net/secrets/app-dev-sp-tenant-id --query value -otsv)
 export RESOURCE_ID=$(az keyvault secret show --id https://${ENV_VAULT}.vault.azure.net/secrets/aad-client-id --query value -otsv)
 
+# copy existing data admin whitelist json file from entitlements-azure repo at src/main/resources/DataAdminServiceAccountsList.json
+
 # Execute the migration
 python3 migrate.py
 
