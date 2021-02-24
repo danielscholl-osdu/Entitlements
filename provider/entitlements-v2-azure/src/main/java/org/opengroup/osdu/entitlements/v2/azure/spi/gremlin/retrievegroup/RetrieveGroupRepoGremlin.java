@@ -1,14 +1,13 @@
 package org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.retrievegroup;
 
-import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
+import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.azure.model.NodeVertex;
-import org.opengroup.osdu.entitlements.v2.azure.service.GraphTraversalSourceUtilService;
 import org.opengroup.osdu.entitlements.v2.azure.service.VertexUtilService;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.EdgePropertyNames;
@@ -25,12 +24,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Repository
@@ -38,7 +39,6 @@ import java.util.stream.Collectors;
 public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
     private final GremlinConnector gremlinConnector;
     private final VertexUtilService vertexUtilService;
-    private final GraphTraversalSourceUtilService graphTraversalSourceUtilService;
 
     @Override
     public EntityNode groupExistenceValidation(String groupId, String partitionId) {
@@ -86,7 +86,7 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
     @Override
     public List<ParentReference> loadDirectParents(String partitionId, String... nodeId) {
         final List<ParentReference> resultList = new ArrayList<>();
-        // TODO: Handle all nodeId's, not just the first
+        // TODO: Handle all nodeId's, not just the first. Use '.or(buildOrTraversalsByNodeIds(...))'
         String singleNodeId = nodeId[0];
         Traversal<Vertex, Vertex> traversal = gremlinConnector.getGraphTraversalSource().V()
                 .has(VertexPropertyNames.NODE_ID, singleNodeId)
@@ -94,7 +94,7 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
                 .outV()
                 .has(VertexPropertyNames.DATA_PARTITION_ID, partitionId);
         gremlinConnector.getVertices(traversal)
-                .forEach(v ->  resultList.add(vertexUtilService.createParentReference(v)));
+                .forEach(v -> resultList.add(vertexUtilService.createParentReference(v)));
         return resultList;
     }
 
@@ -118,7 +118,7 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
     @Override
     public List<ChildrenReference> loadDirectChildren(String partitionId, String... nodeId) {
         final List<ChildrenReference> resultList = new ArrayList<>();
-        // TODO: Handle all nodeId's, not just the first
+        // TODO: Handle all nodeId's, not just the first. Use '.or(buildOrTraversalsByNodeIds(...))'
         String singleNodeId = nodeId[0];
         Traversal<Vertex, Map<String, Object>> traversal = gremlinConnector.getGraphTraversalSource().V()
                 .has(VertexPropertyNames.NODE_ID, singleNodeId)
@@ -129,7 +129,7 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
                 .has(VertexPropertyNames.DATA_PARTITION_ID, partitionId)
                 .select(StepLabel.EDGE, StepLabel.VERTEX);
         gremlinConnector.getVerticesAndEdges(traversal)
-            .forEach(kv ->  resultList.add(vertexUtilService.createChildReference(kv)));
+                .forEach(kv -> resultList.add(vertexUtilService.createChildReference(kv)));
         return resultList;
     }
 
@@ -138,25 +138,21 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
         return ChildrenTreeDto.builder().childrenUserIds(new ArrayList<>()).build();
     }
 
-    /*
-      TODO: US https://dev.azure.com/slb-swt/data-at-rest/_workitems/edit/599488 - Research on Gremlin solution to optimize AppId filter
-     */
     @Override
-    public Set<ParentReference> filterParentsByAppID(
+    public Set<ParentReference> filterParentsByAppId(
             Set<ParentReference> parentReferences, String partitionId, String appId) {
-        Set<ParentReference> filteredParentReferences = new HashSet<>();
-        Gson GSON = new Gson();
-        for (ParentReference pr : parentReferences) {
-            NodeVertex parentNodeVertex = graphTraversalSourceUtilService.getVertex(pr.getId(), pr.getDataPartitionId());
-            Set<String> appIds = GSON.fromJson(parentNodeVertex.getAppIds(), Set.class);
-            if (appIds.isEmpty()) {
-                filteredParentReferences.add(pr);
-            }
-            else if (appIds.contains(appId)) {
-                filteredParentReferences.add(pr);
-            }
-        }
-        return filteredParentReferences;
+        Map<String, ParentReference> parentReferenceById = parentReferences.stream()
+                .collect(Collectors.toMap(ParentReference::getId, Function.identity()));
+        String[] nodeIds = parentReferenceById.keySet().toArray(new String[0]);
+        GraphTraversal<Vertex, Vertex> graphTraversal = gremlinConnector.getGraphTraversalSource().V()
+                .has(VertexPropertyNames.DATA_PARTITION_ID, partitionId)
+                .or(buildOrTraversalsByNodeIds(nodeIds))
+                .or(__.hasNot(VertexPropertyNames.APP_ID), __.has(VertexPropertyNames.APP_ID, appId));
+        return gremlinConnector.getVertices(graphTraversal).stream()
+                .map(NodeVertex::getNodeId)
+                .flatMap(nodeId -> Arrays.stream(nodeIds).filter(nodeId::equals))
+                .map(parentReferenceById::get)
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -177,5 +173,11 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
     private int calculateMaxDepth() {
         // TODO: 584695 Implement this method
         return 0;
+    }
+
+    private Traversal<?, ?>[] buildOrTraversalsByNodeIds(String... nodeIds) {
+        return Arrays.stream(nodeIds)
+                .map(id -> __.has(VertexPropertyNames.NODE_ID, id))
+                .toArray(Traversal[]::new);
     }
 }

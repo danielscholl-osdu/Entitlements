@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.logging.audit.AuditStatus;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
-import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupServiceDto;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
+import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupServiceDto;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.stereotype.Service;
 
@@ -36,14 +36,12 @@ public class ListGroupService {
         log.info(String.format("ListGroupService#run cache look up done timestamp: %d", System.currentTimeMillis()));
         try {
             String serviceAccount = requestInfo.getTenantInfo().getServiceAccount();
-            // TODO: Uncomment when AppId filter is optimized. The current logic is RU expensive,
-            //  so we temporarily disable for now. US https://dev.azure.com/slb-swt/data-at-rest/_workitems/edit/599488
-//            if (serviceAccount.equalsIgnoreCase(requesterId) || Strings.isNullOrEmpty(listGroupServiceDto.getAppId())) {
+            if (serviceAccount.equalsIgnoreCase(requesterId) || Strings.isNullOrEmpty(listGroupServiceDto.getAppId())) {
                 auditLogger.listGroup(AuditStatus.SUCCESS, fetchParentIds(groups));
                 return groups;
-//            } else {
-//                return filterGroupsByAppId(groups, listGroupServiceDto);
-//            }
+            } else {
+                return filterGroupsByAppId(groups, listGroupServiceDto);
+            }
         } catch (Exception e) {
             auditLogger.listGroup(AuditStatus.FAILURE, new ArrayList<>());
             throw e;
@@ -56,7 +54,7 @@ public class ListGroupService {
         log.info(String.format("Filtering groups based on caller's appId: %s", appId));
         Set<ParentReference> accessibleGroups = new HashSet<>();
         listGroupServiceDto.getPartitionIds().forEach(partitionId ->
-                accessibleGroups.addAll(retrieveGroupRepo.filterParentsByAppID(groups, partitionId, appId)));
+                accessibleGroups.addAll(retrieveGroupRepo.filterParentsByAppId(groups, partitionId, appId)));
         auditLogger.listGroup(AuditStatus.SUCCESS, fetchParentIds(accessibleGroups));
         log.info(String.format(
                 "ListGroupService#run cache app id filter done timestamp: %d", System.currentTimeMillis()));

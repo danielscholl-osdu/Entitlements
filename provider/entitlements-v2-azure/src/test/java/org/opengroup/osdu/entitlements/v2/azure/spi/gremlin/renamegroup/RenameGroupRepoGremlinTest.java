@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 public class RenameGroupRepoGremlinTest {
     private static final String TEST_PARTITION_ID = "dp";
     private static final String TEST_DOMAIN = TEST_PARTITION_ID + ".contoso.com";
-    private static final String TEST_APP_IDS = "[App1,App2]";
 
     @Autowired
     private RenameGroupRepo renameGroupRepo;
@@ -152,7 +151,8 @@ public class RenameGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, name)
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, TEST_PARTITION_ID)
-                .property(VertexPropertyNames.APP_IDS, TEST_APP_IDS)
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
     }
 

@@ -133,8 +133,6 @@ public class ListGroupServiceTests {
         verify(auditLogger).listGroup(eq(AuditStatus.SUCCESS), any());
     }
 
-    // TODO: Unignore when AppId filter is enabled. US https://dev.azure.com/slb-swt/data-at-rest/_workitems/edit/599488
-    @Ignore
     @Test
     public void should_filterByAppId_ifNormalCaller() {
         List<String> partitionIds = Arrays.asList("dp", "dp1");
@@ -162,8 +160,8 @@ public class ListGroupServiceTests {
         Set<ParentReference> dp1FilteredParentRefs = new HashSet<>();
         dp1FilteredParentRefs.add(ParentReference.builder().id("g5@dp.domain.com").name("g5").dataPartitionId("dp1").build());
 
-        when(retrieveGroupRepo.filterParentsByAppID(any(), eq("dp"), eq(listGroupServiceDto.getAppId()))).thenReturn(dpFilteredParentRefs);
-        when(retrieveGroupRepo.filterParentsByAppID(any(), eq("dp1"), eq(listGroupServiceDto.getAppId()))).thenReturn(dp1FilteredParentRefs);
+        when(retrieveGroupRepo.filterParentsByAppId(any(), eq("dp"), eq(listGroupServiceDto.getAppId()))).thenReturn(dpFilteredParentRefs);
+        when(retrieveGroupRepo.filterParentsByAppId(any(), eq("dp1"), eq(listGroupServiceDto.getAppId()))).thenReturn(dp1FilteredParentRefs);
 
         Set<ParentReference> parentReferences = listGroupService.getGroups(listGroupServiceDto);
 

@@ -1,24 +1,31 @@
 package org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.updateappids;
 
-import org.opengroup.osdu.entitlements.v2.azure.service.GraphTraversalSourceUtilService;
+import lombok.RequiredArgsConstructor;
+import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
+import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__;
+import org.apache.tinkerpop.gremlin.structure.Vertex;
+import org.apache.tinkerpop.gremlin.structure.VertexProperty.Cardinality;
+import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPropertyNames;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.spi.updateappids.UpdateAppIdsRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Set;
 
 @Repository
+@RequiredArgsConstructor
 public class UpdateAppIdsRepoGremlin implements UpdateAppIdsRepo {
-
-    @Autowired
-    private GraphTraversalSourceUtilService graphTraversalSourceUtilService;
-
+    private final GremlinConnector gremlinConnector;
 
     @Override
-    public void run(EntityNode groupNode, Set<String> allowedAppIds) {
-        String existingNodeId = groupNode.getNodeId();
-        graphTraversalSourceUtilService.updateProperty(existingNodeId, VertexPropertyNames.APP_IDS, allowedAppIds.toString());
+    public void updateAppIds(EntityNode groupNode, Set<String> appIds) {
+        GraphTraversal<Vertex, Vertex> traversal = gremlinConnector.getGraphTraversalSource().V()
+                .has(VertexPropertyNames.NODE_ID, groupNode.getNodeId())
+                .has(VertexPropertyNames.DATA_PARTITION_ID, groupNode.getDataPartitionId())
+                .sideEffect(__.properties(VertexPropertyNames.APP_ID).drop())
+                .barrier();
+        appIds.forEach(appId -> traversal.property(Cardinality.list, VertexPropertyNames.APP_ID, appId));
+        gremlinConnector.updateVertex(traversal);
     }
 }

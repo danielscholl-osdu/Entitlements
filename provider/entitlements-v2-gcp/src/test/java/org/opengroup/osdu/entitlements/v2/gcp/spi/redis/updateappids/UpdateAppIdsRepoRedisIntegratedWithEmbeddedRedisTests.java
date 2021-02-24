@@ -92,7 +92,7 @@ public class UpdateAppIdsRepoRedisIntegratedWithEmbeddedRedisTests {
         commands.select(config.getPartitionAppIdDb());
         commands.sadd("no-app-id", "data.x@dp.domain.com");
         EntityNode groupNode = EntityNode.builder().nodeId("data.x@dp.domain.com").name("data.x").type(NodeType.GROUP).dataPartitionId("dp").build();
-        updateAppIdsRepoRedis.run(groupNode, new HashSet<>(Arrays.asList("app1", "app2")));
+        updateAppIdsRepoRedis.updateAppIds(groupNode, new HashSet<>(Arrays.asList("app1", "app2")));
 
         commands.select(config.getPartitionEntityNodeDb());
         assertEquals("{\"appIds\":[\"app2\",\"app1\"],\"name\":\"data.x\",\"description\":\"\",\"nodeId\":\"data.x@dp.domain.com\",\"type\":\"GROUP\",\"dataPartitionId\":\"dp\"}", commands.get("data.x@dp.domain.com"));

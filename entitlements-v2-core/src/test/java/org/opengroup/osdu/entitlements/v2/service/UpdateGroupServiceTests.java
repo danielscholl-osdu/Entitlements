@@ -174,7 +174,7 @@ public class UpdateGroupServiceTests {
         List<String> appIds = new ArrayList<>();
         appIds.add("app1");
         appIds.add("app2");
-        Mockito.verify(updateAppIdsRepo).run(groupNode, new HashSet<>(appIds));
+        Mockito.verify(updateAppIdsRepo).updateAppIds(groupNode, new HashSet<>(appIds));
         Assert.assertNotNull(responseDto);
         Assert.assertEquals(appIds, responseDto.getAppIds());
     }
@@ -217,7 +217,7 @@ public class UpdateGroupServiceTests {
         appIds.add("app2");
 
         Mockito.verify(renameGroupRepo).run(groupNode, newGroupName);
-        Mockito.verify(updateAppIdsRepo).run(groupNode, new HashSet<>(appIds));
+        Mockito.verify(updateAppIdsRepo).updateAppIds(groupNode, new HashSet<>(appIds));
         Assert.assertNotNull(responseDto);
         Assert.assertEquals(appIds, responseDto.getAppIds());
         Assert.assertEquals("users.test.x@dp.domain", responseDto.getEmail());
