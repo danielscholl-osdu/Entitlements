@@ -21,7 +21,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -61,7 +63,14 @@ public class CreateGroupRepoGremlinTest {
         Assert.assertEquals("name", vertex.value(VertexPropertyNames.NAME));
         Assert.assertEquals("desc", vertex.value(VertexPropertyNames.DESCRIPTION));
         Assert.assertEquals("dp", vertex.value(VertexPropertyNames.DATA_PARTITION_ID));
-        Assert.assertEquals("[App2, App1]", vertex.value(VertexPropertyNames.APP_IDS));
+
+        Set<String> appIds = new HashSet<>();
+        Iterator<String> values = vertex.values(VertexPropertyNames.APP_ID);
+        while (values.hasNext()) {
+            appIds.add(values.next());
+        }
+
+        Assert.assertEquals(new HashSet<>(Arrays.asList("App1", "App2")), appIds);
         ChildrenReference childrenReference = ChildrenReference.builder()
                 .id("test@test.com").type(NodeType.USER).dataPartitionId("dp").role(Role.OWNER).build();
         Assert.assertTrue(retrieveGroupRepo.hasDirectChild(entityNode, childrenReference));
@@ -89,7 +98,14 @@ public class CreateGroupRepoGremlinTest {
         Assert.assertEquals("name", vertex.value(VertexPropertyNames.NAME));
         Assert.assertEquals("desc", vertex.value(VertexPropertyNames.DESCRIPTION));
         Assert.assertEquals("dp", vertex.value(VertexPropertyNames.DATA_PARTITION_ID));
-        Assert.assertEquals("[App2, App1]", vertex.value(VertexPropertyNames.APP_IDS));
+
+        Set<String> appIds = new HashSet<>();
+        Iterator<String> values = vertex.values(VertexPropertyNames.APP_ID);
+        while (values.hasNext()) {
+            appIds.add(values.next());
+        }
+
+        Assert.assertEquals(new HashSet<>(Arrays.asList("App1", "App2")), appIds);
         ChildrenReference childrenReference = ChildrenReference.builder()
                 .id("test@test.com").type(NodeType.USER).dataPartitionId("dp").role(Role.OWNER).build();
         Assert.assertTrue(retrieveGroupRepo.hasDirectChild(entityNode, childrenReference));

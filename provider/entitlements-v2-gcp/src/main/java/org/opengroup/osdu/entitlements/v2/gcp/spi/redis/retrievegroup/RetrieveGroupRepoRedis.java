@@ -318,7 +318,7 @@ public class RetrieveGroupRepoRedis implements RetrieveGroupRepo {
      * inaccessible groups and filter to save time. (redis benchmark shows SMEMBERS of a 10K set takes 200ms at 99%, SUNION is worse)
      */
     @Override
-    public Set<ParentReference> filterParentsByAppID(Set<ParentReference> parentReferences, String partitionId, String appId) {
+    public Set<ParentReference> filterParentsByAppId(Set<ParentReference> parentReferences, String partitionId, String appId) {
         RedisConnectionPool connectionPool = this.redisConnector.getPartitionRedisConnectionPool(partitionId);
         StatefulRedisConnection<String, String> connection = connectionPool.getConnection();
         try {

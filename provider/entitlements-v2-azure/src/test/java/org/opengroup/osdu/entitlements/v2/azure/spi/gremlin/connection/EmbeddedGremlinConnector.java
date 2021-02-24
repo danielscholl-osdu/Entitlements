@@ -17,6 +17,7 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -98,7 +99,7 @@ public class EmbeddedGremlinConnector implements GremlinConnector {
             properties.put(VertexPropertyNames.NAME, createWrapperForValue(vertex.value(VertexPropertyNames.NAME)));
             properties.put(VertexPropertyNames.DESCRIPTION, createWrapperForValue(vertex.value(VertexPropertyNames.DESCRIPTION)));
             properties.put(VertexPropertyNames.DATA_PARTITION_ID, createWrapperForValue(vertex.value(VertexPropertyNames.DATA_PARTITION_ID)));
-            properties.put(VertexPropertyNames.APP_IDS, createWrapperForValue(vertex.value(VertexPropertyNames.APP_IDS)));
+            properties.put(VertexPropertyNames.APP_ID, createWrapperForValues(vertex.values(VertexPropertyNames.APP_ID)));
         }
         return NodeVertex.builder()
                 .id(vertex.id().toString())
@@ -127,9 +128,20 @@ public class EmbeddedGremlinConnector implements GremlinConnector {
         return nodeVertexEdgeMap;
     }
 
-    private List<Map<String, String>> createWrapperForValue(final String value) {
-        Map<String, String> valueMap = new HashMap<>();
-        valueMap.put("value", value);
+    private List<Map<String, String>> createWrapperForValue(String value) {
+        Map<String, String> valueMap = new HashMap<String, String>() {{
+            put("value", value);
+        }};
         return Collections.singletonList(valueMap);
+    }
+
+    private List<Map<String, String>> createWrapperForValues(Iterator<String> values) {
+        List<Map<String, String>> list = new ArrayList<>();
+        while (values.hasNext()) {
+            list.add(new HashMap<String, String>() {{
+                put("value", values.next());
+            }});
+        }
+        return list;
     }
 }

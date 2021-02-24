@@ -50,7 +50,8 @@ public class GraphTraversalSourceUtilServiceTest {
                 .property(VertexPropertyNames.NAME, "data.x")
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
 
         graphTraversalSource.addV(NodeType.GROUP.toString())
@@ -58,7 +59,8 @@ public class GraphTraversalSourceUtilServiceTest {
                 .property(VertexPropertyNames.NAME, "member1")
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp1")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
 
         graphTraversalSource.addV(NodeType.GROUP.toString())
@@ -66,7 +68,8 @@ public class GraphTraversalSourceUtilServiceTest {
                 .property(VertexPropertyNames.NAME, "member1")
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp2")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
 
 
@@ -97,7 +100,8 @@ public class GraphTraversalSourceUtilServiceTest {
                 .property(VertexPropertyNames.NAME, "data.x")
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
 
         graphTraversalSource.addV(NodeType.GROUP.toString())
@@ -105,7 +109,8 @@ public class GraphTraversalSourceUtilServiceTest {
                 .property(VertexPropertyNames.NAME, "data.y")
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
         AddEdgeDto addEdgeDto = AddEdgeDto.builder()
                 .childNodeId("data.y@dp.domain.com")
@@ -131,7 +136,8 @@ public class GraphTraversalSourceUtilServiceTest {
                 .property(VertexPropertyNames.NAME, "data.x")
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
 
         graphTraversalSource.addV(NodeType.GROUP.toString())
@@ -139,7 +145,8 @@ public class GraphTraversalSourceUtilServiceTest {
                 .property(VertexPropertyNames.NAME, "data.y")
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
 
         AddEdgeDto addEdgeDto = AddEdgeDto.builder()
@@ -169,7 +176,7 @@ public class GraphTraversalSourceUtilServiceTest {
         Assert.assertEquals("name", vertex.getName());
         Assert.assertEquals("desc", vertex.getDescription());
         Assert.assertEquals("dp", vertex.getDataPartitionId());
-        Assert.assertEquals("[App2, App1]", vertex.getAppIds());
+        Assert.assertEquals(new HashSet<>(Arrays.asList("App1", "App2")), vertex.getAppIds());
     }
 
     @Test
@@ -185,7 +192,7 @@ public class GraphTraversalSourceUtilServiceTest {
         Assert.assertEquals("name", vertex.getName());
         Assert.assertEquals("desc", vertex.getDescription());
         Assert.assertEquals("dp", vertex.getDataPartitionId());
-        Assert.assertEquals("[App2, App1]", vertex.getAppIds());
+        Assert.assertEquals(new HashSet<>(Arrays.asList("App1", "App2")), vertex.getAppIds());
     }
 
     @Test
@@ -223,24 +230,6 @@ public class GraphTraversalSourceUtilServiceTest {
     }
 
     @Test
-    public void shouldChangeAppIdsSuccessfully() {
-        GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
-
-        graphTraversalSource.addV(NodeType.GROUP.toString())
-                .property(VertexPropertyNames.NODE_ID, "data.x@dp.domain.com")
-                .property(VertexPropertyNames.NAME, "data.x")
-                .property(VertexPropertyNames.DESCRIPTION, "")
-                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
-                .next();
-
-        graphTraversalSourceUtilService.updateProperty("data.x@dp.domain.com", VertexPropertyNames.APP_IDS, "[TestApp1,TestApp2]");
-        Vertex vertex = graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, "data.x@dp.domain.com").next();
-
-        Assert.assertEquals("[TestApp1,TestApp2]", vertex.value(VertexPropertyNames.APP_IDS));
-    }
-
-    @Test
     public void shouldChangeNodeIdSuccessfully() {
         GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
 
@@ -249,7 +238,8 @@ public class GraphTraversalSourceUtilServiceTest {
                 .property(VertexPropertyNames.NAME, "data.x")
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
 
         graphTraversalSourceUtilService.updateProperty("data.x@dp.domain.com", VertexPropertyNames.NODE_ID, "data.y@dp.domain.com");

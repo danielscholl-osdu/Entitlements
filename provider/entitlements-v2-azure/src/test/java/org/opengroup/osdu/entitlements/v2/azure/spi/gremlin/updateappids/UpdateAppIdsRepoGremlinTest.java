@@ -25,6 +25,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,7 +35,6 @@ import java.util.stream.Collectors;
 public class UpdateAppIdsRepoGremlinTest {
     private static final String TEST_PARTITION_ID = "dp";
     private static final String TEST_DOMAIN = TEST_PARTITION_ID + ".contoso.com";
-    private static final String TEST_APP_IDS = "[App1,App2]";
 
     @Autowired
     private UpdateAppIdsRepo updateAppIdsRepo;
@@ -88,11 +88,18 @@ public class UpdateAppIdsRepoGremlinTest {
         allowedAppIds.add("testApp1");
         allowedAppIds.add("testApp2");
 
-        updateAppIdsRepo.run(groupNode, allowedAppIds);
-        Assert.assertEquals("[testApp1, testApp2]", graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, "users.x@dp.contoso.com")
+        updateAppIdsRepo.updateAppIds(groupNode, allowedAppIds);
+
+        Set<String> appIds = new HashSet<>();
+        Iterator<String> values = graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, "users.x@dp.contoso.com")
                 .has(VertexPropertyNames.DATA_PARTITION_ID, "dp")
                 .next()
-                .value(VertexPropertyNames.APP_IDS));
+                .values(VertexPropertyNames.APP_ID);
+        while (values.hasNext()) {
+            appIds.add(values.next());
+        }
+
+        Assert.assertEquals(new HashSet<>(Arrays.asList("testApp1", "testApp2")), appIds);
         List<Vertex> usersYMembers = gremlinConnector.getGraphTraversalSource().V().has(VertexPropertyNames.NODE_ID, "users.x@dp.contoso.com")
                 .outE(EdgePropertyNames.EDGE_LB)
                 .has(EdgePropertyNames.ROLE, Role.MEMBER.getValue())
@@ -139,7 +146,8 @@ public class UpdateAppIdsRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, name)
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, TEST_PARTITION_ID)
-                .property(VertexPropertyNames.APP_IDS, TEST_APP_IDS)
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
     }
 
@@ -169,12 +177,18 @@ public class UpdateAppIdsRepoGremlinTest {
         allowedAppIds.add("testApp1");
         allowedAppIds.add("testApp2");
 
-        updateAppIdsRepo.run(groupNode, allowedAppIds);
+        updateAppIdsRepo.updateAppIds(groupNode, allowedAppIds);
 
-        Assert.assertEquals("[testApp1, testApp2]", graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, "users.x@dp.contoso.com")
+        Set<String> appIds = new HashSet<>();
+        Iterator<String> values = graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, "users.x@dp.contoso.com")
                 .has(VertexPropertyNames.DATA_PARTITION_ID, "dp")
                 .next()
-                .value(VertexPropertyNames.APP_IDS));
+                .values(VertexPropertyNames.APP_ID);
+        while (values.hasNext()) {
+            appIds.add(values.next());
+        }
+
+        Assert.assertEquals(new HashSet<>(Arrays.asList("testApp1", "testApp2")), appIds);
         List<Vertex> members = gremlinConnector.getGraphTraversalSource().V().has(VertexPropertyNames.NODE_ID, "users.x@dp.contoso.com")
                 .outE(EdgePropertyNames.EDGE_LB)
                 .inV()

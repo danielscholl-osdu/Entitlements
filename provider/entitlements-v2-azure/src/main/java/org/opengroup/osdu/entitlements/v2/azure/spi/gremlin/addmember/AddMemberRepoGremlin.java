@@ -1,14 +1,13 @@
 package org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.addmember;
 
+import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.entitlements.v2.azure.service.AddEdgeDto;
 import org.opengroup.osdu.entitlements.v2.azure.service.GraphTraversalSourceUtilService;
-import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
+import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
-import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.spi.Operation;
 import org.opengroup.osdu.entitlements.v2.spi.addmember.AddMemberRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Deque;
@@ -16,13 +15,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Repository
+@RequiredArgsConstructor
 public class AddMemberRepoGremlin implements AddMemberRepo {
-
-    @Autowired
-    private GraphTraversalSourceUtilService graphTraversalSourceUtilService;
-
-    @Autowired
-    private GremlinConnector gremlinConnector;
+    private final GraphTraversalSourceUtilService graphTraversalSourceUtilService;
 
     @Override
     public Set<String> addMember(EntityNode groupNode, AddMemberRepoDto addMemberRepoDto) {

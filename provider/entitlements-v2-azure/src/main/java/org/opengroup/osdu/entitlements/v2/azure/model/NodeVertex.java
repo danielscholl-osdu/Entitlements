@@ -3,9 +3,14 @@ package org.opengroup.osdu.entitlements.v2.azure.model;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Generated;
+import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPropertyNames;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -17,22 +22,25 @@ public class NodeVertex {
     private Map<String, List<Map<String, String>>> properties;
 
     public String getNodeId() {
-        return properties.get("nodeId").get(0).get("value");
+        return properties.get(VertexPropertyNames.NODE_ID).get(0).get("value");
     }
 
     public String getName() {
-        return properties.get("name").get(0).get("value");
+        return properties.get(VertexPropertyNames.NAME).get(0).get("value");
     }
 
     public String getDescription() {
-        return properties.get("description").get(0).get("value");
+        return properties.get(VertexPropertyNames.DESCRIPTION).get(0).get("value");
     }
 
     public String getDataPartitionId() {
-        return properties.get("dataPartitionId").get(0).get("value");
+        return properties.get(VertexPropertyNames.DATA_PARTITION_ID).get(0).get("value");
     }
 
-    public String getAppIds() {
-        return properties.get("appIds").get(0).get("value");
+    public Set<String> getAppIds() {
+        return Optional.ofNullable(properties.get(VertexPropertyNames.APP_ID))
+                .orElseGet(Collections::emptyList).stream()
+                .map(appId -> appId.get("value"))
+                .collect(Collectors.toSet());
     }
 }

@@ -59,7 +59,7 @@ public class UpdateGroupService {
 
         if (updateGroupServiceDto.getAppIdsOperation()!= null) {
             List<String> allowedAppIdsList = updateGroupServiceDto.getAppIdsOperation().getValue();
-            updateAppIdsRepo.run(existingGroupEntityNode, new HashSet<>(allowedAppIdsList));
+            updateAppIdsRepo.updateAppIds(existingGroupEntityNode, new HashSet<>(allowedAppIdsList));
             result.setAppIds(allowedAppIdsList);
         }
 

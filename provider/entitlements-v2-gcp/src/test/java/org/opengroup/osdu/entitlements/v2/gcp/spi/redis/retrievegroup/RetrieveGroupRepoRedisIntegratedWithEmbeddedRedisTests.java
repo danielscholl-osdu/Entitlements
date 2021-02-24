@@ -418,7 +418,7 @@ users.x@dp.domain.com  users.y@dp.domain.com    member2@xxx.com       member2@xx
         parentReferences.add(ParentReference.builder().id("users@dp.domain.com").build());
 
 
-        Set<ParentReference> res = retrieveGroupRepoRedis.filterParentsByAppID(parentReferences, "dp", appId);
+        Set<ParentReference> res = retrieveGroupRepoRedis.filterParentsByAppId(parentReferences, "dp", appId);
 
         assertEquals(3, res.size());
         assertEquals(0, res.stream().filter(r -> r.getId().equalsIgnoreCase("users.y@dp.domain.com")).count());
@@ -439,7 +439,7 @@ users.x@dp.domain.com  users.y@dp.domain.com    member2@xxx.com       member2@xx
         parentReferences.add(ParentReference.builder().id("users@dp.domain.com").build());
 
 
-        Set<ParentReference> res = retrieveGroupRepoRedis.filterParentsByAppID(parentReferences, "dp", appId);
+        Set<ParentReference> res = retrieveGroupRepoRedis.filterParentsByAppId(parentReferences, "dp", appId);
 
         assertEquals(3, res.size());
     }
@@ -458,7 +458,7 @@ users.x@dp.domain.com  users.y@dp.domain.com    member2@xxx.com       member2@xx
         parentReferences.add(ParentReference.builder().id("users@dp.domain.com").build());
 
 
-        Set<ParentReference> res = retrieveGroupRepoRedis.filterParentsByAppID(parentReferences, "dp", appId);
+        Set<ParentReference> res = retrieveGroupRepoRedis.filterParentsByAppId(parentReferences, "dp", appId);
 
         assertEquals(3, res.size());
     }

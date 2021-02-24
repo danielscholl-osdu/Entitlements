@@ -42,13 +42,13 @@ public class ListMemberRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "groupId1")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[]").next();
+                .next();
         Vertex group2Vertex = graphTraversalSource.addV(NodeType.GROUP.toString())
                 .property(VertexPropertyNames.NODE_ID, "groupId2")
                 .property(VertexPropertyNames.NAME, "groupId1")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[]").next();
+                .next();
         Vertex childVertex = graphTraversalSource.addV(NodeType.USER.toString())
                 .property(VertexPropertyNames.NODE_ID, "userId")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp").next();

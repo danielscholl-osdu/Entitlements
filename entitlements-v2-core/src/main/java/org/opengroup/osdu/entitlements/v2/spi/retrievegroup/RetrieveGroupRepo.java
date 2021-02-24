@@ -32,7 +32,7 @@ public interface RetrieveGroupRepo {
 
     ChildrenTreeDto loadAllChildrenUsers(EntityNode node);
 
-    Set<ParentReference> filterParentsByAppID(Set<ParentReference> parentReferences, String partitionId, String appId);
+    Set<ParentReference> filterParentsByAppId(Set<ParentReference> parentReferences, String partitionId, String appId);
 
     Set<String> getGroupOwners(String partitionId, String nodeId);
 

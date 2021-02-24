@@ -2,6 +2,7 @@ package org.opengroup.osdu.entitlements.v2.azure.service;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
+import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__;
 import org.apache.tinkerpop.gremlin.structure.Edge;
@@ -45,12 +46,12 @@ public class GraphTraversalSourceUtilService {
 
     public NodeVertex createGroupVertexFromEntityNode(EntityNode entityNode) {
         final GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
-        Traversal<Vertex, Vertex> traversal = graphTraversalSource.addV(entityNode.getType().toString())
+        GraphTraversal<Vertex, Vertex> traversal = graphTraversalSource.addV(entityNode.getType().toString())
                 .property(VertexPropertyNames.NODE_ID, entityNode.getNodeId())
                 .property(VertexPropertyNames.NAME, entityNode.getName())
                 .property(VertexPropertyNames.DESCRIPTION, entityNode.getDescription())
-                .property(VertexPropertyNames.DATA_PARTITION_ID, entityNode.getDataPartitionId())
-                .property(VertexPropertyNames.APP_IDS, entityNode.getAppIds().toString());
+                .property(VertexPropertyNames.DATA_PARTITION_ID, entityNode.getDataPartitionId());
+        entityNode.getAppIds().forEach(appId -> traversal.property(VertexPropertyNames.APP_ID, appId));
         return gremlinConnector.addVertex(traversal);
     }
 

@@ -62,7 +62,9 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "users.test")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]").next();
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
+                .next();
         assertNotNull(retrieveGroupRepo.groupExistenceValidation("users.test@domain.com", "dp"));
     }
 
@@ -92,7 +94,9 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "users.test")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]").next();
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
+                .next();
         Optional<EntityNode> groupNode = retrieveGroupRepo.getEntityNode("users.test@domain.com", "dp");
         assertTrue(groupNode.isPresent());
         assertEquals(NodeType.GROUP, groupNode.get().getType());
@@ -124,7 +128,8 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "users.x")
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
 
         graphTraversalSource.addV(NodeType.GROUP.toString())
@@ -132,7 +137,8 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "users.y")
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
 
         graphTraversalSource.addV(NodeType.GROUP.toString())
@@ -140,7 +146,8 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "data.x")
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
 
         graphTraversalSource.addV(NodeType.GROUP.toString())
@@ -148,7 +155,8 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "data.y")
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
 
         graphTraversalSource.addV(NodeType.USER.toString())
@@ -185,7 +193,8 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "users.x")
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
 
         graphTraversalSource.addV(NodeType.GROUP.toString())
@@ -193,7 +202,8 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "users.y")
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
 
         graphTraversalSource.addV(NodeType.GROUP.toString())
@@ -201,7 +211,8 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "data.x")
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
 
         graphTraversalSource.addV(NodeType.GROUP.toString())
@@ -209,7 +220,8 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "data.y")
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
 
         graphTraversalSource.addV(NodeType.GROUP.toString())
@@ -217,7 +229,8 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "data.z")
                 .property(VertexPropertyNames.DESCRIPTION, "")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[App1,App2]")
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
 
         graphTraversalSource.addV(NodeType.USER.toString())
@@ -352,12 +365,12 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "groupId1")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[]").next();
+                .next();
         Vertex group2Vertex = graphTraversalSource.addV(NodeType.GROUP.toString()).property(VertexPropertyNames.NODE_ID, "groupId2")
                 .property(VertexPropertyNames.NAME, "groupId2")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[]").next();
+                .next();
         Vertex childVertex = graphTraversalSource.addV(NodeType.USER.toString()).property(VertexPropertyNames.NODE_ID, "userId")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp").next();
         group1Vertex.addEdge(EdgePropertyNames.EDGE_LB, childVertex, EdgePropertyNames.ROLE, Role.OWNER.getValue());
@@ -395,25 +408,25 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "users.x")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[]").next();
+                .next();
         Vertex users2Vertex = graphTraversalSource.addV(NodeType.GROUP.toString())
                 .property(VertexPropertyNames.NODE_ID, "users.y@dp.domain.com")
                 .property(VertexPropertyNames.NAME, "users.y")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[]").next();
+                .next();
         Vertex data1Vertex = graphTraversalSource.addV(NodeType.GROUP.toString())
                 .property(VertexPropertyNames.NODE_ID, "data.x@dp.domain.com")
                 .property(VertexPropertyNames.NAME, "data.x")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[]").next();
+                .next();
         Vertex data2Vertex = graphTraversalSource.addV(NodeType.GROUP.toString())
                 .property(VertexPropertyNames.NODE_ID, "data.y@dp.domain.com")
                 .property(VertexPropertyNames.NAME, "data.y")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[]").next();
+                .next();
         Vertex childVertex = graphTraversalSource.addV(NodeType.USER.toString()).property(VertexPropertyNames.NODE_ID, "member@xxx.com")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp").next();
 
@@ -439,25 +452,29 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "groupId1")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[]").next();
+                .next();
         Vertex group2Vertex = graphTraversalSource.addV(NodeType.GROUP.toString())
                 .property(VertexPropertyNames.NODE_ID, "groupId2")
                 .property(VertexPropertyNames.NAME, "groupId2")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[appid]").next();
+                .property(VertexPropertyNames.APP_ID, "appid")
+                .next();
         Vertex group3Vertex = graphTraversalSource.addV(NodeType.GROUP.toString())
                 .property(VertexPropertyNames.NODE_ID, "groupId3")
                 .property(VertexPropertyNames.NAME, "groupId3")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[otherappid]").next();
+                .property(VertexPropertyNames.APP_ID, "otherappid")
+                .next();
         Vertex group4Vertex = graphTraversalSource.addV(NodeType.GROUP.toString())
                 .property(VertexPropertyNames.NODE_ID, "groupId4")
                 .property(VertexPropertyNames.NAME, "groupId4")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[appid, otherappid]").next();
+                .property(VertexPropertyNames.APP_ID, "appid")
+                .property(VertexPropertyNames.APP_ID, "otherappid")
+                .next();
 
         Set<ParentReference> parentReferences = new HashSet<>();
         parentReferences.add(ParentReference.builder().id(group1Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
@@ -465,7 +482,7 @@ public class RetrieveGroupRepoGremlinTest {
         parentReferences.add(ParentReference.builder().id(group3Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
         parentReferences.add(ParentReference.builder().id(group4Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
 
-        Set<ParentReference> res = retrieveGroupRepo.filterParentsByAppID(parentReferences, "dp", "appid");
+        Set<ParentReference> res = retrieveGroupRepo.filterParentsByAppId(parentReferences, "dp", "appid");
         Assert.assertEquals(3, res.size());
         Assert.assertEquals(0, res.stream().filter(r -> r.getId().equalsIgnoreCase("groupId3")).count());
     }
@@ -478,26 +495,28 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "groupId1")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[]").next();
+                .next();
         Vertex group2Vertex = graphTraversalSource.addV(NodeType.GROUP.toString())
                 .property(VertexPropertyNames.NODE_ID, "groupId2")
                 .property(VertexPropertyNames.NAME, "groupId2")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[appid]").next();
+                .property(VertexPropertyNames.APP_ID, "appid")
+                .next();
         Vertex group3Vertex = graphTraversalSource.addV(NodeType.GROUP.toString())
                 .property(VertexPropertyNames.NODE_ID, "groupId3")
                 .property(VertexPropertyNames.NAME, "groupId3")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[appid]").next();
+                .property(VertexPropertyNames.APP_ID, "appid")
+                .next();
 
         Set<ParentReference> parentReferences = new HashSet<>();
         parentReferences.add(ParentReference.builder().id(group1Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
         parentReferences.add(ParentReference.builder().id(group2Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
         parentReferences.add(ParentReference.builder().id(group3Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
 
-        Set<ParentReference> res = retrieveGroupRepo.filterParentsByAppID(parentReferences, "dp", "appid");
+        Set<ParentReference> res = retrieveGroupRepo.filterParentsByAppId(parentReferences, "dp", "appid");
         Assert.assertEquals(3, res.size());
     }
 
@@ -509,26 +528,26 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "groupId1")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[]").next();
+                .next();
         Vertex group2Vertex = graphTraversalSource.addV(NodeType.GROUP.toString())
                 .property(VertexPropertyNames.NODE_ID, "groupId2")
                 .property(VertexPropertyNames.NAME, "groupId2")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[]").next();
+                .next();
         Vertex group3Vertex = graphTraversalSource.addV(NodeType.GROUP.toString())
                 .property(VertexPropertyNames.NODE_ID, "groupId3")
                 .property(VertexPropertyNames.NAME, "groupId3")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[]").next();
+                .next();
 
         Set<ParentReference> parentReferences = new HashSet<>();
         parentReferences.add(ParentReference.builder().id(group1Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
         parentReferences.add(ParentReference.builder().id(group2Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
         parentReferences.add(ParentReference.builder().id(group3Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
 
-        Set<ParentReference> res = retrieveGroupRepo.filterParentsByAppID(parentReferences, "dp", null);
+        Set<ParentReference> res = retrieveGroupRepo.filterParentsByAppId(parentReferences, "dp", null);
         Assert.assertEquals(3, res.size());
     }
 
@@ -540,19 +559,19 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.NAME, "users.x")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[]").next();
+                .next();
         Vertex users2Vertex = graphTraversalSource.addV(NodeType.GROUP.toString())
                 .property(VertexPropertyNames.NODE_ID, "users.y@dp.domain.com")
                 .property(VertexPropertyNames.NAME, "users.y")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_IDS, "[]").next();
+                .next();
         Vertex users3Vertex = graphTraversalSource.addV(NodeType.GROUP.toString())
                 .property(VertexPropertyNames.NODE_ID, "users.x@dp2.domain.com")
                 .property(VertexPropertyNames.NAME, "users.x")
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp2")
-                .property(VertexPropertyNames.APP_IDS, "[]").next();
+                .next();
         Vertex childVertex = graphTraversalSource.addV(NodeType.USER.toString()).property(VertexPropertyNames.NODE_ID, "member@xxx.com")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp").next();
 

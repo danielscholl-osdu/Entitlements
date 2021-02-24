@@ -35,7 +35,7 @@ public class UpdateAppIdsRepoRedis extends BaseRepo implements UpdateAppIdsRepo 
     private Retry retry;
 
     @Override
-    public void run(EntityNode groupNode, Set<String> allowedAppIds) {
+    public void updateAppIds(EntityNode groupNode, Set<String> allowedAppIds) {
         log.info(String.format("Updating allowed appids for group %s to %s in redis", groupNode, allowedAppIds));
         try {
             executeAppIdUpdate(groupNode, allowedAppIds);

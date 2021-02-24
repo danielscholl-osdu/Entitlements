@@ -17,14 +17,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class VertexUtilService {
     private static final Gson GSON = new Gson();
 
-    @SuppressWarnings("unchecked")
     public EntityNode createMemberNode(NodeVertex vertex) {
         if (NodeType.GROUP.equals(NodeType.valueOf(vertex.getLabel()))) {
             return EntityNode.builder()
@@ -33,7 +31,7 @@ public class VertexUtilService {
                     .name(vertex.getName())
                     .description(vertex.getDescription())
                     .dataPartitionId(vertex.getDataPartitionId())
-                    .appIds(GSON.fromJson(vertex.getAppIds(), Set.class))
+                    .appIds(vertex.getAppIds())
                     .build();
         } else {
             return EntityNode.builder()
