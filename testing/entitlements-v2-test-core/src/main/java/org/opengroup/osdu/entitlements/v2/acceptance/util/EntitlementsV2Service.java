@@ -98,4 +98,16 @@ public class EntitlementsV2Service {
         ClientResponse response = httpClientService.send(requestData);
         Assert.assertEquals(200, response.getStatus());
     }
+
+    public ClientResponse deleteMember(String memberEmail, String token) throws Exception {
+        RequestData requestData = RequestData.builder()
+                .method("DELETE")
+                .relativePath("members/" + memberEmail)
+                .dataPartitionId(configurationService.getTenantId())
+                .token(token)
+                .build();
+        ClientResponse response = httpClientService.send(requestData);
+        Assert.assertTrue(204 == response.getStatus() || 404 == response.getStatus());
+        return response;
+    }
 }

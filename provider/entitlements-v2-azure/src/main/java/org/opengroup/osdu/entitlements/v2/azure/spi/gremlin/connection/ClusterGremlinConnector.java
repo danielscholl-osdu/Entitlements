@@ -1,10 +1,13 @@
 package org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tinkerpop.gremlin.driver.Client;
 import org.apache.tinkerpop.gremlin.driver.Cluster;
 import org.apache.tinkerpop.gremlin.driver.Result;
 import org.apache.tinkerpop.gremlin.driver.ResultSet;
+import org.apache.tinkerpop.gremlin.driver.exception.ResponseException;
+import org.apache.tinkerpop.gremlin.driver.message.ResponseStatusCode;
 import org.apache.tinkerpop.gremlin.driver.remote.DriverRemoteConnection;
 import org.apache.tinkerpop.gremlin.driver.ser.Serializers;
 import org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource;
@@ -34,8 +37,10 @@ public class ClusterGremlinConnector implements GremlinConnector {
     private static final int MAX_CONTENT_LENGTH = 65536;
     private static final long KEEP_ALIVE_TIME = 30000;
     private static final int MAX_IN_PROCESS = 16;
+    private static final String NOT_FOUND_EXCEPTION_TYPE = "NotFoundException";
     private static final String TRAVERSAL_SUBMIT_ERROR_MESSAGE = "Error submitting traversal";
     private static final String RETRIEVING_RESULT_SET_ERROR_MESSAGE = "Error retrieving ResultSet object";
+    private static final String RESOURCE_NOT_FOUND_ERROR_MESSAGE = "Resource Not Found";
     private static final String HTTPS_SCHEME = "https://";
     private static final String ENDPOINT_PORT = ":443/";
     /**
@@ -157,6 +162,12 @@ public class ClusterGremlinConnector implements GremlinConnector {
             resultList = completableFutureResults.get();
             validateRequestSuccessful(completableFutureStatusAttributes.get());
         } catch (ExecutionException e) {
+            if (isResourceNotFoundException(e)) {
+                throw new AppException(
+                        HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND.getReasonPhrase(),
+                        RESOURCE_NOT_FOUND_ERROR_MESSAGE, e);
+            }
             throw new AppException(
                     HttpStatus.INTERNAL_SERVER_ERROR.value(),
                     HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
@@ -169,6 +180,16 @@ public class ClusterGremlinConnector implements GremlinConnector {
                     RETRIEVING_RESULT_SET_ERROR_MESSAGE, e);
         }
         return resultList;
+    }
+
+    private boolean isResourceNotFoundException(ExecutionException e) {
+        if (e.getCause() instanceof ResponseException) {
+            ResponseException responseException = (ResponseException) e.getCause();
+            if (ResponseStatusCode.SERVER_ERROR.equals(responseException.getResponseStatusCode())) {
+                return StringUtils.contains(responseException.getMessage(), NOT_FOUND_EXCEPTION_TYPE);
+            }
+        }
+        return false;
     }
 
     private void validateRequestSuccessful(Map<String, Object> statusAttributes) {
