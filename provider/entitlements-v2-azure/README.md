@@ -1,8 +1,54 @@
 # entitlements-v2-azure
 
-entitlements-v2-azure is a [Spring Boot](https://spring.io/projects/spring-boot) service that hosts CRUD APIs that enable management of user entitlements.
+entitlements-v2-azure is a [Spring Boot](https://spring.io/projects/spring-boot) service which hosts CRUD APIs that enable management of user entitlements.
+Data kept in Azure cosmos graph database.
 
-## Running Locally
+### Graph structure
+
+`id` - auto-generated property <br/>
+`appId` - a multi value property <br/>
+`dataPartitionId` - a cosmos db partition key. It is a required property in all vertices in a graph.
+
+Group vertex:
+
+    {
+        "id": "***"
+        "nodeId": "users@opendes.domain.com",
+        "name": "users",
+        "description": "",
+        "dataPartitionId": "opendes",
+        "appId": "",
+        "label": "GROUP"
+    }
+
+User vertex:
+
+    {
+        "id": "***",
+        "nodeId": "user@test.com",
+        "dataPartitionId": "test",
+        "label": "USER"
+    }
+
+Child edges point from group to group (in case a group is a member of another group)
+or from a group to user (in case a user is a member of a group). <br/>
+`role` - an edge property. Can be "OWNER" or "MEMBER". User can be "OWNER" or "MEMBER" of another group.
+Group can be only a "MEMBER" of another group.
+
+Child edge:
+
+    {
+        "id": "***",
+        "label": "child",
+        "type": "edge",
+        "inVLabel": "USER",
+        "outVLabel": "GROUP",
+        "inV": "***",
+        "outV": "***",
+        "properties": {
+            "role": "OWNER"
+        }
+    }
 
 ### Requirements
 
