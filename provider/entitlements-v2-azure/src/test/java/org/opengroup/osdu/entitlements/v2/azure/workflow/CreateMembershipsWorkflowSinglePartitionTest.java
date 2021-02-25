@@ -15,6 +15,7 @@ import org.opengroup.osdu.core.common.model.tenant.TenantInfo;
 import org.opengroup.osdu.core.common.provider.interfaces.ITenantFactory;
 import org.opengroup.osdu.entitlements.v2.api.CreateGroupApi;
 import org.opengroup.osdu.entitlements.v2.api.DeleteGroupApi;
+import org.opengroup.osdu.entitlements.v2.api.DeleteMemberApi;
 import org.opengroup.osdu.entitlements.v2.auth.AuthorizationService;
 import org.opengroup.osdu.entitlements.v2.azure.AzureAppProperties;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
@@ -48,6 +49,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -58,7 +60,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @ComponentScan("org.opengroup.osdu.entitlements.v2")
-@WebMvcTest(controllers = {CreateGroupApi.class, DeleteGroupApi.class})
+@WebMvcTest(controllers = {CreateGroupApi.class, DeleteGroupApi.class, DeleteMemberApi.class})
 public class CreateMembershipsWorkflowSinglePartitionTest {
     /**
      * JWT token of service principal
@@ -91,10 +93,15 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
             "MjQyODA4OCwiZXhwIjoxNjA0NDI5OTM2LCJhdWQiOiJ0ZXN0LmNvbSIsInN1YiI6InVzZXIzQGIuY29tIiwibGFzdG5hbWUiOiJKb2hu" +
             "bnkiLCJmaXJzdCI6IlJvY2tldCIsImVtYWlsIjoidXNlcjNAZGVzaWQuY29tIiwiZGVzaWQiOiJ1c2VyM0BkZXNpZC5jb20iLCJqdGki" +
             "OiJjZDI1MDRlZC1hNDA1LTRlYmItYjNlNS01NDExOGNhYTdkMDgifQ.1lLN3kg88ncki3bWk9aYz2obN8cXgtfKU5JSzvqOeiM";
+    public static final String JWT_FOR_MEMBER_DELETION = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSl" +
+            "dUIEJ1aWxkZXIiLCJpYXQiOjE1OTk2NzE0NTEsImV4cCI6MTYzMTIwNzQ1MSwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoidX" +
+            "Nlci1mb3ItZGVsZXRpb25AZGVzaWQuY29tIiwiZW1haWwiOiJ1c2VyLWZvci1kZWxldGlvbkBkZXNpZC5jb20iLCJkZXNpZCI6InVzZX" +
+            "ItZm9yLWRlbGV0aW9uQGRlc2lkLmNvbSJ9.JkDGIlylJUDwaZcAiYGd4VDpFZOgrabYB31DrxjLCpw";
 
     private static final String userA = "user1@desid.com";
     private static final String userB = "user2@desid.com";
     private static final String userC = "user3@desid.com";
+    private static final String USER_FOR_DELETION = "user-for-deletion@desid.com";
 
     @Autowired
     private MockMvc mockMvc;
@@ -223,6 +230,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "data.default.viewers@common.contoso.com"}, performListGroupRequest(jwtC));
 
         testGroupUpdateApi();
+
+        testDeleteMemberApi();
     }
 
     private void removeDataGroup1FromDataGroup2(String dataGroup1, String dataGroup2) {
@@ -564,6 +573,29 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "users@common.contoso.com"}, performListGroupRequest(jwtA));
     }
 
+    private void testDeleteMemberApi() throws Exception {
+        String rootUserGroup = "users@common.contoso.com";
+
+        String permissionGroupName = "users.test.editors";
+        String permissionGroup = permissionGroupName + "@common.contoso.com";
+        performCreateGroupRequest(permissionGroupName, SERVICE_P_JWT);
+
+        assertTrue(performListGroupRequest(JWT_FOR_MEMBER_DELETION).getGroups().isEmpty());
+        performAddMemberRequest(new AddMemberDto(USER_FOR_DELETION, Role.MEMBER), rootUserGroup, SERVICE_P_JWT);
+        performAddMemberRequest(new AddMemberDto(USER_FOR_DELETION, Role.MEMBER), permissionGroup, SERVICE_P_JWT);
+
+        assertGroupsEquals(new String[]{
+                rootUserGroup,
+                permissionGroup,
+                "data.default.owners@common.contoso.com",
+                "data.default.viewers@common.contoso.com"
+        }, performListGroupRequest(JWT_FOR_MEMBER_DELETION));
+        performDeleteMemberRequest(USER_FOR_DELETION, SERVICE_P_JWT);
+        assertTrue(performListGroupRequest(JWT_FOR_MEMBER_DELETION).getGroups().isEmpty());
+
+        performDeleteGroupRequest(permissionGroup, SERVICE_P_JWT);
+    }
+
     private void performCreateGroupRequest(String groupName, String jwt) {
         try {
             CreateGroupDto dto = new CreateGroupDto(groupName, groupName + ": description");
@@ -661,6 +693,15 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 .header(DpsHeaders.DATA_PARTITION_ID, "common")
                 .content(objectMapper.writeValueAsString(operations)))
                 .andExpect(status().isOk());
+    }
+
+    private void performDeleteMemberRequest(String memberEmail, String jwt) throws Exception {
+        mockMvc.perform(delete("/members/{member_email}", memberEmail)
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding(StandardCharsets.UTF_8.name())
+                .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
+                .header(DpsHeaders.DATA_PARTITION_ID, "common"))
+                .andExpect(status().isNoContent());
     }
 
     private void assertGroupsEquals(String[] expectedGroupEmails, ListGroupResponseDto dto) {
