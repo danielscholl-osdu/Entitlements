@@ -337,6 +337,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "data.mydata1.operators@common.contoso.com", jwtA);
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
+                "data.default.owners@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "users.myusers.operators@common.contoso.com"}, performListGroupRequest(jwtA));
 
         //update group metadata with audience
@@ -345,6 +347,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
+                "data.default.owners@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA));
 
         //update group metadata with empty list
@@ -353,6 +357,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
+                "data.default.owners@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA));
     }
 
