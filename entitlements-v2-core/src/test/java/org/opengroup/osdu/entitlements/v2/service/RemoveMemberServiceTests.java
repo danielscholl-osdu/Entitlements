@@ -1,6 +1,5 @@
 package org.opengroup.osdu.entitlements.v2.service;
 
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +38,6 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @Import(AppPropertiesTestConfiguration.class)
 public class RemoveMemberServiceTests {
-
     @MockBean
     private RetrieveGroupRepo retrieveGroupRepo;
     @MockBean
@@ -54,7 +52,6 @@ public class RemoveMemberServiceTests {
     private RequestInfoUtilService requestInfoUtilService;
     @MockBean
     private AppProperties appProperties;
-
     @Autowired
     private RemoveMemberService removeMemberService;
 
@@ -67,21 +64,48 @@ public class RemoveMemberServiceTests {
     }
 
     @Test
-    public void should_successfullyRemoveMember_when_MemberExists() {
-        EntityNode memberNode = EntityNode.createNodeFromEmail("member@xxx.com", "common", "common.contoso.com");
-        EntityNode groupNode = EntityNode.builder().nodeId("data.x@common.contoso.com").name("data.x")
-                .type(NodeType.GROUP).dataPartitionId("common").build();
-        EntityNode requesterNode = EntityNode.builder().nodeId("requesterid").name("requesterid").type(NodeType.USER).dataPartitionId("common").build();
+    public void shouldSuccessfullyRemoveMemberWhenMemberExists() {
+        EntityNode memberNode = EntityNode.builder()
+                .type(NodeType.USER)
+                .nodeId("member@xxx.com")
+                .name("member")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.getEntityNode("member@xxx.com", "common")).thenReturn(Optional.of(memberNode));
+        EntityNode groupNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("data.x@common.contoso.com")
+                .name("data.x")
+                .dataPartitionId("common")
+                .build();
+        EntityNode requesterNode = EntityNode.builder()
+                .type(NodeType.USER)
+                .nodeId("requesterid")
+                .name("requesterid")
+                .dataPartitionId("common")
+                .build();
         when(retrieveGroupRepo.groupExistenceValidation("data.x@common.contoso.com", "common")).thenReturn(groupNode);
-        EntityNode rootDataGroupNode = EntityNode.builder().nodeId("users.data.root@common.contoso.com").name("users.data.root")
-                .type(NodeType.GROUP).dataPartitionId("common").build();
-        when(retrieveGroupRepo.groupExistenceValidation("users.data.root@common.contoso.com", "common")).thenReturn(rootDataGroupNode);
-        when(retrieveGroupRepo.hasDirectChild(rootDataGroupNode, ChildrenReference.createChildrenReference(requesterNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
-        when(retrieveGroupRepo.hasDirectChild(groupNode, ChildrenReference.createChildrenReference(memberNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
+        EntityNode rootDataGroupNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("users.data.root@common.contoso.com")
+                .name("users.data.root")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.groupExistenceValidation(
+                "users.data.root@common.contoso.com", "common")).thenReturn(rootDataGroupNode);
+        when(retrieveGroupRepo.hasDirectChild(
+                rootDataGroupNode,
+                ChildrenReference.createChildrenReference(requesterNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
+        when(retrieveGroupRepo.hasDirectChild(
+                groupNode,
+                ChildrenReference.createChildrenReference(memberNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
         when(requestInfoUtilService.getDomain("common")).thenReturn("common.contoso.com");
         RemoveMemberServiceDto removeMemberServiceDto = RemoveMemberServiceDto.builder()
-                .groupEmail("data.x@common.contoso.com").memberEmail("member@xxx.com").requesterId("requesterid")
-                .partitionId("common").build();
+                .groupEmail("data.x@common.contoso.com")
+                .memberEmail("member@xxx.com")
+                .requesterId("requesterid")
+                .partitionId("common")
+                .build();
 
         removeMemberService.removeMember(removeMemberServiceDto);
 
@@ -89,21 +113,39 @@ public class RemoveMemberServiceTests {
     }
 
     @Test
-    public void should_successfullyRemoveMember_when_MemberExistsWhenDatafierIsExecutingTheRequest() {
-        EntityNode memberNode = EntityNode.createNodeFromEmail("member@xxx.com", "common", "common.contoso.com");
-        EntityNode groupNode = EntityNode.builder().nodeId("data.x@common.contoso.com").name("data.x")
-                .type(NodeType.GROUP).dataPartitionId("common").build();
-        EntityNode requesterNode = EntityNode.builder().nodeId("datafier@evd-ddl-us-common.iam.gserviceaccount.com").name("datafier@evd-ddl-us-common.iam.gserviceaccount.com")
-                .type(NodeType.USER).build();
+    public void shouldSuccessfullyRemoveMemberWhenMemberExistsWhenDatafierIsExecutingTheRequest() {
+        EntityNode memberNode = EntityNode.builder()
+                .type(NodeType.USER)
+                .nodeId("member@xxx.com")
+                .name("member")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.getEntityNode("member@xxx.com", "common")).thenReturn(Optional.of(memberNode));
+        EntityNode groupNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("data.x@common.contoso.com")
+                .name("data.x")
+                .dataPartitionId("common")
+                .build();
+        EntityNode requesterNode = EntityNode.builder()
+                .type(NodeType.USER)
+                .nodeId("datafier@evd-ddl-us-common.iam.gserviceaccount.com")
+                .name("datafier@evd-ddl-us-common.iam.gserviceaccount.com")
+                .build();
         when(retrieveGroupRepo.groupExistenceValidation("data.x@common.contoso.com", "common")).thenReturn(groupNode);
-        when(retrieveGroupRepo.hasDirectChild(groupNode, ChildrenReference.createChildrenReference(requesterNode, Role.OWNER))).thenReturn(Boolean.FALSE);
-        when(retrieveGroupRepo.hasDirectChild(groupNode, ChildrenReference.createChildrenReference(memberNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
+        when(retrieveGroupRepo.hasDirectChild(
+                groupNode,
+                ChildrenReference.createChildrenReference(requesterNode, Role.OWNER))).thenReturn(Boolean.FALSE);
+        when(retrieveGroupRepo.hasDirectChild(
+                groupNode,
+                ChildrenReference.createChildrenReference(memberNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
         when(requestInfoUtilService.getDomain("common")).thenReturn("common.contoso.com");
         RemoveMemberServiceDto removeMemberServiceDto = RemoveMemberServiceDto.builder()
                 .groupEmail("data.x@common.contoso.com")
                 .memberEmail("member@xxx.com")
                 .requesterId("datafier@evd-ddl-us-common.iam.gserviceaccount.com")
-                .partitionId("common").build();
+                .partitionId("common")
+                .build();
 
         removeMemberService.removeMember(removeMemberServiceDto);
 
@@ -111,19 +153,42 @@ public class RemoveMemberServiceTests {
     }
 
     @Test
-    public void should_throw404_ifMemberIsNotFound() {
-        EntityNode groupNode = EntityNode.builder().nodeId("data.x@common.contoso.com").name("data.x")
-                .type(NodeType.GROUP).dataPartitionId("common").build();
-        EntityNode requesterNode = EntityNode.builder().nodeId("requesterid").name("requesterid").type(NodeType.USER).dataPartitionId("common").build();
+    public void shouldThrow404IfMemberIsNotFound() {
+        EntityNode memberNode = EntityNode.builder()
+                .type(NodeType.USER)
+                .nodeId("member@xxx.com")
+                .name("member")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.getEntityNode("member@xxx.com", "common")).thenReturn(Optional.of(memberNode));
+        EntityNode groupNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("data.x@common.contoso.com")
+                .name("data.x")
+                .dataPartitionId("common")
+                .build();
+        EntityNode requesterNode = EntityNode.builder()
+                .type(NodeType.USER)
+                .nodeId("requesterid")
+                .name("requesterid")
+                .dataPartitionId("common")
+                .build();
         when(retrieveGroupRepo.groupExistenceValidation("data.x@common.contoso.com", "common")).thenReturn(groupNode);
-        EntityNode rootDataGroupNode = EntityNode.builder().nodeId("users.data.root@common.contoso.com").name("users.data.root")
-                .type(NodeType.GROUP).dataPartitionId("common").build();
+        EntityNode rootDataGroupNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("users.data.root@common.contoso.com")
+                .name("users.data.root")
+                .dataPartitionId("common")
+                .build();
         when(retrieveGroupRepo.groupExistenceValidation("users.data.root@common.contoso.com", "common")).thenReturn(rootDataGroupNode);
         when(retrieveGroupRepo.hasDirectChild(rootDataGroupNode, ChildrenReference.createChildrenReference(requesterNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
         when(requestInfoUtilService.getDomain("common")).thenReturn("common.contoso.com");
         RemoveMemberServiceDto removeMemberServiceDto = RemoveMemberServiceDto.builder()
-                .groupEmail("data.x@common.contoso.com").memberEmail("member@xxx.com").requesterId("requesterid")
-                .partitionId("common").build();
+                .groupEmail("data.x@common.contoso.com")
+                .memberEmail("member@xxx.com")
+                .requesterId("requesterid")
+                .partitionId("common")
+                .build();
 
         try {
             removeMemberService.removeMember(removeMemberServiceDto);
@@ -137,19 +202,45 @@ public class RemoveMemberServiceTests {
     }
 
     @Test
-    public void should_throw404_ifMemberDoesNotBelongToGroup() {
-        EntityNode groupNode = EntityNode.builder().nodeId("data.x@common.contoso.com").name("data.x")
-                .type(NodeType.GROUP).dataPartitionId("common").build();
-        EntityNode requesterNode = EntityNode.builder().nodeId("requesterid").name("requesterid").type(NodeType.USER).dataPartitionId("common").build();
+    public void shouldThrow404IfMemberDoesNotBelongToGroup() {
+        EntityNode memberNode = EntityNode.builder()
+                .type(NodeType.USER)
+                .nodeId("member@xxx.com")
+                .name("member")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.getEntityNode("member@xxx.com", "common")).thenReturn(Optional.of(memberNode));
+        EntityNode groupNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("data.x@common.contoso.com")
+                .name("data.x")
+                .dataPartitionId("common")
+                .build();
+        EntityNode requesterNode = EntityNode.builder()
+                .type(NodeType.USER)
+                .nodeId("requesterid")
+                .name("requesterid")
+                .dataPartitionId("common")
+                .build();
         when(retrieveGroupRepo.groupExistenceValidation("data.x@common.contoso.com", "common")).thenReturn(groupNode);
-        EntityNode rootDataGroupNode = EntityNode.builder().nodeId("users.data.root@common.contoso.com").name("users.data.root")
-                .type(NodeType.GROUP).dataPartitionId("common").build();
-        when(retrieveGroupRepo.groupExistenceValidation("users.data.root@common.contoso.com", "common")).thenReturn(rootDataGroupNode);
-        when(retrieveGroupRepo.hasDirectChild(rootDataGroupNode, ChildrenReference.createChildrenReference(requesterNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
+        EntityNode rootDataGroupNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("users.data.root@common.contoso.com")
+                .name("users.data.root")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.groupExistenceValidation(
+                "users.data.root@common.contoso.com", "common")).thenReturn(rootDataGroupNode);
+        when(retrieveGroupRepo.hasDirectChild(
+                rootDataGroupNode,
+                ChildrenReference.createChildrenReference(requesterNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
         when(requestInfoUtilService.getDomain("common")).thenReturn("common.contoso.com");
         RemoveMemberServiceDto removeMemberServiceDto = RemoveMemberServiceDto.builder()
-                .groupEmail("data.x@common.contoso.com").memberEmail("member@xxx.com").requesterId("requesterid")
-                .partitionId("common").build();
+                .groupEmail("data.x@common.contoso.com")
+                .memberEmail("member@xxx.com")
+                .requesterId("requesterid")
+                .partitionId("common")
+                .build();
 
         try {
             removeMemberService.removeMember(removeMemberServiceDto);
@@ -163,17 +254,43 @@ public class RemoveMemberServiceTests {
     }
 
     @Test
-    public void should_throw401_ifCallerDoesNotOwnTheGroup() {
-        EntityNode entityNode = EntityNode.builder().nodeId("member@xxx.com").name("shadowid@xxx.com").type(NodeType.USER).dataPartitionId("common").build();
-        EntityNode groupNode = EntityNode.builder().nodeId("data.x@common.contoso.com").name("data.x")
-                .type(NodeType.GROUP).dataPartitionId("common").build();
-        EntityNode requesterNode = EntityNode.builder().nodeId("requesterid").name("requesterid").type(NodeType.USER).dataPartitionId("common").build();
+    public void shouldThrow401IfCallerDoesNotOwnTheGroup() {
+        EntityNode memberNode = EntityNode.builder()
+                .type(NodeType.USER)
+                .nodeId("member@xxx.com")
+                .name("member")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.getEntityNode("member@xxx.com", "common")).thenReturn(Optional.of(memberNode));
+        EntityNode entityNode = EntityNode.builder()
+                .type(NodeType.USER)
+                .nodeId("member@xxx.com")
+                .name("shadowid@xxx.com")
+                .dataPartitionId("common")
+                .build();
+        EntityNode groupNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("data.x@common.contoso.com")
+                .name("data.x")
+                .dataPartitionId("common")
+                .build();
+        EntityNode requesterNode = EntityNode.builder()
+                .type(NodeType.USER)
+                .nodeId("requesterid")
+                .name("requesterid")
+                .dataPartitionId("common")
+                .build();
         when(retrieveGroupRepo.getEntityNode("member@xxx.com", "common")).thenReturn(Optional.of(entityNode));
         when(retrieveGroupRepo.groupExistenceValidation("data.x@common.contoso.com", "common")).thenReturn(groupNode);
-        when(retrieveGroupRepo.hasDirectChild(groupNode, ChildrenReference.createChildrenReference(requesterNode, Role.MEMBER))).thenReturn(Boolean.FALSE);
+        when(retrieveGroupRepo.hasDirectChild(
+                groupNode,
+                ChildrenReference.createChildrenReference(requesterNode, Role.MEMBER))).thenReturn(Boolean.FALSE);
         RemoveMemberServiceDto removeMemberServiceDto = RemoveMemberServiceDto.builder()
-                .groupEmail("data.x@common.contoso.com").memberEmail("member@xxx.com").requesterId("requesterid")
-                .partitionId("common").build();
+                .groupEmail("data.x@common.contoso.com")
+                .memberEmail("member@xxx.com")
+                .requesterId("requesterid")
+                .partitionId("common")
+                .build();
 
         try {
             removeMemberService.removeMember(removeMemberServiceDto);
@@ -187,24 +304,54 @@ public class RemoveMemberServiceTests {
     }
 
     @Test
-    public void should_throw400_ifDeleteKeySvcAccFromBootstrapGroup() {
-        EntityNode memberNode = EntityNode.createNodeFromEmail("datafier@evd-ddl-us-common.iam.gserviceaccount.com", "common", "common.contoso.com");
-        EntityNode groupNode = EntityNode.builder().nodeId("users.data.root@common.contoso.com").name("users.data.root")
-                .type(NodeType.GROUP).dataPartitionId("common").build();
-        EntityNode requesterNode = EntityNode.builder().nodeId("requesterid").name("requesterid").type(NodeType.USER).dataPartitionId("common").build();
-        when(retrieveGroupRepo.groupExistenceValidation("users.data.root@common.contoso.com", "common")).thenReturn(groupNode);
-        EntityNode rootDataGroupNode = EntityNode.builder().nodeId("users.data.root@common.contoso.com").name("users.data.root")
-                .type(NodeType.GROUP).dataPartitionId("common").build();
-        when(retrieveGroupRepo.groupExistenceValidation("users.data.root@common.contoso.com", "common")).thenReturn(rootDataGroupNode);
-        when(retrieveGroupRepo.hasDirectChild(rootDataGroupNode, ChildrenReference.createChildrenReference(requesterNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
-        when(retrieveGroupRepo.hasDirectChild(groupNode, ChildrenReference.createChildrenReference(memberNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
+    public void shouldThrow400IfDeleteKeySvcAccFromBootstrapGroup() {
+        EntityNode memberNode = EntityNode.builder()
+                .type(NodeType.USER)
+                .nodeId("datafier@evd-ddl-us-common.iam.gserviceaccount.com")
+                .name("datafier")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.getEntityNode(
+                "datafier@evd-ddl-us-common.iam.gserviceaccount.com", "common")).thenReturn(Optional.of(memberNode));
+        EntityNode groupNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("users.data.root@common.contoso.com")
+                .name("users.data.root")
+                .dataPartitionId("common")
+                .build();
+        EntityNode requesterNode = EntityNode.builder()
+                .type(NodeType.USER)
+                .nodeId("requesterid")
+                .name("requesterid")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.groupExistenceValidation(
+                "users.data.root@common.contoso.com", "common")).thenReturn(groupNode);
+        EntityNode rootDataGroupNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("users.data.root@common.contoso.com")
+                .name("users.data.root")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.groupExistenceValidation(
+                "users.data.root@common.contoso.com", "common")).thenReturn(rootDataGroupNode);
+        when(retrieveGroupRepo.hasDirectChild(
+                rootDataGroupNode,
+                ChildrenReference.createChildrenReference(requesterNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
+        when(retrieveGroupRepo.hasDirectChild(
+                groupNode,
+                ChildrenReference.createChildrenReference(memberNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
         when(requestInfoUtilService.getDomain("common")).thenReturn("common.contoso.com");
 
         RemoveMemberServiceDto removeMemberServiceDto = RemoveMemberServiceDto.builder()
-                .groupEmail("users.data.root@common.contoso.com").memberEmail("datafier@evd-ddl-us-common.iam.gserviceaccount.com").requesterId("requesterid")
-                .partitionId("common").build();
+                .groupEmail("users.data.root@common.contoso.com")
+                .memberEmail("datafier@evd-ddl-us-common.iam.gserviceaccount.com")
+                .requesterId("requesterid")
+                .partitionId("common")
+                .build();
 
-        when(keySvcAccBeanConfiguration.isKeySvcAccountInBootstrapGroup(removeMemberServiceDto.getGroupEmail(), removeMemberServiceDto.getMemberEmail())).thenReturn(true);
+        when(keySvcAccBeanConfiguration.isKeySvcAccountInBootstrapGroup(
+                removeMemberServiceDto.getGroupEmail(), removeMemberServiceDto.getMemberEmail())).thenReturn(true);
         try {
             removeMemberService.removeMember(removeMemberServiceDto);
             fail("should throw exception");
@@ -217,25 +364,55 @@ public class RemoveMemberServiceTests {
     }
 
     @Test
-    public void should_throw400_ifDeleteUsersdatarootGroupFromAnyDataOrUsersGroup() {
-        EntityNode memberNode = EntityNode.createNodeFromEmail("users.data.root@common.contoso.com", "common", "common.contoso.com");
-        EntityNode groupNode = EntityNode.builder().nodeId("users.test@common.contoso.com").name("users.test")
-                .type(NodeType.GROUP).dataPartitionId("common").build();
-        EntityNode requesterNode = EntityNode.builder().nodeId("requesterid").name("requesterid").type(NodeType.USER).dataPartitionId("common").build();
-        when(retrieveGroupRepo.groupExistenceValidation("users.test@common.contoso.com", "common")).thenReturn(groupNode);
+    public void shouldThrow400IfDeleteUsersdatarootGroupFromAnyDataOrUsersGroup() {
+        EntityNode memberNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("users.data.root@common.contoso.com")
+                .name("users.data.root")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.getEntityNode(
+                "users.data.root@common.contoso.com", "common")).thenReturn(Optional.of(memberNode));
+        EntityNode groupNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("users.test@common.contoso.com")
+                .name("users.test")
+                .dataPartitionId("common")
+                .build();
+        EntityNode requesterNode = EntityNode.builder()
+                .type(NodeType.USER)
+                .nodeId("requesterid")
+                .name("requesterid")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.groupExistenceValidation(
+                "users.test@common.contoso.com", "common")).thenReturn(groupNode);
         when(retrieveGroupRepo.getEntityNode("requesterid", "common")).thenReturn(Optional.of(requesterNode));
-        EntityNode rootDataGroupNode = EntityNode.builder().nodeId("users.data.root@common.contoso.com").name("users.data.root")
-                .type(NodeType.GROUP).dataPartitionId("common").build();
-        when(retrieveGroupRepo.groupExistenceValidation("users.data.root@common.contoso.com", "common")).thenReturn(rootDataGroupNode);
-        when(retrieveGroupRepo.hasDirectChild(rootDataGroupNode, ChildrenReference.createChildrenReference(requesterNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
-        when(retrieveGroupRepo.hasDirectChild(groupNode, ChildrenReference.createChildrenReference(memberNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
+        EntityNode rootDataGroupNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("users.data.root@common.contoso.com")
+                .name("users.data.root")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.groupExistenceValidation(
+                "users.data.root@common.contoso.com", "common")).thenReturn(rootDataGroupNode);
+        when(retrieveGroupRepo.hasDirectChild(
+                rootDataGroupNode,
+                ChildrenReference.createChildrenReference(requesterNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
+        when(retrieveGroupRepo.hasDirectChild(
+                groupNode,
+                ChildrenReference.createChildrenReference(memberNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
         when(requestInfoUtilService.getDomain("common")).thenReturn("common.contoso.com");
 
         RemoveMemberServiceDto removeMemberServiceDto = RemoveMemberServiceDto.builder()
-                .groupEmail("users.test@common.contoso.com").memberEmail("users.data.root@common.contoso.com").requesterId("requesterid")
-                .partitionId("common").build();
+                .groupEmail("users.test@common.contoso.com")
+                .memberEmail("users.data.root@common.contoso.com")
+                .requesterId("requesterid")
+                .partitionId("common")
+                .build();
 
-        when(keySvcAccBeanConfiguration.isKeySvcAccountInBootstrapGroup(removeMemberServiceDto.getGroupEmail(), removeMemberServiceDto.getMemberEmail())).thenReturn(false);
+        when(keySvcAccBeanConfiguration.isKeySvcAccountInBootstrapGroup(
+                removeMemberServiceDto.getGroupEmail(), removeMemberServiceDto.getMemberEmail())).thenReturn(false);
         try {
             removeMemberService.removeMember(removeMemberServiceDto);
             fail("should throw exception");

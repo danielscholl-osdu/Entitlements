@@ -1,17 +1,12 @@
 package org.opengroup.osdu.entitlements.v2.model;
 
 import org.junit.Test;
-import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class EntityNodeTest {
 
@@ -26,33 +21,6 @@ public class EntityNodeTest {
     public void should_createRequesterNode_withUserType() {
         assertThat(EntityNode.createMemberNodeForRequester("callerdesid", "dp").getType()).isEqualTo(NodeType.USER);
         assertThat(EntityNode.createMemberNodeForRequester("callerdesid", "dp").getNodeId()).isEqualTo("callerdesid");
-    }
-
-    @Test
-    public void should_createUserNode_fromEmail() {
-        EntityNode node = EntityNode.createNodeFromEmail("member@xxx.com", "dp", "domain.com");
-        assertThat(node.getNodeId()).isEqualTo("member@xxx.com");
-        assertThat(node.getName()).isEqualTo("member@xxx.com");
-        assertThat(node.getType()).isEqualTo(NodeType.USER);
-        assertThat(node.getDataPartitionId()).isEqualTo("dp");
-    }
-
-    @Test
-    public void should_createUserNode_fromEmail_ifDesId() {
-        EntityNode node = EntityNode.createNodeFromEmail("member@desid.domain.com", "dp", "domain.com");
-        assertThat(node.getNodeId()).isEqualTo("member@desid.domain.com");
-        assertThat(node.getName()).isEqualTo("member@desid.domain.com");
-        assertThat(node.getType()).isEqualTo(NodeType.USER);
-        assertThat(node.getDataPartitionId()).isEqualTo("dp");
-    }
-
-    @Test
-    public void should_createGroupNode_fromEmail() {
-        EntityNode node = EntityNode.createNodeFromEmail("group@dp.domain.com", "dp", "domain.com");
-        assertThat(node.getNodeId()).isEqualTo("group@dp.domain.com");
-        assertThat(node.getName()).isEqualTo("group");
-        assertThat(node.getType()).isEqualTo(NodeType.GROUP);
-        assertThat(node.getDataPartitionId()).isEqualTo("dp");
     }
 
     @Test

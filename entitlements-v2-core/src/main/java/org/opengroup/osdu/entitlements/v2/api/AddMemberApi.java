@@ -22,10 +22,8 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 public class AddMemberApi {
-
     private final AddMemberService addMemberService;
     private final RequestInfo requestInfo;
-    private final AppProperties config;
     private final RequestInfoUtilService requestInfoUtilService;
     private final PartitionHeaderValidationService partitionHeaderValidationService;
 
@@ -34,21 +32,20 @@ public class AddMemberApi {
     public ResponseEntity<AddMemberDto> addMember(@Valid @RequestBody AddMemberDto addMemberDto,
                                                   @PathVariable("group_email") String groupEmail) {
         addMemberDto.setEmail(addMemberDto.getEmail().toLowerCase());
-        String partitionIdHeader = requestInfo.getHeaders().getPartitionId();
-        String partitionDomain = requestInfoUtilService.getDomain(partitionIdHeader);
-        performValidation(groupEmail, addMemberDto, partitionIdHeader, partitionDomain);
+        String partitionId = requestInfo.getHeaders().getPartitionId();
+        performValidation(groupEmail, partitionId);
         AddMemberServiceDto addMemberServiceDto = AddMemberServiceDto.builder()
                 .groupEmail(groupEmail.toLowerCase())
                 .requesterId(requestInfoUtilService.getUserId(requestInfo.getHeaders()))
-                .partitionId(partitionIdHeader)
+                .partitionId(partitionId)
                 .build();
         addMemberService.run(addMemberDto, addMemberServiceDto);
         return new ResponseEntity<>(addMemberDto, HttpStatus.OK);
     }
 
-    private void performValidation(String groupEmail, AddMemberDto addMemberDto, String partitionId, String partitionDomain) {
+    private void performValidation(String groupEmail, String partitionId) {
         partitionHeaderValidationService.validateSinglePartitionProvided(partitionId);
+        String partitionDomain = requestInfoUtilService.getDomain(partitionId);
         ApiInputValidation.validateEmailAndBelongsToPartition(groupEmail, partitionDomain);
-        ApiInputValidation.validateEmailAgainstCrossPartition(addMemberDto.getEmail(), config.getDomain(), partitionDomain);
     }
 }
