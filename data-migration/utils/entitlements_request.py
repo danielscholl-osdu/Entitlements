@@ -11,6 +11,18 @@ consoleHandler = logging.StreamHandler()
 logger.addHandler(consoleHandler)
 
 
+def tenant_provisioning_v2(partition_id, token, dns):
+    header = request_header(partition_id, token)
+    logger.info('bootstrapping partition {}'.format(partition_id))
+    try:
+        response = requests.post(urllib.parse.urljoin(entitlement_v2_url(dns), '/api/entitlements/v2/tenant-provisioning'),
+                                 headers=header, timeout=30)
+        if response.status_code > 299:
+            logger.error('error bootstrapping the partition {} with status_code {} and error_message {}'.format(partition_id, response.status_code, response.json()))
+    except:
+        logger.error('error bootstrapping the partition {} when sending request to entitlements service'.format(partition_id))
+
+
 def create_group_v2(group_name, partition_id, token, dns):
     header = request_header(partition_id, token)
     request_body = {'name': group_name, 'description': ''}
@@ -26,7 +38,7 @@ def create_group_v2(group_name, partition_id, token, dns):
                                                                                                           response.json()))
     except:
         logger.error(
-            'error creating group {} on partition {} when sending request to entitlemens service'.format(group_name,
+            'error creating group {} on partition {} when sending request to entitlements service'.format(group_name,
                                                                                                          partition_id))
 
 
