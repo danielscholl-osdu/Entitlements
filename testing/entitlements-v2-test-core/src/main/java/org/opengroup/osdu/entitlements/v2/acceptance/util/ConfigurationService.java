@@ -4,8 +4,6 @@ public interface ConfigurationService {
 
     String getTenantId();
 
-    String getUnauthorizedTenantId();
-
     String getServiceUrl();
 
     String getDomain();
