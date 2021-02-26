@@ -36,7 +36,13 @@ public class ChildReferenceService {
         return idsOfOwners.contains(id) ? Role.OWNER : Role.MEMBER;
     }
 
-    private EntityNode convertToEntityNode(final ChildrenReference childrenReference, final String partitionDomain) {
-        return EntityNode.createNodeFromEmail(childrenReference.getId(), childrenReference.getDataPartitionId(), partitionDomain);
+    private EntityNode convertToEntityNode(ChildrenReference childrenReference, String partitionDomain) {
+        // TODO: This logic was moved from EntityNode to keep working logic.
+        String email = childrenReference.getId();
+        if (email.endsWith(partitionDomain) && !email.contains("desid")) {
+            return EntityNode.createNodeFromGroupEmail(email);
+        } else {
+            return EntityNode.createMemberNodeForNewUser(email, childrenReference.getDataPartitionId());
+        }
     }
 }

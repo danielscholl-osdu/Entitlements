@@ -84,37 +84,23 @@ public class EntityNode {
                 .build();
     }
 
-    public static EntityNode createMemberNodeForNewUser(String memberDesId, String partitionId) {
-        return EntityNode.builder().nodeId(memberDesId.toLowerCase())
-                .name(memberDesId.toLowerCase())
-                .description(memberDesId)
-                .dataPartitionId(partitionId)
+    public static EntityNode createMemberNodeForNewUser(String memberId, String partitionId) {
+        return EntityNode.builder()
                 .type(NodeType.USER)
+                .nodeId(memberId.toLowerCase())
+                .name(memberId.toLowerCase())
+                .dataPartitionId(partitionId)
+                .description(memberId)
                 .build();
-    }
-
-    /**
-     * This function has a smell but we have to keep it because the remove member API interface gives us only email about the member
-     * Then we have to figure out which partition redis we need to go to, and that depends on the type of the member
-     * If it is a GROUP, the partition information is inside the email and if it is a USER, we need to go to the data-partition-id header
-     * To determine whether the give email is a GROUP or not, the only information is email, so we have this logic
-     * which check the domain (passing in either partition domain or environment domain) suffix and avoid desid conflict
-     */
-    public static EntityNode createNodeFromEmail(String email, String partitionId, String partitionDomain) {
-        if (email.endsWith(partitionDomain) && !email.contains("desid")) {
-            return EntityNode.createNodeFromGroupEmail(email);
-        } else {
-            return EntityNode.createMemberNodeForNewUser(email, partitionId);
-        }
     }
 
     public static EntityNode createNodeFromGroupEmail(String email) {
         String[] emailParts = email.split("@");
         String[] domainParts = emailParts[1].split("\\.");
         return EntityNode.builder()
-                .name(emailParts[0].toLowerCase())
-                .nodeId(email.toLowerCase())
                 .type(NodeType.GROUP)
+                .nodeId(email.toLowerCase())
+                .name(emailParts[0].toLowerCase())
                 .dataPartitionId(domainParts[0])
                 .build();
     }

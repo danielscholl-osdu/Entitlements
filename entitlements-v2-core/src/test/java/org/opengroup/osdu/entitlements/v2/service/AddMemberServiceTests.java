@@ -64,7 +64,6 @@ public class AddMemberServiceTests {
         when(requestInfo.getTenantInfo()).thenReturn(tenantInfo);
     }
 
-
     @Test
     public void should_createUserMemberNode_ifItDoesNotExist() {
         EntityNode groupNode = EntityNode.builder().nodeId("data.x@common.contoso.com").name("data.x")
