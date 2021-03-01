@@ -1,6 +1,7 @@
 package org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.addmember;
 
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
+import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.junit.After;
 import org.junit.Assert;
@@ -38,9 +39,10 @@ public class AddMemberRepoGremlinTest {
 
     @Test
     public void shouldAddMemberSuccessfully() {
-        EntityNode group = EntityNode.builder().nodeId("groupId").build();
+        EntityNode group = EntityNode.builder().nodeId("groupId").dataPartitionId("dp").build();
         GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
-        graphTraversalSource.addV(NodeType.GROUP.toString()).property(VertexPropertyNames.NODE_ID, group.getNodeId()).next();
+        graphTraversalSource.addV(NodeType.GROUP.toString()).property(VertexPropertyNames.NODE_ID, group.getNodeId())
+                .property(VertexPropertyNames.DATA_PARTITION_ID, group.getDataPartitionId()).next();
         EntityNode member = EntityNode.builder().nodeId("memberId").dataPartitionId("dp").type(NodeType.USER).build();
         AddMemberRepoDto addMemberRepoDto = AddMemberRepoDto.builder().memberNode(member)
                 .partitionId("dp").role(Role.OWNER).build();
@@ -55,5 +57,10 @@ public class AddMemberRepoGremlinTest {
                 .toList();
         Assert.assertEquals(1, members.size());
         Assert.assertEquals(member.getNodeId(), members.iterator().next().value(VertexPropertyNames.NODE_ID));
+        List<Edge> edges = graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, group.getNodeId()).bothE().toList();
+        Edge childEdge = edges.stream().filter(edge -> "child".equals(edge.label())).findFirst().orElse(null);
+        Assert.assertEquals("memberId", childEdge.inVertex().value("nodeId"));
+        Assert.assertEquals("groupId", childEdge.outVertex().value("nodeId"));
+        Assert.assertEquals("OWNER", childEdge.value("role"));
     }
 }

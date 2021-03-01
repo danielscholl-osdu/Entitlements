@@ -20,4 +20,8 @@ public class AddEdgeDto {
      * data partition id of child node
      */
     private String dpOfChild;
+    /**
+     * data partition id of parent node
+     */
+    private String dpOfParent;
 }

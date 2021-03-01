@@ -213,6 +213,7 @@ public class UpdateAppIdsRepoGremlinTest {
                 .roleOfChild(role)
                 .parentNodeId(parentNodeId)
                 .dpOfChild(TEST_PARTITION_ID)
+                .dpOfParent(TEST_PARTITION_ID)
                 .build();
     }
 }

@@ -7,7 +7,6 @@ import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSo
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__;
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
-import org.apache.tinkerpop.gremlin.structure.VertexProperty;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.azure.model.NodeVertex;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
@@ -26,6 +25,7 @@ public class GraphTraversalSourceUtilService {
         GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
         Traversal<Vertex, Edge> traversal = graphTraversalSource.V()
                 .has(VertexPropertyNames.NODE_ID, addEdgeDto.getParentNodeId())
+                .has(VertexPropertyNames.DATA_PARTITION_ID, addEdgeDto.getDpOfParent())
                 .addE(EdgePropertyNames.EDGE_LB)
                 .property(EdgePropertyNames.ROLE, addEdgeDto.getRoleOfChild().getValue())
                 .to(graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, addEdgeDto.getChildNodeId())
@@ -33,13 +33,16 @@ public class GraphTraversalSourceUtilService {
         gremlinConnector.addEdge(traversal);
     }
 
-    public void removeEdge(String parentNodeId, String childNodeId) {
+    public void removeEdge(RemoveEdgeDto removeEdgeDto) {
         GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
         Traversal<Vertex, Edge> traversal = graphTraversalSource.V()
-                .has(VertexPropertyNames.NODE_ID, parentNodeId)
+                .has(VertexPropertyNames.NODE_ID, removeEdgeDto.getFromNodeId())
+                .has(VertexPropertyNames.DATA_PARTITION_ID, removeEdgeDto.getFromDataPartitionId())
                 .outE()
                 .hasLabel(EdgePropertyNames.EDGE_LB)
-                .where(__.otherV().has(VertexPropertyNames.NODE_ID, childNodeId))
+                .where(__.otherV()
+                        .has(VertexPropertyNames.NODE_ID, removeEdgeDto.getToNodeId())
+                        .has(VertexPropertyNames.DATA_PARTITION_ID, removeEdgeDto.getToDataPartitionId()))
                 .drop();
         gremlinConnector.removeEdge(traversal);
     }
@@ -91,13 +94,5 @@ public class GraphTraversalSourceUtilService {
                 .V().has(VertexPropertyNames.NODE_ID, nodeId)
                 .has(VertexPropertyNames.DATA_PARTITION_ID, dataPartitionId);
         return gremlinConnector.getVertex(traversal).orElseThrow(() -> new AppException(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), "Cannot find Vertex"));
-    }
-
-    public void updateProperty(String nodeId, String key, String value) {
-        GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
-        Traversal<Vertex, Vertex> traversal = graphTraversalSource.V()
-                .has(VertexPropertyNames.NODE_ID, nodeId)
-                .property(VertexProperty.Cardinality.single, key, value);
-        gremlinConnector.updateVertex(traversal);
     }
 }

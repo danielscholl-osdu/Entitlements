@@ -23,9 +23,10 @@ public class AddMemberRepoGremlin implements AddMemberRepo {
     public Set<String> addMember(EntityNode groupNode, AddMemberRepoDto addMemberRepoDto) {
         graphTraversalSourceUtilService.createVertexFromEntityNodeIdempotent(addMemberRepoDto.getMemberNode());
         AddEdgeDto.AddEdgeDtoBuilder addEdgeRequestBuilder = AddEdgeDto.builder()
-                .childNodeId(addMemberRepoDto.getMemberNode().getNodeId())
                 .parentNodeId(groupNode.getNodeId())
-                .dpOfChild(addMemberRepoDto.getPartitionId());
+                .dpOfParent(groupNode.getDataPartitionId())
+                .childNodeId(addMemberRepoDto.getMemberNode().getNodeId())
+                .dpOfChild(addMemberRepoDto.getMemberNode().getDataPartitionId());
         if (Role.MEMBER.equals(addMemberRepoDto.getRole())) {
             addEdgeRequestBuilder.roleOfChild(Role.MEMBER);
             graphTraversalSourceUtilService.addEdge(addEdgeRequestBuilder.build());

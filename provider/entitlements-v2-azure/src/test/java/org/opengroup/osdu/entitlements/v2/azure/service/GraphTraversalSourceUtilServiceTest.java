@@ -78,6 +78,7 @@ public class GraphTraversalSourceUtilServiceTest {
                 .roleOfChild(Role.OWNER)
                 .parentNodeId("data.x@dp.domain.com")
                 .dpOfChild("dp2")
+                .dpOfParent("dp")
                 .build();
         graphTraversalSourceUtilService.addEdge(addEdgeDto);
 
@@ -117,6 +118,7 @@ public class GraphTraversalSourceUtilServiceTest {
                 .roleOfChild(Role.OWNER)
                 .parentNodeId("data.x@dp.domain.com")
                 .dpOfChild("dp")
+                .dpOfParent("dp")
                 .build();
         graphTraversalSourceUtilService.addEdge(addEdgeDto);
 
@@ -154,6 +156,7 @@ public class GraphTraversalSourceUtilServiceTest {
                 .roleOfChild(Role.MEMBER)
                 .parentNodeId("data.x@dp.domain.com")
                 .dpOfChild("dp")
+                .dpOfParent("dp")
                 .build();
         graphTraversalSourceUtilService.addEdge(addEdgeDto);
 
@@ -227,24 +230,5 @@ public class GraphTraversalSourceUtilServiceTest {
 
 
         graphTraversalSourceUtilService.createGroupVertex(otherEntityNode);
-    }
-
-    @Test
-    public void shouldChangeNodeIdSuccessfully() {
-        GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
-
-        graphTraversalSource.addV(NodeType.GROUP.toString())
-                .property(VertexPropertyNames.NODE_ID, "data.x@dp.domain.com")
-                .property(VertexPropertyNames.NAME, "data.x")
-                .property(VertexPropertyNames.DESCRIPTION, "")
-                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .property(VertexPropertyNames.APP_ID, "App1")
-                .property(VertexPropertyNames.APP_ID, "App2")
-                .next();
-
-        graphTraversalSourceUtilService.updateProperty("data.x@dp.domain.com", VertexPropertyNames.NODE_ID, "data.y@dp.domain.com");
-
-        Assert.assertFalse(graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, "data.x@dp.domain.com").hasNext());
-        Assert.assertTrue(graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, "data.y@dp.domain.com").hasNext());
     }
 }
