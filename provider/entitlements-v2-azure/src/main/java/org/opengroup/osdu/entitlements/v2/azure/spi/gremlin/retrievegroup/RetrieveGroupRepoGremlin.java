@@ -74,6 +74,7 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
     public Boolean hasDirectChild(EntityNode groupNode, ChildrenReference childrenReference) {
         Traversal<Vertex, Vertex> traversal = gremlinConnector.getGraphTraversalSource().V()
                 .has(VertexPropertyNames.NODE_ID, groupNode.getNodeId())
+                .has(VertexPropertyNames.DATA_PARTITION_ID, groupNode.getDataPartitionId())
                 .outE(EdgePropertyNames.EDGE_LB)
                 .has(EdgePropertyNames.ROLE, childrenReference.getRole().getValue())
                 .inV()
@@ -84,12 +85,11 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
     }
 
     @Override
-    public List<ParentReference> loadDirectParents(String partitionId, String... nodeId) {
+    public List<ParentReference> loadDirectParents(String partitionId, String... nodeIds) {
         final List<ParentReference> resultList = new ArrayList<>();
-        // TODO: Handle all nodeId's, not just the first. Use '.or(buildOrTraversalsByNodeIds(...))'
-        String singleNodeId = nodeId[0];
         Traversal<Vertex, Vertex> traversal = gremlinConnector.getGraphTraversalSource().V()
-                .has(VertexPropertyNames.NODE_ID, singleNodeId)
+                .has(VertexPropertyNames.DATA_PARTITION_ID, partitionId)
+                .or(buildOrTraversalsByNodeIds(nodeIds))
                 .inE(EdgePropertyNames.EDGE_LB)
                 .outV()
                 .has(VertexPropertyNames.DATA_PARTITION_ID, partitionId);
@@ -101,9 +101,9 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
     @Override
     public ParentTreeDto loadAllParents(EntityNode memberNode) {
         Traversal<Vertex, Vertex> traversal = gremlinConnector.getGraphTraversalSource().V()
+                .has(VertexPropertyNames.DATA_PARTITION_ID, memberNode.getDataPartitionId())
                 .has(VertexPropertyNames.NODE_ID, memberNode.getNodeId())
-                .emit(__.hasLabel(NodeType.GROUP.toString())
-                        .has(VertexPropertyNames.DATA_PARTITION_ID, memberNode.getDataPartitionId()))
+                .emit(__.hasLabel(NodeType.GROUP.toString()))
                 .repeat(__.in());
         List<NodeVertex> vertices = gremlinConnector.getVertices(traversal);
         Set<ParentReference> parentReferences = vertices.stream()
@@ -116,12 +116,11 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
     }
 
     @Override
-    public List<ChildrenReference> loadDirectChildren(String partitionId, String... nodeId) {
+    public List<ChildrenReference> loadDirectChildren(String partitionId, String... nodeIds) {
         final List<ChildrenReference> resultList = new ArrayList<>();
-        // TODO: Handle all nodeId's, not just the first. Use '.or(buildOrTraversalsByNodeIds(...))'
-        String singleNodeId = nodeId[0];
         Traversal<Vertex, Map<String, Object>> traversal = gremlinConnector.getGraphTraversalSource().V()
-                .has(VertexPropertyNames.NODE_ID, singleNodeId)
+                .has(VertexPropertyNames.DATA_PARTITION_ID, partitionId)
+                .or(buildOrTraversalsByNodeIds(nodeIds))
                 .outE(EdgePropertyNames.EDGE_LB)
                 .as(StepLabel.EDGE)
                 .inV()

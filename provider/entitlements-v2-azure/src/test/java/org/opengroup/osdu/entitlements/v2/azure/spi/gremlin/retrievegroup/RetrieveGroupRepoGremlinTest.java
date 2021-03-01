@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.azure.service.AddEdgeDto;
 import org.opengroup.osdu.entitlements.v2.azure.service.GraphTraversalSourceUtilService;
+import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.addmember.AddMemberRepoGremlin;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.EdgePropertyNames;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPropertyNames;
@@ -18,6 +19,7 @@ import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.ParentTreeDto;
 import org.opengroup.osdu.entitlements.v2.model.Role;
+import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,6 +48,8 @@ public class RetrieveGroupRepoGremlinTest {
     private RetrieveGroupRepo retrieveGroupRepo;
     @Autowired
     private GraphTraversalSourceUtilService graphTraversalSourceUtilService;
+    @Autowired
+    private AddMemberRepoGremlin addMemberRepoGremlin;
 
     @After
     public void cleanup() {
@@ -159,18 +163,11 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
 
-        graphTraversalSource.addV(NodeType.USER.toString())
-                .property(VertexPropertyNames.NODE_ID, "member@xxx.com")
-                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
-                .next();
-
-        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("users.x@dp.domain.com", "data.x@dp.domain.com"));
-        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("users.x@dp.domain.com", "data.y@dp.domain.com"));
-
-        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("users.y@dp.domain.com", "data.y@dp.domain.com"));
-
-        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("member@xxx.com", "users.x@dp.domain.com"));
-        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("member@xxx.com", "users.y@dp.domain.com"));
+        addMember("users.x@dp.domain.com", NodeType.GROUP, "data.x@dp.domain.com");
+        addMember("users.x@dp.domain.com", NodeType.GROUP, "data.y@dp.domain.com");
+        addMember("users.y@dp.domain.com", NodeType.GROUP, "data.y@dp.domain.com");
+        addMember("member@xxx.com", NodeType.USER, "users.x@dp.domain.com");
+        addMember("member@xxx.com", NodeType.USER, "users.y@dp.domain.com");
 
         EntityNode memberNode = EntityNode.createMemberNodeForNewUser("member@xxx.com", "dp");
         ParentTreeDto parents = retrieveGroupRepo.loadAllParents(memberNode);
@@ -238,17 +235,13 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
                 .next();
 
-        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("member@xxx.com", "users.x@dp.domain.com"));
-        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("member@xxx.com", "users.y@dp.domain.com"));
-
-        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("users.x@dp.domain.com", "data.y@dp.domain.com"));
-
-        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("users.y@dp.domain.com", "data.y@dp.domain.com"));
-        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("users.y@dp.domain.com", "data.z@dp.domain.com"));
-
-        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("data.y@dp.domain.com", "data.x@dp.domain.com"));
-
-        graphTraversalSourceUtilService.addEdge(createAddMemberRequest("data.z@dp.domain.com", "data.x@dp.domain.com"));
+        addMember("member@xxx.com", NodeType.USER, "users.x@dp.domain.com");
+        addMember("member@xxx.com", NodeType.USER, "users.y@dp.domain.com");
+        addMember("users.x@dp.domain.com", NodeType.GROUP, "data.y@dp.domain.com");
+        addMember("users.y@dp.domain.com", NodeType.GROUP, "data.y@dp.domain.com");
+        addMember("users.y@dp.domain.com", NodeType.GROUP, "data.z@dp.domain.com");
+        addMember("data.y@dp.domain.com", NodeType.GROUP, "data.x@dp.domain.com");
+        addMember("data.z@dp.domain.com", NodeType.GROUP, "data.x@dp.domain.com");
 
         EntityNode memberNode = EntityNode.createMemberNodeForNewUser("member@xxx.com", "dp");
         ParentTreeDto parents = retrieveGroupRepo.loadAllParents(memberNode);
@@ -273,11 +266,12 @@ public class RetrieveGroupRepoGremlinTest {
     @Test
     public void shouldReturnTrueIfDirectChildExists() {
         GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
-        Vertex groupVertex = graphTraversalSource.addV(NodeType.GROUP.toString()).property(VertexPropertyNames.NODE_ID, "groupId").next();
+        Vertex groupVertex = graphTraversalSource.addV(NodeType.GROUP.toString()).property(VertexPropertyNames.NODE_ID, "groupId")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp").next();
         Vertex childVertex = graphTraversalSource.addV(NodeType.USER.toString()).property(VertexPropertyNames.NODE_ID, "userId")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp").next();
         groupVertex.addEdge(EdgePropertyNames.EDGE_LB, childVertex, EdgePropertyNames.ROLE, Role.OWNER.getValue());
-        EntityNode groupNode = EntityNode.builder().nodeId("groupId").build();
+        EntityNode groupNode = EntityNode.builder().nodeId("groupId").dataPartitionId("dp").build();
         ChildrenReference childrenReference = ChildrenReference.builder()
                 .dataPartitionId("dp")
                 .role(Role.OWNER)
@@ -572,12 +566,14 @@ public class RetrieveGroupRepoGremlinTest {
                 .property(VertexPropertyNames.DESCRIPTION, "xxx")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp2")
                 .next();
-        Vertex childVertex = graphTraversalSource.addV(NodeType.USER.toString()).property(VertexPropertyNames.NODE_ID, "member@xxx.com")
+        Vertex childVertexOfDp = graphTraversalSource.addV(NodeType.USER.toString()).property(VertexPropertyNames.NODE_ID, "member@xxx.com")
                 .property(VertexPropertyNames.DATA_PARTITION_ID, "dp").next();
+        Vertex childVertexOfDp2 = graphTraversalSource.addV(NodeType.USER.toString()).property(VertexPropertyNames.NODE_ID, "member@xxx.com")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp2").next();
 
-        users1Vertex.addEdge(EdgePropertyNames.EDGE_LB, childVertex, EdgePropertyNames.ROLE, Role.MEMBER.getValue());
-        users2Vertex.addEdge(EdgePropertyNames.EDGE_LB, childVertex, EdgePropertyNames.ROLE, Role.MEMBER.getValue());
-        users3Vertex.addEdge(EdgePropertyNames.EDGE_LB, childVertex, EdgePropertyNames.ROLE, Role.MEMBER.getValue());
+        users1Vertex.addEdge(EdgePropertyNames.EDGE_LB, childVertexOfDp, EdgePropertyNames.ROLE, Role.MEMBER.getValue());
+        users2Vertex.addEdge(EdgePropertyNames.EDGE_LB, childVertexOfDp, EdgePropertyNames.ROLE, Role.MEMBER.getValue());
+        users3Vertex.addEdge(EdgePropertyNames.EDGE_LB, childVertexOfDp2, EdgePropertyNames.ROLE, Role.MEMBER.getValue());
 
         EntityNode memberNode = EntityNode.createMemberNodeForNewUser("member@xxx.com", "dp");
         ParentTreeDto parents = retrieveGroupRepo.loadAllParents(memberNode);
@@ -587,12 +583,10 @@ public class RetrieveGroupRepoGremlinTest {
         Assert.assertEquals(1, parents.getParentReferences().size());
     }
 
-    private AddEdgeDto createAddMemberRequest(String childNodeId, String parentNodeId) {
-        return AddEdgeDto.builder()
-                .childNodeId(childNodeId)
-                .roleOfChild(Role.MEMBER)
-                .parentNodeId(parentNodeId)
-                .dpOfChild("dp")
-                .build();
+    private void addMember(String childNodeId, NodeType typeOfChild, String parentNodeId) {
+        EntityNode groupNode = EntityNode.builder().nodeId(parentNodeId).dataPartitionId("dp").build();
+        EntityNode memberNode = EntityNode.builder().nodeId(childNodeId).dataPartitionId("dp").type(typeOfChild).build();
+        AddMemberRepoDto addMemberRepoDto = AddMemberRepoDto.builder().memberNode(memberNode).role(Role.MEMBER).build();
+        addMemberRepoGremlin.addMember(groupNode, addMemberRepoDto);
     }
 }

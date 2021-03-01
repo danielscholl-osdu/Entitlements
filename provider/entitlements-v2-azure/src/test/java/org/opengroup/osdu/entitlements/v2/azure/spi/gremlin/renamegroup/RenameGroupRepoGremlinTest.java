@@ -129,6 +129,7 @@ public class RenameGroupRepoGremlinTest {
                 .roleOfChild(Role.OWNER)
                 .parentNodeId(parentNodeId)
                 .dpOfChild("dp")
+                .dpOfParent("dp")
                 .build();
         graphTraversalSourceUtilService.addEdge(addEdgeDto);
     }
@@ -141,6 +142,7 @@ public class RenameGroupRepoGremlinTest {
                 .roleOfChild(Role.MEMBER)
                 .parentNodeId(parentNodeId)
                 .dpOfChild("dp")
+                .dpOfParent("dp")
                 .build();
         graphTraversalSourceUtilService.addEdge(addEdgeDto);
     }
@@ -172,6 +174,7 @@ public class RenameGroupRepoGremlinTest {
                 .roleOfChild(Role.OWNER)
                 .parentNodeId("users.x@dp.contoso.com")
                 .dpOfChild("dp")
+                .dpOfParent("dp")
                 .build();
         graphTraversalSourceUtilService.addEdge(addEdgeDto);
         addTestEdgeAsMember("users.x", "users.y");
