@@ -136,24 +136,6 @@
       ]
     },
     {
-      "name": "service.legal.admin",
-      "description": "Datalake Legal admins",
-      "members": [
-        {
-          "name": "users.datalake.ops"
-        }
-      ]
-    },
-    {
-      "name": "service.plugin.admin",
-      "description": "Datalake Plugin-Manager admins",
-      "members": [
-        {
-          "name": "users.datalake.ops"
-        }
-      ]
-    },
-    {
       "name": "service.plugin.user",
       "description": "Datalake Plugin-Manager users",
       "members": [
@@ -166,15 +148,6 @@
         {
           "name": "users.datalake.admins"
         },
-        {
-          "name": "users.datalake.ops"
-        }
-      ]
-    },
-    {
-      "name": "service.messaging.admin",
-      "description": "Datalake Messaging admins",
-      "members": [
         {
           "name": "users.datalake.ops"
         }
@@ -195,6 +168,126 @@
         },
         {
           "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.schema-service.editors",
+      "description": "Editors group for ddms schema service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        }
+      ]
+    },
+    {
+      "name": "service.schema-service.viewers",
+      "description": "Viewers group for ddms schema service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.viewers"
+        }
+      ]
+    },
+    {
+      "name": "service.schema-service.admins",
+      "description": "Admin group for ddms schema service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.file.editors",
+      "description": "Editors group for file service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        }
+      ]
+    },
+    {
+      "name": "service.file.viewers",
+      "description": "Viewers group for file service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.viewers"
+        }
+      ]
+    },
+    {
+      "name": "service.workflow.creator",
+      "description": "Creators group for workflow service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        }
+      ]
+    },
+    {
+      "name": "service.workflow.viewer",
+      "description": "Viewers group for workflow service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.viewers"
+        }
+      ]
+    },
+    {
+      "name": "service.workflow.admin",
+      "description": "Admin group for workflow service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
         }
       ]
     }

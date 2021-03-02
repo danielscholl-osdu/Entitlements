@@ -19,9 +19,6 @@
       "groupName": "service.storage.admin"
     },
     {
-      "groupName": "service.legal.admin"
-    },
-    {
       "groupName": "users.datalake.admins"
     },
     {
@@ -35,12 +32,6 @@
     },
     {
       "groupName": "service.legal.editor"
-    },
-    {
-      "groupName": "service.plugin.admin"
-    },
-    {
-      "groupName": "service.messaging.admin"
     },
     {
       "groupName": "service.storage.creator"
@@ -65,6 +56,30 @@
     },
     {
       "groupName": "service.search.admin"
+    },
+    {
+      "groupName": "service.schema-service.editors"
+    },
+    {
+      "groupName": "service.schema-service.viewers"
+    },
+    {
+      "groupName": "service.schema-service.admins"
+    },
+    {
+      "groupName": "service.file.editors"
+    },
+    {
+      "groupName": "service.file.viewers"
+    },
+    {
+      "groupName": "service.workflow.creator"
+    },
+    {
+      "groupName": "service.workflow.viewer"
+    },
+    {
+      "groupName": "service.workflow.admin"
     }
   ]
 }
