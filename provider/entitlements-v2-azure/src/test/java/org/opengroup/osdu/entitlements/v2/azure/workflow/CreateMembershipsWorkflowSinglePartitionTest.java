@@ -736,17 +736,21 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 .header("authorization", "Bearer " + SERVICE_P_JWT)
                 .header("data-partition-id", "common");
         mockMvc.perform(request).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk());
-        assertGroupsEquals(new String[]{"service.entitlements.user@common.contoso.com",
-                "users.datalake.viewers@common.contoso.com", "service.search.admin@common.contoso.com",
-                "data.default.owners@common.contoso.com", "users.datalake.editors@common.contoso.com",
-                "service.messaging.admin@common.contoso.com", "service.storage.creator@common.contoso.com",
-                "users.data.root@common.contoso.com", "service.search.user@common.contoso.com",
-                "users@common.contoso.com", "service.entitlements.admin@common.contoso.com",
-                "service.legal.user@common.contoso.com", "data.default.viewers@common.contoso.com",
-                "users.datalake.ops@common.contoso.com", "service.storage.admin@common.contoso.com",
-                "service.legal.admin@common.contoso.com", "users.datalake.admins@common.contoso.com",
-                "service.plugin.user@common.contoso.com", "service.plugin.admin@common.contoso.com",
-                "service.messaging.user@common.contoso.com", "service.storage.viewer@common.contoso.com",
-                "service.legal.editor@common.contoso.com"}, performListGroupRequest(SERVICE_P_JWT));
+        assertGroupsEquals(new String[]{"users@common.contoso.com",
+                "users.datalake.editors@common.contoso.com", "service.storage.viewer@common.contoso.com",
+                "service.workflow.creator@common.contoso.com", "service.search.user@common.contoso.com",
+                "service.legal.user@common.contoso.com", "service.file.viewers@common.contoso.com",
+                "service.schema-service.admins@common.contoso.com",
+                "service.plugin.user@common.contoso.com", "service.messaging.user@common.contoso.com",
+                "service.schema-service.editors@common.contoso.com",
+                "service.schema-service.viewers@common.contoso.com",
+                "users.data.root@common.contoso.com", "service.workflow.viewer@common.contoso.com",
+                "users.datalake.ops@common.contoso.com", "users.datalake.admins@common.contoso.com",
+                "service.legal.editor@common.contoso.com", "service.entitlements.admin@common.contoso.com",
+                "data.default.owners@common.contoso.com", "service.file.editors@common.contoso.com",
+                "service.entitlements.user@common.contoso.com", "service.search.admin@common.contoso.com",
+                "service.storage.admin@common.contoso.com", "users.datalake.viewers@common.contoso.com",
+                "service.storage.creator@common.contoso.com", "service.workflow.admin@common.contoso.com",
+                "data.default.viewers@common.contoso.com"}, performListGroupRequest(SERVICE_P_JWT));
     }
 }
