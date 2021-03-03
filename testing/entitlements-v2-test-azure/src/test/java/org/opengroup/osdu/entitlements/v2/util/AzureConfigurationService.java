@@ -29,7 +29,11 @@ public class AzureConfigurationService implements ConfigurationService {
 
     @Override
     public String getDomain() {
-        return "contoso.com";
+        String domain = System.getProperty("DOMAIN", System.getenv("DOMAIN"));
+        if (Strings.isNullOrEmpty(domain)) {
+            domain = "contoso.com";
+        }
+        return domain;
     }
 
     @Override
