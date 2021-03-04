@@ -24,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -94,13 +95,13 @@ public class RenameGroupRepoGremlinTest {
                 .next()
                 .value(VertexPropertyNames.NAME));
         List<Vertex> usersYMembers = gremlinConnector.getGraphTraversalSource().V().has(VertexPropertyNames.NODE_ID, "users.y@dp.contoso.com")
-                .outE(EdgePropertyNames.EDGE_LB)
+                .outE(EdgePropertyNames.CHILD_EDGE_LB)
                 .has(EdgePropertyNames.ROLE, Role.MEMBER.getValue())
                 .inV()
                 .toList();
         Assert.assertEquals(2, usersYMembers.size());
         List<Vertex> usersYAllMembers = gremlinConnector.getGraphTraversalSource().V().has(VertexPropertyNames.NODE_ID, "users.y@dp.contoso.com")
-                .outE(EdgePropertyNames.EDGE_LB)
+                .outE(EdgePropertyNames.CHILD_EDGE_LB)
                 .inV()
                 .toList();
         Assert.assertEquals(3, usersYAllMembers.size());
@@ -125,11 +126,12 @@ public class RenameGroupRepoGremlinTest {
         String childNodeId = childName + "@" + TEST_DOMAIN;
         String parentNodeId = parentName + "@" + TEST_DOMAIN;
         AddEdgeDto addEdgeDto = AddEdgeDto.builder()
-                .childNodeId(childNodeId)
-                .roleOfChild(Role.OWNER)
-                .parentNodeId(parentNodeId)
-                .dpOfChild("dp")
-                .dpOfParent("dp")
+                .toNodeId(childNodeId)
+                .edgeProperties(Collections.singletonMap(EdgePropertyNames.ROLE, Role.OWNER.getValue()))
+                .fromNodeId(parentNodeId)
+                .dpOfToNodeId("dp")
+                .dpOfFromNodeId("dp")
+                .edgeLabel(EdgePropertyNames.CHILD_EDGE_LB)
                 .build();
         graphTraversalSourceUtilService.addEdge(addEdgeDto);
     }
@@ -138,11 +140,12 @@ public class RenameGroupRepoGremlinTest {
         String childNodeId = childName + "@" + TEST_DOMAIN;
         String parentNodeId = parentName + "@" + TEST_DOMAIN;
         AddEdgeDto addEdgeDto = AddEdgeDto.builder()
-                .childNodeId(childNodeId)
-                .roleOfChild(Role.MEMBER)
-                .parentNodeId(parentNodeId)
-                .dpOfChild("dp")
-                .dpOfParent("dp")
+                .toNodeId(childNodeId)
+                .edgeProperties(Collections.singletonMap(EdgePropertyNames.ROLE, Role.MEMBER.getValue()))
+                .fromNodeId(parentNodeId)
+                .dpOfToNodeId("dp")
+                .dpOfFromNodeId("dp")
+                .edgeLabel(EdgePropertyNames.CHILD_EDGE_LB)
                 .build();
         graphTraversalSourceUtilService.addEdge(addEdgeDto);
     }
@@ -170,11 +173,12 @@ public class RenameGroupRepoGremlinTest {
                 .next();
 
         AddEdgeDto addEdgeDto = AddEdgeDto.builder()
-                .childNodeId("member@xxx.com")
-                .roleOfChild(Role.OWNER)
-                .parentNodeId("users.x@dp.contoso.com")
-                .dpOfChild("dp")
-                .dpOfParent("dp")
+                .toNodeId("member@xxx.com")
+                .edgeProperties(Collections.singletonMap(EdgePropertyNames.ROLE, Role.OWNER.getValue()))
+                .fromNodeId("users.x@dp.contoso.com")
+                .dpOfToNodeId(TEST_PARTITION_ID)
+                .dpOfFromNodeId(TEST_PARTITION_ID)
+                .edgeLabel(EdgePropertyNames.CHILD_EDGE_LB)
                 .build();
         graphTraversalSourceUtilService.addEdge(addEdgeDto);
         addTestEdgeAsMember("users.x", "users.y");
@@ -194,7 +198,7 @@ public class RenameGroupRepoGremlinTest {
                 .has(VertexPropertyNames.DATA_PARTITION_ID, "dp")
                 .hasNext());
         List<Vertex> members = gremlinConnector.getGraphTraversalSource().V().has(VertexPropertyNames.NODE_ID, "users.z@dp.contoso.com")
-                .outE(EdgePropertyNames.EDGE_LB)
+                .outE(EdgePropertyNames.CHILD_EDGE_LB)
                 .inV()
                 .toList();
         Assert.assertEquals(1, members.size());

@@ -26,6 +26,9 @@ public interface RetrieveGroupRepo {
 
     List<ParentReference> loadDirectParents(String partitionId, String... nodeId);
 
+    /**
+     * Returns parents of given member, including from other data partitions.
+     */
     ParentTreeDto loadAllParents(EntityNode memberNode);
 
     List<ChildrenReference> loadDirectChildren(String partitionId, String... nodeId);

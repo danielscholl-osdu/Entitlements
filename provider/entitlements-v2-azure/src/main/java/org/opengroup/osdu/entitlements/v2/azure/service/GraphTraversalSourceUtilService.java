@@ -16,6 +16,8 @@ import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 public class GraphTraversalSourceUtilService {
@@ -23,13 +25,17 @@ public class GraphTraversalSourceUtilService {
 
     public void addEdge(AddEdgeDto addEdgeDto) {
         GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
-        Traversal<Vertex, Edge> traversal = graphTraversalSource.V()
-                .has(VertexPropertyNames.NODE_ID, addEdgeDto.getParentNodeId())
-                .has(VertexPropertyNames.DATA_PARTITION_ID, addEdgeDto.getDpOfParent())
-                .addE(EdgePropertyNames.EDGE_LB)
-                .property(EdgePropertyNames.ROLE, addEdgeDto.getRoleOfChild().getValue())
-                .to(graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, addEdgeDto.getChildNodeId())
-                        .has(VertexPropertyNames.DATA_PARTITION_ID, addEdgeDto.getDpOfChild()));
+        GraphTraversal<Vertex, Edge> traversal = graphTraversalSource.V()
+                .has(VertexPropertyNames.DATA_PARTITION_ID, addEdgeDto.getDpOfFromNodeId())
+                .has(VertexPropertyNames.NODE_ID, addEdgeDto.getFromNodeId())
+                .addE(addEdgeDto.getEdgeLabel());
+        if (addEdgeDto.getEdgeProperties() != null) {
+            for (Map.Entry<String, String> entry: addEdgeDto.getEdgeProperties().entrySet()) {
+                traversal = traversal.property(entry.getKey(), entry.getValue());
+            }
+        }
+        traversal = traversal.to(graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, addEdgeDto.getToNodeId())
+                .has(VertexPropertyNames.DATA_PARTITION_ID, addEdgeDto.getDpOfToNodeId()));
         gremlinConnector.addEdge(traversal);
     }
 
@@ -39,7 +45,7 @@ public class GraphTraversalSourceUtilService {
                 .has(VertexPropertyNames.NODE_ID, removeEdgeDto.getFromNodeId())
                 .has(VertexPropertyNames.DATA_PARTITION_ID, removeEdgeDto.getFromDataPartitionId())
                 .outE()
-                .hasLabel(EdgePropertyNames.EDGE_LB)
+                .hasLabel(removeEdgeDto.getEdgeLabel())
                 .where(__.otherV()
                         .has(VertexPropertyNames.NODE_ID, removeEdgeDto.getToNodeId())
                         .has(VertexPropertyNames.DATA_PARTITION_ID, removeEdgeDto.getToDataPartitionId()))

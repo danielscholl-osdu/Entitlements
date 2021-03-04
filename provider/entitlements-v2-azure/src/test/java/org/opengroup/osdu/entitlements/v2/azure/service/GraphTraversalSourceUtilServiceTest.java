@@ -21,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
@@ -74,17 +75,17 @@ public class GraphTraversalSourceUtilServiceTest {
 
 
         AddEdgeDto addEdgeDto = AddEdgeDto.builder()
-                .childNodeId("member1@domain.com")
-                .roleOfChild(Role.OWNER)
-                .parentNodeId("data.x@dp.domain.com")
-                .dpOfChild("dp2")
-                .dpOfParent("dp")
+                .toNodeId("member1@domain.com")
+                .fromNodeId("data.x@dp.domain.com")
+                .dpOfToNodeId("dp2")
+                .dpOfFromNodeId("dp")
+                .edgeProperties(Collections.singletonMap(EdgePropertyNames.ROLE, Role.OWNER.getValue()))
                 .build();
         graphTraversalSourceUtilService.addEdge(addEdgeDto);
 
         Vertex vertex = graphTraversalSource.V()
-                .has(VertexPropertyNames.NODE_ID, addEdgeDto.getChildNodeId())
-                .has(VertexPropertyNames.DATA_PARTITION_ID, addEdgeDto.getDpOfChild())
+                .has(VertexPropertyNames.NODE_ID, addEdgeDto.getToNodeId())
+                .has(VertexPropertyNames.DATA_PARTITION_ID, addEdgeDto.getDpOfToNodeId())
                 .next();
 
         Edge edge = vertex.edges(Direction.IN).next();
@@ -114,11 +115,11 @@ public class GraphTraversalSourceUtilServiceTest {
                 .property(VertexPropertyNames.APP_ID, "App2")
                 .next();
         AddEdgeDto addEdgeDto = AddEdgeDto.builder()
-                .childNodeId("data.y@dp.domain.com")
-                .roleOfChild(Role.OWNER)
-                .parentNodeId("data.x@dp.domain.com")
-                .dpOfChild("dp")
-                .dpOfParent("dp")
+                .toNodeId("data.y@dp.domain.com")
+                .fromNodeId("data.x@dp.domain.com")
+                .dpOfToNodeId("dp")
+                .dpOfFromNodeId("dp")
+                .edgeProperties(Collections.singletonMap(EdgePropertyNames.ROLE, Role.OWNER.getValue()))
                 .build();
         graphTraversalSourceUtilService.addEdge(addEdgeDto);
 
@@ -152,11 +153,11 @@ public class GraphTraversalSourceUtilServiceTest {
                 .next();
 
         AddEdgeDto addEdgeDto = AddEdgeDto.builder()
-                .childNodeId("data.y@dp.domain.com")
-                .roleOfChild(Role.MEMBER)
-                .parentNodeId("data.x@dp.domain.com")
-                .dpOfChild("dp")
-                .dpOfParent("dp")
+                .toNodeId("data.y@dp.domain.com")
+                .fromNodeId("data.x@dp.domain.com")
+                .dpOfToNodeId("dp")
+                .dpOfFromNodeId("dp")
+                .edgeProperties(Collections.singletonMap(EdgePropertyNames.ROLE, Role.MEMBER.getValue()))
                 .build();
         graphTraversalSourceUtilService.addEdge(addEdgeDto);
 

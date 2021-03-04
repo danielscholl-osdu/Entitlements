@@ -29,7 +29,8 @@ User vertex:
         "dataPartitionId": "test",
         "label": "USER"
     }
-
+Parent edges point from group to group (in case a group is a member of another group)
+or from a user to group (in case a user is a member of a group). <br/>
 Child edges point from group to group (in case a group is a member of another group)
 or from a group to user (in case a user is a member of a group). <br/>
 `role` - an edge property. Can be "OWNER" or "MEMBER". User can be "OWNER" or "MEMBER" of another group.
@@ -48,6 +49,18 @@ Child edge:
         "properties": {
             "role": "OWNER"
         }
+    }
+
+Parent edge:
+
+    {
+        "id": "***",
+        "label": "parent",
+        "type": "edge",
+        "inVLabel": "GROUP",
+        "outVLabel": "USER",
+        "inV": "***",
+        "outV": "***"
     }
 
 ### Requirements

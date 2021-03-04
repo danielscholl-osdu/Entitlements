@@ -5,7 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Generated;
 import lombok.NoArgsConstructor;
-import org.opengroup.osdu.entitlements.v2.model.Role;
+
+import java.util.Map;
 
 @Data
 @Builder
@@ -13,15 +14,16 @@ import org.opengroup.osdu.entitlements.v2.model.Role;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddEdgeDto {
-    private String parentNodeId;
-    private String childNodeId;
-    private Role roleOfChild;
+    private String fromNodeId;
+    private String toNodeId;
     /**
-     * data partition id of child node
+     * data partition id of a node, from where the edge goes
      */
-    private String dpOfChild;
+    private String dpOfFromNodeId;
     /**
-     * data partition id of parent node
+     * data partition id of a node, to where the edge goes
      */
-    private String dpOfParent;
+    private String dpOfToNodeId;
+    private String edgeLabel;
+    private Map<String, String> edgeProperties;
 }
