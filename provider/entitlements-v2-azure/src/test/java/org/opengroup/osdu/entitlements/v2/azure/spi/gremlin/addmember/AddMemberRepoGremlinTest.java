@@ -58,9 +58,13 @@ public class AddMemberRepoGremlinTest {
         Assert.assertEquals(1, members.size());
         Assert.assertEquals(member.getNodeId(), members.iterator().next().value(VertexPropertyNames.NODE_ID));
         List<Edge> edges = graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, group.getNodeId()).bothE().toList();
+        Assert.assertEquals(2, edges.size());
         Edge childEdge = edges.stream().filter(edge -> "child".equals(edge.label())).findFirst().orElse(null);
+        Edge parentEdge = edges.stream().filter(edge -> "parent".equals(edge.label())).findFirst().orElse(null);
         Assert.assertEquals("memberId", childEdge.inVertex().value("nodeId"));
         Assert.assertEquals("groupId", childEdge.outVertex().value("nodeId"));
         Assert.assertEquals("OWNER", childEdge.value("role"));
+        Assert.assertEquals("memberId", parentEdge.outVertex().value("nodeId"));
+        Assert.assertEquals("groupId", parentEdge.inVertex().value("nodeId"));
     }
 }

@@ -75,7 +75,7 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
         Traversal<Vertex, Vertex> traversal = gremlinConnector.getGraphTraversalSource().V()
                 .has(VertexPropertyNames.NODE_ID, groupNode.getNodeId())
                 .has(VertexPropertyNames.DATA_PARTITION_ID, groupNode.getDataPartitionId())
-                .outE(EdgePropertyNames.EDGE_LB)
+                .outE(EdgePropertyNames.CHILD_EDGE_LB)
                 .has(EdgePropertyNames.ROLE, childrenReference.getRole().getValue())
                 .inV()
                 .has(VertexPropertyNames.NODE_ID, childrenReference.getId())
@@ -90,8 +90,8 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
         Traversal<Vertex, Vertex> traversal = gremlinConnector.getGraphTraversalSource().V()
                 .has(VertexPropertyNames.DATA_PARTITION_ID, partitionId)
                 .or(buildOrTraversalsByNodeIds(nodeIds))
-                .inE(EdgePropertyNames.EDGE_LB)
-                .outV()
+                .outE(EdgePropertyNames.PARENT_EDGE_LB)
+                .inV()
                 .has(VertexPropertyNames.DATA_PARTITION_ID, partitionId);
         gremlinConnector.getVertices(traversal)
                 .forEach(v -> resultList.add(vertexUtilService.createParentReference(v)));
@@ -104,7 +104,7 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
                 .has(VertexPropertyNames.DATA_PARTITION_ID, memberNode.getDataPartitionId())
                 .has(VertexPropertyNames.NODE_ID, memberNode.getNodeId())
                 .emit(__.hasLabel(NodeType.GROUP.toString()))
-                .repeat(__.in());
+                .repeat(__.outE(EdgePropertyNames.PARENT_EDGE_LB).inV());
         List<NodeVertex> vertices = gremlinConnector.getVertices(traversal);
         Set<ParentReference> parentReferences = vertices.stream()
                 .map(vertexUtilService::createParentReference)
@@ -121,7 +121,7 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
         Traversal<Vertex, Map<String, Object>> traversal = gremlinConnector.getGraphTraversalSource().V()
                 .has(VertexPropertyNames.DATA_PARTITION_ID, partitionId)
                 .or(buildOrTraversalsByNodeIds(nodeIds))
-                .outE(EdgePropertyNames.EDGE_LB)
+                .outE(EdgePropertyNames.CHILD_EDGE_LB)
                 .as(StepLabel.EDGE)
                 .inV()
                 .as(StepLabel.VERTEX)

@@ -16,4 +16,5 @@ public class RemoveEdgeDto {
     private String fromDataPartitionId;
     private String toNodeId;
     private String toDataPartitionId;
+    private String edgeLabel;
 }

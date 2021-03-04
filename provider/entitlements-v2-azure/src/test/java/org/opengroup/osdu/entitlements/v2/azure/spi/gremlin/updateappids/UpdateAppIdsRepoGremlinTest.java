@@ -24,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -101,13 +102,13 @@ public class UpdateAppIdsRepoGremlinTest {
 
         Assert.assertEquals(new HashSet<>(Arrays.asList("testApp1", "testApp2")), appIds);
         List<Vertex> usersYMembers = gremlinConnector.getGraphTraversalSource().V().has(VertexPropertyNames.NODE_ID, "users.x@dp.contoso.com")
-                .outE(EdgePropertyNames.EDGE_LB)
+                .outE(EdgePropertyNames.CHILD_EDGE_LB)
                 .has(EdgePropertyNames.ROLE, Role.MEMBER.getValue())
                 .inV()
                 .toList();
         Assert.assertEquals(2, usersYMembers.size());
         List<Vertex> usersYAllMembers = gremlinConnector.getGraphTraversalSource().V().has(VertexPropertyNames.NODE_ID, "users.x@dp.contoso.com")
-                .outE(EdgePropertyNames.EDGE_LB)
+                .outE(EdgePropertyNames.CHILD_EDGE_LB)
                 .inV()
                 .toList();
         Assert.assertEquals(3, usersYAllMembers.size());
@@ -190,7 +191,7 @@ public class UpdateAppIdsRepoGremlinTest {
 
         Assert.assertEquals(new HashSet<>(Arrays.asList("testApp1", "testApp2")), appIds);
         List<Vertex> members = gremlinConnector.getGraphTraversalSource().V().has(VertexPropertyNames.NODE_ID, "users.x@dp.contoso.com")
-                .outE(EdgePropertyNames.EDGE_LB)
+                .outE(EdgePropertyNames.CHILD_EDGE_LB)
                 .inV()
                 .toList();
         Assert.assertEquals(1, members.size());
@@ -209,11 +210,12 @@ public class UpdateAppIdsRepoGremlinTest {
 
     private AddEdgeDto createAddMemberRequest(String childNodeId, String parentNodeId, Role role) {
         return AddEdgeDto.builder()
-                .childNodeId(childNodeId)
-                .roleOfChild(role)
-                .parentNodeId(parentNodeId)
-                .dpOfChild(TEST_PARTITION_ID)
-                .dpOfParent(TEST_PARTITION_ID)
+                .toNodeId(childNodeId)
+                .edgeProperties(Collections.singletonMap(EdgePropertyNames.ROLE, role.getValue()))
+                .fromNodeId(parentNodeId)
+                .dpOfToNodeId(TEST_PARTITION_ID)
+                .dpOfFromNodeId(TEST_PARTITION_ID)
+                .edgeLabel(EdgePropertyNames.CHILD_EDGE_LB)
                 .build();
     }
 }
