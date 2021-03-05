@@ -26,15 +26,10 @@ public abstract class AcceptanceBaseTest {
     }
 
     protected abstract RequestData getRequestDataForUnauthorizedTest();
+
     protected abstract RequestData getRequestDataForNoTokenTest();
 
     protected void cleanup() throws Exception {
-    }
-
-    @Test
-    public void shouldReturn401WhenMakingHttpRequestWithUnauthorizedToken() throws Exception {
-        ClientResponse response = httpClientService.send(getRequestDataForUnauthorizedTest());
-        Assert.assertEquals(401, response.getStatus());
     }
 
     @Test

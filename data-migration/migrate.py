@@ -51,7 +51,8 @@ if __name__ == '__main__':
                         group_id = '{}@{}.{}'.format(group_name, partition_id, domain)
                         create_membership_v2(group_id, user_id, partition_id, service_pricipal_token, role, dns)
         # migrate data admins
-        all_data_admins = json.load('DataAdminServiceAccountsList.json')
+        with open('DataAdminServiceAccountsList.json') as f:
+            all_data_admins = json.load(f)
         data_admin_group_id = 'users.data.root@{}.{}'.format(partition_id, domain)
         for data_admin in all_data_admins:
             create_membership_v2(data_admin_group_id, data_admin, partition_id, service_pricipal_token, 'MEMBER', dns)
