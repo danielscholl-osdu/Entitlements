@@ -15,7 +15,7 @@
     <artifactId>entitlements-v2-azure</artifactId>
 
     <properties>
-        <core-lib-azure.version>0.0.57</core-lib-azure.version>
+        <core-lib-azure.version>0.6.2</core-lib-azure.version>
         <reactor.netty.version>0.9.5.RELEASE</reactor.netty.version>
         <reactor.core.version>3.3.0.RELEASE</reactor.core.version>
         <springfox-version>2.7.0</springfox-version>
