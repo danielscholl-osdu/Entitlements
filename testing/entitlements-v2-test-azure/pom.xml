@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.main.basedir>${project.basedir}</project.main.basedir>
         <jackson.version>2.10.1</jackson.version>
-        <corelib.version>0.0.33</corelib.version>
+        <core-lib-azure.version>0.6.2</core-lib-azure.version>
         <junit.version>4.12</junit.version>
         <netty-all.version>4.1.50.Final</netty-all.version>
     </properties>
@@ -41,7 +41,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Added depdencies Azure Service Principal  -->
+        <!-- Added dependencies Azure Service Principal  -->
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
@@ -50,7 +50,7 @@
         <dependency>
             <groupId>org.opengroup.osdu</groupId>
             <artifactId>core-lib-azure</artifactId>
-            <version>${corelib.version}</version>
+            <version>${core-lib-azure.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

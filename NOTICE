@@ -26,6 +26,7 @@ The following software have components provided under the terms of this license:
 - Adapter: RxJava (from )
 - Admin Directory API directory_v1-rev77-1.22.0 (from )
 - Apache Commons Codec (from http://commons.apache.org/proper/commons-codec/)
+- Apache Commons Collections (from http://commons.apache.org/proper/commons-collections/)
 - Apache Commons Configuration (from http://commons.apache.org/configuration/)
 - Apache Commons Lang (from http://commons.apache.org/proper/commons-lang/)
 - Apache Commons Logging (from http://commons.apache.org/proper/commons-logging/)
@@ -124,6 +125,7 @@ The following software have components provided under the terms of this license:
 - Java Native Access Platform (from https://github.com/java-native-access/jna)
 - Java Servlet 4.0 API (from )
 - Java Servlet API (from https://projects.eclipse.org/projects/ee4j.servlet)
+- Java UUID Generator (from http://wiki.fasterxml.com/JugHome)
 - JavaPoet (from http://github.com/square/javapoet/)
 - Javassist (from http://www.javassist.org/)
 - Javassist (from http://www.javassist.org/)
@@ -542,6 +544,13 @@ The following software have components provided under the terms of this license:
 - jbcrypt (from http://www.mindrot.org/)
 
 ========================================================================
+JSON
+========================================================================
+The following software have components provided under the terms of this license:
+
+- JSON in Java (from https://github.com/douglascrockford/JSON-java)
+
+========================================================================
 LGPL-2.1-only
 ========================================================================
 The following software have components provided under the terms of this license:
@@ -584,6 +593,7 @@ The following software have components provided under the terms of this license:
 
 - Animal Sniffer Annotations (from )
 - Azure Java Client Authentication Library for AutoRest (from https://github.com/Azure/autorest-clientruntime-for-java)
+- Azure Java Client Runtime for ARM (from https://github.com/Azure/autorest-clientruntime-for-java)
 - Azure Java Client Runtime for AutoRest (from https://github.com/Azure/autorest-clientruntime-for-java)
 - Azure Metrics Spring Boot Starter (from https://github.com/Microsoft/azure-spring-boot)
 - Azure Spring Boot AutoConfigure (from https://github.com/Microsoft/azure-spring-boot)
@@ -603,11 +613,13 @@ The following software have components provided under the terms of this license:
 - Microsoft Azure Java Core Library (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure Netty HTTP Client Library (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure SDK annotations (from https://github.com/Microsoft/java-api-annotations)
+- Microsoft Azure SDK for EventGrid Management (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure SDK for SQL API of Azure Cosmos DB Service (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure SDK for Service Bus (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure SDK for eventgrid (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure client library for Blob Storage (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure client library for Identity (from https://github.com/Azure/azure-sdk-for-java)
+- Microsoft Azure client library for KeyVault Keys (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure client library for KeyVault Secrets (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure common module for Storage (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure internal Avro module for Storage (from https://github.com/Azure/azure-sdk-for-java)
@@ -622,6 +634,8 @@ The following software have components provided under the terms of this license:
 - Spongy Castle (from http://rtyley.github.io/spongycastle/)
 - Spring Data for Azure Cosmos DB SQL API (from https://github.com/Azure/azure-sdk-for-java/tree/master/sdk/cosmos/azure-spring-data-cosmos)
 - adal4j (from https://github.com/AzureAD/azure-activedirectory-library-for-java)
+- azure-documentdb (from https://azure.microsoft.com/en-us/services/cosmos-db/)
+- documentdb-bulkexecutor (from http://azure.microsoft.com/en-us/services/documentdb/)
 - jbcrypt (from http://www.mindrot.org/)
 - micrometer-core (from https://github.com/micrometer-metrics/micrometer)
 - mockito-junit-jupiter (from https://github.com/mockito/mockito)
@@ -689,12 +703,14 @@ The following software have components provided under the terms of this license:
 - Joda-Time (from http://www.joda.org/joda-time/)
 - LatencyUtils (from http://latencyutils.github.io/LatencyUtils/)
 - Microsoft Application Insights Java SDK Core (from https://github.com/Microsoft/ApplicationInsights-Java)
+- Microsoft Azure SDK for EventGrid Management (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure SDK for SQL API of Azure Cosmos DB Service (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure client library for Blob Storage (from https://github.com/Azure/azure-sdk-for-java)
 - Project Lombok (from https://projectlombok.org)
 - Project Lombok (from https://projectlombok.org)
 - Spring Web (from https://github.com/spring-projects/spring-framework)
 - StAX API (from http://stax.codehaus.org/)
+- azure-documentdb (from https://azure.microsoft.com/en-us/services/cosmos-db/)
 - msal4j (from https://github.com/AzureAD/microsoft-authentication-library-for-java)
 - reactive-streams (from http://www.reactive-streams.org/)
 
