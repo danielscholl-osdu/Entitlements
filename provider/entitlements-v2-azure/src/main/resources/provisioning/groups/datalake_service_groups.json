@@ -136,6 +136,15 @@
       ]
     },
     {
+      "name": "service.legal.admin",
+      "description": "Datalake Legal admins",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
       "name": "service.plugin.user",
       "description": "Datalake Plugin-Manager users",
       "members": [
