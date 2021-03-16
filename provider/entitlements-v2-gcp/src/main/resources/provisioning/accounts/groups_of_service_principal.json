@@ -37,6 +37,9 @@
       "groupName": "service.storage.creator"
     },
     {
+      "groupName": "service.legal.admin"
+    },
+    {
       "groupName": "service.legal.user"
     },
     {

@@ -40,6 +40,9 @@
       "groupName": "service.legal.user"
     },
     {
+      "groupName": "service.legal.admin"
+    },
+    {
       "groupName": "service.messaging.user"
     },
     {
