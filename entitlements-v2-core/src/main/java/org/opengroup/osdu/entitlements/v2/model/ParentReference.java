@@ -10,6 +10,9 @@ import lombok.Data;
 import lombok.Generated;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * We use 2 json library annotation in this class for performance optimization
  * @ConfiledJson @JsonAttribute annotations are from dsljson library and they are used for conversion when storing and retrieving from reference db,
@@ -31,6 +34,9 @@ public class ParentReference {
     private String description;
     @JsonIgnore
     private String dataPartitionId;
+    @JsonIgnore
+    @Builder.Default
+    private Set<String> appIds = new HashSet<>();
 
     @JsonAttribute(index = 3)
     public String getId() {
@@ -59,6 +65,11 @@ public class ParentReference {
                 .description(groupNode.getDescription())
                 .dataPartitionId(groupNode.getDataPartitionId())
                 .build();
+    }
+
+    @JsonIgnore
+    public Set<String> getAppIds() {
+        return appIds;
     }
 
     @JsonIgnore
