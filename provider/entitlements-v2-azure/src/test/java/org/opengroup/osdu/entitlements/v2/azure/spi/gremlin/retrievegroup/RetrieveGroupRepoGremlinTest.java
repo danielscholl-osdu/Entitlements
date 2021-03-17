@@ -25,6 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -475,10 +476,25 @@ public class RetrieveGroupRepoGremlinTest {
                 .next();
 
         Set<ParentReference> parentReferences = new HashSet<>();
-        parentReferences.add(ParentReference.builder().id(group1Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
-        parentReferences.add(ParentReference.builder().id(group2Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
-        parentReferences.add(ParentReference.builder().id(group3Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
-        parentReferences.add(ParentReference.builder().id(group4Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
+        parentReferences.add(ParentReference.builder()
+                .id(group1Vertex.value(VertexPropertyNames.NODE_ID))
+                .dataPartitionId("dp")
+                .build());
+        parentReferences.add(ParentReference.builder()
+                .id(group2Vertex.value(VertexPropertyNames.NODE_ID))
+                .dataPartitionId("dp")
+                .appIds(new HashSet<>(Collections.singletonList("appid")))
+                .build());
+        parentReferences.add(ParentReference.builder()
+                .id(group3Vertex.value(VertexPropertyNames.NODE_ID))
+                .dataPartitionId("dp")
+                .appIds(new HashSet<>(Collections.singletonList("otherappid")))
+                .build());
+        parentReferences.add(ParentReference.builder()
+                .id(group4Vertex.value(VertexPropertyNames.NODE_ID))
+                .dataPartitionId("dp")
+                .appIds(new HashSet<>(Arrays.asList("otherappid","appid")))
+                .build());
 
         Set<ParentReference> res = retrieveGroupRepo.filterParentsByAppId(parentReferences, "dp", "appid");
         Assert.assertEquals(3, res.size());
@@ -510,9 +526,20 @@ public class RetrieveGroupRepoGremlinTest {
                 .next();
 
         Set<ParentReference> parentReferences = new HashSet<>();
-        parentReferences.add(ParentReference.builder().id(group1Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
-        parentReferences.add(ParentReference.builder().id(group2Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
-        parentReferences.add(ParentReference.builder().id(group3Vertex.value(VertexPropertyNames.NODE_ID)).dataPartitionId("dp").build());
+        parentReferences.add(ParentReference.builder()
+                .id(group1Vertex.value(VertexPropertyNames.NODE_ID))
+                .dataPartitionId("dp")
+                .build());
+        parentReferences.add(ParentReference.builder()
+                .id(group2Vertex.value(VertexPropertyNames.NODE_ID))
+                .dataPartitionId("dp")
+                .appIds(new HashSet<>(Collections.singletonList("appid")))
+                .build());
+        parentReferences.add(ParentReference.builder()
+                .id(group3Vertex.value(VertexPropertyNames.NODE_ID))
+                .dataPartitionId("dp")
+                .appIds(new HashSet<>(Collections.singletonList("appid")))
+                .build());
 
         Set<ParentReference> res = retrieveGroupRepo.filterParentsByAppId(parentReferences, "dp", "appid");
         Assert.assertEquals(3, res.size());

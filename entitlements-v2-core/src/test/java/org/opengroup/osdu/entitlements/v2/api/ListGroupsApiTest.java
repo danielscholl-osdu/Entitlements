@@ -73,8 +73,8 @@ public class ListGroupsApiTest {
 
     @Test
     public void shouldSerializeOutput() throws Exception {
-        ParentReference g1 = ParentReference.builder().name("viewers").id("viewers@dp.domain.com").description("").build();
-        ParentReference g2 = ParentReference.builder().name("data.x").id("data.x@dp.domain.com").description("a data group").build();
+        ParentReference g1 = ParentReference.builder().name("data.x").id("data.x@dp.domain.com").description("a data group").build();
+        ParentReference g2 = ParentReference.builder().name("viewers").id("viewers@dp.domain.com").description("").build();
         List<ParentReference> groups = Arrays.asList(g1, g2);
         ListGroupResponseDto expectedResult = ListGroupResponseDto.builder().desId("a@b.com").memberEmail("a@b.com").groups(groups).build();
 

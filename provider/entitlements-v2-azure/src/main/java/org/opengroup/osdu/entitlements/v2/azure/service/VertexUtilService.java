@@ -48,6 +48,7 @@ public class VertexUtilService {
                 .name(vertex.getName())
                 .description(vertex.getDescription())
                 .dataPartitionId(vertex.getDataPartitionId())
+                .appIds(vertex.getAppIds())
                 .build();
     }
 

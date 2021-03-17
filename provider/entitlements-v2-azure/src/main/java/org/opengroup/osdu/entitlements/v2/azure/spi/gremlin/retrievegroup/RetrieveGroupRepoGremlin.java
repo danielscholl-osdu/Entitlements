@@ -137,20 +137,9 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
         return ChildrenTreeDto.builder().childrenUserIds(new ArrayList<>()).build();
     }
 
-    @Override
-    public Set<ParentReference> filterParentsByAppId(
-            Set<ParentReference> parentReferences, String partitionId, String appId) {
-        Map<String, ParentReference> parentReferenceById = parentReferences.stream()
-                .collect(Collectors.toMap(ParentReference::getId, Function.identity()));
-        String[] nodeIds = parentReferenceById.keySet().toArray(new String[0]);
-        GraphTraversal<Vertex, Vertex> graphTraversal = gremlinConnector.getGraphTraversalSource().V()
-                .has(VertexPropertyNames.DATA_PARTITION_ID, partitionId)
-                .or(buildOrTraversalsByNodeIds(nodeIds))
-                .or(__.hasNot(VertexPropertyNames.APP_ID), __.has(VertexPropertyNames.APP_ID, appId));
-        return gremlinConnector.getVertices(graphTraversal).stream()
-                .map(NodeVertex::getNodeId)
-                .flatMap(nodeId -> Arrays.stream(nodeIds).filter(nodeId::equals))
-                .map(parentReferenceById::get)
+    public Set<ParentReference> filterParentsByAppId(Set<ParentReference> parentReferences, String partitionId, String appId) {
+        return parentReferences.stream()
+                .filter(pr -> pr.getAppIds().isEmpty() || pr.getAppIds().contains(appId))
                 .collect(Collectors.toSet());
     }
 
