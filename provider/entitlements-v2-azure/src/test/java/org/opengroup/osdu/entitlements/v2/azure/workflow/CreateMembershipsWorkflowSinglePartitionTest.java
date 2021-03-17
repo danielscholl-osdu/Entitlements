@@ -122,7 +122,6 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     public void before() {
         Mockito.when(config.getDomain()).thenReturn("contoso.com");
         Mockito.when(config.getProjectId()).thenReturn("evd-ddl-us-services");
-        Mockito.when(config.isHttpAccepted()).thenReturn(true);
         Mockito.when(config.getInitialGroups()).thenCallRealMethod();
         Mockito.when(config.getGroupsOfServicePrincipal()).thenCallRealMethod();
         TenantInfo tenantInfo = new TenantInfo();
