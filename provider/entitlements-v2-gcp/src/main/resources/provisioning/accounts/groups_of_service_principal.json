@@ -67,7 +67,7 @@
       "groupName": "service.schema-service.viewers"
     },
     {
-      "groupName": "service.schema-service.admins"
+      "groupName": "service.schema-service.admin"
     },
     {
       "groupName": "service.file.editors"

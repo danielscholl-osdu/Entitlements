@@ -214,7 +214,7 @@
       ]
     },
     {
-      "name": "service.schema-service.admins",
+      "name": "service.schema-service.admin",
       "description": "Admin group for ddms schema service",
       "members": [
         {
