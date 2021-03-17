@@ -13,8 +13,6 @@ public abstract class AppProperties {
     private String projectId;
     @Value("${app.domain}")
     private String domain;
-    @Value("${ACCEPT_HTTP:false}")
-    private boolean httpAccepted;
 
     public String getProjectId() {
         return projectId;
@@ -22,10 +20,6 @@ public abstract class AppProperties {
 
     public String getDomain() {
         return domain;
-    }
-
-    public boolean isHttpAccepted() {
-        return httpAccepted;
     }
 
     /**

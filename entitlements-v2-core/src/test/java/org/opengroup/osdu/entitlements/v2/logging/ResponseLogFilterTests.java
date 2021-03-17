@@ -33,8 +33,6 @@ public class ResponseLogFilterTests {
     @Mock
     private RequestInfo requestInfo;
     @Mock
-    private AppProperties appProperties;
-    @Mock
     private DpsHeaders headers;
     @Mock
     private ServletContext context;
@@ -58,25 +56,6 @@ public class ResponseLogFilterTests {
         when(servletRequest.getMethod()).thenReturn("OPTIONS");
         when(servletRequest.getServletContext()).thenReturn(context);
         when(context.getAttribute("starttime")).thenReturn(null);
-    }
-
-    @Test
-    public void shouldReturn307WithHttpsLocationWhenIsNotACronAndIsNotUsingHttps() throws Exception {
-        when(requestInfo.isCronRequest()).thenReturn(false);
-        responseLogFilter.doFilter(servletRequest, servletResponse, filterChain);
-        assertEquals(307, servletResponse.getStatus());
-        ArgumentCaptor<Request> argument = ArgumentCaptor.forClass(Request.class);
-        verify(logger).request(argument.capture());
-        Request result = argument.getValue();
-        assertEquals("127.0.0.1", result.getIp());
-        assertEquals(307, result.getStatus());
-    }
-
-    @Test
-    public void shouldNotTReturn307ExceptionWhenHttpAccepted() throws Exception {
-        when(appProperties.isHttpAccepted()).thenReturn(true);
-        responseLogFilter.doFilter(servletRequest, servletResponse, filterChain);
-        assertEquals(200, servletResponse.getStatus());
     }
 
     @Test

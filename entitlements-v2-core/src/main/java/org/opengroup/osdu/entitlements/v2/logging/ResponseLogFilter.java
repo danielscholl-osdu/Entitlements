@@ -6,7 +6,6 @@ import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.model.http.Request;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
-import org.opengroup.osdu.entitlements.v2.AppProperties;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.Filter;
@@ -26,7 +25,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ResponseLogFilter implements Filter {
     private final RequestInfo requestInfo;
-    private final AppProperties appProperties;
     private final JaxRsDpsLog logger;
 
     @Override
@@ -56,14 +54,10 @@ public class ResponseLogFilter implements Filter {
         }
 
         try {
-            if (shouldRequestBeRedirectedToHttps(uri)) {
-                redirectRequestToHttps(uri, httpServletResponse);
+            if (isOptionsRequest(httpServletRequest)) {
+                httpServletResponse.setStatus(200);
             } else {
-                if (isOptionsRequest(httpServletRequest)) {
-                    httpServletResponse.setStatus(200);
-                } else {
-                    filterChain.doFilter(servletRequest, servletResponse);
-                }
+                filterChain.doFilter(servletRequest, servletResponse);
             }
         } finally {
             if (isNotHealthCheckRequest(uri)) {
@@ -82,40 +76,8 @@ public class ResponseLogFilter implements Filter {
         httpServletResponse.addHeader(DpsHeaders.CORRELATION_ID, requestInfo.getHeaders().getCorrelationId());
     }
 
-    private boolean shouldRequestBeRedirectedToHttps(String uri) {
-        return (isNotLocalHost(uri)
-                && isNotSwaggerRequest(uri)
-                && isNotHealthCheckRequest(uri)
-                && isNotHttps() && isNotHttpAccepted());
-    }
-
-    private void redirectRequestToHttps(String uri, HttpServletResponse httpServletResponse) {
-        httpServletResponse.setStatus(307);
-        String location = uri.replaceFirst("http", "https");
-        httpServletResponse.addHeader("location", location);
-    }
-
-    private boolean isNotHttps() {
-        return (!requestInfo.isHttps() && !requestInfo.isCronRequest());
-    }
-
-    private boolean isNotLocalHost(String uri) {
-        return (!uri.contains("//localhost") && !uri.contains("//127.0.0.1"));
-    }
-
-    private boolean isNotSwaggerRequest(String uri) {
-        return (!uri.contains("/swagger")
-                && !uri.contains("/v2/api-docs")
-                && !uri.contains("/configuration/ui")
-                && !uri.contains("/webjars/"));
-    }
-
     private boolean isNotHealthCheckRequest(String uri) {
         return (!uri.endsWith("/liveness_check") && !uri.endsWith("/readiness_check"));
-    }
-
-    private boolean isNotHttpAccepted() {
-        return !appProperties.isHttpAccepted();
     }
 
     private boolean isOptionsRequest(HttpServletRequest request) {

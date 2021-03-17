@@ -134,7 +134,6 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         when(config.getPartitionRedisInstanceId()).thenReturn("instanceId");
         when(config.getDomain()).thenReturn("contoso.com");
         when(config.getProjectId()).thenReturn("evd-ddl-us-services");
-        when(config.isHttpAccepted()).thenReturn(true);
         when(config.getInitialGroups()).thenCallRealMethod();
         when(config.getGroupsOfServicePrincipal()).thenCallRealMethod();
         when(partitionRedisInstanceService.getHostOfRedisInstanceForPartition("common")).thenReturn("localhost");
