@@ -740,7 +740,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "users.datalake.editors@common.contoso.com", "service.storage.viewer@common.contoso.com",
                 "service.workflow.creator@common.contoso.com", "service.search.user@common.contoso.com",
                 "service.legal.user@common.contoso.com", "service.file.viewers@common.contoso.com",
-                "service.schema-service.admins@common.contoso.com", "service.plugin.user@common.contoso.com",
+                "service.schema-service.admin@common.contoso.com", "service.plugin.user@common.contoso.com",
                 "service.messaging.user@common.contoso.com", "service.schema-service.editors@common.contoso.com",
                 "service.legal.admin@common.contoso.com", "service.schema-service.viewers@common.contoso.com",
                 "users.data.root@common.contoso.com", "service.workflow.viewer@common.contoso.com",
