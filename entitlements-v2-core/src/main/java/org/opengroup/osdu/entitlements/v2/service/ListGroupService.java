@@ -24,7 +24,7 @@ public class ListGroupService {
     private final AuditLogger auditLogger;
     private final RequestInfo requestInfo;
     private final RetrieveGroupRepo retrieveGroupRepo;
-    private final IGroupCacheService groupCacheService;
+    private final GroupCacheService groupCacheService;
 
     public Set<ParentReference> getGroups(ListGroupServiceDto listGroupServiceDto) {
         log.info(String.format("ListGroupService#run timestamp: %d", System.currentTimeMillis()));

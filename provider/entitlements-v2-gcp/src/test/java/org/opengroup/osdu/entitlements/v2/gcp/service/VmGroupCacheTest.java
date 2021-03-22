@@ -1,5 +1,4 @@
-package org.opengroup.osdu.entitlements.v2.service;
-
+package org.opengroup.osdu.entitlements.v2.gcp.service;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @RunWith(MockitoJUnitRunner.class)
-public class VmGroupCacheTests {
+public class VmGroupCacheTest {
     private Set<ParentReference> parents = new HashSet<>();
 
     @InjectMocks

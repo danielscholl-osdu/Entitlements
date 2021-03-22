@@ -3,12 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <os-core-common.version>0.3.6</os-core-common.version>
+        <os-core-common.version>0.6.9</os-core-common.version>
         <java.version>1.8</java.version>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <os-core-common.version>0.3.12</os-core-common.version>
         <spring-boot-dependencies.version>2.4.0</spring-boot-dependencies.version>
     </properties>
 

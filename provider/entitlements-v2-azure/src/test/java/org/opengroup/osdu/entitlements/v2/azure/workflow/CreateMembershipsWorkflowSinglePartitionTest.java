@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.opengroup.osdu.core.common.cache.ICache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.model.tenant.TenantInfo;
@@ -20,6 +21,7 @@ import org.opengroup.osdu.entitlements.v2.auth.AuthorizationService;
 import org.opengroup.osdu.entitlements.v2.azure.AzureAppProperties;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
+import org.opengroup.osdu.entitlements.v2.model.ParentReferences;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberDto;
 import org.opengroup.osdu.entitlements.v2.model.creategroup.CreateGroupDto;
@@ -27,6 +29,7 @@ import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupResponseDto;
 import org.opengroup.osdu.entitlements.v2.model.listmember.ListMemberResponseDto;
 import org.opengroup.osdu.entitlements.v2.model.listmember.MemberDto;
 import org.opengroup.osdu.entitlements.v2.model.updategroup.UpdateGroupOperation;
+import org.opengroup.osdu.entitlements.v2.azure.service.metrics.hitsnmisses.HitsNMissesMetricService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -117,6 +120,10 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     private ITenantFactory tenantFactory;
     @MockBean
     private AuthorizationService authService;
+    @MockBean
+    private ICache<String, ParentReferences> redisGroupCache;
+    @MockBean
+    private HitsNMissesMetricService metricService;
 
     @Before
     public void before() {
