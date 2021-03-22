@@ -1,7 +1,6 @@
-package org.opengroup.osdu.entitlements.v2.service;
+package org.opengroup.osdu.entitlements.v2.gcp.service;
 
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
-import org.opengroup.osdu.entitlements.v2.service.GroupCache;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
@@ -11,15 +10,13 @@ import java.util.Set;
 
 @RequestScope
 @Component
-public class VmGroupCache implements GroupCache {
+public class VmGroupCache {
     private Map<String, Set<ParentReference>> groupMap = new HashMap<>();
 
-    @Override
     public Set<ParentReference> getGroupCache(String requesterId) {
         return this.groupMap.get(requesterId);
     }
 
-    @Override
     public void addGroupCache(String requesterId, Set<ParentReference> parents) {
         this.groupMap.put(requesterId, parents);
     }
