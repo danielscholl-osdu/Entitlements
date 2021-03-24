@@ -16,17 +16,6 @@ public abstract class DeleteGroupTest extends AcceptanceBaseTest {
     }
 
     @Override
-    protected RequestData getRequestDataForUnauthorizedTest() {
-        Token noAccessToken = tokenService.getNoDataAccessToken();
-        return RequestData.builder()
-                .method("DELETE")
-                .relativePath("groups/" + configurationService.getIdOfGroup("test"))
-                .dataPartitionId(configurationService.getTenantId())
-                .token(noAccessToken.getValue())
-                .build();
-    }
-
-    @Override
     protected RequestData getRequestDataForNoTokenTest() {
         return RequestData.builder()
                 .method("DELETE")

@@ -40,16 +40,6 @@ public abstract class DeleteMemberTest extends AcceptanceBaseTest {
     }
 
     @Override
-    protected RequestData getRequestDataForUnauthorizedTest() {
-        return RequestData.builder()
-                .method("DELETE")
-                .relativePath("members/member@test.com")
-                .dataPartitionId(configurationService.getTenantId())
-                .token(tokenService.getNoDataAccessToken().getValue())
-                .build();
-    }
-
-    @Override
     protected RequestData getRequestDataForNoTokenTest() {
         return RequestData.builder()
                 .method("DELETE")

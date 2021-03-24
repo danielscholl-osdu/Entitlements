@@ -23,16 +23,6 @@ public abstract class GetGroupsTest extends AcceptanceBaseTest {
     }
 
     @Override
-    protected RequestData getRequestDataForUnauthorizedTest() {
-        Token noAccessToken = tokenService.getNoDataAccessToken();
-        return RequestData.builder()
-                .method("GET").dataPartitionId(configurationService.getTenantId())
-                .relativePath("groups")
-                .token(noAccessToken.getValue())
-                .build();
-    }
-
-    @Override
     protected RequestData getRequestDataForNoTokenTest() {
         return RequestData.builder()
                 .method("GET").dataPartitionId(configurationService.getTenantId())

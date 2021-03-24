@@ -75,21 +75,6 @@ public abstract class UpdateGroupTest extends AcceptanceBaseTest {
     }
 
     @Override
-    protected RequestData getRequestDataForUnauthorizedTest() {
-        Token noAccessToken = tokenService.getNoDataAccessToken();
-        UpdateGroupRequestData requestBody = UpdateGroupRequestData.builder()
-                .op("replace")
-                .path("/name")
-                .value(Collections.singletonList("newGroupName")).build();
-        return RequestData.builder()
-                .method("PATCH").dataPartitionId(configurationService.getTenantId())
-                .relativePath("groups/" + configurationService.getIdOfGroup("test"))
-                .body(new Gson().toJson(Collections.singletonList(requestBody)))
-                .token(noAccessToken.getValue())
-                .build();
-    }
-
-    @Override
     protected RequestData getRequestDataForNoTokenTest() {
         UpdateGroupRequestData requestBody = UpdateGroupRequestData.builder()
                 .op("replace")

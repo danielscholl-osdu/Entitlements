@@ -64,20 +64,6 @@ public abstract class AddMemberTest extends AcceptanceBaseTest {
     }
 
     @Override
-    protected RequestData getRequestDataForUnauthorizedTest() {
-        Token noAccessToken = tokenService.getNoDataAccessToken();
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("role", "MEMBER");
-        requestBody.put("email", "memberName-" + System.currentTimeMillis() + "@test.com");
-        return RequestData.builder()
-                .method("POST").dataPartitionId(configurationService.getTenantId())
-                .relativePath(String.format("groups/%s/members", configurationService.getIdOfGroup("users")))
-                .body(new Gson().toJson(requestBody))
-                .token(noAccessToken.getValue())
-                .build();
-    }
-
-    @Override
     protected RequestData getRequestDataForNoTokenTest() {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("role", "MEMBER");
