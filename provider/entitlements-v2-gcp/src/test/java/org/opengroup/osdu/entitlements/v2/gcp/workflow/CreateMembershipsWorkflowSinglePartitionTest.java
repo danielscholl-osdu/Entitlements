@@ -72,11 +72,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         ListMemberApi.class, ListGroupApi.class, UpdateGroupApi.class})
 public class CreateMembershipsWorkflowSinglePartitionTest {
     private static final String userA = "user1@desid.com";
-    private static final String jwtA = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhQGIuY29tIiwiaXNzIjoicHJldmlldy5jb20iLCJhdWQiOiJ0ZXN0LmNvbSIsImlhdCI6MTU5MDYwMDgyNCwiZXhwIjoxNjA0NDI5ODMxLCJwcm92aWRlciI6ImEuY29tIiwiY2xpZW50IjoidGVzdC5jb20iLCJ1c2VyaWQiOiJhQGIuY29tIiwiZW1haWwiOiJ1c2VyMUBkZXNpZC5jb20iLCJhdXRoeiI6IiIsImxhc3RuYW1lIjoiQiIsImZpcnN0bmFtZSI6IkEiLCJjb3VudHJ5IjoiIiwiY29tcGFueSI6IiIsImpvYnRpdGxlIjoiIiwic3ViaWQiOiJ1NUxTTkp1aFVmYUgweFAzdVlUbkl4Vk9BSjR4NkRKdWNXc3BzNWdEb280IiwiaWRwIjoibzM2NSIsImhkIjoic2xiLmNvbSIsImRlc2lkIjoiYUBkZXNpZC5jb20iLCJjb250YWN0X2VtYWlsIjoiYUBiLmNvbSIsInJ0X2hhc2giOiJ5UzFwdjdrQ29pNkdWV3ZzdzhLcXlBIiwianRpIjoiMjU3N2I0MTUtYTMwMi00NTY0LTlmNDItMmVkNWQyZjdmOWMwIn0.amFMAT5YWhkVANLqLbATVtSVxDwtss9uMdgTDvhftxM";
+    private static final String jwtA = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMUBkZXNpZC5jb20iLCJpc3MiOiJwcmV2aWV3LmNvbSIsImF1ZCI6InRlc3QuY29tIiwiaWF0IjoxNTkwNjAwODI0LCJleHAiOjE2MDQ0Mjk4MzEsInByb3ZpZGVyIjoiYS5jb20iLCJjbGllbnQiOiJ0ZXN0LmNvbSIsInVzZXJpZCI6ImFAYi5jb20iLCJlbWFpbCI6InVzZXIxQGRlc2lkLmNvbSIsImF1dGh6IjoiIiwibGFzdG5hbWUiOiJCIiwiZmlyc3RuYW1lIjoiQSIsImNvdW50cnkiOiIiLCJjb21wYW55IjoiIiwiam9idGl0bGUiOiIiLCJzdWJpZCI6InU1TFNOSnVoVWZhSDB4UDN1WVRuSXhWT0FKNHg2REp1Y1dzcHM1Z0RvbzQiLCJpZHAiOiJvMzY1IiwiaGQiOiJzbGIuY29tIiwiZGVzaWQiOiJhQGRlc2lkLmNvbSIsImNvbnRhY3RfZW1haWwiOiJhQGIuY29tIiwicnRfaGFzaCI6InlTMXB2N2tDb2k2R1ZXdnN3OEtxeUEiLCJqdGkiOiIyNTc3YjQxNS1hMzAyLTQ1NjQtOWY0Mi0yZWQ1ZDJmN2Y5YzAifQ.2Y3pKm0cZLFCY8E4J4Mltd84JMDweFytIpvYmNzztw8";
     private static final String userB = "user2@desid.com";
-    private static final String jwtB = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiQGIuY29tIiwiaXNzIjoicHJldmlldy5jb20iLCJhdWQiOiJ0ZXN0LmNvbSIsImlhdCI6MTU5MDYwMDgyNCwiZXhwIjoxNjA0NDI5ODg2LCJwcm92aWRlciI6ImEuY29tIiwiY2xpZW50IjoidGVzdC5jb20iLCJ1c2VyaWQiOiJiQGIuY29tIiwiZW1haWwiOiJ1c2VyMkBkZXNpZC5jb20iLCJhdXRoeiI6IiIsImxhc3RuYW1lIjoiQiIsImZpcnN0bmFtZSI6IkEiLCJjb3VudHJ5IjoiIiwiY29tcGFueSI6IiIsImpvYnRpdGxlIjoiIiwic3ViaWQiOiJ1NUxTTkp1aFVmYUgweFAzdVlUbkl4Vk9BSjR4NkRKdWNXc3BzNWdEb280IiwiaWRwIjoibzM2NSIsImhkIjoic2xiLmNvbSIsImRlc2lkIjoidXNlcjJAZGVzaWQuY29tIiwiY29udGFjdF9lbWFpbCI6ImFAYi5jb20iLCJydF9oYXNoIjoieVMxcHY3a0NvaTZHVld2c3c4S3F5QSIsImp0aSI6IjBhYTNjZWVmLTBkZTUtNDgyOS1hNGYyLWFjZGNmYzIzMTc2YiJ9.P4-6xN3-loF4EDHqfib6kvman4qNr6H8Pe0IeyAMlA4";
+    private static final String jwtB = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMkBkZXNpZC5jb20iLCJpc3MiOiJwcmV2aWV3LmNvbSIsImF1ZCI6InRlc3QuY29tIiwiaWF0IjoxNTkwNjAwODI0LCJleHAiOjE2MDQ0Mjk4ODYsInByb3ZpZGVyIjoiYS5jb20iLCJjbGllbnQiOiJ0ZXN0LmNvbSIsInVzZXJpZCI6ImJAYi5jb20iLCJlbWFpbCI6InVzZXIyQGRlc2lkLmNvbSIsImF1dGh6IjoiIiwibGFzdG5hbWUiOiJCIiwiZmlyc3RuYW1lIjoiQSIsImNvdW50cnkiOiIiLCJjb21wYW55IjoiIiwiam9idGl0bGUiOiIiLCJzdWJpZCI6InU1TFNOSnVoVWZhSDB4UDN1WVRuSXhWT0FKNHg2REp1Y1dzcHM1Z0RvbzQiLCJpZHAiOiJvMzY1IiwiaGQiOiJzbGIuY29tIiwiZGVzaWQiOiJ1c2VyMkBkZXNpZC5jb20iLCJjb250YWN0X2VtYWlsIjoiYUBiLmNvbSIsInJ0X2hhc2giOiJ5UzFwdjdrQ29pNkdWV3ZzdzhLcXlBIiwianRpIjoiMGFhM2NlZWYtMGRlNS00ODI5LWE0ZjItYWNkY2ZjMjMxNzZiIn0.uALyL2IHZ_kTK-d3kmQ5stjxcXifMUWHMp1drdPGJ2Q";
     private static final String userC = "user3@desid.com";
-    private static final String jwtC = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwcmV2aWV3LmNvbSIsImlhdCI6MTU5MjQyODA4OCwiZXhwIjoxNjA0NDI5OTM2LCJhdWQiOiJ0ZXN0LmNvbSIsInN1YiI6InVzZXIzQGIuY29tIiwibGFzdG5hbWUiOiJKb2hubnkiLCJmaXJzdCI6IlJvY2tldCIsImVtYWlsIjoidXNlcjNAZGVzaWQuY29tIiwiZGVzaWQiOiJ1c2VyM0BkZXNpZC5jb20iLCJqdGkiOiJjZDI1MDRlZC1hNDA1LTRlYmItYjNlNS01NDExOGNhYTdkMDgifQ.1lLN3kg88ncki3bWk9aYz2obN8cXgtfKU5JSzvqOeiM";
+    private static final String jwtC = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJwcmV2aWV3LmNvbSIsImlhdCI6MTU5MjQyODA4OCwiZXhwIjoxNjA0NDI5OTM2LCJhdWQiOiJ0ZXN0LmNvbSIsInN1YiI6InVzZXIzQGRlc2lkLmNvbSIsImxhc3RuYW1lIjoiSm9obm55IiwiZmlyc3QiOiJSb2NrZXQiLCJlbWFpbCI6InVzZXIzQGRlc2lkLmNvbSIsImRlc2lkIjoidXNlcjNAZGVzaWQuY29tIiwianRpIjoiY2QyNTA0ZWQtYTQwNS00ZWJiLWIzZTUtNTQxMThjYWE3ZDA4In0.BUoe7Hb-DvIz1oGGLWv8Z-caTkVNOQMgeB3deAhTpc0";
+    private static final String datafier = "a@b.com";
     private static final String datafierJWT = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhQGIuY29tIiwiaXNzIjoicHJldmlldy5jb20iLCJhdWQiOiJ0ZXN0LmNvbSIsImlhdCI6MTU5MDYwMDgyNCwiZXhwIjoxNTkzNzEzODI0LCJwcm92aWRlciI6ImEuY29tIiwiY2xpZW50IjoidGVzdC5jb20iLCJ1c2VyaWQiOiJkYXRhZmllckBldmQtZGRsLXVzLWNvbW1vbi5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsImVtYWlsIjoiYUBiLmNvbSIsImF1dGh6IjoiIiwibGFzdG5hbWUiOiJCIiwiZmlyc3RuYW1lIjoiQSIsImNvdW50cnkiOiIiLCJjb21wYW55IjoiIiwiam9idGl0bGUiOiIiLCJzdWJpZCI6InU1TFNOSnVoVWZhSDB4UDN1WVRuSXhWT0FKNHg2REp1Y1dzcHM1Z0RvbzQiLCJpZHAiOiJvMzY1IiwiaGQiOiJzbGIuY29tIiwiZGVzaWQiOiJkYXRhZmllckBldmQtZGRsLXVzLWNvbW1vbi5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsImNvbnRhY3RfZW1haWwiOiJkYXRhZmllckBldmQtZGRsLXVzLWNvbW1vbi5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsInJ0X2hhc2giOiJ5UzFwdjdrQ29pNkdWV3ZzdzhLcXlBIiwianRpIjoiYjM0OTE5ZDUtZGMyOC00ZGM1LTkwODgtNmRjODU4NWQ2ZWJlIn0.LwpKthf1TFkhMoREurRAzDwBlEN3Pe93hQusfLC8DEU";
     private static RedisServer centralRedisServer;
     private static RedisClient centralRedisClient;
@@ -161,39 +162,39 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
 
         // Create users and users.data.root groups to pass phase 1 api's logic
         CreateGroupDto dto = new CreateGroupDto("users.data.root", "Users data root group");
-        performCreateGroupRequest(dto, datafierJWT);
+        performCreateGroupRequest(dto, datafierJWT, datafier);
         dto = new CreateGroupDto("users", "Root users group");
-        performCreateGroupRequest(dto, datafierJWT);
-        performAddMemberRequest(new AddMemberDto(userA, Role.MEMBER), rootUserGroup, datafierJWT);
-        performAddMemberRequest(new AddMemberDto(userB, Role.MEMBER), rootUserGroup, datafierJWT);
-        performAddMemberRequest(new AddMemberDto(userC, Role.MEMBER), rootUserGroup, datafierJWT);
+        performCreateGroupRequest(dto, datafierJWT, datafier);
+        performAddMemberRequest(new AddMemberDto(userA, Role.MEMBER), rootUserGroup, datafierJWT, datafier);
+        performAddMemberRequest(new AddMemberDto(userB, Role.MEMBER), rootUserGroup, datafierJWT, datafier);
+        performAddMemberRequest(new AddMemberDto(userC, Role.MEMBER), rootUserGroup, datafierJWT, datafier);
 
         //create users group
         dto = new CreateGroupDto("users.myusers.operators", "My users group");
-        performCreateGroupRequest(dto, jwtA);
+        performCreateGroupRequest(dto, jwtA, userA);
 
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
-                "users.myusers.operators@common.contoso.com"}, performListGroupRequest(jwtA));
+                "users.myusers.operators@common.contoso.com"}, performListGroupRequest(jwtA, userA));
 
         //create data groups
         dto = new CreateGroupDto("data.mydata1.operators", "My data group");
-        performCreateGroupRequest(dto, jwtA);
+        performCreateGroupRequest(dto, jwtA, userA);
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
-                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA));
+                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA, userA));
 
         updateGroupMetadata();
 
         //add data groups to users group
         dto = new CreateGroupDto("data.mydata2.operators", "My data group");
-        performCreateGroupRequest(dto, jwtA);
+        performCreateGroupRequest(dto, jwtA, userA);
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
                 "data.mydata2.operators@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
-                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA));
+                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA, userA));
 
         String dataGroup1 = "data.mydata1.operators@common.contoso.com";
         String dataGroup2 = "data.mydata2.operators@common.contoso.com";
@@ -207,148 +208,150 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
 
         //create new root hierarchy
         dto = new CreateGroupDto("users.myusers2.operators", "My data group");
-        performCreateGroupRequest(dto, jwtC);
+        performCreateGroupRequest(dto, jwtC, userC);
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
-                "users.myusers2.operators@common.contoso.com"}, performListGroupRequest(jwtC));
+                "users.myusers2.operators@common.contoso.com"}, performListGroupRequest(jwtC, userC));
 
         //add it to users operators
         String userGroup2 = "users.myusers2.operators@common.contoso.com";
-        performAddMemberRequest(new AddMemberDto(userGroup2, Role.MEMBER), userGroup1, jwtA);
+        performAddMemberRequest(new AddMemberDto(userGroup2, Role.MEMBER), userGroup1, jwtA, userA);
 
         assertMembersEquals(new String[]{userA,
                 userB,
                 "users.data.root@common.contoso.com",
-                "users.myusers2.operators@common.contoso.com"}, performListMemberRequest(userGroup1, jwtA));
+                "users.myusers2.operators@common.contoso.com"}, performListMemberRequest(userGroup1, jwtA, userA));
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
                 "data.mydata2.operators@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
-                "users.myusers2.operators@common.contoso.com"}, performListGroupRequest(jwtC));
+                "users.myusers2.operators@common.contoso.com"}, performListGroupRequest(jwtC, userC));
 
         //remove data group A from Data group B
-        performRemoveMemberRequest(dataGroup2, dataGroup1, jwtA);
+        performRemoveMemberRequest(dataGroup2, dataGroup1, jwtA, userA);
 
         assertMembersEquals(new String[]{userA,
                 "users.data.root@common.contoso.com",
-                "users.myusers.operators@common.contoso.com"}, performListMemberRequest(dataGroup2, jwtA));
+                "users.myusers.operators@common.contoso.com"}, performListMemberRequest(dataGroup2, jwtA, userA));
 
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
                 "data.mydata2.operators@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
-                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtB));
+                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtB, userB));
 
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
                 "data.mydata2.operators@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com",
-                "users.myusers2.operators@common.contoso.com"}, performListGroupRequest(jwtC));
+                "users.myusers2.operators@common.contoso.com"}, performListGroupRequest(jwtC, userC));
 
         //delete data group B
-        performDeleteGroupRequest(dataGroup2, jwtA);
+        performDeleteGroupRequest(dataGroup2, jwtA, userA);
 
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
-                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA));
+                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA, userA));
 
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
-                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtB));
+                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtB, userB));
 
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com",
-                "users.myusers2.operators@common.contoso.com"}, performListGroupRequest(jwtC));
+                "users.myusers2.operators@common.contoso.com"}, performListGroupRequest(jwtC, userC));
 
         //delete user group 1
-        performDeleteGroupRequest(userGroup1, jwtA);
+        performDeleteGroupRequest(userGroup1, jwtA, userA);
         assertMembersEquals(new String[]{userA,
-                "users.data.root@common.contoso.com"}, performListMemberRequest(dataGroup1, jwtA));
+                "users.data.root@common.contoso.com"}, performListMemberRequest(dataGroup1, jwtA, userA));
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
-                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA));
-        assertGroupsEquals(new String[]{"users@common.contoso.com"}, performListGroupRequest(jwtB));
+                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA, userA));
+        assertGroupsEquals(new String[]{"users@common.contoso.com"}, performListGroupRequest(jwtB, userB));
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
-                "users.myusers2.operators@common.contoso.com"}, performListGroupRequest(jwtC));
+                "users.myusers2.operators@common.contoso.com"}, performListGroupRequest(jwtC, userC));
 
         //add user b as OWNER of user group 2 and delete it
-        performAddMemberRequest(new AddMemberDto(userB, Role.OWNER), userGroup2, jwtC);
-        performDeleteGroupRequest(userGroup2, jwtB);
+        performAddMemberRequest(new AddMemberDto(userB, Role.OWNER), userGroup2, jwtC, userC);
+        performDeleteGroupRequest(userGroup2, jwtB, userB);
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
-                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA));
-        assertGroupsEquals(new String[]{"users@common.contoso.com"}, performListGroupRequest(jwtB));
-        assertGroupsEquals(new String[]{"users@common.contoso.com"}, performListGroupRequest(jwtC));
+                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA, userA));
+        assertGroupsEquals(new String[]{"users@common.contoso.com"}, performListGroupRequest(jwtB, userB));
+        assertGroupsEquals(new String[]{"users@common.contoso.com"}, performListGroupRequest(jwtC, userC));
 
         testGroupUpdateApi();
     }
 
     private void addNewUserToUsersOperators(String newUser, String newUserJwt, String userGroup) throws Exception {
-        performAddMemberRequest(new AddMemberDto(newUser, Role.MEMBER), userGroup, jwtA);
+        performAddMemberRequest(new AddMemberDto(newUser, Role.MEMBER), userGroup, jwtA, userA);
 
         assertMembersEquals(new String[]{userA,
                 "users.data.root@common.contoso.com",
-                userB}, performListMemberRequest(userGroup, jwtA));
+                userB}, performListMemberRequest(userGroup, jwtA, userA));
 
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
                 "data.mydata2.operators@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
-                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(newUserJwt));
+                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(newUserJwt, newUser));
     }
 
     private void addUserGroupToDataGroups(String userGroup, String dataGroup1, String dataGroup2) throws Exception {
-        performAddMemberRequest(new AddMemberDto(userGroup, Role.MEMBER), dataGroup1, jwtA);
-        performAddMemberRequest(new AddMemberDto(userGroup, Role.MEMBER), dataGroup2, jwtA);
+        performAddMemberRequest(new AddMemberDto(userGroup, Role.MEMBER), dataGroup1, jwtA, userA);
+        performAddMemberRequest(new AddMemberDto(userGroup, Role.MEMBER), dataGroup2, jwtA, userA);
 
         assertMembersEquals(new String[]{userA,
                 "users.data.root@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com",
-                "users.myusers.operators@common.contoso.com"}, performListMemberRequest(dataGroup2, jwtA));
+                "users.myusers.operators@common.contoso.com"}, performListMemberRequest(dataGroup2, jwtA, userA));
 
         assertMembersEquals(new String[]{userA,
                 "users.data.root@common.contoso.com",
-                "users.myusers.operators@common.contoso.com"}, performListMemberRequest(dataGroup1, jwtA));
+                "users.myusers.operators@common.contoso.com"}, performListMemberRequest(dataGroup1, jwtA, userA));
     }
 
     private void addDataGroup1ToDataGroup2(String dataGroup1, String dataGroup2) throws Exception {
-        performAddMemberRequest(new AddMemberDto(dataGroup1, Role.MEMBER), dataGroup2, jwtA);
+        performAddMemberRequest(new AddMemberDto(dataGroup1, Role.MEMBER), dataGroup2, jwtA, userA);
         assertMembersEquals(new String[]{userA,
                 "users.data.root@common.contoso.com",
-                "data.mydata1.operators@common.contoso.com"}, performListMemberRequest(dataGroup2, jwtA));
+                "data.mydata1.operators@common.contoso.com"}, performListMemberRequest(dataGroup2, jwtA, userA));
         assertMembersEquals(new String[]{userA,
-                "users.data.root@common.contoso.com"}, performListMemberRequest(dataGroup1, jwtA));
+                "users.data.root@common.contoso.com"}, performListMemberRequest(dataGroup1, jwtA, userA));
     }
 
     private void updateGroupMetadata() throws Exception {
-        performUpdateGroupRequest(Collections.singletonList(getUpdateAppIdsOperation(Arrays.asList("App1", "App2"))),
-                "data.mydata1.operators@common.contoso.com", jwtA);
+        List<String> appIds = Arrays.asList("App1", "App2");
+        List<String> audience = Collections.singletonList("test.com");
+        performUpdateGroupRequest(Collections.singletonList(getUpdateAppIdsOperation(appIds)),
+                "data.mydata1.operators@common.contoso.com", jwtA, userA, appIds);
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
-                "users.myusers.operators@common.contoso.com"}, performListGroupRequest(jwtA));
+                "users.myusers.operators@common.contoso.com"}, performListGroupRequestWithAppId(jwtA, userA, audience));
 
         //update group metadata with audience
-        performUpdateGroupRequest(Collections.singletonList(getUpdateAppIdsOperation(Collections.singletonList("test.com"))),
-                "data.mydata1.operators@common.contoso.com", jwtA);
+        performUpdateGroupRequest(Collections.singletonList(getUpdateAppIdsOperation(audience)),
+                "data.mydata1.operators@common.contoso.com", jwtA, userA, audience);
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
-                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA));
+                "data.mydata1.operators@common.contoso.com"}, performListGroupRequestWithAppId(jwtA, userA, audience));
 
         //update group metadata with empty list
         performUpdateGroupRequest(Collections.singletonList(getUpdateAppIdsOperation(Collections.emptyList())),
-                "data.mydata1.operators@common.contoso.com", jwtA);
+                "data.mydata1.operators@common.contoso.com", jwtA, userA, audience);
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
-                "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(jwtA));
+                "data.mydata1.operators@common.contoso.com"}, performListGroupRequestWithAppId(jwtA, userA, audience));
     }
 
     private void testGroupUpdateApi() throws Exception {
@@ -356,59 +359,59 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         assertGroupsEquals(new String[]{
                 "data.mydata1.operators@common.contoso.com",
                 "users@common.contoso.com"
-        }, performListGroupRequest(jwtA));
+        }, performListGroupRequest(jwtA, userA));
 
         checkThatUsersGroupCannotBeRenamedByExistingName();
 
         // data group was created
         String dataGroupName = "data.testdata.operators";
         String dataGroupEmail = dataGroupName + "@common.contoso.com";
-        performCreateGroupRequest(new CreateGroupDto(dataGroupName, "data group"), jwtA);
+        performCreateGroupRequest(new CreateGroupDto(dataGroupName, "data group"), jwtA, userA);
         assertGroupsEquals(new String[]{
                 "data.mydata1.operators@common.contoso.com",
                 "users@common.contoso.com",
                 dataGroupEmail
-        }, performListGroupRequest(jwtA));
+        }, performListGroupRequest(jwtA, userA));
 
         // users group 1 was created
         String usersGroup1Name = "users.testusers1.operators";
         String usersGroup1Email = usersGroup1Name + "@common.contoso.com";
         performCreateGroupRequest(
-                new CreateGroupDto(usersGroup1Name, "users group 1 to be updated by a new email"), jwtA);
+                new CreateGroupDto(usersGroup1Name, "users group 1 to be updated by a new email"), jwtA, userA);
         assertGroupsEquals(new String[]{
                 "data.mydata1.operators@common.contoso.com",
                 "users@common.contoso.com",
                 dataGroupEmail,
                 usersGroup1Email
-        }, performListGroupRequest(jwtA));
+        }, performListGroupRequest(jwtA, userA));
 
         // users group 2 was created
         String usersGroup2Name = "users.testusers2.operators";
         String usersGroup2Email = usersGroup2Name + "@common.contoso.com";
-        performCreateGroupRequest(new CreateGroupDto(usersGroup2Name, "users group 2"), jwtA);
+        performCreateGroupRequest(new CreateGroupDto(usersGroup2Name, "users group 2"), jwtA, userA);
         assertGroupsEquals(new String[]{
                 "data.mydata1.operators@common.contoso.com",
                 "users@common.contoso.com",
                 dataGroupEmail,
                 usersGroup1Email,
                 usersGroup2Email
-        }, performListGroupRequest(jwtA));
+        }, performListGroupRequest(jwtA, userA));
 
         // users group 1 was added to data group
-        performAddMemberRequest(new AddMemberDto(usersGroup1Email, Role.MEMBER), dataGroupEmail, jwtA);
+        performAddMemberRequest(new AddMemberDto(usersGroup1Email, Role.MEMBER), dataGroupEmail, jwtA, userA);
         assertMembersEquals(new String[]{
                 userA,
                 "users.data.root@common.contoso.com",
                 usersGroup1Email
-        }, performListMemberRequest(dataGroupEmail, jwtA));
+        }, performListMemberRequest(dataGroupEmail, jwtA, userA));
 
         // users group 2 was added to users group 1
-        performAddMemberRequest(new AddMemberDto(usersGroup2Email, Role.MEMBER), usersGroup1Email, jwtA);
+        performAddMemberRequest(new AddMemberDto(usersGroup2Email, Role.MEMBER), usersGroup1Email, jwtA, userA);
         assertMembersEquals(new String[]{
                 userA,
                 "users.data.root@common.contoso.com",
                 usersGroup2Email
-        }, performListMemberRequest(usersGroup1Email, jwtA));
+        }, performListMemberRequest(usersGroup1Email, jwtA, userA));
 
         // users group 1 email was updated
         String newUsersGroup1Name = "users.testusers3.operators";
@@ -418,7 +421,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         checkBootstrappedGroupCannotBeRenamed(newUsersGroup1Name);
 
         performUpdateGroupRequest(Collections.singletonList(getRenameGroupOperation(newUsersGroup1Name)),
-                usersGroup1Email, datafierJWT);
+                usersGroup1Email, datafierJWT, datafier, Collections.singletonList("test.com"));
         usersGroup1Email = newUsersGroup1Email;
         assertGroupsEquals(new String[]{
                 "data.mydata1.operators@common.contoso.com",
@@ -426,26 +429,26 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 dataGroupEmail,
                 usersGroup1Email, // updated email
                 usersGroup2Email
-        }, performListGroupRequest(jwtA));
+        }, performListGroupRequestWithAppId(jwtA, userA, Collections.singletonList("test.com")));
 
         // data group has a member with updated email
         assertMembersEquals(new String[]{
                 userA,
                 "users.data.root@common.contoso.com",
                 usersGroup1Email // updated email
-        }, performListMemberRequest(dataGroupEmail, jwtA));
+        }, performListMemberRequest(dataGroupEmail, jwtA, userA));
 
         // users group 2 still is a member of users group 1 even after the updated email
         assertMembersEquals(new String[]{
                 userA,
                 "users.data.root@common.contoso.com",
                 usersGroup2Email
-        }, performListMemberRequest(usersGroup1Email, jwtA)); // updated email
+        }, performListMemberRequest(usersGroup1Email, jwtA, userA)); // updated email
 
         // clean-up
-        performDeleteGroupRequest(dataGroupEmail, datafierJWT);
-        performDeleteGroupRequest(usersGroup1Email, datafierJWT);
-        performDeleteGroupRequest(usersGroup2Email, datafierJWT);
+        performDeleteGroupRequest(dataGroupEmail, datafierJWT, datafier);
+        performDeleteGroupRequest(usersGroup1Email, datafierJWT, datafier);
+        performDeleteGroupRequest(usersGroup2Email, datafierJWT, datafier);
     }
 
     private void checkThatUsersGroupCannotBeRenamedByExistingName() throws Exception {
@@ -453,23 +456,23 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         String usersGroup1Name = "users.testusers1.operators";
         String usersGroup1Email = usersGroup1Name + "@common.contoso.com";
         performCreateGroupRequest(
-                new CreateGroupDto(usersGroup1Name, "users group 1 to be updated by a new email"), jwtA);
+                new CreateGroupDto(usersGroup1Name, "users group 1 to be updated by a new email"), jwtA, userA);
         assertGroupsEquals(new String[]{
                 "data.mydata1.operators@common.contoso.com",
                 "users@common.contoso.com",
                 usersGroup1Email
-        }, performListGroupRequest(jwtA));
+        }, performListGroupRequest(jwtA, userA));
 
         // users group 2 was created
         String usersGroup2Name = "users.testusers2.operators";
         String usersGroup2Email = usersGroup2Name + "@common.contoso.com";
-        performCreateGroupRequest(new CreateGroupDto(usersGroup2Name, "users group 2"), jwtA);
+        performCreateGroupRequest(new CreateGroupDto(usersGroup2Name, "users group 2"), jwtA, userA);
         assertGroupsEquals(new String[]{
                 "data.mydata1.operators@common.contoso.com",
                 "users@common.contoso.com",
                 usersGroup1Email,
                 usersGroup2Email
-        }, performListGroupRequest(jwtA));
+        }, performListGroupRequest(jwtA, userA));
 
         // bad request when users group 1 email is updated by users group 2 name
         mockMvc.perform(patch("/groups/{group_email}", usersGroup1Email)
@@ -477,6 +480,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .content(objectMapper.writeValueAsString(Collections.singletonList(getRenameGroupOperation(usersGroup2Name))))
                 .header(DpsHeaders.AUTHORIZATION, "Bearer " + datafierJWT)
+                .header(DpsHeaders.USER_ID, datafier)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"code\":400,\"reason\":\"Bad Request\"," +
@@ -488,11 +492,11 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "users@common.contoso.com",
                 usersGroup1Email,
                 usersGroup2Email
-        }, performListGroupRequest(jwtA));
+        }, performListGroupRequest(jwtA, userA));
 
         // clean-up
-        performDeleteGroupRequest(usersGroup1Email, datafierJWT);
-        performDeleteGroupRequest(usersGroup2Email, datafierJWT);
+        performDeleteGroupRequest(usersGroup1Email, datafierJWT, datafier);
+        performDeleteGroupRequest(usersGroup2Email, datafierJWT, datafier);
     }
 
     private void checkThatUsersGroupCannotBeRenamedToBootstrapGroup(final String existingGroupEmail) throws Exception {
@@ -504,6 +508,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .content(objectMapper.writeValueAsString(Collections.singletonList(getRenameGroupOperation(nameOfBootstrappedGroup))))
                 .header(DpsHeaders.AUTHORIZATION, "Bearer " + datafierJWT)
+                .header(DpsHeaders.USER_ID, datafier)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"code\":400,\"reason\":\"Bad Request\"," +
@@ -515,7 +520,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                         "data.testdata.operators@common.contoso.com",
                         "users.testusers2.operators@common.contoso.com",
                         "users@common.contoso.com"},
-                performListGroupRequest(jwtA));
+                performListGroupRequest(jwtA, userA));
     }
 
     private void checkBootstrappedGroupCannotBeRenamed(final String newGroupName) throws Exception {
@@ -528,6 +533,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .content(objectMapper.writeValueAsString(Collections.singletonList(getRenameGroupOperation(newGroupName))))
                 .header(DpsHeaders.AUTHORIZATION, "Bearer " + datafierJWT)
+                .header(DpsHeaders.USER_ID, datafier)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("{\"code\":400,\"reason\":\"Bad Request\"," +
@@ -539,45 +545,49 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                         "data.testdata.operators@common.contoso.com",
                         "users.testusers2.operators@common.contoso.com",
                         "users@common.contoso.com"},
-                performListGroupRequest(jwtA));
+                performListGroupRequest(jwtA, userA));
     }
 
-    private void performCreateGroupRequest(CreateGroupDto dto, String jwt) throws Exception {
+    private void performCreateGroupRequest(CreateGroupDto dto, String jwt, String userId) throws Exception {
         mockMvc.perform(post("/groups")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common")
+                .header(DpsHeaders.USER_ID, userId)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated());
     }
 
-    private ListGroupResponseDto performListGroupRequest(String jwt) throws Exception {
+    private ListGroupResponseDto performListGroupRequest(String jwt, String userId) throws Exception {
         ResultActions result = mockMvc.perform(get("/groups")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
+                .header(DpsHeaders.USER_ID, userId)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common"));
         return objectMapper.readValue(
                 result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                 ListGroupResponseDto.class);
     }
 
-    private void performAddMemberRequest(AddMemberDto dto, String groupEmail, String jwt) throws Exception {
+    private void performAddMemberRequest(AddMemberDto dto, String groupEmail, String jwt, String userId) throws Exception {
         mockMvc.perform(post("/groups/{group_email}/members", groupEmail)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common")
+                .header(DpsHeaders.USER_ID, userId)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk());
     }
 
-    private ListMemberResponseDto performListMemberRequest(String groupEmail, String jwt) throws Exception {
+    private ListMemberResponseDto performListMemberRequest(String groupEmail, String jwt, String userId) throws Exception {
         ResultActions result = mockMvc.perform(get("/groups/{group_email}/members", groupEmail)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
+                .header(DpsHeaders.USER_ID, userId)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common"))
                 .andExpect(status().isOk());
 
@@ -586,32 +596,49 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 ListMemberResponseDto.class);
     }
 
-    private void performRemoveMemberRequest(String groupEmail, String memberEmail, String jwt) throws Exception {
+    private void performRemoveMemberRequest(String groupEmail, String memberEmail, String jwt, String userId) throws Exception {
         mockMvc.perform(delete("/groups/{group_email}/members/{member_email}", groupEmail, memberEmail)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
+                .header(DpsHeaders.USER_ID, userId)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common"))
                 .andExpect(status().isNoContent());
     }
 
-    private void performDeleteGroupRequest(String groupEmail, String jwt) throws Exception {
+    private void performDeleteGroupRequest(String groupEmail, String jwt, String userId) throws Exception {
         mockMvc.perform(delete("/groups/{group_email}", groupEmail)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
+                .header(DpsHeaders.USER_ID, userId)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common"))
                 .andExpect(status().isNoContent());
     }
 
-    private void performUpdateGroupRequest(List<UpdateGroupOperation> operations, String groupEmail, String jwt) throws Exception {
+    private void performUpdateGroupRequest(List<UpdateGroupOperation> operations, String groupEmail, String jwt, String userId, List<String> appIds) throws Exception {
         mockMvc.perform(patch("/groups/{group_email}", groupEmail)
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common")
+                .header(DpsHeaders.USER_ID, userId)
+                .header(DpsHeaders.APP_ID, appIds)
                 .content(objectMapper.writeValueAsString(operations)))
                 .andExpect(status().isOk());
+    }
+
+    private ListGroupResponseDto performListGroupRequestWithAppId(String jwt, String userId, List<String> appIds) throws Exception {
+        ResultActions result = mockMvc.perform(get("/groups")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding(StandardCharsets.UTF_8.name())
+                .header(DpsHeaders.AUTHORIZATION, "Bearer " + jwt)
+                .header(DpsHeaders.USER_ID, userId)
+                .header(DpsHeaders.APP_ID, appIds)
+                .header(DpsHeaders.DATA_PARTITION_ID, "common"));
+        return objectMapper.readValue(
+                result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
+                ListGroupResponseDto.class);
     }
 
     private void assertMembersEquals(final String[] expectedMemberEmails, final ListMemberResponseDto dto) {

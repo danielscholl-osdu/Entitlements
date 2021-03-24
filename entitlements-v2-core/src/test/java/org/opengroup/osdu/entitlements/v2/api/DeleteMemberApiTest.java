@@ -106,6 +106,7 @@ public class DeleteMemberApiTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding(StandardCharsets.UTF_8.name())
                 .header(DpsHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                .header(DpsHeaders.USER_ID,"a@b.com")
                 .header(DpsHeaders.DATA_PARTITION_ID, partitionId))
                 .andDo(print());
     }

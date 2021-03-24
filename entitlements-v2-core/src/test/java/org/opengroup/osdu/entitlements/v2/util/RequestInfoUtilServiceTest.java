@@ -7,11 +7,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.entitlements.v2.AppProperties;
-import org.opengroup.osdu.entitlements.v2.auth.JwtClaimExtractor;
-import org.opengroup.osdu.entitlements.v2.auth.JwtClaims;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +27,7 @@ public class RequestInfoUtilServiceTest {
     private AppProperties appProperties;
 
     @Mock
-    private JwtClaimExtractor jwtClaimExtractor;
+    private JaxRsDpsLog log;
 
     @InjectMocks
     private RequestInfoUtilService requestInfoUtilService;
@@ -73,26 +72,22 @@ public class RequestInfoUtilServiceTest {
     }
 
     @Test
-    public void shouldReturnAppIdSuccessfully() {
-        JwtClaims jwtClaims = new JwtClaims("email", "appId");
-        Mockito.when(jwtClaimExtractor.extract("token")).thenReturn(jwtClaims);
+    public void shouldReturnUserIdSuccessfullyWhenNewUserIdHeaderIsPresent() {
         Map<String, String> map = new HashMap<>();
         map.put(DpsHeaders.AUTHORIZATION, "token");
+        map.put(DpsHeaders.USER_ID, "user_id");
         DpsHeaders dpsHeaders = new DpsHeaders();
         dpsHeaders.getHeaders().putAll(map);
-
-        Assert.assertEquals(jwtClaims.getAppId(), requestInfoUtilService.getAppId(dpsHeaders));
+        Assert.assertEquals("user_id", requestInfoUtilService.getUserId(dpsHeaders));
     }
 
     @Test
-    public void shouldReturnUserIdSuccessfully() {
-        JwtClaims jwtClaims = new JwtClaims("email", "appId");
-        Mockito.when(jwtClaimExtractor.extract("token")).thenReturn(jwtClaims);
+    public void shouldReturnAppIdSuccessfullyWhenAppIdHeaderIsPresent() {
         Map<String, String> map = new HashMap<>();
         map.put(DpsHeaders.AUTHORIZATION, "token");
+        map.put(DpsHeaders.APP_ID, "app_id");
         DpsHeaders dpsHeaders = new DpsHeaders();
         dpsHeaders.getHeaders().putAll(map);
-
-        Assert.assertEquals(jwtClaims.getUserId(), requestInfoUtilService.getUserId(dpsHeaders));
+        Assert.assertEquals("app_id", requestInfoUtilService.getAppId(dpsHeaders));
     }
 }
