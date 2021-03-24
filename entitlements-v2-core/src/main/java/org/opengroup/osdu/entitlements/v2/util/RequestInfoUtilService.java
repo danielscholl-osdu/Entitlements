@@ -1,10 +1,10 @@
 package org.opengroup.osdu.entitlements.v2.util;
 
 import org.apache.commons.lang3.StringUtils;
+import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.entitlements.v2.AppProperties;
-import org.opengroup.osdu.entitlements.v2.auth.JwtClaimExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,15 +18,19 @@ public class RequestInfoUtilService {
     @Autowired
     private AppProperties appProperties;
     @Autowired
-    private JwtClaimExtractor jwtClaimExtractor;
+    private JaxRsDpsLog log;
 
 
     public String getAppId(final DpsHeaders dpsHeaders) {
-        return jwtClaimExtractor.extract(dpsHeaders.getAuthorization()).getAppId();
+        String appId = dpsHeaders.getAppId();
+        log.info(String.format("Getting App Id from Headers: %s", appId));
+        return appId;
     }
 
     public String getUserId(final DpsHeaders dpsHeaders) {
-        return jwtClaimExtractor.extract(dpsHeaders.getAuthorization()).getUserId();
+        String userId = dpsHeaders.getUserId();
+        log.info(String.format("Getting User Id from Headers: %s", userId));
+        return userId;
     }
 
     public String getDomain(final String partitionId) {
