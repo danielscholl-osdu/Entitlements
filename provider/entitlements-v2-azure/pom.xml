@@ -27,11 +27,37 @@
             <artifactId>entitlements-v2-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!--
+        Old versions of 'com.nimbusds:oauth2-oidc-sdk' and 'com.microsoft.azure:msal4j' are excluded
+        because they cannot work with Spring Boot version 2.4.x
+
+        New version of 'com.microsoft.azure:msal4j' is added to work with Spring Boot version 2.4.x
+
+        Stay tuned for a new version of 'com.azure:azure-identity', they started releasing updates, but it's still in beta.
+        More details here: https://github.com/Azure/azure-sdk-for-java
+        -->
         <dependency>
             <groupId>org.opengroup.osdu</groupId>
             <artifactId>core-lib-azure</artifactId>
             <version>${core-lib-azure.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.nimbusds</groupId>
+                    <artifactId>oauth2-oidc-sdk</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.microsoft.azure</groupId>
+                    <artifactId>msal4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+        <dependency>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>msal4j</artifactId>
+            <version>1.9.1</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>

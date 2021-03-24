@@ -17,17 +17,6 @@ public abstract class RemoveMemberTest extends AcceptanceBaseTest {
     }
 
     @Override
-    protected RequestData getRequestDataForUnauthorizedTest() {
-        Token noAccessToken = tokenService.getNoDataAccessToken();
-        final String groupEmail = configurationService.getIdOfGroup("group");
-        return RequestData.builder()
-                .method("DELETE").dataPartitionId(configurationService.getTenantId())
-                .relativePath(String.format("groups/%s/members/%s", groupEmail, "member@test.com"))
-                .token(noAccessToken.getValue())
-                .build();
-    }
-
-    @Override
     protected RequestData getRequestDataForNoTokenTest() {
         final String groupEmail = configurationService.getIdOfGroup("group");
         return RequestData.builder()

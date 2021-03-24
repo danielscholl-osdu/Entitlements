@@ -3,6 +3,7 @@
 entitlements-v2-azure is a [Spring Boot](https://spring.io/projects/spring-boot) service which hosts CRUD APIs that enable management of user entitlements.
 Data kept in Azure cosmos graph database.
 
+
 ### Graph structure
 
 `id` - auto-generated property <br/>
@@ -63,6 +64,7 @@ Parent edge:
         "outV": "***"
     }
 
+
 ### Requirements
 
 In order to run this service locally, you will need the following:
@@ -71,6 +73,7 @@ In order to run this service locally, you will need the following:
 - [AdoptOpenJDK8](https://adoptopenjdk.net/)
 - Infrastructure dependencies, deployable through the relevant [infrastructure template](https://dev.azure.com/slb-des-ext-collaboration/open-data-ecosystem/_git/infrastructure-templates?path=%2Finfra&version=GBmaster&_a=contents)
 - While not a strict dependency, example commands in this document use [bash](https://www.gnu.org/software/bash/)
+
 
 ### General Tips
 
@@ -84,9 +87,10 @@ This project uses [Lombok](https://projectlombok.org/) for code generation. You 
  - [Intellij configuration](https://projectlombok.org/setup/intellij)
  - [VSCode configuration](https://projectlombok.org/setup/vscode)
 
+
 ### Environment Variables
 
-In order to run the service locally, you will need to have the following environment variables defined.
+In order to run the service locally, you will need to have defined environment variables that you can find [here](https://community.opengroup.org/osdu/platform/deployment-and-operations/infra-azure-provisioning/-/blob/master/tools/variables/entitlements.sh#L150).
 
 **Note** The following command can be useful to pull secrets from keyvault:
 ```bash
@@ -100,23 +104,6 @@ az keyvault secret show --vault-name $KEY_VAULT_NAME --name $KEY_VAULT_SECRET_NA
 In Order to run service with Istio authentication, add below environment variables. This is needed only to test Istio filter scenarios,
 with these settings service expects "x-payload" header which contains Base64 encoded format of Payload. In this approach service will not do Authentication.
 
- name | value | description | sensitive? | source |
-| ---  | ---   | ---         | ---        | ---    |
-| `azure_istioauth_enabled` | `true` | Flag to Disable AAD auth | no | -- |
-| `service_domain_name` | ex `contoso.com` | The name of the domain for which the service will run | no | output of infrastructure deployment |
-
-**Required to run integration tests**
-
-| name | value | description | sensitive? | source |
-| ---  | ---   | ---         | ---        | ---    |
-| `ENTITLEMENT_V2_URL` | ex `http://localhost:8080/api/entitlements/v2` | The host where the service is running | no | -- |
-| `DOMAIN` | ex `contoso.com` | The domain of the environment | no | -- |
-| `INTEGRATION_TESTER` | `********` | System identity to assume for API calls. Note: this user must have entitlements configured already | no | -- |
-| `AZURE_TESTER_SERVICEPRINCIPAL_SECRET` | `********` | Secret for `$INTEGRATION_TESTER` | yes | -- |
-| `AZURE_AD_TENANT_ID` | `********` | AD tenant to authenticate users from | yes | -- |
-| `AZURE_AD_APP_RESOURCE_ID` | `********` | AAD client application ID | yes | output of infrastructure deployment |
-| `NO_DATA_ACCESS_TESTER` | `********` | Service principal ID of a service principal without entitlements | yes | `osdu-infra-test-app-noaccess-id` secret from keyvault |
-| `NO_DATA_ACCESS_TESTER_SERVICEPRINCIPAL_SECRET` | `********` | Secret for `$NO_DATA_ACCESS_TESTER` | yes | `osdu-infra-test-app-noaccess-key` secret from keyvault |
 
 ### Build and run the application
 
@@ -136,25 +123,82 @@ $ java -jar $(find provider/entitlements-v2-azure/target/ -name '*-spring-boot.j
 $ ./mvnw spring-boot:run -pl provider/entitlements-v2-azure
 ```
 
-### Test the application
-How to setup local environment, including cosmos db, please refer to: testing/entitlements-v2-test-azure/README.md
 
-How to run the integration tests:
+### Test the application
+
+#### Using Cloud Infrastructure
+
+1. Run Entitlements V2 service from Azure provider (assumed that all the required environment variables are specified for using Cloud Infrastructure).
+
+2. Define environment variables for integration tests (e.g. maven options):
+
+| Name                                   | Value                                          | Description                                                                                        | Sensitive? | Source                              |
+| -------------------------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------------- | ---------- | ----------------------------------- |
+| `ENTITLEMENT_V2_URL`                   | ex `http://localhost:8080/api/entitlements/v2` | The host where the service is running                                                              | no         | --                                  |
+| `DOMAIN`                               | ex `contoso.com`                               | The domain of the environment                                                                      | no         | --                                  |
+| `INTEGRATION_TESTER`                   | `********`                                     | System identity to assume for API calls. Note: this user must have entitlements configured already | no         | --                                  |
+| `AZURE_TESTER_SERVICEPRINCIPAL_SECRET` | `********`                                     | Secret for `INTEGRATION_TESTER`                                                                    | yes        | --                                  |
+| `AZURE_AD_TENANT_ID`                   | `********`                                     | AD tenant to authenticate users from                                                               | yes        | --                                  |
+| `AZURE_AD_APP_RESOURCE_ID`             | `********`                                     | AAD client application ID                                                                          | yes        | output of infrastructure deployment |
+
+3. Run integration tests:
 
 ```bash
 # build + install integration test core
 $ ./mvnw compile -f testing/entitlements-v2-test-core
 
 # build + run Azure integration tests.
-#
-# Note: this assumes that the environment variables for integration tests as outlined
-#       above are already exported in your environment.
 $ ./mvnw test -f testing/entitlements-v2-test-azure
 ```
+
+#### Using CosmosDB Emulator
+
+1. Set up CosmosDB Emulator
+    - Download [Azure Cosmos emulator](https://docs.microsoft.com/en-us/azure/cosmos-db/local-emulator?tabs=cli%2Cssl-netstd21#download-the-emulator) and save the program to your desktop
+    - Navigate to the directory and start the emulator from command prompt. This should pop up the Emulator in localhost:8081
+       ```
+       Microsoft.Azure.Cosmos.Emulator.exe /EnableGremlinEndpoint
+       ```
+    - Go to Explorer tab and create a database `osdu-graph` and a collection `Entitlements`. For the partition key, use `/dataPartitionId`
+
+2. Using this tool [Entitlements data uploader](https://community.opengroup.org/osdu/platform/deployment-and-operations/infra-azure-provisioning/-/tree/master/tools/test_data/entitlements_data_uploader), populate CosmosDB Emulator by required data for integration tests.
+
+3. Temporarily hardcode in `provider/entitlements-v2-azure/src/main/resources/application.properties` the following properties:
+    - `app.gremlin.port`=`8901`
+    - `app.gremlin.sslEnabled`=`false`
+
+4. Temporarily hardcode in `provider/entitlements-v2-azure/src/main/java/org/opengroup/osdu/entitlements/v2/azure/AzureAppProperties.java` the following methods so that they start returning such values:
+    - `getGraphDbEndpoint()`=`localhost`
+    - `getGraphDbPassword()`=`C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==`
+
+5. Run Entitlements V2 service from Azure provider.
+
+6. Define environment variables for integration tests (e.g. maven options):
+
+| Name                                   | Value                                          | Description                                                                                        | Sensitive? | Source                              |
+| -------------------------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------------- | ---------- | ----------------------------------- |
+| `ENTITLEMENT_V2_URL`                   | ex `http://localhost:8080/api/entitlements/v2` | The host where the service is running                                                              | no         | --                                  |
+| `DOMAIN`                               | ex `contoso.com`                               | The domain of the environment                                                                      | no         | --                                  |
+| `INTEGRATION_TESTER`                   | `********`                                     | System identity to assume for API calls. Note: this user must have entitlements configured already | no         | --                                  |
+| `AZURE_TESTER_SERVICEPRINCIPAL_SECRET` | `********`                                     | Secret for `INTEGRATION_TESTER`                                                                    | yes        | --                                  |
+| `AZURE_AD_TENANT_ID`                   | `********`                                     | AD tenant to authenticate users from                                                               | yes        | --                                  |
+| `AZURE_AD_APP_RESOURCE_ID`             | `********`                                     | AAD client application ID                                                                          | yes        | output of infrastructure deployment |
+
+7. Run integration tests:
+
+```bash
+# build + install integration test core
+$ ./mvnw compile -f testing/entitlements-v2-test-core
+
+# build + run Azure integration tests.
+$ ./mvnw test -f testing/entitlements-v2-test-azure
+```
+
 
 ## Debugging
 
 Jet Brains - the authors of Intellij IDEA, have written an [excellent guide](https://www.jetbrains.com/help/idea/debugging-your-first-java-application.html) on how to debug java programs.
+
 
 ## Deploying the Service
 
@@ -162,6 +206,7 @@ Service deployments into Azure are standardized to make the process the same for
 closely related to the infrastructure deployed. The steps to deploy into Azure can be [found here](https://github.com/azure/osdu-infrastructure)
 
 The default ADO pipeline is /devops/pipeline.yml
+
 
 ## License
 Copyright © Microsoft Corporation
@@ -177,3 +222,4 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+

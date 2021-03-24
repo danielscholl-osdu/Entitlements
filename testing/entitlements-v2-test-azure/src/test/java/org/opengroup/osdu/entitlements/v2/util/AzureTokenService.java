@@ -15,13 +15,7 @@ public class AzureTokenService implements TokenService {
             System.getProperty("AZURE_AD_TENANT_ID", System.getenv("AZURE_AD_TENANT_ID"));
     private static final String APP_RESOURCE_ID =
             System.getProperty("AZURE_AD_APP_RESOURCE_ID", System.getenv("AZURE_AD_APP_RESOURCE_ID"));
-    private static final String NO_DATA_ACCESS_CLIENT_ID =
-            System.getProperty("NO_DATA_ACCESS_TESTER", System.getenv("NO_DATA_ACCESS_TESTER"));
-    private static final String NO_DATA_ACCESS_CLIENT_SECRET =
-            System.getProperty("NO_DATA_ACCESS_TESTER_SERVICEPRINCIPAL_SECRET",
-                    System.getenv("NO_DATA_ACCESS_TESTER_SERVICEPRINCIPAL_SECRET"));
     private static String TOKEN;
-    private static String NODATAACEESSTOKEN;
 
     /**
      * Returns token of a service principal
@@ -29,7 +23,7 @@ public class AzureTokenService implements TokenService {
     @Override
     public synchronized Token getToken() {
         if (Strings.isNullOrEmpty(TOKEN)) {
-            TOKEN = retrieveToken(CLIENT_ID, CLIENT_SECRET);
+            TOKEN = retrieveToken();
         }
         return Token.builder()
                 .value(TOKEN)
@@ -37,19 +31,9 @@ public class AzureTokenService implements TokenService {
                 .build();
     }
 
-    @Override
-    public synchronized Token getNoDataAccessToken() {
-        if (Strings.isNullOrEmpty(NODATAACEESSTOKEN)) {
-            NODATAACEESSTOKEN = retrieveToken(NO_DATA_ACCESS_CLIENT_ID, NO_DATA_ACCESS_CLIENT_SECRET);
-        }
-        return Token.builder()
-                .value(NODATAACEESSTOKEN)
-                .userId(NO_DATA_ACCESS_CLIENT_ID)
-                .build();    }
-
-    private String retrieveToken(String clientId, String clientSecret) {
+    private String retrieveToken() {
         try {
-            return new AzureServicePrincipal().getIdToken(clientId, clientSecret, TENANT_ID, APP_RESOURCE_ID);
+            return new AzureServicePrincipal().getIdToken(CLIENT_ID, CLIENT_SECRET, TENANT_ID, APP_RESOURCE_ID);
         } catch (Exception e) {
             throw new RuntimeException("Cannot retrieve token", e);
         }

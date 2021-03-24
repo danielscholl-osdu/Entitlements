@@ -17,17 +17,6 @@ public abstract class GetMembersTest extends AcceptanceBaseTest {
     }
 
     @Override
-    protected RequestData getRequestDataForUnauthorizedTest() {
-        Token noAccessToken = tokenService.getNoDataAccessToken();
-        final String groupEmail = configurationService.getIdOfGroup("group");
-        return RequestData.builder()
-                .method("GET").dataPartitionId(configurationService.getTenantId())
-                .relativePath(String.format("groups/%s/members", groupEmail))
-                .token(noAccessToken.getValue())
-                .build();
-    }
-
-    @Override
     protected RequestData getRequestDataForNoTokenTest() {
         final String groupEmail = configurationService.getIdOfGroup("group");
         return RequestData.builder()

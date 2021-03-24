@@ -25,8 +25,6 @@ public abstract class AcceptanceBaseTest {
         this.currentTime = System.currentTimeMillis();
     }
 
-    protected abstract RequestData getRequestDataForUnauthorizedTest();
-
     protected abstract RequestData getRequestDataForNoTokenTest();
 
     protected void cleanup() throws Exception {
