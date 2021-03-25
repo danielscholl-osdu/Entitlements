@@ -29,6 +29,7 @@ import org.opengroup.osdu.entitlements.v2.di.WhitelistSvcAccBeanConfiguration;
 import org.opengroup.osdu.entitlements.v2.gcp.GcpAppProperties;
 import org.opengroup.osdu.entitlements.v2.gcp.service.PartitionRedisInstanceService;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
+import org.opengroup.osdu.entitlements.v2.model.GroupType;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberDto;
@@ -228,6 +229,9 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "users.myusers.operators@common.contoso.com",
                 "users.myusers2.operators@common.contoso.com"}, performListGroupRequest(jwtC, userC));
 
+        //list groups by memberEmail
+        listGroupsByMemberEmail();
+
         //remove data group A from Data group B
         performRemoveMemberRequest(dataGroup2, dataGroup1, jwtA, userA);
 
@@ -326,6 +330,24 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "data.mydata1.operators@common.contoso.com"}, performListMemberRequest(dataGroup2, jwtA, userA));
         assertMembersEquals(new String[]{userA,
                 "users.data.root@common.contoso.com"}, performListMemberRequest(dataGroup1, jwtA, userA));
+    }
+
+    private void listGroupsByMemberEmail() throws Exception {
+        // when argument passed is NONE
+        assertGroupsEquals(new String[]{"users@common.contoso.com",
+                "data.mydata2.operators@common.contoso.com",
+                "users.myusers.operators@common.contoso.com",
+                "data.mydata1.operators@common.contoso.com"}, performListGroupsOnBehalfOfRequest(userA, String.valueOf(GroupType.NONE)));
+
+        // when argument passed is DATA
+        assertGroupsEquals(new String[]{"data.mydata2.operators@common.contoso.com",
+                "data.mydata1.operators@common.contoso.com"}, performListGroupsOnBehalfOfRequest(userA, String.valueOf(GroupType.DATA)));
+
+        //when argument is USER
+        assertGroupsEquals(new String[]{
+                "users@common.contoso.com",
+                "users.myusers.operators@common.contoso.com"}, performListGroupsOnBehalfOfRequest(userA, String.valueOf(GroupType.USER)));
+
     }
 
     private void updateGroupMetadata() throws Exception {
@@ -546,6 +568,19 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                         "users.testusers2.operators@common.contoso.com",
                         "users@common.contoso.com"},
                 performListGroupRequest(jwtA, userA));
+    }
+
+    private ListGroupResponseDto performListGroupsOnBehalfOfRequest(String memberEmail, String groupType) throws Exception {
+        ResultActions result = mockMvc.perform(get("/members/{member_email}/groups", memberEmail)
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding(StandardCharsets.UTF_8.name())
+                .header(DpsHeaders.AUTHORIZATION, "Bearer " + datafierJWT)
+                .header(DpsHeaders.USER_ID, datafier)
+                .header(DpsHeaders.DATA_PARTITION_ID, "common")
+                .queryParam("type", groupType));
+        return objectMapper.readValue(
+                result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
+                ListGroupResponseDto.class);
     }
 
     private void performCreateGroupRequest(CreateGroupDto dto, String jwt, String userId) throws Exception {

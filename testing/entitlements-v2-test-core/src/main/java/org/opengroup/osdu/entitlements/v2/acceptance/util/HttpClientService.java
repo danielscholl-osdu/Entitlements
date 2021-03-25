@@ -18,6 +18,7 @@ import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.Map.Entry;
 import java.util.Set;
 
 public class HttpClientService {
@@ -32,7 +33,12 @@ public class HttpClientService {
 
     public ClientResponse send(RequestData requestData) throws Exception {
         WebResource webResource = client.resource(new URL(baseUrl + requestData.getRelativePath()).toString());
-        final WebResource.Builder builder = webResource.getRequestBuilder();
+        if (!requestData.getQueryParams().isEmpty()) {
+            for (Entry<String, String> entry : requestData.getQueryParams().entrySet()) {
+                webResource = webResource.queryParam(entry.getKey(), entry.getValue());
+            }
+        }
+        WebResource.Builder builder = webResource.getRequestBuilder();
         builder.accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + requestData.getToken())
@@ -62,7 +68,7 @@ public class HttpClientService {
             SSLContext sc = SSLContext.getInstance("TLS");
             sc.init(null, trustAllCerts, new SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        } catch (Exception e) {}
+        } catch (Exception e) {/*do nothing*/}
         allowMethods("PATCH");
         return Client.create();
     }
