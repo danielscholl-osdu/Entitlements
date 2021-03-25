@@ -20,6 +20,7 @@ import org.opengroup.osdu.entitlements.v2.api.DeleteMemberApi;
 import org.opengroup.osdu.entitlements.v2.auth.AuthorizationService;
 import org.opengroup.osdu.entitlements.v2.azure.AzureAppProperties;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
+import org.opengroup.osdu.entitlements.v2.model.GroupType;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.ParentReferences;
 import org.opengroup.osdu.entitlements.v2.model.Role;
@@ -213,6 +214,9 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "data.mydata1.operators@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
                 "users.myusers2.operators@common.contoso.com"}, performListGroupRequest(jwtC, userC));
+
+        //list groups by memberEmail
+        listGroupsByMemberEmail();
 
         removeDataGroup1FromDataGroup2(dataGroup1, dataGroup2);
         deleteDataGroup2(dataGroup2);
@@ -558,6 +562,28 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "users@common.contoso.com"}, performListGroupRequest(jwtA, userA));
     }
 
+    private void listGroupsByMemberEmail() throws Exception {
+        // when argument passed is NONE
+        assertGroupsEquals(new String[]{"data.default.owners@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
+                "users@common.contoso.com",
+                "data.mydata2.operators@common.contoso.com",
+                "users.myusers.operators@common.contoso.com",
+                "data.mydata1.operators@common.contoso.com"}, performListGroupsOnBehalfOfRequest(userA, String.valueOf(GroupType.NONE)));
+
+        // when argument passed is DATA
+        assertGroupsEquals(new String[]{"data.default.owners@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
+                "data.mydata2.operators@common.contoso.com",
+                "data.mydata1.operators@common.contoso.com"}, performListGroupsOnBehalfOfRequest(userA, String.valueOf(GroupType.DATA)));
+
+        //when argument is USER
+        assertGroupsEquals(new String[]{
+                "users@common.contoso.com",
+                "users.myusers.operators@common.contoso.com"}, performListGroupsOnBehalfOfRequest(userA, String.valueOf(GroupType.USER)));
+
+    }
+
     private void checkBootstrappedGroupCannotBeRenamed(final String newGroupName) throws Exception {
         // users group 1 was created
         String bootstrappedGroupEmail = "users.datalake.ops@common.contoso.com";
@@ -663,6 +689,24 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                     .header(DpsHeaders.DATA_PARTITION_ID, "common"));
             return objectMapper.readValue(
                     result.andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString(),
+                    ListGroupResponseDto.class);
+        } catch (Exception e) {
+            Assert.fail("Exception shouldn't take place here");
+        }
+        return ListGroupResponseDto.builder().build();
+    }
+
+    private ListGroupResponseDto performListGroupsOnBehalfOfRequest(String memberId, String groupType) {
+        try {
+            ResultActions result = mockMvc.perform(get("/members/{member_email}/groups", memberId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8.name())
+                    .header(DpsHeaders.AUTHORIZATION, "Bearer " + SERVICE_P_JWT)
+                    .header(DpsHeaders.USER_ID, servicePrincipal)
+                    .header(DpsHeaders.DATA_PARTITION_ID, "common")
+                    .queryParam("type", groupType));
+            return objectMapper.readValue(
+                    result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                     ListGroupResponseDto.class);
         } catch (Exception e) {
             Assert.fail("Exception shouldn't take place here");

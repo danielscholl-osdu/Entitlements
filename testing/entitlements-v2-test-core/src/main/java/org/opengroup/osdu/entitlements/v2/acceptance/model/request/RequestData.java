@@ -2,6 +2,7 @@ package org.opengroup.osdu.entitlements.v2.acceptance.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,5 +19,6 @@ public class RequestData {
     private String body;
     private String dataPartitionId;
     private String token;
+    @Default
     private Map<String, String> queryParams = new HashMap<>();
 }
