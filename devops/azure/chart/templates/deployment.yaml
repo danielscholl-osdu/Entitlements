@@ -71,9 +71,9 @@ spec:
                   key: appinsights
             - name: partition_service_endpoint
               value: http://partition/api/partition/v1
-            - name: cosmosdb_database
-              value: osdu-db
             - name: service_domain_name
               value: {{ .Values.config.domain }}
+            - name: root_data_group_quota
+              value: "{{ .Values.config.quota.group.data.root }}"
             - name: azure_istioauth_enabled
               value: "true"

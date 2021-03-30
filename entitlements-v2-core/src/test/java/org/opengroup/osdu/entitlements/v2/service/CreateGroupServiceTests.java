@@ -1,5 +1,6 @@
 package org.opengroup.osdu.entitlements.v2.service;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -16,6 +17,7 @@ import org.opengroup.osdu.entitlements.v2.model.creategroup.CreateGroupRepoDto;
 import org.opengroup.osdu.entitlements.v2.model.creategroup.CreateGroupServiceDto;
 import org.opengroup.osdu.entitlements.v2.spi.creategroup.CreateGroupRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
+import org.powermock.reflect.Whitebox;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -44,6 +46,11 @@ public class CreateGroupServiceTests {
 
     @InjectMocks
     private CreateGroupService createGroupService;
+
+    @Before
+    public void setup() {
+        Whitebox.setInternalState(createGroupService, "dataRootGroupQuota", 5000);
+    }
 
     @Test
     public void shouldThrow412IfRequesterQuotaHit() {
