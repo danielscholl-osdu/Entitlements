@@ -25,4 +25,8 @@ server:
     contextPath: /api/entitlements/v2
 
 config:
+  quota:
+    group:
+      data:
+        root: 5000
   domain: contoso.com

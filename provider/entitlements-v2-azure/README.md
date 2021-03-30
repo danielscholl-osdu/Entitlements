@@ -90,20 +90,28 @@ This project uses [Lombok](https://projectlombok.org/) for code generation. You 
 
 ### Environment Variables
 
+| name | value | description | sensitive? | source |
+| ---  | ---   | ---         | ---        | ---    |
+| `LOG_PREFIX` | `entitlements` | Logging prefix | no | - |
+| `LOGGING_LEVEL` | `INFO` | Logging level | no | - |
+| `partition_service_endpoint` |  ex `https://foo-partition.azurewebsites.net` | Partition Service API endpoint | no | output of infrastructure deployment |
+| `aad_client_id` | `********` | AAD client application ID | yes | output of infrastructure deployment |
+| `KEYVAULT_URI` | ex `https://foo-keyvault.vault.azure.net/` | URI of KeyVault that holds application secrets | no | output of infrastructure deployment |
+| `appinsights_key` | `********` | API Key for App Insights | yes | output of infrastructure deployment |
+| `AZURE_TENANT_ID` | `********` | AD tenant to authenticate users from | yes | keyvault secret: `$KEYVAULT_URI/secrets/app-dev-sp-tenant-id` |
+| `AZURE_CLIENT_ID` | `********` | Identity to run the service locally. This enables access to Azure resources. You only need this if running locally | yes | keyvault secret: `$KEYVAULT_URI/secrets/app-dev-sp-username` |
+| `AZURE_CLIENT_SECRET` | `********` | Secret for `$AZURE_CLIENT_ID` | yes | keyvault secret: `$KEYVAULT_URI/secrets/app-dev-sp-password` |
+| `azure_istioauth_enabled` | `true` | Flag to Disable AAD auth | no | -- |
+| `server_port` | ex `8080` | Port of the server | no | -- |
+| `service_domain_name` | ex `contoso.com` | domain name of the service | yes | -- |
+| `root_data_group_quota` | ex `5000` | Maximum number of parents a group users.data.root can have | no | -- |
+
 In order to run the service locally, you will need to have defined environment variables that you can find [here](https://community.opengroup.org/osdu/platform/deployment-and-operations/infra-azure-provisioning/-/blob/master/tools/variables/entitlements.sh#L150).
 
 **Note** The following command can be useful to pull secrets from keyvault:
 ```bash
 az keyvault secret show --vault-name $KEY_VAULT_NAME --name $KEY_VAULT_SECRET_NAME --query value -otsv
 ```
-
-**Required to run service**
-
- TODO: Update this section when infrastructure changes will be in place
-
-In Order to run service with Istio authentication, add below environment variables. This is needed only to test Istio filter scenarios,
-with these settings service expects "x-payload" header which contains Base64 encoded format of Payload. In this approach service will not do Authentication.
-
 
 ### Build and run the application
 
@@ -128,18 +136,10 @@ $ ./mvnw spring-boot:run -pl provider/entitlements-v2-azure
 
 #### Using Cloud Infrastructure
 
-1. Run Entitlements V2 service from Azure provider (assumed that all the required environment variables are specified for using Cloud Infrastructure).
+1. Run Entitlements V2 service from Azure provider (assumed that all the required environment variables specified for using Cloud Infrastructure).
 
 2. Define environment variables for integration tests (e.g. maven options):
-
-| Name                                   | Value                                          | Description                                                                                        | Sensitive? | Source                              |
-| -------------------------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------------- | ---------- | ----------------------------------- |
-| `ENTITLEMENT_V2_URL`                   | ex `http://localhost:8080/api/entitlements/v2` | The host where the service is running                                                              | no         | --                                  |
-| `DOMAIN`                               | ex `contoso.com`                               | The domain of the environment                                                                      | no         | --                                  |
-| `INTEGRATION_TESTER`                   | `********`                                     | System identity to assume for API calls. Note: this user must have entitlements configured already | no         | --                                  |
-| `AZURE_TESTER_SERVICEPRINCIPAL_SECRET` | `********`                                     | Secret for `INTEGRATION_TESTER`                                                                    | yes        | --                                  |
-| `AZURE_AD_TENANT_ID`                   | `********`                                     | AD tenant to authenticate users from                                                               | yes        | --                                  |
-| `AZURE_AD_APP_RESOURCE_ID`             | `********`                                     | AAD client application ID                                                                          | yes        | output of infrastructure deployment |
+[See this link](https://community.opengroup.org/osdu/platform/deployment-and-operations/infra-azure-provisioning/-/blob/master/tools/variables/entitlements.sh#L176)
 
 3. Run integration tests:
 
@@ -174,15 +174,7 @@ $ ./mvnw test -f testing/entitlements-v2-test-azure
 5. Run Entitlements V2 service from Azure provider.
 
 6. Define environment variables for integration tests (e.g. maven options):
-
-| Name                                   | Value                                          | Description                                                                                        | Sensitive? | Source                              |
-| -------------------------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------------- | ---------- | ----------------------------------- |
-| `ENTITLEMENT_V2_URL`                   | ex `http://localhost:8080/api/entitlements/v2` | The host where the service is running                                                              | no         | --                                  |
-| `DOMAIN`                               | ex `contoso.com`                               | The domain of the environment                                                                      | no         | --                                  |
-| `INTEGRATION_TESTER`                   | `********`                                     | System identity to assume for API calls. Note: this user must have entitlements configured already | no         | --                                  |
-| `AZURE_TESTER_SERVICEPRINCIPAL_SECRET` | `********`                                     | Secret for `INTEGRATION_TESTER`                                                                    | yes        | --                                  |
-| `AZURE_AD_TENANT_ID`                   | `********`                                     | AD tenant to authenticate users from                                                               | yes        | --                                  |
-| `AZURE_AD_APP_RESOURCE_ID`             | `********`                                     | AAD client application ID                                                                          | yes        | output of infrastructure deployment |
+[See this link](https://community.opengroup.org/osdu/platform/deployment-and-operations/infra-azure-provisioning/-/blob/master/tools/variables/entitlements.sh#L176)
 
 7. Run integration tests:
 
@@ -202,7 +194,7 @@ Jet Brains - the authors of Intellij IDEA, have written an [excellent guide](htt
 
 ## Deploying the Service
 
-Service deployments into Azure are standardized to make the process the same for all services if using ADO and are 
+Service deployments into Azure standardized to make the process the same for all services if using ADO and are
 closely related to the infrastructure deployed. The steps to deploy into Azure can be [found here](https://github.com/azure/osdu-infrastructure)
 
 The default ADO pipeline is /devops/pipeline.yml
