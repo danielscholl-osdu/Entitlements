@@ -22,6 +22,7 @@
         <module>entitlements-v2-core</module>
         <module>provider/entitlements-v2-azure</module>
         <module>provider/entitlements-v2-gcp</module>
+        <module>provider/entitlements-v2-aws</module>
     </modules>
 
     <licenses>
