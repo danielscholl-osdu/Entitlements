@@ -7,12 +7,16 @@ import lombok.Data;
 import lombok.Generated;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @Builder
 @Generated
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddMemberDto {
+    @NotNull
     private String email;
+    @NotNull
     private Role role;
 }

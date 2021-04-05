@@ -9,6 +9,7 @@ import lombok.Generated;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Data
@@ -16,7 +17,8 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateGroupDto {
-    @Pattern(regexp ="^[A-Za-z0-9{}_.-]{3,128}$")
+    @Pattern(regexp = "^[A-Za-z0-9{}_.-]{3,128}$")
+    @NotNull
     private String name;
     @Length(min = 0, max = 256)
     private String description;
