@@ -168,6 +168,12 @@ public class ClusterGremlinConnector implements GremlinConnector {
                         HttpStatus.NOT_FOUND.getReasonPhrase(),
                         RESOURCE_NOT_FOUND_ERROR_MESSAGE, e);
             }
+            if (e.getMessage().contains("Request rate is large")) {
+                throw new AppException(
+                        HttpStatus.TOO_MANY_REQUESTS.value(),
+                        HttpStatus.TOO_MANY_REQUESTS.getReasonPhrase(),
+                        RETRIEVING_RESULT_SET_ERROR_MESSAGE, e);
+            }
             throw new AppException(
                     HttpStatus.INTERNAL_SERVER_ERROR.value(),
                     HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),

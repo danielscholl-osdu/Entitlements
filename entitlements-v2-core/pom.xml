@@ -138,25 +138,19 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.2</version>
+                <version>0.8.6</version>
                 <executions>
                     <execution>
-                        <id>prepare-unit-tests</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
-
-                    <!-- prepare agent for measuring integration tests -->
                     <execution>
-                        <id>prepare-agent</id>
+                        <id>report</id>
+                        <phase>test</phase>
                         <goals>
-                            <goal>prepare-agent</goal>
+                            <goal>report</goal>
                         </goals>
-                        <phase>pre-integration-test</phase>
-                        <configuration>
-                            <propertyName>itCoverageAgent</propertyName>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
