@@ -40,6 +40,7 @@ public class ClusterGremlinConnector implements GremlinConnector {
     private static final String NOT_FOUND_EXCEPTION_TYPE = "NotFoundException";
     private static final String TRAVERSAL_SUBMIT_ERROR_MESSAGE = "Error submitting traversal";
     private static final String RETRIEVING_RESULT_SET_ERROR_MESSAGE = "Error retrieving ResultSet object";
+    private static final String COSMOS_DB_RATE_LIMIT_ERROR_MESSAGE = "Request rate to Cosmos DB is too large";
     private static final String RESOURCE_NOT_FOUND_ERROR_MESSAGE = "Resource Not Found";
     private static final String HTTPS_SCHEME = "https://";
     private static final String ENDPOINT_PORT = ":443/";
@@ -170,9 +171,9 @@ public class ClusterGremlinConnector implements GremlinConnector {
             }
             if (e.getMessage().contains("Request rate is large")) {
                 throw new AppException(
-                        HttpStatus.TOO_MANY_REQUESTS.value(),
-                        HttpStatus.TOO_MANY_REQUESTS.getReasonPhrase(),
-                        RETRIEVING_RESULT_SET_ERROR_MESSAGE, e);
+                        HttpStatus.SERVICE_UNAVAILABLE.value(),
+                        HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase(),
+                        COSMOS_DB_RATE_LIMIT_ERROR_MESSAGE, e);
             }
             throw new AppException(
                     HttpStatus.INTERNAL_SERVER_ERROR.value(),
