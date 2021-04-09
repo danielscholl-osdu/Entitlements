@@ -4,9 +4,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
+import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.core.common.model.tenant.TenantInfo;
 import org.opengroup.osdu.entitlements.v2.AppProperties;
+import org.opengroup.osdu.entitlements.v2.auth.AuthorizationService;
 import org.opengroup.osdu.entitlements.v2.configuration.AppPropertiesTestConfiguration;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
@@ -26,9 +28,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -47,6 +52,8 @@ public class ListMemberServiceTests {
     private RequestInfo requestInfo;
     @MockBean
     private AppProperties appProperties;
+    @MockBean
+    private AuthorizationService authorizationService;
 
     @Autowired
     private ListMemberService listMemberService;
@@ -85,6 +92,30 @@ public class ListMemberServiceTests {
     }
 
     @Test
+    public void shouldThrow401IfCallerDoesNotOwnTheGroup() {
+        EntityNode groupNode = EntityNode.builder().nodeId("data.x@dp.domain.com").name("data.x")
+                .type(NodeType.GROUP).dataPartitionId("dp").build();
+        when(retrieveGroupRepo.groupExistenceValidation("data.x@dp.domain.com", "dp")).thenReturn(groupNode);
+        EntityNode requesterNode = EntityNode.builder().nodeId("requesterid").name("requesterid").type(NodeType.USER).dataPartitionId("dp").build();
+        when(retrieveGroupRepo.getEntityNode("requesterid", "dp")).thenReturn(Optional.of(requesterNode));
+        when(retrieveGroupRepo.groupExistenceValidation("data.y@dp.domain.com", "dp")).thenReturn(groupNode);
+        when(retrieveGroupRepo.hasDirectChild(groupNode, ChildrenReference.createChildrenReference(requesterNode, Role.OWNER))).thenReturn(Boolean.FALSE);
+        when(authorizationService.isAuthorized(any(), eq(AppProperties.ADMIN))).thenThrow(AppException.createUnauthorized(""));
+        ListMemberServiceDto listMemberServiceDto = ListMemberServiceDto.builder()
+                .groupId("data.x@dp.domain.com")
+                .requesterId("requesterid")
+                .partitionId("dp").build();
+        try {
+            listMemberService.run(listMemberServiceDto);
+            fail("should throw exception");
+        } catch (AppException ex) {
+            assertThat(ex.getError().getCode()).isEqualTo(401);
+        } catch (Exception ex) {
+            fail(String.format("should not throw exception: %s", ex.getMessage()));
+        }
+    }
+
+    @Test
     public void shouldReturnResultsIfCallerDoesNotBelongToTheGroupAndCallerIsAdmin() {
         String requesterId = "requesterid";
         String partition = "dp";
@@ -93,6 +124,7 @@ public class ListMemberServiceTests {
         when(retrieveGroupRepo.groupExistenceValidation("data.x@dp.domain.com", partition)).thenReturn(groupNode);
         EntityNode requesterNode = EntityNode.builder().nodeId("requesterid").name("requesterid").type(NodeType.USER).dataPartitionId("dp").build();
         when(retrieveGroupRepo.hasDirectChild(groupNode, ChildrenReference.createChildrenReference(requesterNode, Role.OWNER))).thenReturn(Boolean.FALSE);
+        when(authorizationService.isAuthorized(any(), eq(AppProperties.ADMIN))).thenReturn(true);
         ListMemberServiceDto listMemberServiceDto = ListMemberServiceDto.builder()
                 .groupId("data.x@dp.domain.com")
                 .requesterId(requesterId)
