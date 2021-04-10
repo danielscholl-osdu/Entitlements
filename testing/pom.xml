@@ -4,7 +4,7 @@
 
     <groupId>org.opengroup.osdu.entitlements.v2</groupId>
     <artifactId>os-entitlements-v2-testing</artifactId>
-    <version>0.8.0-SNAPSHOT</version>
+    <version>0.9.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
