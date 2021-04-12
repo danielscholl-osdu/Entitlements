@@ -3,6 +3,9 @@ package org.opengroup.osdu.entitlements.v2.service;
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.core.common.model.http.RequestInfo;
+import org.opengroup.osdu.entitlements.v2.AppProperties;
+import org.opengroup.osdu.entitlements.v2.auth.AuthorizationService;
 import org.opengroup.osdu.entitlements.v2.model.listmember.ListMemberServiceDto;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
@@ -21,6 +24,8 @@ public class ListMemberService {
     private final ListMemberRepo listMemberRepo;
     private final JaxRsDpsLog log;
     private final PermissionService permissionService;
+    private final AuthorizationService authorizationService;
+    private final RequestInfo requestInfo;
 
     private static final String NOT_AUTHORIZED_MESSAGE = "Not authorized to manage members";
 
@@ -35,6 +40,11 @@ public class ListMemberService {
     }
 
     private boolean isCallerHasAdminPermissions() {
-        return true;
+        try {
+            return authorizationService.isAuthorized(requestInfo.getHeaders(), AppProperties.ADMIN);
+        } catch (AppException e) {
+            log.warning("Caller does not have ADMIN permissions", e);
+            return false;
+        }
     }
 }
