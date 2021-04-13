@@ -12,6 +12,7 @@ import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.addmember.AddMemberR
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.EdgePropertyNames;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPropertyNames;
+import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.NodeType;
@@ -22,6 +23,7 @@ import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
@@ -50,6 +52,8 @@ public class RetrieveGroupRepoGremlinTest {
     private GraphTraversalSourceUtilService graphTraversalSourceUtilService;
     @Autowired
     private AddMemberRepoGremlin addMemberRepoGremlin;
+    @MockBean
+    private AuditLogger auditLogger;
 
     @After
     public void cleanup() {

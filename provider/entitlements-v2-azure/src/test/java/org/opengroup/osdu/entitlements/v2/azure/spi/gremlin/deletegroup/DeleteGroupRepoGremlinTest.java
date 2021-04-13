@@ -4,9 +4,12 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.opengroup.osdu.core.common.logging.audit.AuditStatus;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.addmember.AddMemberRepoGremlin;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPropertyNames;
+import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.Role;
@@ -14,6 +17,7 @@ import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
 import org.opengroup.osdu.entitlements.v2.spi.deletegroup.DeleteGroupRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @SpringBootTest
@@ -28,6 +32,9 @@ public class DeleteGroupRepoGremlinTest {
 
     @Autowired
     private AddMemberRepoGremlin addMemberRepoGremlin;
+
+    @MockBean
+    private AuditLogger auditLogger;
 
     @After
     public void cleanup() {
@@ -50,6 +57,7 @@ public class DeleteGroupRepoGremlinTest {
 
         Assert.assertFalse(gremlinConnector.getGraphTraversalSource().V().has(VertexPropertyNames.NODE_ID, "groupMemberId").hasNext());
         Assert.assertTrue(gremlinConnector.getGraphTraversalSource().E().toList().isEmpty());
+        Mockito.verify(auditLogger).deleteGroup(AuditStatus.SUCCESS, "groupMemberId");
     }
 
     private void createGroup(String nodeId) {

@@ -1,6 +1,8 @@
 package org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.creategroup;
 
+import org.opengroup.osdu.core.common.logging.audit.AuditStatus;
 import org.opengroup.osdu.entitlements.v2.azure.service.GraphTraversalSourceUtilService;
+import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
 import org.opengroup.osdu.entitlements.v2.model.creategroup.CreateGroupRepoDto;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
@@ -22,15 +24,19 @@ public class CreateGroupRepoGremlin implements CreateGroupRepo {
     private GraphTraversalSourceUtilService graphTraversalSourceUtilService;
     @Autowired
     private AddMemberRepo addMemberRepo;
+    @Autowired
+    private AuditLogger auditLogger;
 
     @Override
     public Set<String> createGroup(EntityNode groupNode, CreateGroupRepoDto createGroupRepoDto) {
-        graphTraversalSourceUtilService.createGroupVertex(groupNode);
-        addRequesterAsOwnerMemberToGroup(groupNode, createGroupRepoDto);
-        if (createGroupRepoDto.isAddDataRootGroup()) {
-            addRootGroupNodeAsMemberOfGroupNewGroup(groupNode, createGroupRepoDto);
+        try {
+            executeCreateGroupOperation(groupNode, createGroupRepoDto);
+            auditLogger.createGroup(AuditStatus.SUCCESS, groupNode.getNodeId());
+            return new HashSet<>();
+        } catch (Exception e) {
+            auditLogger.createGroup(AuditStatus.FAILURE, groupNode.getNodeId());
+            throw e;
         }
-        return new HashSet<>();
     }
 
     @Override
@@ -52,5 +58,13 @@ public class CreateGroupRepoGremlin implements CreateGroupRepo {
                 .partitionId(createGroupRepoDto.getPartitionId())
                 .role(Role.OWNER).build();
         addMemberRepo.addMember(groupNode, addMemberRepoDto);
+    }
+
+    private void executeCreateGroupOperation(EntityNode groupNode, CreateGroupRepoDto createGroupRepoDto) {
+        graphTraversalSourceUtilService.createGroupVertex(groupNode);
+        addRequesterAsOwnerMemberToGroup(groupNode, createGroupRepoDto);
+        if (createGroupRepoDto.isAddDataRootGroup()) {
+            addRootGroupNodeAsMemberOfGroupNewGroup(groupNode, createGroupRepoDto);
+        }
     }
 }

@@ -13,15 +13,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ListGroupService {
     private final JaxRsDpsLog log;
-    private final AuditLogger auditLogger;
     private final RequestInfo requestInfo;
     private final RetrieveGroupRepo retrieveGroupRepo;
     private final GroupCacheService groupCacheService;
@@ -34,18 +31,11 @@ public class ListGroupService {
         listGroupServiceDto.getPartitionIds().forEach(partitionId ->
                 groups.addAll(groupCacheService.getFromPartitionCache(requesterId, partitionId)));
         log.info(String.format("ListGroupService#run cache look up done timestamp: %d", System.currentTimeMillis()));
-        try {
-            String serviceAccount = requestInfo.getTenantInfo().getServiceAccount();
-            if (serviceAccount.equalsIgnoreCase(requesterId) || Strings.isNullOrEmpty(listGroupServiceDto.getAppId())) {
-                auditLogger.listGroup(AuditStatus.SUCCESS, fetchParentIds(groups));
-                return groups;
-            } else {
-                return filterGroupsByAppId(groups, listGroupServiceDto);
-            }
-        } catch (Exception e) {
-            auditLogger.listGroup(AuditStatus.FAILURE, new ArrayList<>());
-            throw e;
+        String serviceAccount = requestInfo.getTenantInfo().getServiceAccount();
+        if (serviceAccount.equalsIgnoreCase(requesterId) || Strings.isNullOrEmpty(listGroupServiceDto.getAppId())) {
+            return groups;
         }
+        return filterGroupsByAppId(groups, listGroupServiceDto);
     }
 
     private Set<ParentReference> filterGroupsByAppId(Set<ParentReference> groups,
@@ -55,15 +45,8 @@ public class ListGroupService {
         Set<ParentReference> accessibleGroups = new HashSet<>();
         listGroupServiceDto.getPartitionIds().forEach(partitionId ->
                 accessibleGroups.addAll(retrieveGroupRepo.filterParentsByAppId(groups, partitionId, appId)));
-        auditLogger.listGroup(AuditStatus.SUCCESS, fetchParentIds(accessibleGroups));
         log.info(String.format(
                 "ListGroupService#run cache app id filter done timestamp: %d", System.currentTimeMillis()));
         return accessibleGroups;
-    }
-
-    private List<String> fetchParentIds(Set<ParentReference> groups) {
-        return groups.stream()
-                .map(ParentReference::getId)
-                .collect(Collectors.toList());
     }
 }
