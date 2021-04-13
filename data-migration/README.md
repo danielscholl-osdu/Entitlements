@@ -1,4 +1,4 @@
-# Entitlements Data Migration Instractions
+# Entitlements Data Migration Instructions
 
 ## Getting started
 
