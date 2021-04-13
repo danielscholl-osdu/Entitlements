@@ -16,6 +16,7 @@ import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSo
 import org.apache.tinkerpop.gremlin.process.traversal.translator.GroovyTranslator;
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
+import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.azure.AzureAppProperties;
 import org.opengroup.osdu.entitlements.v2.azure.model.NodeEdge;
@@ -57,6 +58,7 @@ public class ClusterGremlinConnector implements GremlinConnector {
     private final VertexUtilService vertexUtilService;
     private Client client;
     private GraphTraversalSource graphTraversalSource;
+    private final JaxRsDpsLog log;
 
     @PostConstruct
     protected void init() {
@@ -163,6 +165,7 @@ public class ClusterGremlinConnector implements GremlinConnector {
             resultList = completableFutureResults.get();
             validateRequestSuccessful(completableFutureStatusAttributes.get());
         } catch (ExecutionException e) {
+            log.error(String.format("getting error from cosmos db: %s", e.getMessage()), e);
             if (isResourceNotFoundException(e)) {
                 throw new AppException(
                         HttpStatus.NOT_FOUND.value(),
