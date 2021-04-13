@@ -1,0 +1,1 @@
+See [infra-azure-provisioning\docs\envoy-multiple-idp-support.md](https://community.opengroup.org/osdu/platform/deployment-and-operations/infra-azure-provisioning/-/blob/master/docs/envoy-multiple-idp-support.md) for details on Envoy filter configuration.
