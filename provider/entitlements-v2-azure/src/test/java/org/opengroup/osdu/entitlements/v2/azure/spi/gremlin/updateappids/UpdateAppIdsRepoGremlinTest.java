@@ -8,12 +8,15 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.opengroup.osdu.core.common.logging.audit.AuditStatus;
 import org.opengroup.osdu.entitlements.v2.azure.service.AddEdgeDto;
 import org.opengroup.osdu.entitlements.v2.azure.service.GraphTraversalSourceUtilService;
 import org.opengroup.osdu.entitlements.v2.azure.service.VertexUtilService;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.EdgePropertyNames;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPropertyNames;
+import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
@@ -21,6 +24,7 @@ import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.spi.updateappids.UpdateAppIdsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
@@ -37,6 +41,8 @@ public class UpdateAppIdsRepoGremlinTest {
     private static final String TEST_PARTITION_ID = "dp";
     private static final String TEST_DOMAIN = TEST_PARTITION_ID + ".contoso.com";
 
+    @MockBean
+    private AuditLogger auditLogger;
     @Autowired
     private UpdateAppIdsRepo updateAppIdsRepo;
     @Autowired
@@ -51,6 +57,18 @@ public class UpdateAppIdsRepoGremlinTest {
         GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
         graphTraversalSource.V().drop().iterate();
         graphTraversalSource.E().drop().iterate();
+    }
+
+    @Test
+    public void shouldLogFailureInAuditLogs() {
+        Set<String> appIds = new HashSet<>(Arrays.asList("app1","app2"));
+        EntityNode groupNode = EntityNode.builder().nodeId("group1").build();
+        try {
+            updateAppIdsRepo.updateAppIds(groupNode, appIds);
+            Assert.fail("Exception is expected here");
+        } catch (Exception e) {
+            Mockito.verify(auditLogger).updateAppIds(AuditStatus.FAILURE, groupNode.getNodeId(), appIds);
+        }
     }
 
     @Test
@@ -126,6 +144,7 @@ public class UpdateAppIdsRepoGremlinTest {
                 .map(vertexUtilService::createParentReference)
                 .map(ParentReference::getId)
                 .collect(Collectors.toSet()));
+        Mockito.verify(auditLogger).updateAppIds(AuditStatus.SUCCESS, "users.x" + "@" + TEST_DOMAIN, allowedAppIds);
 
     }
 
@@ -206,6 +225,7 @@ public class UpdateAppIdsRepoGremlinTest {
                 .map(vertexUtilService::createParentReference)
                 .map(ParentReference::getId)
                 .collect(Collectors.toSet()));
+        Mockito.verify(auditLogger).updateAppIds(AuditStatus.SUCCESS, "users.x" + "@" + TEST_DOMAIN, allowedAppIds);
     }
 
     private AddEdgeDto createAddMemberRequest(String childNodeId, String parentNodeId, Role role) {

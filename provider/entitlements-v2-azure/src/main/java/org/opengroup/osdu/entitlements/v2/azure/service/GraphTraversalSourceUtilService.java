@@ -10,7 +10,6 @@ import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.azure.model.NodeVertex;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
-import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.EdgePropertyNames;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPropertyNames;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.springframework.http.HttpStatus;

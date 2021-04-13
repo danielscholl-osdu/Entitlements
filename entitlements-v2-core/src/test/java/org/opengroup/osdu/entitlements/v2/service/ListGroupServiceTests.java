@@ -45,8 +45,6 @@ public class ListGroupServiceTests {
     @MockBean
     private GroupCacheService groupCacheService;
     @MockBean
-    private AuditLogger auditLogger;
-    @MockBean
     private RequestInfo requestInfo;
 
     @Autowired
@@ -87,7 +85,6 @@ public class ListGroupServiceTests {
         Set<ParentReference> parentReferences = listGroupService.getGroups(listGroupServiceDto);
 
         assertEquals(5, parentReferences.size());
-        verify(auditLogger).listGroup(eq(AuditStatus.SUCCESS), any());
     }
 
     @Test
@@ -108,7 +105,6 @@ public class ListGroupServiceTests {
         Set<ParentReference> parentReferences = listGroupService.getGroups(listGroupServiceDto);
 
         assertEquals(4, parentReferences.size());
-        verify(auditLogger).listGroup(eq(AuditStatus.SUCCESS), any());
     }
 
     @Test
@@ -129,7 +125,6 @@ public class ListGroupServiceTests {
 
         Set<ParentReference> parentReferences = listGroupService.getGroups(listGroupServiceDto);
         assertEquals(4, parentReferences.size());
-        verify(auditLogger).listGroup(eq(AuditStatus.SUCCESS), any());
     }
 
     @Test
@@ -168,6 +163,5 @@ public class ListGroupServiceTests {
         assertTrue(parentReferences.stream().anyMatch(g -> g.getId().equals("g1@dp.domain.com")));
         assertTrue(parentReferences.stream().anyMatch(g -> g.getId().equals("g2@dp.domain.com")));
         assertTrue(parentReferences.stream().anyMatch(g -> g.getId().equals("g5@dp.domain.com")));
-        verify(auditLogger).listGroup(eq(AuditStatus.SUCCESS), any());
     }
 }

@@ -6,8 +6,11 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.opengroup.osdu.core.common.logging.audit.AuditStatus;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPropertyNames;
+import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.NodeType;
@@ -17,6 +20,7 @@ import org.opengroup.osdu.entitlements.v2.spi.creategroup.CreateGroupRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
@@ -28,6 +32,9 @@ import java.util.Set;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class CreateGroupRepoGremlinTest {
+
+    @MockBean
+    private AuditLogger auditLogger;
 
     @Autowired
     private CreateGroupRepo createGroupRepo;
@@ -74,6 +81,7 @@ public class CreateGroupRepoGremlinTest {
         ChildrenReference childrenReference = ChildrenReference.builder()
                 .id("test@test.com").type(NodeType.USER).dataPartitionId("dp").role(Role.OWNER).build();
         Assert.assertTrue(retrieveGroupRepo.hasDirectChild(entityNode, childrenReference));
+        Mockito.verify(auditLogger).createGroup(AuditStatus.SUCCESS, "groupId");
     }
 
     @Test
@@ -113,5 +121,6 @@ public class CreateGroupRepoGremlinTest {
                 .id(dataRootGroupNode.getNodeId()).type(dataRootGroupNode.getType())
                 .dataPartitionId(dataRootGroupNode.getDataPartitionId()).role(Role.MEMBER).build();
         Assert.assertTrue(retrieveGroupRepo.hasDirectChild(entityNode, childrenReferenceOfDataGroup));
+        Mockito.verify(auditLogger).createGroup(AuditStatus.SUCCESS, "groupId");
     }
 }

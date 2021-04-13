@@ -5,17 +5,22 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.opengroup.osdu.core.common.logging.audit.AuditStatus;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.addmember.AddMemberRepoGremlin;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPropertyNames;
+import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
+import org.opengroup.osdu.entitlements.v2.model.removemember.RemoveMemberServiceDto;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @SpringBootTest
@@ -33,6 +38,9 @@ public class RemoveMemberRepoGremlinTest {
 
     @Autowired
     private AddMemberRepoGremlin addMemberRepoGremlin;
+
+    @MockBean
+    private AuditLogger auditLogger;
 
     @After
     public void cleanup() {
@@ -60,9 +68,10 @@ public class RemoveMemberRepoGremlinTest {
         addMemberRepoGremlin.addMember(groupNode, addMemberRepoDto);
         Assert.assertTrue(retrieveGroupRepo.hasDirectChild(groupNode, childrenReference));
 
-        removeMemberRepoGremlin.removeMember(groupNode, memberNode, null);
+        removeMemberRepoGremlin.removeMember(groupNode, memberNode, RemoveMemberServiceDto.builder().build());
 
         Assert.assertFalse(retrieveGroupRepo.hasDirectChild(groupNode, childrenReference));
         Assert.assertTrue(graphTraversalSource.E().toList().isEmpty());
+        Mockito.verify(auditLogger).removeMember(AuditStatus.SUCCESS, "groupId", "userId", null);
     }
 }
