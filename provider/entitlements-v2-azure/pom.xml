@@ -19,6 +19,11 @@
         <springfox-version>2.7.0</springfox-version>
         <tomcat-embed-core.version>9.0.37</tomcat-embed-core.version>
         <gremlin.version>3.4.10</gremlin.version>
+        <redisson.version>3.11.6</redisson.version>
+        <resilience4j.version>1.7.0</resilience4j.version>
+        <embedded-resdis.version>0.7.1</embedded-resdis.version>
+        <awaitility.version>3.0.0</awaitility.version>
+        <awaitility.proxy.version>3.0.0</awaitility.proxy.version>
     </properties>
 
     <dependencies>
@@ -151,6 +156,18 @@
             <version>${springfox-version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>${redisson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-retry</artifactId>
+            <version>${resilience4j.version}</version>
+        </dependency>
+
         <!-- test scope dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -188,9 +205,27 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>it.ozimov</groupId>
+            <artifactId>embedded-redis</artifactId>
+            <version>${embedded-resdis.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.tinkerpop</groupId>
             <artifactId>tinkergraph-gremlin</artifactId>
             <version>${gremlin.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <version>${awaitility.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility-proxy</artifactId>
+            <version>${awaitility.proxy.version}</version>
             <scope>test</scope>
         </dependency>
 

@@ -3,11 +3,13 @@ package org.opengroup.osdu.entitlements.v2.azure.workflow;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import io.github.resilience4j.retry.Retry;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.opengroup.osdu.core.common.cache.ICache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
@@ -31,6 +33,8 @@ import org.opengroup.osdu.entitlements.v2.model.listmember.ListMemberResponseDto
 import org.opengroup.osdu.entitlements.v2.model.listmember.MemberDto;
 import org.opengroup.osdu.entitlements.v2.model.updategroup.UpdateGroupOperation;
 import org.opengroup.osdu.entitlements.v2.azure.service.metrics.hitsnmisses.HitsNMissesMetricService;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -51,10 +55,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -123,10 +130,16 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     @MockBean
     private ICache<String, ParentReferences> redisGroupCache;
     @MockBean
+    private RedissonClient redissonClient;
+    @Mock
+    private RLock cacheLock;
+    @MockBean
+    private Retry retry;
+    @MockBean
     private HitsNMissesMetricService metricService;
 
     @Before
-    public void before() {
+    public void before() throws InterruptedException {
         Mockito.when(config.getDomain()).thenReturn("contoso.com");
         Mockito.when(config.getProjectId()).thenReturn("evd-ddl-us-services");
         Mockito.when(config.getInitialGroups()).thenCallRealMethod();
@@ -137,6 +150,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         tenantInfo.setServiceAccount("service_principal.com");
         Mockito.when(tenantFactory.getTenantInfo("common")).thenReturn(tenantInfo);
         when(authService.isAuthorized(any(), any())).thenReturn(true);
+        when(redissonClient.getLock(any())).thenReturn(cacheLock);
+        when(cacheLock.tryLock(anyLong(), anyLong(), any())).thenReturn(true);
     }
 
     @Test
