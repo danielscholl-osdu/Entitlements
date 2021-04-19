@@ -75,5 +75,7 @@ spec:
               value: {{ .Values.config.domain }}
             - name: root_data_group_quota
               value: "{{ .Values.config.quota.group.data.root }}"
+            - name: redis_ttl_seconds
+              value: "{{ .Values.config.redis.ttl.seconds }}"
             - name: azure_istioauth_enabled
               value: "true"

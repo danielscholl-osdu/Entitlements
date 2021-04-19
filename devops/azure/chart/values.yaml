@@ -30,3 +30,6 @@ config:
       data:
         root: 5000
   domain: contoso.com
+  redis:
+    ttl:
+      seconds: 1

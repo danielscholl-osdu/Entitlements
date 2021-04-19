@@ -24,6 +24,9 @@ public class CacheConfig {
     @Value("${redis.database}")
     private int redisDatabase;
 
+    @Value("${app.redis.ttl.seconds}")
+    private int redisTtlSeconds;
+
     @Value("${redisson.connection.timeout}")
     private int redissonConnectionTimeout;
 
@@ -31,14 +34,8 @@ public class CacheConfig {
     private String applicationName;
 
     @Bean
-    public int getRedisTtlSeconds() {
-        if (System.getenv("REDIS_TTL_SECONDS") == null) return 1;
-        else return Integer.parseInt(System.getenv("REDIS_TTL_SECONDS"));
-    }
-
-    @Bean
     public RedisCache<String, ParentReferences> groupCacheRedis() {
-        return new RedisCache<>(getRedisHostname(), redisPort, getRedisPassword(), getRedisTtlSeconds(), redisDatabase, String.class,
+        return new RedisCache<>(getRedisHostname(), redisPort, getRedisPassword(), redisTtlSeconds, redisDatabase, String.class,
                 ParentReferences.class);
     }
 
