@@ -105,6 +105,7 @@ This project uses [Lombok](https://projectlombok.org/) for code generation. You 
 | `server_port` | ex `8080` | Port of the server | no | -- |
 | `service_domain_name` | ex `contoso.com` | domain name of the service | yes | -- |
 | `root_data_group_quota` | ex `5000` | Maximum number of parents a group users.data.root can have | no | -- |
+| `redis_ttl_seconds` | ex `1` | The time to live in seconds for entitlements redis cache | no | -- |
 
 In order to run the service locally, you will need to have defined environment variables that you can find [here](https://community.opengroup.org/osdu/platform/deployment-and-operations/infra-azure-provisioning/-/blob/master/tools/variables/entitlements.sh#L150).
 

@@ -23,3 +23,6 @@ config:
       data:
         root: #{ROOT_DATA_GROUP_QUOTA}#
   domain: #{DOMAIN}#
+  redis:
+    ttl:
+      seconds: #{ENTV2_REDIS_TTL_SECONDS}#
