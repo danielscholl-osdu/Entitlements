@@ -8,10 +8,9 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <redisson.version>3.13.2</redisson.version>
         <protobuf-java.version>3.12.4</protobuf-java.version>
-        <org.springframework.boot.version>2.4.0</org.springframework.boot.version>
-        <io.undertow.version>2.2.0.Final</io.undertow.version>
+        <org.springframework.boot.version>2.4.4</org.springframework.boot.version>
         <commons-codec.version>1.15</commons-codec.version>
-        <springfox-version>2.7.0</springfox-version>
+        <springfox-version>3.0.0</springfox-version>
     </properties>
 
     <parent>
@@ -50,11 +49,6 @@
             <groupId>com.dslplatform</groupId>
             <artifactId>dsl-json-java8</artifactId>
             <version>1.9.7</version>
-        </dependency>
-        <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
-            <version>3.10.3</version>
         </dependency>
 
         <dependency>
