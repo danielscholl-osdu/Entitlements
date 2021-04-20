@@ -2,7 +2,7 @@ package org.opengroup.osdu.entitlements.v2.azure.service;
 
 import io.github.resilience4j.retry.Retry;
 import lombok.RequiredArgsConstructor;
-import org.opengroup.osdu.core.common.cache.ICache;
+import org.opengroup.osdu.core.common.cache.RedisCache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.azure.service.metrics.hitsnmisses.HitsNMissesMetricService;
@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -26,7 +25,8 @@ import java.util.concurrent.TimeUnit;
 public class GroupCacheServiceAzure implements GroupCacheService {
     private final JaxRsDpsLog log;
     private final RetrieveGroupRepo retrieveGroupRepo;
-    private final ICache<String, ParentReferences> redisGroupCache;
+    private final RedisCache<String, ParentReferences> redisGroupCache;
+    private final PartitionCacheTtlService partitionCacheTtlService;
     private final HitsNMissesMetricService metricService;
     private final RedissonClient redissonClient;
     private final Retry retry;
@@ -61,7 +61,8 @@ public class GroupCacheServiceAzure implements GroupCacheService {
             if (locked) {
                 metricService.sendMissesMetric();
                 ParentReferences parentReferences = rebuildCache(requesterId, partitionId);
-                redisGroupCache.put(key, parentReferences);
+                long ttlOfKey = partitionCacheTtlService.getCacheTtlOfPartition(partitionId);
+                redisGroupCache.put(key, ttlOfKey, parentReferences);
                 return parentReferences.getParentReferencesOfUser();
             } else {
                 ParentReferences parentReferences = Retry.decorateSupplier(retry, () -> redisGroupCache.get(key)).get();

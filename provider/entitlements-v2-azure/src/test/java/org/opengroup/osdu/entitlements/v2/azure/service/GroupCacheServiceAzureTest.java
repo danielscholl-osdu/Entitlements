@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.AdditionalAnswers;
 import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
-import org.opengroup.osdu.core.common.cache.ICache;
+import org.opengroup.osdu.core.common.cache.RedisCache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.azure.service.metrics.hitsnmisses.HitsNMissesMetricService;
@@ -33,7 +33,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import redis.embedded.RedisServer;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,6 +47,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -83,9 +83,11 @@ public class GroupCacheServiceAzureTest {
     @MockBean
     private HitsNMissesMetricService metricService;
     @MockBean
-    private ICache<String, ParentReferences> redisGroupCache;
+    private RedisCache<String, ParentReferences> redisGroupCache;
     @MockBean
     private JaxRsDpsLog log;
+    @MockBean
+    private PartitionCacheTtlService partitionCacheTtlService;
     @Mock
     private ParentTreeDto parentTreeDto;
 
@@ -128,6 +130,7 @@ public class GroupCacheServiceAzureTest {
         parentReferences.setParentReferencesOfUser(parents);
 
         requester = EntityNode.createMemberNodeForNewUser("requesterId", "dp");
+        when(partitionCacheTtlService.getCacheTtlOfPartition("dp")).thenReturn(2000L);
     }
 
     @Test
@@ -138,9 +141,9 @@ public class GroupCacheServiceAzureTest {
 
         Set<ParentReference> result = this.sut.getFromPartitionCache("requesterId", "dp");
         assertEquals(this.parents, result);
-        verify(this.retrieveGroupRepo, times(1)).loadAllParents(this.requester);
-        verify(this.redisGroupCache, times(1)).put("requesterId-dp", this.parentReferences);
-        verify(this.metricService, times(1)).sendMissesMetric();
+        verify(this.retrieveGroupRepo).loadAllParents(this.requester);
+        verify(this.redisGroupCache).put("requesterId-dp", 2000L, this.parentReferences);
+        verify(this.metricService).sendMissesMetric();
     }
 
     @Test
@@ -149,7 +152,7 @@ public class GroupCacheServiceAzureTest {
 
         Set<ParentReference> result = this.sut.getFromPartitionCache("requesterId", "dp");
         assertEquals(this.parents, result);
-        verify(this.retrieveGroupRepo, times(0)).loadAllParents(this.requester);
+        verifyNoInteractions(this.retrieveGroupRepo);
         verify(this.metricService, times(1)).sendHitsMetric();
     }
 
