@@ -68,7 +68,7 @@ public class GroupCacheServiceAzureTest {
             config.useSingleServer().setAddress(String.format("redis://%s:%d", "localhost", 7000))
                     .setPassword("pass")
                     .setDatabase(0)
-                    .setTimeout(100000)
+                    .setKeepAlive(true)
                     .setClientName("test");
             return Redisson.create(config);
         }
@@ -165,7 +165,7 @@ public class GroupCacheServiceAzureTest {
         cacheValues.add(this.parentReferences);
         when(this.redisGroupCache.get("requesterId-dp")).thenAnswer(AdditionalAnswers.returnsElementsOf(cacheValues));
         when(this.retrieveGroupRepo.loadAllParents(this.requester)).thenAnswer((Answer<ParentTreeDto>) invocationOnMock -> {
-            await().atLeast(Duration.FIVE_SECONDS);
+            await().pollDelay(Duration.FIVE_SECONDS).until(() -> true);
             return parentTreeDto;
         });
         when(this.parentTreeDto.getParentReferences()).thenReturn(this.parents);
@@ -193,10 +193,10 @@ public class GroupCacheServiceAzureTest {
     }
 
     @Test
-    public void shouldReturnEmptyIfTimeout() throws InterruptedException {
+    public void shouldThrowExceptionIfTimeout() throws InterruptedException {
         when(this.redisGroupCache.get("requesterId-dp")).thenReturn(null);
         when(this.retrieveGroupRepo.loadAllParents(this.requester)).thenAnswer((Answer<ParentTreeDto>) invocationOnMock -> {
-            await().atLeast(Duration.FIVE_SECONDS);
+            await().pollDelay(Duration.FIVE_SECONDS).until(() -> true);
             return parentTreeDto;
         });
         when(this.parentTreeDto.getParentReferences()).thenReturn(this.parents);

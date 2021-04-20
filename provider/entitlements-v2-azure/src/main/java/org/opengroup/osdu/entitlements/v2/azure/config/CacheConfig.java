@@ -27,9 +27,6 @@ public class CacheConfig {
     @Value("${app.redis.ttl.seconds}")
     private int redisTtlSeconds;
 
-    @Value("${redisson.connection.timeout}")
-    private int redissonConnectionTimeout;
-
     @Value("${spring.application.name}")
     private String applicationName;
 
@@ -45,7 +42,7 @@ public class CacheConfig {
         config.useSingleServer().setAddress(String.format("rediss://%s:%d",getRedisHostname(), redisPort))
                 .setPassword(getRedisPassword())
                 .setDatabase(redisDatabase)
-                .setTimeout(redissonConnectionTimeout)
+                .setKeepAlive(true)
                 .setClientName(applicationName);
         return Redisson.create(config);
     }
