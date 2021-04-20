@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.opengroup.osdu.core.common.cache.ICache;
+import org.opengroup.osdu.core.common.cache.RedisCache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.model.tenant.TenantInfo;
@@ -21,6 +22,7 @@ import org.opengroup.osdu.entitlements.v2.api.DeleteGroupApi;
 import org.opengroup.osdu.entitlements.v2.api.DeleteMemberApi;
 import org.opengroup.osdu.entitlements.v2.auth.AuthorizationService;
 import org.opengroup.osdu.entitlements.v2.azure.AzureAppProperties;
+import org.opengroup.osdu.entitlements.v2.azure.service.PartitionCacheTtlService;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.GroupType;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
@@ -94,7 +96,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     @MockBean
     private AuthorizationService authService;
     @MockBean
-    private ICache<String, ParentReferences> redisGroupCache;
+    private RedisCache<String, ParentReferences> redisGroupCache;
     @MockBean
     private RedissonClient redissonClient;
     @Mock
@@ -103,6 +105,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     private Retry retry;
     @MockBean
     private HitsNMissesMetricService metricService;
+    @MockBean
+    private PartitionCacheTtlService partitionCacheTtlService;
 
     @Before
     public void before() throws InterruptedException {
@@ -118,6 +122,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         when(authService.isAuthorized(any(), any())).thenReturn(true);
         when(redissonClient.getLock(any())).thenReturn(cacheLock);
         when(cacheLock.tryLock(anyLong(), anyLong(), any())).thenReturn(true);
+        when(partitionCacheTtlService.getCacheTtlOfPartition("common")).thenReturn(0L);
     }
 
     @Test
