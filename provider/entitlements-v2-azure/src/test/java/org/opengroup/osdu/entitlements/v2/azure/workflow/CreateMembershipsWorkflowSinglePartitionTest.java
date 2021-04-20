@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.opengroup.osdu.core.common.cache.ICache;
 import org.opengroup.osdu.core.common.cache.RedisCache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
@@ -57,12 +56,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -114,6 +111,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         Mockito.when(config.getProjectId()).thenReturn("evd-ddl-us-services");
         Mockito.when(config.getInitialGroups()).thenCallRealMethod();
         Mockito.when(config.getGroupsOfServicePrincipal()).thenCallRealMethod();
+        Mockito.when(config.getProtectedMembers()).thenCallRealMethod();
         TenantInfo tenantInfo = new TenantInfo();
         tenantInfo.setProjectId("evd-ddl-us-common");
         tenantInfo.setDataPartitionId("common");
@@ -132,6 +130,10 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         //running second time to prove the the api is idempotent
         performBootstrappingOfGroupsAndUsers();
 
+        testProtectionAgainstBootstrapGroupsRemoval();
+
+        testProtectionAgainstServicePrincipalUserRemoval();
+
         String rootUserGroup = "users@common.contoso.com";
         performAddMemberRequest(new AddMemberDto(userA, Role.MEMBER), rootUserGroup, servicePrincipal);
         performAddMemberRequest(new AddMemberDto(userB, Role.MEMBER), rootUserGroup, servicePrincipal);
@@ -144,6 +146,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "users@common.contoso.com",
                 "data.default.owners@common.contoso.com",
                 "users.myusers.operators@common.contoso.com"}, performListGroupRequest(userA));
+
+        testProtectionAgainstUsersDataRootGroupRemoval("users.myusers.operators");
 
         //create data group
         performCreateGroupRequest("data.mydata1.operators", userA);
@@ -230,7 +234,12 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     }
 
     private void removeDataGroup1FromDataGroup2(String dataGroup1, String dataGroup2) {
-        performRemoveMemberRequest(dataGroup2, dataGroup1, userA);
+        try {
+            performRemoveMemberRequest(dataGroup2, dataGroup1, userA).andExpect(status().isNoContent());
+        } catch (Exception e) {
+            Assert.fail("Exception shouldn't take place here");
+            throw new RuntimeException(e);
+        }
         assertMembersEquals(new String[]{userA,
                 "users.data.root@common.contoso.com",
                 "users.myusers.operators@common.contoso.com"}, performListMemberRequest(dataGroup2, userA));
@@ -249,6 +258,54 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "users.myusers.operators@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com",
                 "users.myusers2.operators@common.contoso.com"}, performListGroupRequest(userC));
+    }
+
+
+    private void testProtectionAgainstBootstrapGroupsRemoval() {
+        validateBadRequestOnBootstrapGroupRemoval("data.default.viewers", "users");
+        validateBadRequestOnBootstrapGroupRemoval("data.default.owners", "users");
+        validateBadRequestOnBootstrapGroupRemoval("service.storage.viewer", "users.datalake.viewers");
+        validateBadRequestOnBootstrapGroupRemoval("service.storage.viewer", "users.datalake.editors");
+        validateBadRequestOnBootstrapGroupRemoval("service.storage.viewer", "users.datalake.admins");
+        validateBadRequestOnBootstrapGroupRemoval("service.storage.viewer", "users.datalake.ops");
+    }
+
+    private void testProtectionAgainstServicePrincipalUserRemoval() {
+        try {
+            performRemoveMemberRequest("users.datalake.ops@common.contoso.com",
+                    servicePrincipal, servicePrincipal)
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().json("{\"code\":400,\"reason\":\"Bad Request\",\"message\":\"Key service" +
+                            " accounts hierarchy is enforced, service_principal.com cannot" +
+                            " be removed from group users.datalake.ops@common.contoso.com\"}"));
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    private void testProtectionAgainstUsersDataRootGroupRemoval(String usersGroup) {
+        try {
+            performRemoveMemberRequest(usersGroup + "@common.contoso.com",
+                    "users.data.root@common.contoso.com", servicePrincipal)
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().json("{\"code\":400,\"reason\":\"Bad Request\",\"message\":\"Users" +
+                            " data root group hierarchy is enforced, member users.data.root cannot be removed\"}"));
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    private void validateBadRequestOnBootstrapGroupRemoval(String protectedGroupName, String protectedMemberName) {
+        String expectedResponseBody = String.format("{\"code\":400,\"reason\":\"Bad Request\",\"message\":\"Bootstrap group hierarchy" +
+                " is enforced, member %s cannot be removed from group %s\"}", protectedMemberName, protectedGroupName);
+        try {
+            performRemoveMemberRequest(protectedGroupName + "@common.contoso.com",
+                    protectedMemberName + "@common.contoso.com", servicePrincipal)
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().json(expectedResponseBody));
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
     }
 
     private void deleteDataGroup2(String dataGroup2) {
@@ -719,17 +776,17 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         return ListMemberResponseDto.builder().build();
     }
 
-    private void performRemoveMemberRequest(String groupEmail, String memberEmail, String userId) {
+    private ResultActions performRemoveMemberRequest(String groupEmail, String memberEmail, String userId) {
         try {
-            mockMvc.perform(delete("/groups/{group_email}/members/{member_email}", groupEmail, memberEmail)
+            return mockMvc.perform(delete("/groups/{group_email}/members/{member_email}", groupEmail, memberEmail)
                     .contentType(MediaType.APPLICATION_JSON)
                     .characterEncoding(StandardCharsets.UTF_8.name())
                     .header(DpsHeaders.AUTHORIZATION, "Bearer token")
                     .header(DpsHeaders.USER_ID, userId)
-                    .header(DpsHeaders.DATA_PARTITION_ID, "common"))
-                    .andExpect(status().isNoContent());
+                    .header(DpsHeaders.DATA_PARTITION_ID, "common"));
         } catch (Exception e) {
             Assert.fail("Exception shouldn't take place here");
+            throw new RuntimeException(e);
         }
     }
 

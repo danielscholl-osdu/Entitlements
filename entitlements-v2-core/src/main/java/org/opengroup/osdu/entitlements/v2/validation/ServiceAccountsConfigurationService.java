@@ -1,4 +1,4 @@
-package org.opengroup.osdu.entitlements.v2.di;
+package org.opengroup.osdu.entitlements.v2.validation;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.entitlements.v2.AppProperties;
+import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.util.FileReaderService;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,7 @@ import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
-public class KeySvcAccBeanConfiguration {
+public class ServiceAccountsConfigurationService {
 
     private final FileReaderService fileReaderService;
     private final RequestInfo requestInfo;
@@ -31,10 +32,20 @@ public class KeySvcAccBeanConfiguration {
         loadConfiguration(appProperties.getGroupsOfServicePrincipal());
     }
 
-    public boolean isKeySvcAccountInBootstrapGroup(final String groupEmail, final String memberEmail) {
-        return isKeyServiceAccount(memberEmail) && getServiceAccountGroups(memberEmail).contains(groupEmail);
+    /**
+     * Checks if a member is a service account and if it belongs to its default group
+     */
+    public boolean isMemberProtectedServiceAccount(final EntityNode memberNode, final EntityNode groupNode) {
+        if (!memberNode.getDataPartitionId().equals(groupNode.getDataPartitionId())) {
+            return false;
+        }
+        return isKeyServiceAccount(memberNode.getNodeId())
+                && getServiceAccountGroups(memberNode.getNodeId()).contains(groupNode.getName());
     }
 
+    /**
+     * Returns a set of default groups of service account
+     */
     public Set<String> getServiceAccountGroups(final String email) {
         if (isServicePrincipalAccount(email)) {
             return this.svcAccGroupConfig.computeIfAbsent("SERVICE_PRINCIPAL", k -> new HashSet<>());
@@ -42,7 +53,7 @@ public class KeySvcAccBeanConfiguration {
         return new HashSet<>();
     }
 
-    public boolean isKeyServiceAccount(final String email) {
+    private boolean isKeyServiceAccount(final String email) {
         return isServicePrincipalAccount(email);
     }
 
