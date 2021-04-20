@@ -138,4 +138,12 @@ public class GcpAppProperties extends AppProperties {
     public String getGroupsOfServicePrincipal() {
         return "/provisioning/accounts/groups_of_service_principal.json";
     }
+
+    @Override
+    public List<String> getProtectedMembers() {
+        List<String> filePaths = new ArrayList<>();
+        filePaths.add("/provisioning/groups/data_groups.json");
+        filePaths.add("/provisioning/groups/datalake_service_groups.json");
+        return filePaths;
+    }
 }

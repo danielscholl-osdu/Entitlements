@@ -9,7 +9,8 @@ import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.core.common.model.tenant.TenantInfo;
 import org.opengroup.osdu.entitlements.v2.AppProperties;
 import org.opengroup.osdu.entitlements.v2.configuration.AppPropertiesTestConfiguration;
-import org.opengroup.osdu.entitlements.v2.di.KeySvcAccBeanConfiguration;
+import org.opengroup.osdu.entitlements.v2.validation.BootstrapGroupsConfigurationService;
+import org.opengroup.osdu.entitlements.v2.validation.ServiceAccountsConfigurationService;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.NodeType;
@@ -47,7 +48,9 @@ public class RemoveMemberServiceTests {
     @MockBean
     private JaxRsDpsLog logger;
     @MockBean
-    private KeySvcAccBeanConfiguration keySvcAccBeanConfiguration;
+    private ServiceAccountsConfigurationService serviceAccountsConfigurationService;
+    @MockBean
+    private BootstrapGroupsConfigurationService bootstrapGroupsConfigurationService;
     @MockBean
     private RequestInfoUtilService requestInfoUtilService;
     @MockBean
@@ -254,6 +257,63 @@ public class RemoveMemberServiceTests {
     }
 
     @Test
+    public void shouldThrow400OnRemovalOfBootstrapGroup() {
+        EntityNode memberNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("users@common.contoso.com")
+                .name("users")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.getEntityNode("users@common.contoso.com", "common")).thenReturn(Optional.of(memberNode));
+        EntityNode groupNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("data.default.owners@common.contoso.com")
+                .name("data.default.owners")
+                .dataPartitionId("common")
+                .build();
+        EntityNode requesterNode = EntityNode.builder()
+                .type(NodeType.USER)
+                .nodeId("requesterid")
+                .name("requesterid")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.groupExistenceValidation("data.default.owners@common.contoso.com", "common")).thenReturn(groupNode);
+        EntityNode rootDataGroupNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("users.data.root@common.contoso.com")
+                .name("users.data.root")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.groupExistenceValidation(
+                "users.data.root@common.contoso.com", "common")).thenReturn(rootDataGroupNode);
+        when(retrieveGroupRepo.hasDirectChild(
+                rootDataGroupNode,
+                ChildrenReference.createChildrenReference(requesterNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
+        when(retrieveGroupRepo.hasDirectChild(
+                groupNode,
+                ChildrenReference.createChildrenReference(memberNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
+        when(requestInfoUtilService.getDomain("common")).thenReturn("common.contoso.com");
+        RemoveMemberServiceDto removeMemberServiceDto = RemoveMemberServiceDto.builder()
+                .groupEmail("data.default.owners@common.contoso.com")
+                .memberEmail("users@common.contoso.com")
+                .requesterId("requesterid")
+                .partitionId("common")
+                .build();
+        when(bootstrapGroupsConfigurationService.isMemberProtectedFromRemoval(memberNode, groupNode)).thenReturn(true);
+
+        try {
+            removeMemberService.removeMember(removeMemberServiceDto);
+            fail("should throw exception");
+        } catch (AppException ex) {
+            verify(removeMemberRepo, never()).removeMember(any(), any(), any());
+            assertThat(ex.getError().getCode()).isEqualTo(400);
+            assertEquals("Bootstrap group hierarchy is enforced, member users cannot be removed from group data.default.owners", ex.getError().getMessage());
+        } catch (Exception ex) {
+            fail(String.format("should now throw exception: %s", ex.getMessage()));
+        }
+    }
+
+    @Test
     public void shouldThrow401IfCallerDoesNotOwnTheGroup() {
         EntityNode memberNode = EntityNode.builder()
                 .type(NodeType.USER)
@@ -350,8 +410,7 @@ public class RemoveMemberServiceTests {
                 .partitionId("common")
                 .build();
 
-        when(keySvcAccBeanConfiguration.isKeySvcAccountInBootstrapGroup(
-                removeMemberServiceDto.getGroupEmail(), removeMemberServiceDto.getMemberEmail())).thenReturn(true);
+        when(serviceAccountsConfigurationService.isMemberProtectedServiceAccount(memberNode, groupNode)).thenReturn(true);
         try {
             removeMemberService.removeMember(removeMemberServiceDto);
             fail("should throw exception");
@@ -411,15 +470,14 @@ public class RemoveMemberServiceTests {
                 .partitionId("common")
                 .build();
 
-        when(keySvcAccBeanConfiguration.isKeySvcAccountInBootstrapGroup(
-                removeMemberServiceDto.getGroupEmail(), removeMemberServiceDto.getMemberEmail())).thenReturn(false);
+        when(serviceAccountsConfigurationService.isMemberProtectedServiceAccount(memberNode, groupNode)).thenReturn(false);
         try {
             removeMemberService.removeMember(removeMemberServiceDto);
             fail("should throw exception");
         } catch (AppException ex) {
             verify(removeMemberRepo, never()).removeMember(any(), any(), any());
             assertThat(ex.getError().getCode()).isEqualTo(400);
-            assertEquals("users data root group hierarchy is enforced, cannot be removed", ex.getError().getMessage());
+            assertEquals("Users data root group hierarchy is enforced, member users.data.root cannot be removed", ex.getError().getMessage());
         } catch (Exception ex) {
             fail(String.format("should now throw exception: %s", ex.getMessage()));
         }

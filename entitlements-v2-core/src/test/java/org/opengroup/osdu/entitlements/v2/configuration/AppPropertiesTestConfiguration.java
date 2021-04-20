@@ -21,6 +21,11 @@ public class AppPropertiesTestConfiguration {
             public String getGroupsOfServicePrincipal() {
                 return null;
             }
+
+            @Override
+            public List<String> getProtectedMembers() {
+                return null;
+            }
         };
     }
 }
