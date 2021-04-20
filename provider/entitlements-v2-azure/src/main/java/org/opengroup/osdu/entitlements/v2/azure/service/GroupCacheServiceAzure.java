@@ -37,11 +37,12 @@ public class GroupCacheServiceAzure implements GroupCacheService {
 
     @Override
     public Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId) {
-        String key = String.format("%s-%s", requesterId, partitionId);
-        ParentReferences parentReferences = redisGroupCache.get(key);
+        String cacheKey = String.format("%s-%s", requesterId, partitionId);
+        ParentReferences parentReferences = redisGroupCache.get(cacheKey);
         if (parentReferences == null) {
-            RLock cacheEntryLock = redissonClient.getLock(key);
-            return lockCacheEntryAndRebuild(cacheEntryLock, key, requesterId, partitionId);
+            String lockKey = String.format("lock-%s", cacheKey);
+            RLock cacheEntryLock = redissonClient.getLock(lockKey);
+            return lockCacheEntryAndRebuild(cacheEntryLock, cacheKey, requesterId, partitionId);
         } else {
             metricService.sendHitsMetric();
             return parentReferences.getParentReferencesOfUser();
