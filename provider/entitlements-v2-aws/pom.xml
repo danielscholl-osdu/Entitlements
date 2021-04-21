@@ -6,7 +6,7 @@
     <parent>
         <artifactId>entitlements-v2-service</artifactId>
         <groupId>org.opengroup.osdu.entitlements.v2</groupId>
-        <version>0.8.0-SNAPSHOT</version>
+        <version>0.9.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -16,8 +16,9 @@
         <core-lib-aws.version>0.3.16</core-lib-aws.version>
         <reactor.netty.version>0.9.5.RELEASE</reactor.netty.version>
         <reactor.core.version>3.3.0.RELEASE</reactor.core.version>
-        <springfox-version>2.7.0</springfox-version>
+        <springfox-version>3.0.0</springfox-version>
         <tomcat-embed-core.version>9.0.37</tomcat-embed-core.version>
+        <org.springframework.boot.version>2.4.4</org.springframework.boot.version>
     </properties>
 
     <dependencies>
@@ -55,9 +56,31 @@
             <version>${tomcat-embed-core.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
+            <version>5.3.0.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+            <version>2.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.resilience4j</groupId>
+            <artifactId>resilience4j-retry</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>it.ozimov</groupId>
+            <artifactId>embedded-redis</artifactId>
+            <version>0.7.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>2.4.0</version>
+            <!--<version>2.4.0</version>-->
+            <version>${spring-boot-dependencies.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>

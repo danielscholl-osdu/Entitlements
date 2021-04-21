@@ -1,4 +1,4 @@
-# Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ phases:
       # fix error noted here: https://github.com/yarnpkg/yarn/issues/7866
       - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
       - if [ $(echo $CODEBUILD_SOURCE_VERSION | grep -c  ^refs/heads.*) -eq 1 ]; then echo "Branch name found"; else echo "This build only supports branch builds" && exit 1; fi
-      - apt-get update -y
+      - apt-get update -y -qq
       - apt-get install -y maven
       - java -version
       - mvn -version
@@ -60,8 +60,12 @@ phases:
       - echo "Building primary service assemblies..."
       - mvn -ntp -B test install -pl entitlements-v2-core,provider/entitlements-v2-aws -Ddeployment.environment=prod
 
-      #- echo "Building integration testing assemblies and gathering artifacts..."
-      #- ./testing/entitlements-v2-test-aws/build-aws/prepare-dist.sh
+      - echo "Building integration testing assemblies and gathering artifacts..."
+      - ./testing/entitlements-v2-test-aws/build-aws/prepare-dist.sh
+
+      #Copy ENTITLEMENTS V2 bootstrap scripts to dist
+
+      - ./devops/aws/prepare-dist.sh
 
       - echo "Logging into Docker Hub..."
       - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
