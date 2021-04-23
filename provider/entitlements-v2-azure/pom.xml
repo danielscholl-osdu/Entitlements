@@ -16,7 +16,6 @@
         <core-lib-azure.version>0.6.2</core-lib-azure.version>
         <reactor.netty.version>0.9.5.RELEASE</reactor.netty.version>
         <reactor.core.version>3.3.0.RELEASE</reactor.core.version>
-        <springfox-version>3.0.0</springfox-version>
         <gremlin.version>3.4.10</gremlin.version>
         <redisson.version>3.15.3</redisson.version>
         <resilience4j.version>1.7.0</resilience4j.version>
@@ -148,18 +147,6 @@
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
             <version>${reactor.core.version}</version>
-        </dependency>
-
-        <!-- swagger dependencies -->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${springfox-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${springfox-version}</version>
         </dependency>
 
         <dependency>
