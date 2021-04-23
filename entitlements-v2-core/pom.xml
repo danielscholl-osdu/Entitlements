@@ -10,7 +10,10 @@
         <protobuf-java.version>3.12.4</protobuf-java.version>
         <org.springframework.boot.version>2.4.4</org.springframework.boot.version>
         <commons-codec.version>1.15</commons-codec.version>
-        <springfox-version>3.0.0</springfox-version>
+        <!-- When upgrading springfox version make sure to verify how the updated UI is displayed.
+         Latest versions of springfox library have issues with displaying content
+        -->
+        <springfox-version>2.7.0</springfox-version>
     </properties>
 
     <parent>
