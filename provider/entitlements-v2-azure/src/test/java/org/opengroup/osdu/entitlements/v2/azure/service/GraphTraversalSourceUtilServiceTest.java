@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.entitlements.v2.azure.config.CacheConfig;
 import org.opengroup.osdu.entitlements.v2.azure.model.NodeVertex;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.EdgePropertyNames;
@@ -18,6 +19,7 @@ import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
@@ -34,6 +36,8 @@ public class GraphTraversalSourceUtilServiceTest {
     private GremlinConnector gremlinConnector;
     @Autowired
     private GraphTraversalSourceUtilService graphTraversalSourceUtilService;
+    @MockBean
+    private CacheConfig cacheConfig;
 
     @After
     public void cleanup() {

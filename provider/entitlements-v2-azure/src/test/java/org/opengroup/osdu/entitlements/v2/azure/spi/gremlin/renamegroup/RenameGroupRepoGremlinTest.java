@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.opengroup.osdu.core.common.logging.audit.AuditStatus;
+import org.opengroup.osdu.entitlements.v2.azure.config.CacheConfig;
 import org.opengroup.osdu.entitlements.v2.azure.service.AddEdgeDto;
 import org.opengroup.osdu.entitlements.v2.azure.service.GraphTraversalSourceUtilService;
 import org.opengroup.osdu.entitlements.v2.azure.service.VertexUtilService;
@@ -42,6 +43,8 @@ public class RenameGroupRepoGremlinTest {
 
     @MockBean
     private AuditLogger auditLogger;
+    @MockBean
+    private CacheConfig cacheConfig;
     @Autowired
     private RenameGroupRepo renameGroupRepo;
     @Autowired

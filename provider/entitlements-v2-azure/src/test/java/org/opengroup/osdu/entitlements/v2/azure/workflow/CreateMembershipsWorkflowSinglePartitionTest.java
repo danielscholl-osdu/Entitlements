@@ -21,6 +21,7 @@ import org.opengroup.osdu.entitlements.v2.api.DeleteGroupApi;
 import org.opengroup.osdu.entitlements.v2.api.DeleteMemberApi;
 import org.opengroup.osdu.entitlements.v2.auth.AuthorizationService;
 import org.opengroup.osdu.entitlements.v2.azure.AzureAppProperties;
+import org.opengroup.osdu.entitlements.v2.azure.config.CacheConfig;
 import org.opengroup.osdu.entitlements.v2.azure.service.PartitionCacheTtlService;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.GroupType;
@@ -94,6 +95,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     private AuthorizationService authService;
     @MockBean
     private RedisCache<String, ParentReferences> redisGroupCache;
+    @MockBean
+    private CacheConfig cacheConfig;
     @MockBean
     private RedissonClient redissonClient;
     @Mock

@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.opengroup.osdu.core.common.logging.audit.AuditStatus;
+import org.opengroup.osdu.entitlements.v2.azure.config.CacheConfig;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.addmember.AddMemberRepoGremlin;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPropertyNames;
@@ -35,6 +36,9 @@ public class DeleteGroupRepoGremlinTest {
 
     @MockBean
     private AuditLogger auditLogger;
+
+    @MockBean
+    private CacheConfig cacheConfig;
 
     @After
     public void cleanup() {

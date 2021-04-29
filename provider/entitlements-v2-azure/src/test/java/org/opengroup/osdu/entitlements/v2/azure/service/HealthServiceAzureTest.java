@@ -8,10 +8,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.opengroup.osdu.core.common.cache.ICache;
+import org.opengroup.osdu.entitlements.v2.azure.config.CacheConfig;
 import org.opengroup.osdu.entitlements.v2.model.ParentReferences;
 import org.opengroup.osdu.entitlements.v2.service.HealthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import redis.embedded.RedisServer;
@@ -22,6 +24,9 @@ public class HealthServiceAzureTest {
 
     @Autowired
     private HealthService healthService;
+
+    @MockBean
+    private CacheConfig cacheConfig;
 
     @SpyBean
     private ICache<String, ParentReferences> redisGroupCache;
