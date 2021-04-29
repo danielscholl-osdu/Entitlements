@@ -6,7 +6,7 @@ variables:
 
   AWS_BUILD_SUBDIR: provider/entitlements-v2-aws/build-aws
   AWS_TEST_SUBDIR: testing/entitlements-v2-test-aws
-  AWS_SERVICE: entitlementsv2
+  AWS_SERVICE: entitlements-v2
   AWS_ENVIRONMENT: dev
 
 
