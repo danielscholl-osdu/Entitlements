@@ -13,6 +13,7 @@ import org.mockito.stubbing.Answer;
 import org.opengroup.osdu.core.common.cache.RedisCache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.entitlements.v2.azure.config.CacheConfig;
 import org.opengroup.osdu.entitlements.v2.azure.service.metrics.hitsnmisses.HitsNMissesMetricService;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
@@ -86,6 +87,8 @@ public class GroupCacheServiceAzureTest {
     private RedisCache<String, ParentReferences> redisGroupCache;
     @MockBean
     private JaxRsDpsLog log;
+    @MockBean
+    private CacheConfig cacheConfig;
     @MockBean
     private PartitionCacheTtlService partitionCacheTtlService;
     @Mock

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 @Configuration
 public class CacheConfig {
@@ -30,7 +31,12 @@ public class CacheConfig {
     @Value("${spring.application.name}")
     private String applicationName;
 
+    /**
+     * To make sure a connection to redis is created beforehand,
+     * we need to create this spring bean on application startup
+     */
     @Bean
+    @Lazy(false)
     public RedisCache<String, ParentReferences> groupCacheRedis() {
         return new RedisCache<>(getRedisHostname(), redisPort, getRedisPassword(), redisTtlSeconds, redisDatabase, String.class,
                 ParentReferences.class);

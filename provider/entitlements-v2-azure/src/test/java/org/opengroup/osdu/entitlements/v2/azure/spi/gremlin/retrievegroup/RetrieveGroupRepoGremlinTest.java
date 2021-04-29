@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.entitlements.v2.azure.config.CacheConfig;
 import org.opengroup.osdu.entitlements.v2.azure.service.GraphTraversalSourceUtilService;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.addmember.AddMemberRepoGremlin;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
@@ -54,6 +55,8 @@ public class RetrieveGroupRepoGremlinTest {
     private AddMemberRepoGremlin addMemberRepoGremlin;
     @MockBean
     private AuditLogger auditLogger;
+    @MockBean
+    private CacheConfig cacheConfig;
 
     @After
     public void cleanup() {

@@ -5,6 +5,7 @@ import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.opengroup.osdu.entitlements.v2.azure.config.CacheConfig;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.addmember.AddMemberRepoGremlin;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.EdgePropertyNames;
@@ -39,6 +40,9 @@ public class ListMemberRepoGremlinTest {
 
     @MockBean
     private AuditLogger auditLogger;
+
+    @MockBean
+    private CacheConfig cacheConfig;
 
     @Test
     public void shouldLoadDirectChildrenSuccessfully() {
