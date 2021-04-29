@@ -16,7 +16,7 @@
         <core-lib-aws.version>0.3.16</core-lib-aws.version>
         <reactor.netty.version>0.9.5.RELEASE</reactor.netty.version>
         <reactor.core.version>3.3.0.RELEASE</reactor.core.version>
-        <springfox-version>3.0.0</springfox-version>
+        <springfox-version>2.7.0</springfox-version>
         <tomcat-embed-core.version>9.0.37</tomcat-embed-core.version>
         <org.springframework.boot.version>2.4.4</org.springframework.boot.version>
     </properties>
@@ -134,7 +134,7 @@
         </dependency>
 
         <!-- swagger dependencies -->
-        <dependency>
+       <!-- <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
             <version>${springfox-version}</version>
@@ -143,7 +143,7 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${springfox-version}</version>
-        </dependency>
+        </dependency>-->
 
         <!-- test scope dependencies -->
         <dependency>
