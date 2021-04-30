@@ -3,6 +3,14 @@ variables:
   AZURE_BUILD_SUBDIR: provider/entitlements-v2-azure
   AZURE_TEST_SUBDIR: testing/entitlements-v2-test-azure
 
+
+  AWS_BUILD_SUBDIR: provider/entitlements-v2-aws/build-aws
+  AWS_TEST_SUBDIR: testing/entitlements-v2-test-aws
+  AWS_SERVICE: entitlements-v2
+  AWS_ENVIRONMENT: dev
+
+
+
 include:
   - project: "osdu/platform/ci-cd-pipelines"
     file: "standard-setup.yml"
@@ -18,6 +26,9 @@ include:
 
   - project: "osdu/platform/ci-cd-pipelines"
     file: "cloud-providers/azure.yml"
+
+  - project: "osdu/platform/ci-cd-pipelines"
+    file: "cloud-providers/aws.yml"
 
   - project: "osdu/platform/ci-cd-pipelines"
     file: "publishing/pages.yml"
