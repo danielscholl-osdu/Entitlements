@@ -83,6 +83,81 @@
     },
     {
       "groupName": "service.workflow.admin"
+    },
+    {
+      "groupName": "service.indexer.admin"
+    },
+    {
+      "groupName": "service.indexer.creator"
+    },
+    {
+      "groupName": "service.indexer.viewer"
+    },
+    {
+      "groupName": "service.unit.admin"
+    },
+    {
+      "groupName": "service.unit.creator"
+    },
+    {
+      "groupName": "service.unit.viewer"
+    },
+    {
+      "groupName": "service.ingest.admin"
+    },
+    {
+      "groupName": "service.ingest.creator"
+    },
+    {
+      "groupName": "service.ingest.viewer"
+    },
+    {
+      "groupName": "service.seismic-store.viewer"
+    },
+    {
+      "groupName": "service.seismic-store.admin"
+    },
+    {
+      "groupName": "service.seismic-store.creator"
+    },
+    {
+      "groupName": "service.binarydms.admin"
+    },
+    {
+      "groupName": "service.binarydms.creator"
+    },
+    {
+      "groupName": "service.binarydms.viewer"
+    },
+    {
+      "groupName": "service.edsdms.admin"
+    },
+    {
+      "groupName": "service.edsdms.creator"
+    },
+    {
+      "groupName": "service.edsdms.viewer"
+    },
+    {
+      "groupName": "service.csv-parser.admin"
+    },
+    {
+      "groupName": "service.csv-parser.creator"
+    },
+    {
+      "groupName": "service.csv-parser.viewer"
+    },
+    {
+      "groupName": "service.policy.admin"
+    },
+    {
+      "groupName": "service.policy.creator"
+    },
+    {
+      "groupName": "service.policy.viewer"
+    },
+    {
+      "groupName": "cron.job"
     }
   ]
 }

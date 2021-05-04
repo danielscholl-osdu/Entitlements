@@ -21,6 +21,7 @@ import io.lettuce.core.Value;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
+import javafx.scene.Parent;
 import org.apache.commons.lang3.StringUtils;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
@@ -40,17 +41,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -241,7 +232,9 @@ public class AwsRetrieveGroupRepo implements RetrieveGroupRepo {
     public ParentTreeDto loadAllParents(EntityNode memberNode) {
         Set<String> visited = new CopyOnWriteArraySet<>();
         List<ParentReference> directParents = loadDirectParents(memberNode.getDataPartitionId(), memberNode.getNodeId());
+
         Set<ParentReference> allParents = new HashSet<>(directParents);
+
         visited.add(memberNode.getNodeId());
         Deque<List<ParentReference>> queue = new LinkedList<>();
         if (!directParents.isEmpty()) {
@@ -264,7 +257,16 @@ public class AwsRetrieveGroupRepo implements RetrieveGroupRepo {
                 visited.addAll(allNodeIds);
             });
         }
-        return ParentTreeDto.builder().parentReferences(allParents).maxDepth(maxDepth).build();
+        Set<ParentReference> filteredAllParents = new HashSet<>();
+        Iterator<ParentReference> it = allParents.iterator();
+        while(it.hasNext()){
+            ParentReference pf = it.next();
+          if(pf.getDataPartitionId().equals(memberNode.getDataPartitionId()))
+          {
+              filteredAllParents.add(pf);
+          }
+        }
+        return ParentTreeDto.builder().parentReferences(filteredAllParents).maxDepth(maxDepth).build();
     }
 
     @Override

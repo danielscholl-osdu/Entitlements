@@ -299,6 +299,387 @@
           "name": "users.datalake.admins"
         }
       ]
+    },
+    {
+      "name": "service.indexer.viewer",
+      "description": "The viewer of the indexer service",
+      "members": [
+        {
+          "name": "users.datalake.viewers"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.indexer.admin",
+      "description": "Datalake indexer admins",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.indexer.creator",
+      "description": "Datalake indexer creators",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.editors"
+        }
+      ]
+    },
+    {
+      "name": "service.unit.viewer",
+      "description": "The viewer of the unit service",
+      "members": [
+        {
+          "name": "users.datalake.viewers"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.unit.admin",
+      "description": "Datalake unit admins",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.unit.creator",
+      "description": "Datalake unit creators",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.editors"
+        }
+      ]
+    },
+    {
+      "name": "service.ingest.viewer",
+      "description": "The viewer of the ingest service",
+      "members": [
+        {
+          "name": "users.datalake.viewers"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.ingest.admin",
+      "description": "Datalake ingest admins",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.ingest.creator",
+      "description": "Datalake ingest creators",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.editors"
+        }
+      ]
+    },
+    {
+      "name": "service.seismic-store.viewer",
+      "description": "The viewer of the seismic-store service",
+      "members": [
+        {
+          "name": "users.datalake.viewers"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.seismic-store.admin",
+      "description": "Datalake seismic-store admins",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.seismic-store.creator",
+      "description": "Datalake seismic-store creators",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.editors"
+        }
+      ]
+    },
+    {
+      "name": "service.binarydms.viewer",
+      "description": "The viewer of the datalake binarydms service",
+      "members": [
+        {
+          "name": "users.datalake.viewers"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.binarydms.admin",
+      "description": "Datalake binarydms admins",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.binarydms.creator",
+      "description": "Datalake binarydms creators",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.editors"
+        }
+      ]
+    },
+    {
+      "name": "service.edsdms.viewer",
+      "description": "The viewer of the datalake edsdms service",
+      "members": [
+        {
+          "name": "users.datalake.viewers"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.edsdms.admin",
+      "description": "Datalake edsdms admins",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.edsdms.creator",
+      "description": "Datalake edsdms creators",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.editors"
+        }
+      ]
+    },
+    {
+      "name": "service.csv-parser.viewer",
+      "description": "The viewer of the datalake csv-parser service",
+      "members": [
+        {
+          "name": "users.datalake.viewers"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.csv-parser.admin",
+      "description": "Datalake csv-parser admins",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.csv-parser.creator",
+      "description": "Datalake csv-parser creators",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.editors"
+        }
+      ]
+    },
+    {
+      "name": "service.policy.viewer",
+      "description": "The viewer of the datalake policy service",
+      "members": [
+        {
+          "name": "users.datalake.viewers"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.policy.admin",
+      "description": "Datalake policy admins",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.policy.creator",
+      "description": "Datalake policy creators",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.editors"
+        }
+      ]
+    },
+    {
+      "name": "cron.job",
+      "description": "cron job role",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.editors"
+        }
+      ]
+    },
+    {
+      "name": "data.test1",
+      "description": "Storage integration test group",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.editors"
+        }
+      ]
+    },
+    {
+      "name": "data.integration.test",
+      "description": "Storage integration test group",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.editors"
+        }
+      ]
     }
   ]
 }
