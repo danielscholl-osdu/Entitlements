@@ -553,6 +553,24 @@
       ]
     },
     {
+      "name": "service.edsdms.user",
+      "description": "Datalake edsdms user",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.viewers"
+        },
+        {
+          "name": "users.datalake.editors"
+        }
+      ]
+    },
+    {
       "name": "service.csv-parser.viewer",
       "description": "The viewer of the datalake csv-parser service",
       "members": [
@@ -630,6 +648,24 @@
         },
         {
           "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.editors"
+        }
+      ]
+    },
+    {
+      "name": "service.delivery.viewer",
+      "description": "Delivery role",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.viewers"
         },
         {
           "name": "users.datalake.editors"

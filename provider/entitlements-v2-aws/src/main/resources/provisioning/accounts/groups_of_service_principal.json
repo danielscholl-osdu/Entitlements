@@ -139,6 +139,9 @@
       "groupName": "service.edsdms.viewer"
     },
     {
+      "groupName": "service.edsdms.user"
+    },
+    {
       "groupName": "service.csv-parser.admin"
     },
     {
@@ -155,6 +158,9 @@
     },
     {
       "groupName": "service.policy.viewer"
+    },
+    {
+      "groupName": "service.delivery.viewer"
     },
     {
       "groupName": "cron.job"
