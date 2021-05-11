@@ -83,6 +83,12 @@
     },
     {
       "groupName": "service.workflow.admin"
+    },
+    {
+      "groupName": "service.policy.user"
+    },
+    {
+      "groupName": "service.policy.admin"
     }
   ]
 }
