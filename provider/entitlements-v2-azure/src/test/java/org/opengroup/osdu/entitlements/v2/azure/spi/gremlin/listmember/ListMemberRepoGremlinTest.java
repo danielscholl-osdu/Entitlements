@@ -1,14 +1,13 @@
 package org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.listmember;
 
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
-import org.apache.tinkerpop.gremlin.structure.Vertex;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opengroup.osdu.entitlements.v2.azure.config.CacheConfig;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.addmember.AddMemberRepoGremlin;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
-import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.EdgePropertyNames;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPropertyNames;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
@@ -43,6 +42,13 @@ public class ListMemberRepoGremlinTest {
 
     @MockBean
     private CacheConfig cacheConfig;
+
+    @After
+    public void cleanup() {
+        GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
+        graphTraversalSource.V().drop().iterate();
+        graphTraversalSource.E().drop().iterate();
+    }
 
     @Test
     public void shouldLoadDirectChildrenSuccessfully() {
