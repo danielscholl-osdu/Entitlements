@@ -8,8 +8,6 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <redisson.version>3.13.2</redisson.version>
         <protobuf-java.version>3.12.4</protobuf-java.version>
-        <org.springframework.boot.version>2.4.4</org.springframework.boot.version>
-        <commons-codec.version>1.15</commons-codec.version>
         <!-- When upgrading springfox version make sure to verify how the updated UI is displayed.
          Latest versions of springfox library have issues with displaying content
         -->
@@ -36,17 +34,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>${org.springframework.boot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
-            <version>${org.springframework.boot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-            <version>${org.springframework.boot.version}</version>
         </dependency>
         <dependency>
             <groupId>com.dslplatform</groupId>
@@ -58,6 +53,15 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
             <version>${springfox-version}</version>
+            <exclusions>
+                <exclusion>
+                    <!--
+                    Excluding com.google.guava:guava:jar:18.0, because it has security vulnerability
+                    -->
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
@@ -75,7 +79,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-            <version>${org.springframework.boot.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.junit.vintage</groupId>
