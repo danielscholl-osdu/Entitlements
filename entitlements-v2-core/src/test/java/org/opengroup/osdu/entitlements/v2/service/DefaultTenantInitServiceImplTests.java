@@ -35,7 +35,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TenantInitServiceTest {
+public class DefaultTenantInitServiceImplTests {
 
     private final String OWNERS = "{\n" +
             "  \"users\": [\n" +
@@ -104,7 +104,7 @@ public class TenantInitServiceTest {
     @Mock
     private RequestInfoUtilService requestInfoUtilService;
     @InjectMocks
-    private TenantInitService tenantInitService;
+    private DefaultTenantInitServiceImpl tenantInitService;
 
     @Before
     public void setupRequestInfo() {
