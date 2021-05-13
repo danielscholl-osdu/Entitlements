@@ -13,15 +13,14 @@
     <artifactId>entitlements-v2-azure</artifactId>
 
     <properties>
-        <core-lib-azure.version>0.6.2</core-lib-azure.version>
-        <reactor.netty.version>0.9.5.RELEASE</reactor.netty.version>
-        <reactor.core.version>3.3.0.RELEASE</reactor.core.version>
+        <core-lib-azure.version>0.9.0-rc2</core-lib-azure.version>
         <gremlin.version>3.4.10</gremlin.version>
         <redisson.version>3.15.3</redisson.version>
         <resilience4j.version>1.7.0</resilience4j.version>
         <embedded-resdis.version>0.7.1</embedded-resdis.version>
         <awaitility.version>3.0.0</awaitility.version>
         <awaitility.proxy.version>3.0.0</awaitility.proxy.version>
+        <json-smart.version>2.4.6</json-smart.version>
     </properties>
 
     <dependencies>
@@ -31,28 +30,11 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!--
-        Old versions of 'com.nimbusds:oauth2-oidc-sdk' and 'com.microsoft.azure:msal4j' are excluded
-        because they cannot work with Spring Boot version 2.4.x
-
-        New version of 'com.microsoft.azure:msal4j' is added to work with Spring Boot version 2.4.x
-
-        Stay tuned for a new version of 'com.azure:azure-identity', they started releasing updates, but it's still in beta.
-        More details here: https://github.com/Azure/azure-sdk-for-java
-        -->
         <dependency>
             <groupId>org.opengroup.osdu</groupId>
             <artifactId>core-lib-azure</artifactId>
             <version>${core-lib-azure.version}</version>
             <exclusions>
-                <exclusion>
-                    <groupId>com.nimbusds</groupId>
-                    <artifactId>oauth2-oidc-sdk</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.microsoft.azure</groupId>
-                    <artifactId>msal4j</artifactId>
-                </exclusion>
                 <!--
                 Excluding simple-xml because:
                 There’s a library called xpp3 (the Xml Pull Parser) originally developed by Indiana University’s Extreme! Computing group.
@@ -71,10 +53,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--
+        Many dependencies contain library with vulnerabilities: net.minidev:json-smart:jar:2.3
+        because of that we need to enforce the higher version
+        -->
         <dependency>
-            <groupId>com.microsoft.azure</groupId>
-            <artifactId>msal4j</artifactId>
-            <version>1.9.1</version>
+            <groupId>net.minidev</groupId>
+            <artifactId>json-smart</artifactId>
+            <version>${json-smart.version}</version>
         </dependency>
 
         <dependency>
@@ -90,7 +76,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>${spring-boot-dependencies.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
@@ -131,22 +116,15 @@
             <groupId>org.apache.tinkerpop</groupId>
             <artifactId>gremlin-groovy</artifactId>
             <version>${gremlin.version}</version>
-        </dependency>
-
-        <!--
-		 Override the spring-boot version of these dependencies to the ones
-		 required by the azure-core library. This needs to be done for each
-		 app that depends on this library
- 		-->
-        <dependency>
-            <groupId>io.projectreactor.netty</groupId>
-            <artifactId>reactor-netty</artifactId>
-            <version>${reactor.netty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-core</artifactId>
-            <version>${reactor.core.version}</version>
+            <exclusions>
+                <!--
+                Excluding org.apache.ivy:ivy:jar:2.3.0 because it has security bugs
+                -->
+                <exclusion>
+                    <groupId>org.apache.ivy</groupId>
+                    <artifactId>ivy</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -165,7 +143,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>${spring-boot-dependencies.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>

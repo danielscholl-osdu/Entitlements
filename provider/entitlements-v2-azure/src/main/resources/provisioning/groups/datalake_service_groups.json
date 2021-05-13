@@ -299,6 +299,36 @@
           "name": "users.datalake.admins"
         }
       ]
+    },
+    {
+      "name": "service.policy.user",
+      "description": "User group for policy service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.viewers"
+        }
+      ]
+    },
+    {
+      "name": "service.policy.admin",
+      "description": "Admin group for policy service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        }
+      ]
     }
   ]
 }

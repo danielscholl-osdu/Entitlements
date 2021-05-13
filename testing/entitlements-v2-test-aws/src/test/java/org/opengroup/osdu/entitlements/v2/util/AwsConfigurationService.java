@@ -41,7 +41,7 @@ public class AwsConfigurationService implements ConfigurationService {
 
     @Override
     public String getDomain() {
-        String domain = System.getProperty("DOMAIN", System.getenv("DOMAIN"));
+        String domain = System.getProperty("ENTITLEMENTS_V2_DOMAIN", System.getenv("ENTITLEMENTS_V2_DOMAIN"));
         if (Strings.isNullOrEmpty(domain)) {
             domain = "example.com";
         }
