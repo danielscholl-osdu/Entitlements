@@ -43,7 +43,7 @@ public class AwsConfigurationService implements ConfigurationService {
     public String getDomain() {
         String domain = System.getProperty("ENTITLEMENTS_V2_DOMAIN", System.getenv("ENTITLEMENTS_V2_DOMAIN"));
         if (Strings.isNullOrEmpty(domain)) {
-            domain = "contoso.com";
+            domain = "example.com";
         }
         return domain;
     }
