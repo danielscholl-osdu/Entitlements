@@ -121,7 +121,7 @@ public class ClusterGremlinConnector implements GremlinConnector {
     }
 
     private List<Result> submitTraversalAsQueryString(Traversal<?, ?> traversal) {
-        String query = GroovyTranslator.of(G).translate(traversal.asAdmin().getBytecode());
+        String query = GroovyTranslator.of(G).translate(traversal.asAdmin().getBytecode()).getScript();
         return getResultList(client.submit(query));
     }
 
