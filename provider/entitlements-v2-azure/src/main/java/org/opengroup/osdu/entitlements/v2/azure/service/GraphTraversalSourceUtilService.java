@@ -33,7 +33,7 @@ public class GraphTraversalSourceUtilService {
                 traversal = traversal.property(entry.getKey(), entry.getValue());
             }
         }
-        traversal = traversal.to(graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, addEdgeDto.getToNodeId())
+        traversal = traversal.to(__.V().has(VertexPropertyNames.NODE_ID, addEdgeDto.getToNodeId())
                 .has(VertexPropertyNames.DATA_PARTITION_ID, addEdgeDto.getDpOfToNodeId()));
         gremlinConnector.addEdge(traversal);
     }

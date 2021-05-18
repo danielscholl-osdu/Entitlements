@@ -20,13 +20,15 @@ The following software have components provided under the terms of this license:
 - ASM based accessors helper used by json-smart (from )
 - Adapter: RxJava (from )
 - Admin Directory API directory_v1-rev77-1.22.0 (from )
+- Apache Commons BeanUtils (from http://commons.apache.org/proper/commons-beanutils/)
 - Apache Commons Codec (from http://commons.apache.org/proper/commons-codec/)
 - Apache Commons Codec (from http://commons.apache.org/proper/commons-codec/)
 - Apache Commons Collections (from http://commons.apache.org/proper/commons-collections/)
-- Apache Commons Configuration (from http://commons.apache.org/configuration/)
+- Apache Commons Configuration (from http://commons.apache.org/proper/commons-configuration/)
 - Apache Commons Lang (from http://commons.apache.org/proper/commons-lang/)
 - Apache Commons Logging (from http://commons.apache.org/proper/commons-logging/)
 - Apache Commons Pool (from http://commons.apache.org/proper/commons-pool/)
+- Apache Commons Text (from http://commons.apache.org/proper/commons-text/)
 - Apache Groovy (from http://groovy-lang.org)
 - Apache Groovy (from http://groovy-lang.org)
 - Apache Groovy (from http://groovy-lang.org)
@@ -61,7 +63,6 @@ The following software have components provided under the terms of this license:
 - Cloud Storage JSON API v1-rev58-1.21.0 (from )
 - Commons IO (from http://commons.apache.org/io/)
 - Commons IO (from http://commons.apache.org/io/)
-- Commons Lang (from http://commons.apache.org/lang/)
 - Converter: Jackson (from )
 - Core functionality for the Reactor Netty library (from https://github.com/reactor/reactor-netty)
 - Expression Language 3.0 (from https://projects.eclipse.org/projects/ee4j.el)
@@ -145,8 +146,8 @@ The following software have components provided under the terms of this license:
 - Microsoft Azure Java Core Library (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure Netty HTTP Client Library (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure SDK for SQL API of Azure Cosmos DB Service (from https://github.com/Azure/azure-sdk-for-java)
-- Mockito (from http://mockito.org)
 - Mockito (from http://www.mockito.org)
+- Mockito (from http://mockito.org)
 - Netty Reactive Streams Implementation (from )
 - Netty/All-in-One (from )
 - Netty/Buffer (from http://netty.io/)
@@ -463,7 +464,6 @@ GPL-2.0-only
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- Commons Lang (from http://commons.apache.org/lang/)
 - JavaBeans Activation Framework (from )
 - javax.annotation-api (from http://jcp.org/en/jsr/detail?id=250)
 - tomcat-embed-core (from http://tomcat.apache.org/)
@@ -523,7 +523,6 @@ LGPL-2.1-only
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- Commons Lang (from http://commons.apache.org/lang/)
 - Java Native Access (from https://github.com/java-native-access/jna)
 - Java Native Access Platform (from https://github.com/java-native-access/jna)
 - Javassist (from http://www.javassist.org/)

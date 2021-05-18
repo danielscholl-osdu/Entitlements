@@ -84,6 +84,7 @@ public class GraphTraversalSourceUtilServiceTest {
                 .dpOfToNodeId("dp2")
                 .dpOfFromNodeId("dp")
                 .edgeProperties(Collections.singletonMap(EdgePropertyNames.ROLE, Role.OWNER.getValue()))
+                .edgeLabel("edge-label")
                 .build();
         graphTraversalSourceUtilService.addEdge(addEdgeDto);
 
@@ -124,6 +125,7 @@ public class GraphTraversalSourceUtilServiceTest {
                 .dpOfToNodeId("dp")
                 .dpOfFromNodeId("dp")
                 .edgeProperties(Collections.singletonMap(EdgePropertyNames.ROLE, Role.OWNER.getValue()))
+                .edgeLabel("edge-label")
                 .build();
         graphTraversalSourceUtilService.addEdge(addEdgeDto);
 
@@ -162,6 +164,7 @@ public class GraphTraversalSourceUtilServiceTest {
                 .dpOfToNodeId("dp")
                 .dpOfFromNodeId("dp")
                 .edgeProperties(Collections.singletonMap(EdgePropertyNames.ROLE, Role.MEMBER.getValue()))
+                .edgeLabel("edge-label")
                 .build();
         graphTraversalSourceUtilService.addEdge(addEdgeDto);
 
