@@ -97,4 +97,11 @@ public class AwsAppProperties extends AppProperties {
         filePaths.add("/provisioning/groups/datalake_service_groups.json");
         return filePaths;
     }
+
+    @Override
+    public List<String> getGroupsOfInitialUsers() {
+        List<String> groupsOfInitialUsers = new ArrayList<>();
+        groupsOfInitialUsers.add(getGroupsOfServicePrincipal());
+        return groupsOfInitialUsers;
+    }
 }

@@ -46,6 +46,13 @@ public class AzureAppProperties extends AppProperties {
     }
 
     @Override
+    public List<String> getGroupsOfInitialUsers() {
+        List<String> groupsOfInitialUsers = new ArrayList<>();
+        groupsOfInitialUsers.add(getGroupsOfServicePrincipal());
+        return groupsOfInitialUsers;
+    }
+
+    @Override
     public String getGroupsOfServicePrincipal() {
         return "/provisioning/accounts/groups_of_service_principal.json";
     }

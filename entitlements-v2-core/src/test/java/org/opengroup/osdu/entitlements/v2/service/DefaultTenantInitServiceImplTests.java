@@ -54,6 +54,23 @@ public class DefaultTenantInitServiceImplTests {
             "  ]\n" +
             "}";
 
+    private final String MEMBERS = "{\n" +
+            "  \"users\": [\n" +
+            "    {\n" +
+            "      \"email\": \"SERVICE_PRINCIPAL\",\n" +
+            "      \"role\": \"MEMBER\"\n" +
+            "    }\n" +
+            "  ],\n" +
+            "  \"membersOf\": [\n" +
+            "    {\n" +
+            "      \"groupName\": \"groupId1\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"groupName\": \"groupId2\"\n" +
+            "    }\n" +
+            "  ]\n" +
+            "}";
+
     private final String GROUPS_WITH_NO_MEMBERS = "{\n" +
             "  \"groups\": [\n" +
             "    {\n" +
@@ -120,8 +137,10 @@ public class DefaultTenantInitServiceImplTests {
         list.add("/provisioning/groups/datalake_user_groups.json");
         list.add("/provisioning/groups/datalake_service_groups.json");
         list.add("/provisioning/groups/data_groups.json");
+        final List<String> fileNames = new ArrayList<>();
+        fileNames.add("groups_of_service_principal.json");
         when(appProperties.getInitialGroups()).thenReturn(list);
-        when(appProperties.getGroupsOfServicePrincipal()).thenReturn("groups_of_service_principal.json");
+        when(appProperties.getGroupsOfInitialUsers()).thenReturn(fileNames);
     }
 
     @Test
@@ -231,7 +250,23 @@ public class DefaultTenantInitServiceImplTests {
         AddMemberServiceDto addMemberServiceDto2 = AddMemberServiceDto.builder().groupEmail("groupid2@dp.domain.com").requesterId("desId")
                 .partitionId("dp").build();
 
-        tenantInitService.bootstrapServicePrincipal();
+        tenantInitService.bootstrapInitialAccounts();
+
+        verify(addMemberService).run(addMemberDto, addMemberServiceDto1);
+        verify(addMemberService).run(addMemberDto, addMemberServiceDto2);
+        verifyNoMoreInteractions(log);
+    }
+
+    @Test
+    public void shouldSuccessfullyLoadInitialAccounts() {
+        when(fileReaderService.readFile("groups_of_service_principal.json")).thenReturn(MEMBERS);
+        AddMemberDto addMemberDto = AddMemberDto.builder().email("service_principal_username").role(Role.MEMBER).build();
+        AddMemberServiceDto addMemberServiceDto1 = AddMemberServiceDto.builder().groupEmail("groupid1@dp.domain.com").requesterId("desId")
+                .partitionId("dp").build();
+        AddMemberServiceDto addMemberServiceDto2 = AddMemberServiceDto.builder().groupEmail("groupid2@dp.domain.com").requesterId("desId")
+                .partitionId("dp").build();
+
+        tenantInitService.bootstrapInitialAccounts();
 
         verify(addMemberService).run(addMemberDto, addMemberServiceDto1);
         verify(addMemberService).run(addMemberDto, addMemberServiceDto2);

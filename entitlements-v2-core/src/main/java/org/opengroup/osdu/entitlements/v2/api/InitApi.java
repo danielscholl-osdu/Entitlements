@@ -17,7 +17,7 @@ public class InitApi {
     @PreAuthorize("@authorizationFilter.hasAnyPermission()")
     public ResponseEntity<Void> initiateTenant() {
         tenantInitService.createDefaultGroups();
-        tenantInitService.bootstrapServicePrincipal();
+        tenantInitService.bootstrapInitialAccounts();
         return ResponseEntity.ok().build();
     }
 }

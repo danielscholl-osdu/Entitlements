@@ -23,6 +23,11 @@ public class AppPropertiesTestConfiguration {
             }
 
             @Override
+            public List<String> getGroupsOfInitialUsers() {
+                return null;
+            }
+
+            @Override
             public List<String> getProtectedMembers() {
                 return null;
             }

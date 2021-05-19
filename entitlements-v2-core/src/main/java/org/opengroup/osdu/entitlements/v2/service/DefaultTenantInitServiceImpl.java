@@ -44,34 +44,38 @@ public class DefaultTenantInitServiceImpl implements TenantInitService {
     }
 
     @Override
-    public void customizedBootstrap() {
-    }
-
-    @Override
-    public void bootstrapServicePrincipal() {
+    public void bootstrapInitialAccounts() {
         final Map<String, String> userEmails = createUserEmails();
-        final String fileContent = fileReaderService.readFile(appProperties.getGroupsOfServicePrincipal());
-        final JsonObject userElement = getUserJsonObject(fileContent);
-        final String emailKey = userElement.get("email").getAsString();
-        final String role = userElement.get("role").getAsString();
-        final List<String> groupNames = getGroupNamesForOwner(fileContent);
-        final AddMemberDto addMemberDto = AddMemberDto.builder()
-                .email(userEmails.get(emailKey))
-                .role(Role.valueOf(role.toUpperCase()))
-                .build();
-        String partitionId = requestInfo.getHeaders().getPartitionId();
-        String partitionDomain = requestInfoUtilService.getDomain(partitionId);
-        final String requesterId = requestInfoUtilService.getUserId(requestInfo.getHeaders());
-        groupNames.stream()
-                .map(name -> createEmail(name, partitionDomain))
-                .forEach(groupId -> {
-                    AddMemberServiceDto addMemberServiceDto = AddMemberServiceDto.builder()
-                            .groupEmail(groupId)
-                            .partitionId(partitionId)
-                            .requesterId(requesterId)
-                            .build();
-                    addMemberToGroup(addMemberDto, addMemberServiceDto);
-                });
+        List<String> fileNames = appProperties.getGroupsOfInitialUsers();
+        for (String fileName : fileNames) {
+            final String fileContent = fileReaderService.readFile(fileName);
+            final JsonObject userElement = getUserJsonObject(fileContent);
+            final String emailKey = userElement.get("email").getAsString();
+            final String role = userElement.get("role").getAsString();
+            final List<String> groupNames;
+            if ("OWNER".equalsIgnoreCase(role)) {
+                groupNames = getGroupNamesForOwner(fileContent);
+            } else {
+                groupNames = getGroupNamesForMember(fileContent);
+            }
+            final AddMemberDto addMemberDto = AddMemberDto.builder()
+                    .email(userEmails.get(emailKey))
+                    .role(Role.valueOf(role.toUpperCase()))
+                    .build();
+            String partitionId = requestInfo.getHeaders().getPartitionId();
+            String partitionDomain = requestInfoUtilService.getDomain(partitionId);
+            final String requesterId = requestInfoUtilService.getUserId(requestInfo.getHeaders());
+            groupNames.stream()
+                    .map(name -> createEmail(name, partitionDomain))
+                    .forEach(groupId -> {
+                        AddMemberServiceDto addMemberServiceDto = AddMemberServiceDto.builder()
+                                .groupEmail(groupId)
+                                .partitionId(partitionId)
+                                .requesterId(requesterId)
+                                .build();
+                        addMemberToGroup(addMemberDto, addMemberServiceDto);
+                    });
+        }
     }
 
     private void bootstrapGroups(final String fileName) {
@@ -206,6 +210,16 @@ public class DefaultTenantInitServiceImpl implements TenantInitService {
         final JsonArray array = JsonParser.parseString(fileContent)
                 .getAsJsonObject()
                 .get("ownersOf")
+                .getAsJsonArray();
+        array.forEach(element -> groupNames.add(element.getAsJsonObject().get("groupName").getAsString()));
+        return groupNames;
+    }
+
+    private List<String> getGroupNamesForMember(final String fileContent) {
+        final List<String> groupNames = new ArrayList<>();
+        final JsonArray array = JsonParser.parseString(fileContent)
+                .getAsJsonObject()
+                .get("membersOf")
                 .getAsJsonArray();
         array.forEach(element -> groupNames.add(element.getAsJsonObject().get("groupName").getAsString()));
         return groupNames;
