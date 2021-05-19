@@ -5,7 +5,5 @@ public interface TenantInitService {
 
     void createDefaultGroups();
 
-    void bootstrapServicePrincipal();
-
-    void customizedBootstrap();
+    void bootstrapInitialAccounts();
 }

@@ -33,6 +33,11 @@ public abstract class AppProperties {
     public abstract String getGroupsOfServicePrincipal();
 
     /**
+     * @return a list containing paths of configuration files
+     */
+    public abstract List<String> getGroupsOfInitialUsers();
+
+    /**
      * Returns members which are protected from removal from their groups
      */
     public abstract List<String> getProtectedMembers();
