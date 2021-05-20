@@ -69,19 +69,19 @@ public class AddMemberServiceTests {
         EntityNode groupNode = EntityNode.builder().nodeId("data.x@common.contoso.com").name("data.x")
                 .type(NodeType.GROUP).dataPartitionId("common").build();
         EntityNode requesterNode = EntityNode.builder().nodeId("requesterid").name("requesterid").type(NodeType.USER).dataPartitionId("common").build();
-        when(retrieveGroupRepo.getEntityNode("member@xxx.com", "common")).thenReturn(Optional.empty());
+        when(retrieveGroupRepo.getEntityNode("member@contoso.com", "common")).thenReturn(Optional.empty());
         when(retrieveGroupRepo.groupExistenceValidation("data.x@common.contoso.com", "common")).thenReturn(groupNode);
         when(retrieveGroupRepo.getEntityNode("requesterid", "common")).thenReturn(Optional.of(requesterNode));
         EntityNode rootDataGroupNode = EntityNode.builder().nodeId("users.data.root@common.contoso.com").name("users.data.root")
                 .type(NodeType.GROUP).dataPartitionId("common").build();
         when(retrieveGroupRepo.groupExistenceValidation("users.data.root@common.contoso.com", "common")).thenReturn(rootDataGroupNode);
         when(retrieveGroupRepo.hasDirectChild(rootDataGroupNode, ChildrenReference.createChildrenReference(requesterNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
-        EntityNode memberNode = EntityNode.builder().nodeId("member@xxx.com").name("member@xxx.com").type(NodeType.USER)
-                .dataPartitionId("common").description("member@xxx.com").appIds(Collections.emptySet()).build();
+        EntityNode memberNode = EntityNode.builder().nodeId("member@contoso.com").name("member@contoso.com").type(NodeType.USER)
+                .dataPartitionId("common").description("member@contoso.com").appIds(Collections.emptySet()).build();
         ParentTreeDto parentTreeDto = ParentTreeDto.builder().parentReferences(Collections.emptySet()).maxDepth(2).build();
         when(retrieveGroupRepo.loadAllParents(memberNode)).thenReturn(parentTreeDto);
 
-        AddMemberDto addMemberDto = new AddMemberDto("member@xxx.com", Role.MEMBER);
+        AddMemberDto addMemberDto = new AddMemberDto("member@contoso.com", Role.MEMBER);
         AddMemberServiceDto addMemberServiceDto = AddMemberServiceDto.builder()
                 .groupEmail("data.x@common.contoso.com")
                 .requesterId("requesterid")

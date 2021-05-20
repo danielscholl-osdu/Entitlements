@@ -67,7 +67,7 @@ public class AddMemberService {
     }
 
     private EntityNode createNewMemberNode(String memberPrimaryId, String memberDesId, String partitionId) {
-        if (!memberPrimaryId.endsWith(config.getDomain())) {
+        if (!memberPrimaryId.endsWith(String.format("@%s.%s", partitionId, config.getDomain()))) {
             return EntityNode.createMemberNodeForNewUser(memberDesId, partitionId);
         } else {
             throw new AppException(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), String.format("Member group %s not found", memberPrimaryId));
