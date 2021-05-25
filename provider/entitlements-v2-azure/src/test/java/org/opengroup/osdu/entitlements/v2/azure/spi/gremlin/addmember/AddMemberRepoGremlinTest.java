@@ -14,17 +14,24 @@ import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinCo
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.EdgePropertyNames;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPropertyNames;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
+import org.opengroup.osdu.entitlements.v2.model.ChildrenTreeDto;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
 import org.opengroup.osdu.entitlements.v2.spi.addmember.AddMemberRepo;
+import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+
+import static org.junit.Assert.assertTrue;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -42,6 +49,9 @@ public class AddMemberRepoGremlinTest {
     @MockBean
     private CacheConfig cacheConfig;
 
+    @MockBean
+    private RetrieveGroupRepo retrieveGroupRepo;
+
     @After
     public void cleanup() {
         gremlinConnector.getGraphTraversalSource().V().drop().iterate();
@@ -57,8 +67,10 @@ public class AddMemberRepoGremlinTest {
         EntityNode member = EntityNode.builder().nodeId("memberId").dataPartitionId("dp").type(NodeType.USER).build();
         AddMemberRepoDto addMemberRepoDto = AddMemberRepoDto.builder().memberNode(member)
                 .partitionId("dp").role(Role.OWNER).build();
+        ChildrenTreeDto childrenTreeDto = ChildrenTreeDto.builder().childrenUserIds(Collections.singletonList("memberId")).build();
+        when(retrieveGroupRepo.loadAllChildrenUsers(member)).thenReturn(childrenTreeDto);
 
-        addMemberRepo.addMember(group, addMemberRepoDto);
+        Set<String> impactedUsers = addMemberRepo.addMember(group, addMemberRepoDto);
 
         List<Vertex> members = graphTraversalSource.V()
                 .has(VertexPropertyNames.NODE_ID, group.getNodeId())
@@ -67,6 +79,8 @@ public class AddMemberRepoGremlinTest {
                 .inV()
                 .toList();
         Assert.assertEquals(1, members.size());
+        Assert.assertEquals(1, impactedUsers.size());
+        assertTrue(impactedUsers.contains("memberId"));
         Assert.assertEquals(member.getNodeId(), members.iterator().next().value(VertexPropertyNames.NODE_ID));
         List<Edge> edges = graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, group.getNodeId()).bothE().toList();
         Assert.assertEquals(2, edges.size());

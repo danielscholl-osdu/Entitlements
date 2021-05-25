@@ -23,6 +23,7 @@ import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.spi.renamegroup.RenameGroupRepo;
+import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -47,6 +48,8 @@ public class RenameGroupRepoGremlinTest {
     private CacheConfig cacheConfig;
     @Autowired
     private RenameGroupRepo renameGroupRepo;
+    @Autowired
+    private RetrieveGroupRepo retrieveGroupRepo;
     @Autowired
     private GremlinConnector gremlinConnector;
     @Autowired
@@ -94,8 +97,10 @@ public class RenameGroupRepoGremlinTest {
                 .build();
 
         Set<String> impactedUsers = renameGroupRepo.run(groupNode, "users.y");
-        // TODO: 589276 Check impacted users when the logic will be implemented.
-        // Assert.assertEquals(new HashSet<>(), impactedUsers);
+
+        Assert.assertEquals(2, impactedUsers.size());
+        Assert.assertTrue(impactedUsers.contains("users.owner@dp.contoso.com"));
+        Assert.assertTrue(impactedUsers.contains("users.member@dp.contoso.com"));
         Assert.assertFalse(graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, "users.x" + "@" + TEST_DOMAIN)
                 .has(VertexPropertyNames.DATA_PARTITION_ID, TEST_PARTITION_ID)
                 .hasNext());
@@ -201,8 +206,9 @@ public class RenameGroupRepoGremlinTest {
                 .description("")
                 .build();
         Set<String> impactedUsers = renameGroupRepo.run(groupNode, "users.z");
-        // TODO: 589276 Check impacted users when the logic will be implemented.
-        // Assert.assertEquals(new HashSet<>(), impactedUsers);
+
+        Assert.assertEquals(1, impactedUsers.size());
+        Assert.assertTrue(impactedUsers.contains("member@xxx.com"));
         Assert.assertFalse(graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, "users.x@dp.contoso.com")
                 .has(VertexPropertyNames.DATA_PARTITION_ID, "dp")
                 .hasNext());

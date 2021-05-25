@@ -29,6 +29,8 @@ public class DeleteMemberServiceTest {
     private RetrieveGroupRepo retrieveGroupRepo;
     @Mock
     private RemoveMemberService removeMemberService;
+    @Mock
+    private GroupCacheService groupCacheService;
     @InjectMocks
     private DeleteMemberService deleteMemberService;
 
@@ -65,6 +67,7 @@ public class DeleteMemberServiceTest {
         verify(retrieveGroupRepo, times(1)).loadDirectParents(DATA_PARTITION_ID, MEMBER_EMAIL);
         verify(removeMemberService, times(1)).removeMember(buildRemoveMemberServiceDto(groupEmail1));
         verify(removeMemberService, times(1)).removeMember(buildRemoveMemberServiceDto(groupEmail2));
+        verify(groupCacheService).flushListGroupCacheForUser(MEMBER_EMAIL, DATA_PARTITION_ID);
     }
 
     private RemoveMemberServiceDto buildRemoveMemberServiceDto(String groupEmail) {

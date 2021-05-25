@@ -24,6 +24,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -132,7 +133,17 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
 
     @Override
     public ChildrenTreeDto loadAllChildrenUsers(EntityNode node) {
-        return ChildrenTreeDto.builder().childrenUserIds(new ArrayList<>()).build();
+        if (node.isUser()) {
+            return ChildrenTreeDto.builder().childrenUserIds(Collections.singletonList(node.getNodeId())).build();
+        }
+        Traversal<Vertex, Vertex> traversal = gremlinConnector.getGraphTraversalSource().V()
+                .has(VertexPropertyNames.DATA_PARTITION_ID, node.getDataPartitionId())
+                .has(VertexPropertyNames.NODE_ID, node.getNodeId())
+                .emit(__.hasLabel(NodeType.USER.toString()))
+                .repeat(__.outE(EdgePropertyNames.CHILD_EDGE_LB).inV());
+        List<NodeVertex> vertices = gremlinConnector.getVertices(traversal);
+        return ChildrenTreeDto.builder()
+                .childrenUserIds(vertices.stream().map(NodeVertex::getNodeId).distinct().collect(Collectors.toList())).build();
     }
 
     public Set<ParentReference> filterParentsByAppId(Set<ParentReference> parentReferences, String partitionId, String appId) {

@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class DeleteGroupService {
 
     private final DeleteGroupRepo deleteGroupRepo;
     private final RetrieveGroupRepo retrieveGroupRepo;
+    private final GroupCacheService groupCacheService;
     private final JaxRsDpsLog log;
     private final DefaultGroupsService defaultGroupsService;
     private final RequestInfo requestInfo;
@@ -39,7 +41,7 @@ public class DeleteGroupService {
         if (defaultGroupsService.isDefaultGroupName(groupNode.getName())) {
             throw new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Invalid group, bootstrap groups are not allowed to be deleted");
         }
-        deleteGroupRepo.deleteGroup(existingGroupEntityNode.get());
-
+        Set<String> impactedUsers = deleteGroupRepo.deleteGroup(existingGroupEntityNode.get());
+        groupCacheService.refreshListGroupCache(impactedUsers, deleteGroupServiceDto.getPartitionId());
     }
 }

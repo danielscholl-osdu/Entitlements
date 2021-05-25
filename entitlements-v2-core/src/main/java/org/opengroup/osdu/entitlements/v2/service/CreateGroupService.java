@@ -24,13 +24,14 @@ public class CreateGroupService {
 
     private final CreateGroupRepo createGroupRepo;
     private final RetrieveGroupRepo retrieveGroupRepo;
+    private final GroupCacheService groupCacheService;
     private final JaxRsDpsLog log;
     private final DefaultGroupsService defaultGroupsService;
 
     public EntityNode run(EntityNode groupNode, CreateGroupServiceDto createGroupServiceDto) {
         log.info(String.format("requested by %s", createGroupServiceDto.getRequesterId()));
         EntityNode requesterNode = EntityNode.createMemberNodeForRequester(createGroupServiceDto.getRequesterId(), createGroupServiceDto.getPartitionId());
-        Set<ParentReference> allExistingParents = retrieveGroupRepo.loadAllParents(requesterNode).getParentReferences();
+        Set<ParentReference> allExistingParents = groupCacheService.getFromPartitionCache(requesterNode.getNodeId(), createGroupServiceDto.getPartitionId());
         if (allExistingParents.size() >= EntityNode.MAX_PARENTS) {
             log.error(String.format("Identity %s already belong to %d groups", createGroupServiceDto.getRequesterId(), allExistingParents.size()));
             throw new AppException(HttpStatus.PRECONDITION_FAILED.value(), HttpStatus.PRECONDITION_FAILED.getReasonPhrase(), String.format("%s's group quota hit. Identity can't belong to more than %d groups", createGroupServiceDto.getRequesterId(), EntityNode.MAX_PARENTS));
@@ -63,6 +64,7 @@ public class CreateGroupService {
     }
 
     private void createGroup(EntityNode groupNode, CreateGroupRepoDto createGroupRepoDto) {
-        createGroupRepo.createGroup(groupNode, createGroupRepoDto);
+        Set<String> impactedUsers = createGroupRepo.createGroup(groupNode, createGroupRepoDto);
+        groupCacheService.refreshListGroupCache(impactedUsers, createGroupRepoDto.getPartitionId());
     }
 }

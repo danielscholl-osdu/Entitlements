@@ -27,6 +27,7 @@ public class AddMemberService {
     private final AppProperties config;
     private final JaxRsDpsLog log;
     private final PermissionService permissionService;
+    private final GroupCacheService groupCacheService;
 
     /**
      * Add Member only allows to create a member node for a new user (first time add a user to a data partition), but not for a group.
@@ -63,7 +64,8 @@ public class AddMemberService {
         }
         AddMemberRepoDto addMemberRepoDto = AddMemberRepoDto.builder().memberNode(memberNode).role(addMemberDto.getRole()).
                 partitionId(addMemberServiceDto.getPartitionId()).existingParents(allExistingParents).build();
-        addMemberRepo.addMember(existingGroupEntityNode, addMemberRepoDto);
+        Set<String> impactedUsers = addMemberRepo.addMember(existingGroupEntityNode, addMemberRepoDto);
+        groupCacheService.refreshListGroupCache(impactedUsers, addMemberServiceDto.getPartitionId());
     }
 
     private EntityNode createNewMemberNode(String memberPrimaryId, String memberDesId, String partitionId) {

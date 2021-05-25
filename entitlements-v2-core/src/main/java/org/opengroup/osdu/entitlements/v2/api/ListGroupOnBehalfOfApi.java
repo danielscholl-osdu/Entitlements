@@ -28,7 +28,7 @@ public class ListGroupOnBehalfOfApi {
     private final PartitionHeaderValidationService partitionHeaderValidationService;
 
     @GetMapping("/members/{member_email}/groups")
-    @PreAuthorize("@authorizationFilter.hasAnyPermission('" + AppProperties.ADMIN + "')")
+    @PreAuthorize("@authorizationFilter.hasAnyPermission('" + AppProperties.OPS + "', '" + AppProperties.ADMIN + "')")
     public ResponseEntity<ListGroupResponseDto> listGroupsOnBehalfOf(@PathVariable("member_email") String memberId,
                                                                      @RequestParam(name="type", required = false) String type,
                                                                      @RequestParam(name="appid", required = false) String appId) {

@@ -6,11 +6,13 @@ import org.opengroup.osdu.entitlements.v2.azure.service.AddEdgeDto;
 import org.opengroup.osdu.entitlements.v2.azure.service.GraphTraversalSourceUtilService;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.EdgePropertyNames;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
+import org.opengroup.osdu.entitlements.v2.model.ChildrenTreeDto;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
 import org.opengroup.osdu.entitlements.v2.spi.Operation;
 import org.opengroup.osdu.entitlements.v2.spi.addmember.AddMemberRepo;
+import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
@@ -23,6 +25,7 @@ import java.util.Set;
 public class AddMemberRepoGremlin implements AddMemberRepo {
     private final GraphTraversalSourceUtilService graphTraversalSourceUtilService;
     private final AuditLogger auditlogger;
+    private final RetrieveGroupRepo retrieveGroupRepo;
 
     /**
      * Adds a member by adding two edges in the database.
@@ -30,6 +33,8 @@ public class AddMemberRepoGremlin implements AddMemberRepo {
      */
     @Override
     public Set<String> addMember(EntityNode groupNode, AddMemberRepoDto addMemberRepoDto) {
+        ChildrenTreeDto childrenUserDto = retrieveGroupRepo.loadAllChildrenUsers(addMemberRepoDto.getMemberNode());
+        Set<String> impactedUsers = new HashSet<>(childrenUserDto.getChildrenUserIds());
         graphTraversalSourceUtilService.createVertexFromEntityNodeIdempotent(addMemberRepoDto.getMemberNode());
         AddEdgeDto.AddEdgeDtoBuilder addChildEdgeRequestBuilder = AddEdgeDto.builder()
                 .fromNodeId(groupNode.getNodeId())
@@ -62,7 +67,7 @@ public class AddMemberRepoGremlin implements AddMemberRepo {
                     addMemberRepoDto.getRole());
             throw e;
         }
-        return new HashSet<>();
+        return new HashSet<>(impactedUsers);
     }
 
     @Override

@@ -110,7 +110,7 @@ public class UpdateAppIdsRepoGremlinTest {
         allowedAppIds.add("testApp1");
         allowedAppIds.add("testApp2");
 
-        updateAppIdsRepo.updateAppIds(groupNode, allowedAppIds);
+        Set<String> impactedUsers = updateAppIdsRepo.updateAppIds(groupNode, allowedAppIds);
 
         Set<String> appIds = new HashSet<>();
         Iterator<String> values = graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, "users.x@dp.contoso.com")
@@ -121,6 +121,9 @@ public class UpdateAppIdsRepoGremlinTest {
             appIds.add(values.next());
         }
 
+        Assert.assertEquals(2, impactedUsers.size());
+        Assert.assertTrue(impactedUsers.contains("users.owner@dp.contoso.com"));
+        Assert.assertTrue(impactedUsers.contains("users.member@dp.contoso.com"));
         Assert.assertEquals(new HashSet<>(Arrays.asList("testApp1", "testApp2")), appIds);
         List<Vertex> usersYMembers = gremlinConnector.getGraphTraversalSource().V().has(VertexPropertyNames.NODE_ID, "users.x@dp.contoso.com")
                 .outE(EdgePropertyNames.CHILD_EDGE_LB)
@@ -200,7 +203,7 @@ public class UpdateAppIdsRepoGremlinTest {
         allowedAppIds.add("testApp1");
         allowedAppIds.add("testApp2");
 
-        updateAppIdsRepo.updateAppIds(groupNode, allowedAppIds);
+        Set<String> impactedUsers = updateAppIdsRepo.updateAppIds(groupNode, allowedAppIds);
 
         Set<String> appIds = new HashSet<>();
         Iterator<String> values = graphTraversalSource.V().has(VertexPropertyNames.NODE_ID, "users.x@dp.contoso.com")
@@ -211,6 +214,8 @@ public class UpdateAppIdsRepoGremlinTest {
             appIds.add(values.next());
         }
 
+        Assert.assertEquals(1, impactedUsers.size());
+        Assert.assertTrue(impactedUsers.contains("member@xxx.com"));
         Assert.assertEquals(new HashSet<>(Arrays.asList("testApp1", "testApp2")), appIds);
         List<Vertex> members = gremlinConnector.getGraphTraversalSource().V().has(VertexPropertyNames.NODE_ID, "users.x@dp.contoso.com")
                 .outE(EdgePropertyNames.CHILD_EDGE_LB)

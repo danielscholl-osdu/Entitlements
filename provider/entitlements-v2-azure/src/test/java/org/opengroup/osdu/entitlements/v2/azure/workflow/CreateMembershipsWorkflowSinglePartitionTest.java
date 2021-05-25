@@ -23,6 +23,7 @@ import org.opengroup.osdu.entitlements.v2.auth.AuthorizationService;
 import org.opengroup.osdu.entitlements.v2.azure.AzureAppProperties;
 import org.opengroup.osdu.entitlements.v2.azure.config.CacheConfig;
 import org.opengroup.osdu.entitlements.v2.azure.service.PartitionCacheTtlService;
+import org.opengroup.osdu.entitlements.v2.azure.service.metrics.hitsnmisses.HitsNMissesMetricService;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.GroupType;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
@@ -34,7 +35,6 @@ import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupResponseDto;
 import org.opengroup.osdu.entitlements.v2.model.listmember.ListMemberResponseDto;
 import org.opengroup.osdu.entitlements.v2.model.listmember.MemberDto;
 import org.opengroup.osdu.entitlements.v2.model.updategroup.UpdateGroupOperation;
-import org.opengroup.osdu.entitlements.v2.azure.service.metrics.hitsnmisses.HitsNMissesMetricService;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -408,6 +408,25 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "data.default.viewers@common.contoso.com",
                 "users.myusers.operators@common.contoso.com"}, performListGroupRequestWithAppId(userA, audience));
 
+        assertGroupsEquals(new String[]{
+                "users@common.contoso.com",
+                "data.default.owners@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
+                "users.myusers.operators@common.contoso.com"}, performListGroupsOnBehalfOfRequest(userA, "NONE", "test.com"));
+
+        assertGroupsEquals(new String[]{
+                "users@common.contoso.com",
+                "data.default.owners@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
+                "users.myusers.operators@common.contoso.com",
+                "data.mydata1.operators@common.contoso.com"}, performListGroupsOnBehalfOfRequest(userA, "NONE", "App1"));
+
+        assertGroupsEquals(new String[]{
+                "users@common.contoso.com",
+                "data.default.owners@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
+                "users.myusers.operators@common.contoso.com",
+                "data.mydata1.operators@common.contoso.com"}, performListGroupsOnBehalfOfRequest(userA, "NONE", "App2"));
         //update group metadata with audience
 
         performUpdateGroupRequest(Collections.singletonList(getUpdateAppIdsOperation(audience)),
@@ -419,6 +438,13 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "data.default.viewers@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com"}, performListGroupRequestWithAppId(userA, audience));
 
+        assertGroupsEquals(new String[]{
+                "users@common.contoso.com",
+                "users.myusers.operators@common.contoso.com",
+                "data.default.owners@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
+                "data.mydata1.operators@common.contoso.com"}, performListGroupsOnBehalfOfRequest(userA, "NONE", "test.com"));
+
         //update group metadata with empty list
         performUpdateGroupRequest(Collections.singletonList(getUpdateAppIdsOperation(Collections.emptyList())),
                 "data.mydata1.operators@common.contoso.com", userA, audience);
@@ -428,6 +454,13 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "data.default.owners@common.contoso.com",
                 "data.default.viewers@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com"}, performListGroupRequestWithAppId(userA, audience));
+
+        assertGroupsEquals(new String[]{
+                "users@common.contoso.com",
+                "users.myusers.operators@common.contoso.com",
+                "data.default.owners@common.contoso.com",
+                "data.default.viewers@common.contoso.com",
+                "data.mydata1.operators@common.contoso.com"}, performListGroupsOnBehalfOfRequest(userA, "NONE", "test.com"));
     }
 
     private void testGroupUpdateApi() throws Exception {
@@ -751,6 +784,25 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                     .header(DpsHeaders.USER_ID, servicePrincipal)
                     .header(DpsHeaders.DATA_PARTITION_ID, "common")
                     .queryParam("type", groupType));
+            return objectMapper.readValue(
+                    result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
+                    ListGroupResponseDto.class);
+        } catch (Exception e) {
+            Assert.fail("Exception shouldn't take place here");
+        }
+        return ListGroupResponseDto.builder().build();
+    }
+
+    private ListGroupResponseDto performListGroupsOnBehalfOfRequest(String memberId, String groupType, String appId) {
+        try {
+            ResultActions result = mockMvc.perform(get("/members/{member_email}/groups", memberId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8.name())
+                    .header(DpsHeaders.AUTHORIZATION, "Bearer token")
+                    .header(DpsHeaders.USER_ID, servicePrincipal)
+                    .header(DpsHeaders.DATA_PARTITION_ID, "common")
+                    .queryParam("type", groupType)
+                    .queryParam("appid", appId));
             return objectMapper.readValue(
                     result.andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                     ListGroupResponseDto.class);

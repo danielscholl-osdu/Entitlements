@@ -25,9 +25,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
@@ -46,6 +48,8 @@ public class AddMemberServiceTests {
     private AppProperties config;
     @MockBean
     private RetrieveGroupRepo retrieveGroupRepo;
+    @MockBean
+    private GroupCacheService groupCacheService;
     @MockBean
     private AddMemberRepo addMemberRepo;
     @MockBean
@@ -87,6 +91,8 @@ public class AddMemberServiceTests {
                 .requesterId("requesterid")
                 .partitionId("common")
                 .build();
+        Set<String> allImpactUsers = new HashSet<>(Arrays.asList("member@xxx.com"));
+        when(addMemberRepo.addMember(any(), any())).thenReturn(allImpactUsers);
 
         addMemberService.run(addMemberDto, addMemberServiceDto);
 
@@ -94,6 +100,7 @@ public class AddMemberServiceTests {
         verify(addMemberRepo).addMember(eq(groupNode), captor.capture());
         assertThat(captor.getValue().getRole()).isEqualTo(Role.MEMBER);
         assertThat(captor.getValue().getPartitionId()).isEqualTo("common");
+        verify(groupCacheService).refreshListGroupCache(allImpactUsers, "common");
     }
 
     @Test
@@ -118,6 +125,8 @@ public class AddMemberServiceTests {
                 .requesterId("datafier@test.com")
                 .partitionId("common")
                 .build();
+        Set<String> allImpactUsers = new HashSet<>(Arrays.asList("member@xxx.com"));
+        when(addMemberRepo.addMember(any(), any())).thenReturn(allImpactUsers);
 
         addMemberService.run(addMemberDto, addMemberServiceDto);
 
@@ -125,6 +134,7 @@ public class AddMemberServiceTests {
         verify(addMemberRepo).addMember(eq(groupNode), captor.capture());
         assertThat(captor.getValue().getRole()).isEqualTo(Role.MEMBER);
         assertThat(captor.getValue().getPartitionId()).isEqualTo("common");
+        verify(groupCacheService).refreshListGroupCache(allImpactUsers, "common");
     }
 
     @Test
@@ -178,6 +188,8 @@ public class AddMemberServiceTests {
                 .requesterId("requesterid")
                 .partitionId("common")
                 .build();
+        Set<String> allImpactUsers = new HashSet<>(Arrays.asList("member@xxx.com"));
+        when(addMemberRepo.addMember(any(), any())).thenReturn(allImpactUsers);
 
         addMemberService.run(addMemberDto, addMemberServiceDto);
 
@@ -186,6 +198,7 @@ public class AddMemberServiceTests {
         assertThat(captor.getValue().getMemberNode()).isEqualTo(memberNode);
         assertThat(captor.getValue().getRole()).isEqualTo(Role.MEMBER);
         assertThat(captor.getValue().getPartitionId()).isEqualTo("common");
+        verify(groupCacheService).refreshListGroupCache(allImpactUsers, "common");
     }
 
     @Test

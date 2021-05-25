@@ -43,4 +43,14 @@ public class GroupCacheServiceAws implements GroupCacheService {
         }
         return result;
     }
+
+    @Override
+    public void refreshListGroupCache(Set<String> userIds, String partitionId) {
+
+    }
+
+    @Override
+    public void flushListGroupCacheForUser(String userId, String partitionId) {
+
+    }
 }

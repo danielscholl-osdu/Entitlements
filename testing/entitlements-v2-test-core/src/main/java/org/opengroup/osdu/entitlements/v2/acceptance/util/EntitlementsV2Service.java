@@ -137,22 +137,4 @@ public class EntitlementsV2Service {
         Assert.assertTrue(204 == response.getStatus() || 404 == response.getStatus());
         return response;
     }
-
-    public ClientResponse updateGroupAppIds(String groupName, Set<String> newAppIds, String token) throws Exception {
-        UpdateGroupRequestData requestBody = UpdateGroupRequestData.builder()
-                .op("replace")
-                .path("/appIds")
-                .value(new ArrayList<>(newAppIds)).build();
-
-        RequestData requestData = RequestData.builder()
-                .method("PATCH")
-                .relativePath("groups/" + configurationService.getIdOfGroup(groupName))
-                .dataPartitionId(configurationService.getTenantId())
-                .token(token)
-                .body(gson.toJson(Collections.singletonList(requestBody))).build();
-
-        ClientResponse response = httpClientService.send(requestData);
-        Assert.assertEquals(200, response.getStatus());
-        return response;
-    }
 }

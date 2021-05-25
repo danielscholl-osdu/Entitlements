@@ -24,6 +24,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Set;
+
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class RemoveMemberRepoGremlinTest {
@@ -72,8 +74,10 @@ public class RemoveMemberRepoGremlinTest {
         addMemberRepoGremlin.addMember(groupNode, addMemberRepoDto);
         Assert.assertTrue(retrieveGroupRepo.hasDirectChild(groupNode, childrenReference));
 
-        removeMemberRepoGremlin.removeMember(groupNode, memberNode, RemoveMemberServiceDto.builder().build());
+        Set<String> impactedUsers = removeMemberRepoGremlin.removeMember(groupNode, memberNode, RemoveMemberServiceDto.builder().build());
 
+        Assert.assertEquals(1, impactedUsers.size());
+        Assert.assertTrue(impactedUsers.contains("userId"));
         Assert.assertFalse(retrieveGroupRepo.hasDirectChild(groupNode, childrenReference));
         Assert.assertTrue(graphTraversalSource.E().toList().isEmpty());
         Mockito.verify(auditLogger).removeMember(AuditStatus.SUCCESS, "groupId", "userId", null);

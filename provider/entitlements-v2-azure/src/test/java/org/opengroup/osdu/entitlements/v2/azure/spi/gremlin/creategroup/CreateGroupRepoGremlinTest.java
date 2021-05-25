@@ -3,7 +3,6 @@ package org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.creategroup;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -29,6 +28,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -67,13 +69,13 @@ public class CreateGroupRepoGremlinTest {
                 .requesterNode(requesterNode)
                 .partitionId("dp").build();
 
-        createGroupRepo.createGroup(entityNode, createGroupRepoDto);
+        Set<String> impactedUsers = createGroupRepo.createGroup(entityNode, createGroupRepoDto);
 
         Vertex vertex = gremlinConnector.getGraphTraversalSource().V().has(VertexPropertyNames.NODE_ID, "groupId").next();
-        Assert.assertEquals("groupId", vertex.value(VertexPropertyNames.NODE_ID));
-        Assert.assertEquals("name", vertex.value(VertexPropertyNames.NAME));
-        Assert.assertEquals("desc", vertex.value(VertexPropertyNames.DESCRIPTION));
-        Assert.assertEquals("dp", vertex.value(VertexPropertyNames.DATA_PARTITION_ID));
+        assertEquals("groupId", vertex.value(VertexPropertyNames.NODE_ID));
+        assertEquals("name", vertex.value(VertexPropertyNames.NAME));
+        assertEquals("desc", vertex.value(VertexPropertyNames.DESCRIPTION));
+        assertEquals("dp", vertex.value(VertexPropertyNames.DATA_PARTITION_ID));
 
         Set<String> appIds = new HashSet<>();
         Iterator<String> values = vertex.values(VertexPropertyNames.APP_ID);
@@ -81,10 +83,12 @@ public class CreateGroupRepoGremlinTest {
             appIds.add(values.next());
         }
 
-        Assert.assertEquals(new HashSet<>(Arrays.asList("App1", "App2")), appIds);
+        assertEquals(1, impactedUsers.size());
+        assertTrue(impactedUsers.contains("test@test.com"));
+        assertEquals(new HashSet<>(Arrays.asList("App1", "App2")), appIds);
         ChildrenReference childrenReference = ChildrenReference.builder()
                 .id("test@test.com").type(NodeType.USER).dataPartitionId("dp").role(Role.OWNER).build();
-        Assert.assertTrue(retrieveGroupRepo.hasDirectChild(entityNode, childrenReference));
+        assertTrue(retrieveGroupRepo.hasDirectChild(entityNode, childrenReference));
         Mockito.verify(auditLogger).createGroup(AuditStatus.SUCCESS, "groupId");
     }
 
@@ -102,14 +106,14 @@ public class CreateGroupRepoGremlinTest {
                 .dataRootGroupNode(dataRootGroupNode)
                 .partitionId("dp").build();
 
-        createGroupRepo.createGroup(entityNode, createGroupRepoDto);
+        Set<String> impactedUsers = createGroupRepo.createGroup(entityNode, createGroupRepoDto);
 
         List<Vertex> vertices = gremlinConnector.getGraphTraversalSource().V().toList();
         Vertex vertex = vertices.stream().filter(v -> "groupId".equals(v.value(VertexPropertyNames.NODE_ID))).findFirst().get();
-        Assert.assertEquals("groupId", vertex.value(VertexPropertyNames.NODE_ID));
-        Assert.assertEquals("name", vertex.value(VertexPropertyNames.NAME));
-        Assert.assertEquals("desc", vertex.value(VertexPropertyNames.DESCRIPTION));
-        Assert.assertEquals("dp", vertex.value(VertexPropertyNames.DATA_PARTITION_ID));
+        assertEquals("groupId", vertex.value(VertexPropertyNames.NODE_ID));
+        assertEquals("name", vertex.value(VertexPropertyNames.NAME));
+        assertEquals("desc", vertex.value(VertexPropertyNames.DESCRIPTION));
+        assertEquals("dp", vertex.value(VertexPropertyNames.DATA_PARTITION_ID));
 
         Set<String> appIds = new HashSet<>();
         Iterator<String> values = vertex.values(VertexPropertyNames.APP_ID);
@@ -117,14 +121,16 @@ public class CreateGroupRepoGremlinTest {
             appIds.add(values.next());
         }
 
-        Assert.assertEquals(new HashSet<>(Arrays.asList("App1", "App2")), appIds);
+        assertEquals(1, impactedUsers.size());
+        assertTrue(impactedUsers.contains("test@test.com"));
+        assertEquals(new HashSet<>(Arrays.asList("App1", "App2")), appIds);
         ChildrenReference childrenReference = ChildrenReference.builder()
                 .id("test@test.com").type(NodeType.USER).dataPartitionId("dp").role(Role.OWNER).build();
-        Assert.assertTrue(retrieveGroupRepo.hasDirectChild(entityNode, childrenReference));
+        assertTrue(retrieveGroupRepo.hasDirectChild(entityNode, childrenReference));
         ChildrenReference childrenReferenceOfDataGroup = ChildrenReference.builder()
                 .id(dataRootGroupNode.getNodeId()).type(dataRootGroupNode.getType())
                 .dataPartitionId(dataRootGroupNode.getDataPartitionId()).role(Role.MEMBER).build();
-        Assert.assertTrue(retrieveGroupRepo.hasDirectChild(entityNode, childrenReferenceOfDataGroup));
+        assertTrue(retrieveGroupRepo.hasDirectChild(entityNode, childrenReferenceOfDataGroup));
         Mockito.verify(auditLogger).createGroup(AuditStatus.SUCCESS, "groupId");
     }
 }

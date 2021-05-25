@@ -31,22 +31,13 @@ public abstract class UpdateGroupTest extends AcceptanceBaseTest {
         String newGroupName = "newGroupName-" + currentTime;
 
         entitlementsV2Service.createGroup(oldGroupName, token.getValue());
-        GroupItem newGroupItem = GroupItem.builder().name(newGroupName.toLowerCase())
-                .description("desc")
-                .email(configurationService.getIdOfGroup(newGroupName)).build();
 
         ClientResponse response = httpClientService.send(getRenameGroupRequestData(oldGroupName, newGroupName, token.getValue()));
         UpdateGroupResponse updateGroupResponse = new Gson().fromJson(response.getEntity(String.class), UpdateGroupResponse.class);
         Assert.assertEquals(200, response.getStatus());
         Assert.assertEquals(newGroupName.toLowerCase(), updateGroupResponse.getName());
         Assert.assertEquals(configurationService.getIdOfGroup(newGroupName).toLowerCase(), updateGroupResponse.getEmail());
-
-        ListGroupResponse listGroupResponse = entitlementsV2Service.getGroups(token.getValue());
-        GroupItem groupItemFromGetGroups = listGroupResponse.getGroups()
-                .stream()
-                .filter(groupItem -> groupItem.getEmail().equals(configurationService.getIdOfGroup(newGroupName)))
-                .findFirst().orElse(null);
-        Assert.assertEquals(newGroupItem, groupItemFromGetGroups);
+        Assert.assertEquals(newGroupName.toLowerCase(), updateGroupResponse.getName().toLowerCase());
     }
 
     @Test

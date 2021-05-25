@@ -45,6 +45,19 @@ public class VmGroupCacheTest {
         this.sut.addGroupCache(key, this.parents);
         Set<ParentReference> secondResult = this.sut.getGroupCache(key);
         Assert.assertEquals(this.parents, secondResult);
+    }
 
+    @Test
+    public void shouldDeleteKeyInCache() {
+        String key = "requesterId-dp";
+        Set<ParentReference> firstResult = this.sut.getGroupCache(key);
+        Assert.assertEquals(null, firstResult);
+
+        this.sut.addGroupCache(key, this.parents);
+        Set<ParentReference> secondResult = this.sut.getGroupCache(key);
+        Assert.assertEquals(this.parents, secondResult);
+
+        this.sut.deleteGroupCache(key);
+        Assert.assertNull(this.sut.getGroupCache(key));
     }
 }
