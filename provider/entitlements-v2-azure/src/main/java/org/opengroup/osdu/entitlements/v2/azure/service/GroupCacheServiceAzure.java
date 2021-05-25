@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -30,6 +31,8 @@ public class GroupCacheServiceAzure implements GroupCacheService {
     private final HitsNMissesMetricService metricService;
     private final RedissonClient redissonClient;
     private final Retry retry;
+    private static final String REDIS_KEY_FORMAT = "%s-%s";
+
     @Value("${redisson.lock.acquisition.timeout}")
     private int redissonLockAcquisitionTimeOut;
     @Value("${redisson.lock.expiration}")
@@ -37,7 +40,7 @@ public class GroupCacheServiceAzure implements GroupCacheService {
 
     @Override
     public Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId) {
-        String cacheKey = String.format("%s-%s", requesterId, partitionId);
+        String cacheKey = String.format(REDIS_KEY_FORMAT, requesterId, partitionId);
         ParentReferences parentReferences = redisGroupCache.get(cacheKey);
         if (parentReferences == null) {
             String lockKey = String.format("lock-%s", cacheKey);
@@ -46,6 +49,26 @@ public class GroupCacheServiceAzure implements GroupCacheService {
         } else {
             metricService.sendHitsMetric();
             return parentReferences.getParentReferencesOfUser();
+        }
+    }
+
+    @Override
+    public void refreshListGroupCache(final Set<String> userIds, String partitionId) {
+        userIds.forEach(userId -> flushListGroupCacheForUser(userId, partitionId));
+    }
+
+    /**
+     Flush the list group cache for user by setting the ttl for that user's cache entry to a small random value between a lower and upper bound range.
+     */
+    @Override
+    public void flushListGroupCacheForUser(String userId, String partitionId) {
+        String key = String.format(REDIS_KEY_FORMAT, userId, partitionId);
+        long baseTtl = partitionCacheTtlService.getCacheFlushTtlBaseOfPartition(partitionId);
+        long jitter = partitionCacheTtlService.getCacheFlushTtlJitterOfPartition(partitionId);
+        if (redisGroupCache.getTtl(key) > baseTtl + jitter) {
+            SecureRandom random = new SecureRandom();
+            long ttlOfKey = baseTtl + (long)(random.nextDouble() * jitter);
+            redisGroupCache.updateTtl(key, ttlOfKey);
         }
     }
 
@@ -99,5 +122,4 @@ public class GroupCacheServiceAzure implements GroupCacheService {
         parentReferences.setParentReferencesOfUser(allParents);
         return parentReferences;
     }
-
 }

@@ -28,6 +28,7 @@ import org.opengroup.osdu.entitlements.v2.spi.updateappids.UpdateAppIdsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Repository
@@ -49,7 +50,7 @@ public class AwsUpdateAppIdsRepo extends BaseRepo implements UpdateAppIdsRepo {
     private Retry retry;
 
     @Override
-    public void updateAppIds(EntityNode groupNode, Set<String> allowedAppIds) {
+    public Set<String> updateAppIds(EntityNode groupNode, Set<String> allowedAppIds) {
         log.info(String.format("Updating allowed appids for group %s to %s in redis", groupNode, allowedAppIds));
         try {
             executeAppIdUpdate(groupNode, allowedAppIds);
@@ -61,6 +62,7 @@ public class AwsUpdateAppIdsRepo extends BaseRepo implements UpdateAppIdsRepo {
             executedCommands.clear();
         }
         auditLogger.updateAppIds(AuditStatus.SUCCESS, groupNode.getNodeId(), allowedAppIds);
+        return new HashSet<>();
     }
 
     private void executeAppIdUpdate(EntityNode groupEntityNode, Set<String> appIds) {

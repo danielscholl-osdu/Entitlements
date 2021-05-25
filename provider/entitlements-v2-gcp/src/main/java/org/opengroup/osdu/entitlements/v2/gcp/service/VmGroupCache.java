@@ -20,4 +20,8 @@ public class VmGroupCache {
     public void addGroupCache(String requesterId, Set<ParentReference> parents) {
         this.groupMap.put(requesterId, parents);
     }
+
+    public void deleteGroupCache(String requesterId) {
+        this.groupMap.remove(requesterId);
+    }
 }

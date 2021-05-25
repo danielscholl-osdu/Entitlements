@@ -10,29 +10,37 @@ import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinCo
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPropertyNames;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
+import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.opengroup.osdu.entitlements.v2.spi.updateappids.UpdateAppIdsRepo;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Repository
 @RequiredArgsConstructor
 public class UpdateAppIdsRepoGremlin implements UpdateAppIdsRepo {
     private final GremlinConnector gremlinConnector;
+    private final RetrieveGroupRepo retrieveGroupRepo;
     private final AuditLogger auditLogger;
 
     @Override
-    public void updateAppIds(EntityNode groupNode, Set<String> appIds) {
+    public Set<String> updateAppIds(EntityNode groupNode, Set<String> appIds) {
+        Set<String> impactedUsers;
         try {
-            executeUpdateAppIdsOperation(groupNode, appIds);
+            impactedUsers = executeUpdateAppIdsOperation(groupNode, appIds);
             auditLogger.updateAppIds(AuditStatus.SUCCESS, groupNode.getNodeId(), appIds);
         } catch (Exception e) {
             auditLogger.updateAppIds(AuditStatus.FAILURE, groupNode.getNodeId(), appIds);
             throw e;
         }
+        return impactedUsers;
     }
 
-    private void executeUpdateAppIdsOperation(EntityNode groupNode, Set<String> appIds) {
+    private Set<String> executeUpdateAppIdsOperation(EntityNode groupNode, Set<String> appIds) {
+        List<String> impactedUsers = retrieveGroupRepo.loadAllChildrenUsers(groupNode).getChildrenUserIds();
         GraphTraversal<Vertex, Vertex> traversal = gremlinConnector.getGraphTraversalSource().V()
                 .has(VertexPropertyNames.NODE_ID, groupNode.getNodeId())
                 .has(VertexPropertyNames.DATA_PARTITION_ID, groupNode.getDataPartitionId())
@@ -40,5 +48,6 @@ public class UpdateAppIdsRepoGremlin implements UpdateAppIdsRepo {
                 .barrier();
         appIds.forEach(appId -> traversal.property(Cardinality.list, VertexPropertyNames.APP_ID, appId));
         gremlinConnector.updateVertex(traversal);
+        return (impactedUsers == null) ? Collections.emptySet() : new HashSet<>(impactedUsers);
     }
 }

@@ -59,6 +59,70 @@ public class PartitionCacheTtlServiceTest {
     }
 
     @Test
+    public void shouldReturnBaseTtlOfKnownDataPartitionId() {
+        ConcurrentMap<String, Long> baseTtlPerDataPartition = new ConcurrentHashMap<>();
+        baseTtlPerDataPartition.put("common", 500L);
+        Whitebox.setInternalState(partitionCacheTtlService, "baseTtlPerDataPartition", baseTtlPerDataPartition);
+
+        Long actual = partitionCacheTtlService.getCacheFlushTtlBaseOfPartition("common");
+
+        Assert.assertEquals(new Long(500L), actual);
+    }
+
+    @Test
+    public void shouldReturnDefaultBaseTtlOfUnknownDataPartitionId() {
+        Whitebox.setInternalState(partitionCacheTtlService, "cacheFlushTtlBase", 500L);
+
+        Long actual = partitionCacheTtlService.getCacheFlushTtlBaseOfPartition("common");
+
+        Assert.assertEquals(new Long(500L), actual);
+    }
+
+    @Test
+    public void shouldReturnDefaultBaseTtlOfKnownDataPartitionIdIfGreaterThanMax() {
+        Whitebox.setInternalState(partitionCacheTtlService, "cacheFlushTtlBase", 500L);
+        ConcurrentMap<String, Long> baseTtlPerDataPartition = new ConcurrentHashMap<>();
+        baseTtlPerDataPartition.put("common", 10001L);
+        Whitebox.setInternalState(partitionCacheTtlService, "baseTtlPerDataPartition", baseTtlPerDataPartition);
+
+        Long actual = partitionCacheTtlService.getCacheFlushTtlBaseOfPartition("common");
+
+        Assert.assertEquals(new Long(500L), actual);
+    }
+
+    @Test
+    public void shouldReturnJitterTtlOfKnownDataPartitionId() {
+        ConcurrentMap<String, Long> jitterTtlPerDataPartition = new ConcurrentHashMap<>();
+        jitterTtlPerDataPartition.put("common", 1000L);
+        Whitebox.setInternalState(partitionCacheTtlService, "jitterTtlPerDataPartition", jitterTtlPerDataPartition);
+
+        Long actual = partitionCacheTtlService.getCacheFlushTtlJitterOfPartition("common");
+
+        Assert.assertEquals(new Long(1000L), actual);
+    }
+
+    @Test
+    public void shouldReturnBaseJitterTtlOfKnownDataPartitionIdIfGreaterThanMax() {
+        Whitebox.setInternalState(partitionCacheTtlService, "cacheFlushTtlJitter", 1000L);
+        ConcurrentMap<String, Long> jitterTtlPerDataPartition = new ConcurrentHashMap<>();
+        jitterTtlPerDataPartition.put("common", 50001L);
+        Whitebox.setInternalState(partitionCacheTtlService, "jitterTtlPerDataPartition", jitterTtlPerDataPartition);
+
+        Long actual = partitionCacheTtlService.getCacheFlushTtlJitterOfPartition("common");
+
+        Assert.assertEquals(new Long(1000L), actual);
+    }
+
+    @Test
+    public void shouldReturnDefaultJitterTtlOfUnknownDataPartitionId() {
+        Whitebox.setInternalState(partitionCacheTtlService, "cacheFlushTtlJitter", 1000L);
+
+        Long actual = partitionCacheTtlService.getCacheFlushTtlJitterOfPartition("common");
+
+        Assert.assertEquals(new Long(1000L), actual);
+    }
+
+    @Test
     public void shouldDoInitSuccessfully() throws Exception {
         Mockito.when(azureServicePrincipleTokenService.getAuthorizationToken()).thenReturn("token");
         IPartitionProvider provider = Mockito.mock(IPartitionProvider.class);
@@ -69,6 +133,8 @@ public class PartitionCacheTtlServiceTest {
         Property property = new Property();
         property.setValue(ttl);
         properties.put("ent-cache-ttl", property);
+        properties.put("ent-cache-flush-ttl-min", property);
+        properties.put("ent-cache-flush-ttl-max", property);
         PartitionInfo partitionInfo = PartitionInfo.builder().properties(properties).build();
         Mockito.when(provider.get("dp1")).thenReturn(partitionInfo);
 

@@ -20,9 +20,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -41,6 +43,8 @@ public class UpdateGroupServiceTests {
 
     @MockBean
     private RetrieveGroupRepo retrieveGroupRepo;
+    @MockBean
+    private GroupCacheService groupCacheService;
     @MockBean
     private RenameGroupRepo renameGroupRepo;
     @MockBean
@@ -62,12 +66,14 @@ public class UpdateGroupServiceTests {
 
         Mockito.when(retrieveGroupRepo.groupExistenceValidation(TEST_EXISTING_USER_GROUP_EMAIL, TEST_PARTITION)).thenReturn(groupNode);
         Mockito.when(permissionService.hasOwnerPermissionOf(Mockito.any(), Mockito.any())).thenReturn(true);
+        Mockito.when(renameGroupRepo.run(groupNode, newGroupName)).thenReturn(Collections.emptySet());
 
         UpdateGroupResponseDto responseDto = updateGroupService.updateGroup(serviceDto);
         Mockito.verify(renameGroupRepo).run(groupNode, newGroupName);
         Assert.assertNotNull(responseDto);
         Assert.assertEquals("users.test.x@dp.domain", responseDto.getEmail());
         Assert.assertEquals("users.test.x", responseDto.getName());
+        Mockito.verify(groupCacheService).refreshListGroupCache(Collections.emptySet(), "dp");
     }
 
     @Test
@@ -95,7 +101,6 @@ public class UpdateGroupServiceTests {
     public void shouldThrow400WhenNewGroupNameIsAlreadyExist() {
         String newGroupName = "users.test.x";
         String newGroupEmail = "users.test.x@dp.domain";
-        EntityNode existedNewGroupNode = createGroupNode(newGroupName, newGroupEmail);
         EntityNode groupNode = createGroupNode(TEST_EXISTING_USER_GROUP_NAME, TEST_EXISTING_USER_GROUP_EMAIL);
 
         UpdateGroupOperation renameOperation = createUpdateGroupOperation(RENAME_PATH, newGroupName);
@@ -169,14 +174,18 @@ public class UpdateGroupServiceTests {
 
         Mockito.when(retrieveGroupRepo.groupExistenceValidation(TEST_EXISTING_USER_GROUP_EMAIL, TEST_PARTITION)).thenReturn(groupNode);
         Mockito.when(permissionService.hasOwnerPermissionOf(Mockito.any(), Mockito.any())).thenReturn(true);
-        UpdateGroupResponseDto responseDto = updateGroupService.updateGroup(serviceDto);
 
         List<String> appIds = new ArrayList<>();
         appIds.add("app1");
         appIds.add("app2");
+        Mockito.when(updateAppIdsRepo.updateAppIds(groupNode, new HashSet<>(appIds))).thenReturn(Collections.emptySet());
+
+        UpdateGroupResponseDto responseDto = updateGroupService.updateGroup(serviceDto);
+
         Mockito.verify(updateAppIdsRepo).updateAppIds(groupNode, new HashSet<>(appIds));
         Assert.assertNotNull(responseDto);
         Assert.assertEquals(appIds, responseDto.getAppIds());
+        Mockito.verify(groupCacheService).refreshListGroupCache(Collections.emptySet(), "dp");
     }
 
     @Test
@@ -201,20 +210,22 @@ public class UpdateGroupServiceTests {
     }
 
     @Test
-    public void shouldUpdateGroupAppIdsandRenameSuccessfullyWhenUserHasOwnerPermissionOfTheUserGroup() {
+    public void shouldUpdateGroupAppIdsAndRenameSuccessfullyWhenUserHasOwnerPermissionOfTheUserGroup() {
         String newGroupName = "users.test.x";
         EntityNode groupNode = createGroupNode(TEST_EXISTING_USER_GROUP_NAME, TEST_EXISTING_USER_GROUP_EMAIL);
         UpdateGroupOperation renameOperation = createUpdateGroupOperation(RENAME_PATH, newGroupName);
         UpdateGroupOperation appIdsOperation = createUpdateGroupOperation(APP_IDS_PATH, "app1", "app2");
         UpdateGroupServiceDto serviceDto = createUpdateGroupServiceDto(TEST_EXISTING_USER_GROUP_EMAIL, renameOperation, appIdsOperation);
-
-        Mockito.when(retrieveGroupRepo.groupExistenceValidation(TEST_EXISTING_USER_GROUP_EMAIL, TEST_PARTITION)).thenReturn(groupNode);
-        Mockito.when(permissionService.hasOwnerPermissionOf(Mockito.any(), Mockito.any())).thenReturn(true);
-        UpdateGroupResponseDto responseDto = updateGroupService.updateGroup(serviceDto);
-
+        Set<String> impactedUsers = new HashSet<>(Collections.singletonList(USER_A));
         List<String> appIds = new ArrayList<>();
         appIds.add("app1");
         appIds.add("app2");
+
+        Mockito.when(retrieveGroupRepo.groupExistenceValidation(TEST_EXISTING_USER_GROUP_EMAIL, TEST_PARTITION)).thenReturn(groupNode);
+        Mockito.when(permissionService.hasOwnerPermissionOf(Mockito.any(), Mockito.any())).thenReturn(true);
+        Mockito.when(renameGroupRepo.run(groupNode, newGroupName)).thenReturn(impactedUsers);
+        Mockito.when(updateAppIdsRepo.updateAppIds(groupNode, new HashSet<>(appIds))).thenReturn(impactedUsers);
+        UpdateGroupResponseDto responseDto = updateGroupService.updateGroup(serviceDto);
 
         Mockito.verify(renameGroupRepo).run(groupNode, newGroupName);
         Mockito.verify(updateAppIdsRepo).updateAppIds(groupNode, new HashSet<>(appIds));
@@ -222,6 +233,7 @@ public class UpdateGroupServiceTests {
         Assert.assertEquals(appIds, responseDto.getAppIds());
         Assert.assertEquals("users.test.x@dp.domain", responseDto.getEmail());
         Assert.assertEquals("users.test.x", responseDto.getName());
+        Mockito.verify(groupCacheService).refreshListGroupCache(impactedUsers, "dp");
     }
 
     private EntityNode createGroupNode(String groupName, String groupEmail) {

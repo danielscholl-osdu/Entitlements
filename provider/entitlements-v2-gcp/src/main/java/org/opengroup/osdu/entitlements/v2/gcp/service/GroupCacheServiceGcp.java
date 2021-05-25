@@ -14,10 +14,11 @@ import java.util.Set;
 public class GroupCacheServiceGcp implements GroupCacheService {
     private final RetrieveGroupRepo retrieveGroupRepo;
     private final VmGroupCache vmGroupCache;
+    private static final String REDIS_KEY_FORMAT = "%s-%s";
 
     @Override
     public Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId) {
-        String key = String.format("%s-%s", requesterId, partitionId);
+        String key = String.format(REDIS_KEY_FORMAT, requesterId, partitionId);
         Set<ParentReference> result = vmGroupCache.getGroupCache(key);
         if (result == null) {
             EntityNode entityNode = EntityNode.createMemberNodeForNewUser(requesterId, partitionId);
@@ -25,5 +26,20 @@ public class GroupCacheServiceGcp implements GroupCacheService {
             vmGroupCache.addGroupCache(key, result);
         }
         return result;
+    }
+
+    @Override
+    public void refreshListGroupCache(Set<String> userIds, String partitionId) {
+        for (String userId: userIds) {
+            String key = String.format(REDIS_KEY_FORMAT, userId, partitionId);
+            EntityNode entityNode = EntityNode.createMemberNodeForNewUser(userId, partitionId);
+            vmGroupCache.addGroupCache(key, retrieveGroupRepo.loadAllParents(entityNode).getParentReferences());
+        }
+    }
+
+    @Override
+    public void flushListGroupCacheForUser(String userId, String partitionId) {
+        String key = String.format(REDIS_KEY_FORMAT, userId, partitionId);
+        vmGroupCache.deleteGroupCache(key);
     }
 }

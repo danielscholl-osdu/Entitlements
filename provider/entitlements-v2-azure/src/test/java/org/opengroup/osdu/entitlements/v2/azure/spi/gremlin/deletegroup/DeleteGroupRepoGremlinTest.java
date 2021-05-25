@@ -16,10 +16,13 @@ import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
 import org.opengroup.osdu.entitlements.v2.spi.deletegroup.DeleteGroupRepo;
+import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Set;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -30,6 +33,9 @@ public class DeleteGroupRepoGremlinTest {
 
     @Autowired
     private GremlinConnector gremlinConnector;
+
+    @Autowired
+    private RetrieveGroupRepo retrieveGroupRepo;
 
     @Autowired
     private AddMemberRepoGremlin addMemberRepoGremlin;
@@ -57,11 +63,13 @@ public class DeleteGroupRepoGremlinTest {
         AddMemberRepoDto addUserMemberRepoDto = AddMemberRepoDto.builder().memberNode(userNode).role(Role.MEMBER).partitionId("dp").build();
         addMemberRepoGremlin.addMember(groupMemberNode, addUserMemberRepoDto);
 
-        deleteGroupRepo.deleteGroup(groupMemberNode);
+        Set<String> impactedUsers = deleteGroupRepo.deleteGroup(groupMemberNode);
 
         Assert.assertFalse(gremlinConnector.getGraphTraversalSource().V().has(VertexPropertyNames.NODE_ID, "groupMemberId").hasNext());
         Assert.assertTrue(gremlinConnector.getGraphTraversalSource().E().toList().isEmpty());
         Mockito.verify(auditLogger).deleteGroup(AuditStatus.SUCCESS, "groupMemberId");
+        Assert.assertEquals(1, impactedUsers.size());
+        Assert.assertTrue(impactedUsers.contains("userId"));
     }
 
     private void createGroup(String nodeId) {

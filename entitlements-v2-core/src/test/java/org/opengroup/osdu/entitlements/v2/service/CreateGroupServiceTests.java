@@ -19,6 +19,7 @@ import org.opengroup.osdu.entitlements.v2.spi.creategroup.CreateGroupRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.powermock.reflect.Whitebox;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,6 +27,7 @@ import java.util.Set;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -39,6 +41,8 @@ public class CreateGroupServiceTests {
     private CreateGroupRepo createGroupRepo;
     @Mock
     private RetrieveGroupRepo retrieveGroupRepo;
+    @Mock
+    private GroupCacheService groupCacheService;
     @Mock
     private JaxRsDpsLog logger;
     @Mock
@@ -68,8 +72,7 @@ public class CreateGroupServiceTests {
                 .name("callerdesid")
                 .dataPartitionId("dp")
                 .build();
-        ParentTreeDto parentTreeDto = ParentTreeDto.builder().parentReferences(parents).maxDepth(2).build();
-        when(retrieveGroupRepo.loadAllParents(requesterNode)).thenReturn(parentTreeDto);
+        when(groupCacheService.getFromPartitionCache(requesterNode.getNodeId(), "dp")).thenReturn(parents);
         try {
             CreateGroupServiceDto createGroupServiceDto = CreateGroupServiceDto.builder()
                     .requesterId("callerdesid")
@@ -103,9 +106,6 @@ public class CreateGroupServiceTests {
         when(retrieveGroupRepo.groupExistenceValidation("users.data.root@dp.domain.com", "dp")).thenReturn(dataRootGroupNode);
         when(defaultGroupsService.isNotDefaultGroupName("data.x")).thenReturn(true);
         when(retrieveGroupRepo.loadAllParents(dataRootGroupNode)).thenReturn(ParentTreeDto.builder().parentReferences(parents).maxDepth(2).build());
-        EntityNode requesterNode = EntityNode.createMemberNodeForRequester("callerdesid", "dp");
-        ParentTreeDto parentTreeDto = ParentTreeDto.builder().parentReferences(Collections.emptySet()).maxDepth(2).build();
-        when(retrieveGroupRepo.loadAllParents(requesterNode)).thenReturn(parentTreeDto);
         try {
             CreateGroupServiceDto createGroupServiceDto = CreateGroupServiceDto.builder()
                     .requesterId("callerdesid")
@@ -143,14 +143,16 @@ public class CreateGroupServiceTests {
                 .partitionDomain("dp.domain.com")
                 .partitionId("dp").build();
         EntityNode requesterNode = EntityNode.createMemberNodeForRequester("callerdesid", "dp");
-        ParentTreeDto parentTreeDto = ParentTreeDto.builder().parentReferences(Collections.emptySet()).maxDepth(2).build();
-        when(retrieveGroupRepo.loadAllParents(requesterNode)).thenReturn(parentTreeDto);
+        when(groupCacheService.getFromPartitionCache(requesterNode.getNodeId(), "dp")).thenReturn(Collections.emptySet());
         ArgumentCaptor<CreateGroupRepoDto> captor = ArgumentCaptor.forClass(CreateGroupRepoDto.class);
         when(defaultGroupsService.isNotDefaultGroupName("data.x")).thenReturn(true);
+        Set<String> impactedUsers = new HashSet<>(Arrays.asList("callerdesid"));
+        when(createGroupRepo.createGroup(any(), any())).thenReturn(impactedUsers);
         createGroupService.run(groupNode, createGroupServiceDto);
         verify(createGroupRepo, times(1)).createGroup(eq(groupNode), captor.capture());
         assertThat(captor.getValue().getDataRootGroupNode()).isNotNull();
         assertThat(captor.getValue().isAddDataRootGroup()).isTrue();
+        verify(groupCacheService).refreshListGroupCache(impactedUsers, "dp");
     }
 
     @Test
@@ -166,13 +168,15 @@ public class CreateGroupServiceTests {
                 .partitionDomain("dp.domain.com")
                 .partitionId("dp").build();
         EntityNode requesterNode = EntityNode.createMemberNodeForRequester("callerdesid", "dp");
-        ParentTreeDto parentTreeDto = ParentTreeDto.builder().parentReferences(Collections.emptySet()).maxDepth(2).build();
-        when(retrieveGroupRepo.loadAllParents(requesterNode)).thenReturn(parentTreeDto);
+        when(groupCacheService.getFromPartitionCache(requesterNode.getNodeId(), "dp")).thenReturn(Collections.emptySet());
         ArgumentCaptor<CreateGroupRepoDto> captor = ArgumentCaptor.forClass(CreateGroupRepoDto.class);
+        Set<String> impactedUsers = new HashSet<>(Arrays.asList("callerdesid"));
+        when(createGroupRepo.createGroup(any(), any())).thenReturn(impactedUsers);
         createGroupService.run(groupNode, createGroupServiceDto);
         verify(createGroupRepo, times(1)).createGroup(eq(groupNode), captor.capture());
         assertThat(captor.getValue().getDataRootGroupNode()).isNull();
         assertThat(captor.getValue().isAddDataRootGroup()).isFalse();
+        verify(groupCacheService).refreshListGroupCache(impactedUsers, "dp");
     }
 
     @Test
@@ -188,13 +192,15 @@ public class CreateGroupServiceTests {
                 .partitionDomain("dp.domain.com")
                 .partitionId("dp").build();
         EntityNode requesterNode = EntityNode.createMemberNodeForRequester("callerdesid", "dp");
-        ParentTreeDto parentTreeDto = ParentTreeDto.builder().parentReferences(Collections.emptySet()).maxDepth(2).build();
-        when(retrieveGroupRepo.loadAllParents(requesterNode)).thenReturn(parentTreeDto);
+        when(groupCacheService.getFromPartitionCache(requesterNode.getNodeId(), "dp")).thenReturn(Collections.emptySet());
         ArgumentCaptor<CreateGroupRepoDto> captor = ArgumentCaptor.forClass(CreateGroupRepoDto.class);
         when(defaultGroupsService.isNotDefaultGroupName("data.x")).thenReturn(false);
+        Set<String> impactedUsers = new HashSet<>(Arrays.asList("callerdesid"));
+        when(createGroupRepo.createGroup(any(), any())).thenReturn(impactedUsers);
         createGroupService.run(groupNode, createGroupServiceDto);
         verify(createGroupRepo, times(1)).createGroup(eq(groupNode), captor.capture());
         assertThat(captor.getValue().getDataRootGroupNode()).isNull();
         assertThat(captor.getValue().isAddDataRootGroup()).isFalse();
+        verify(groupCacheService).refreshListGroupCache(impactedUsers, "dp");
     }
 }

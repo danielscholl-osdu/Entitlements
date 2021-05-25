@@ -15,6 +15,7 @@ import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.EdgePropert
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPropertyNames;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
+import org.opengroup.osdu.entitlements.v2.model.ChildrenTreeDto;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
@@ -448,6 +449,129 @@ public class RetrieveGroupRepoGremlinTest {
         Assert.assertEquals(1, g4.size());
         List<ParentReference> member = retrieveGroupRepo.loadDirectParents("dp", "member@xxx.com");
         Assert.assertEquals(2, member.size());
+    }
+    @Test
+    public void shouldReturnItSelfIfNoChildrenWhenLoadAllChildrenUsers() {
+        EntityNode groupNode = EntityNode.createMemberNodeForNewUser("member@xxx.com", "dp");
+        ChildrenTreeDto childrenUsers = retrieveGroupRepo.loadAllChildrenUsers(groupNode);
+        Assert.assertEquals(1, childrenUsers.getChildrenUserIds().size());
+    }
+
+    @Test
+    public void shouldReturnAllChildrenUsersWhenLoadAllChildrenUsers1() {
+        GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "users.x@dp.domain.com")
+                .property(VertexPropertyNames.NAME, "users.x")
+                .property(VertexPropertyNames.DESCRIPTION, "xxx")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
+                .next();
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "users.y@dp.domain.com")
+                .property(VertexPropertyNames.NAME, "users.y")
+                .property(VertexPropertyNames.DESCRIPTION, "xxx")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
+                .next();
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "data.x@dp.domain.com")
+                .property(VertexPropertyNames.NAME, "data.x")
+                .property(VertexPropertyNames.DESCRIPTION, "xxx")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
+                .next();
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "data.y@dp.domain.com")
+                .property(VertexPropertyNames.NAME, "data.y")
+                .property(VertexPropertyNames.DESCRIPTION, "xxx")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
+                .next();
+        graphTraversalSource.addV(NodeType.USER.toString()).property(VertexPropertyNames.NODE_ID, "member1@xxx.com")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp").next();
+        graphTraversalSource.addV(NodeType.USER.toString()).property(VertexPropertyNames.NODE_ID, "member2@xxx.com")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp").next();
+
+        addMember("member1@xxx.com", NodeType.USER, "data.x@dp.domain.com", Role.MEMBER);
+        addMember("member2@xxx.com", NodeType.USER, "data.y@dp.domain.com", Role.MEMBER);
+        addMember("member2@xxx.com", NodeType.USER, "users.x@dp.domain.com", Role.OWNER);
+        addMember("data.y@dp.domain.com", NodeType.GROUP, "data.x@dp.domain.com", Role.MEMBER);
+        addMember("users.x@dp.domain.com", NodeType.GROUP, "data.y@dp.domain.com", Role.MEMBER);
+        addMember("users.y@dp.domain.com", NodeType.GROUP, "data.y@dp.domain.com", Role.MEMBER);
+
+        EntityNode groupNode = EntityNode.createNodeFromGroupEmail("data.x@dp.domain.com");
+        ChildrenTreeDto childrenUserDto = retrieveGroupRepo.loadAllChildrenUsers(groupNode);
+        Assert.assertEquals(2, childrenUserDto.getChildrenUserIds().size());
+        Assert.assertTrue(childrenUserDto.getChildrenUserIds().containsAll(Arrays.asList("member1@xxx.com", "member2@xxx.com")));
+    }
+
+    /*
+                                              data.x@dp.domain.com
+                                                        ^
+                                                        |
+                               |-------------------------------|---------------------------|
+                      data.y@dp.domain.com            data.z@dp.domain.com           member1@xxx.com
+                               ^                               ^-----------
+           |-------------------|---------------------|                    |
+users.x@dp.domain.com  users.y@dp.domain.com    member2@xxx.com -----------
+           ^                   ^
+           |                   |--------------|
+           ------------ member3@xxx.com    member4@xxx.com
+     */
+    @Test
+    public void shouldReturnAllChildrenUsersWhenLoadAllChildrenUsers2() {
+        GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "users.x@dp.domain.com")
+                .property(VertexPropertyNames.NAME, "users.x")
+                .property(VertexPropertyNames.DESCRIPTION, "xxx")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
+                .next();
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "users.y@dp.domain.com")
+                .property(VertexPropertyNames.NAME, "users.y")
+                .property(VertexPropertyNames.DESCRIPTION, "xxx")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
+                .next();
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "data.x@dp.domain.com")
+                .property(VertexPropertyNames.NAME, "data.x")
+                .property(VertexPropertyNames.DESCRIPTION, "xxx")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
+                .next();
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "data.y@dp.domain.com")
+                .property(VertexPropertyNames.NAME, "data.y")
+                .property(VertexPropertyNames.DESCRIPTION, "xxx")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
+                .next();
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "data.z@dp.domain.com")
+                .property(VertexPropertyNames.NAME, "data.z")
+                .property(VertexPropertyNames.DESCRIPTION, "xxx")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
+                .next();
+        graphTraversalSource.addV(NodeType.USER.toString()).property(VertexPropertyNames.NODE_ID, "member1@xxx.com")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp").next();
+        graphTraversalSource.addV(NodeType.USER.toString()).property(VertexPropertyNames.NODE_ID, "member2@xxx.com")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp").next();
+        graphTraversalSource.addV(NodeType.USER.toString()).property(VertexPropertyNames.NODE_ID, "member3@xxx.com")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp").next();
+        graphTraversalSource.addV(NodeType.USER.toString()).property(VertexPropertyNames.NODE_ID, "member4@xxx.com")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp").next();
+
+        addMember("member1@xxx.com", NodeType.USER, "data.x@dp.domain.com", Role.OWNER);
+        addMember("member2@xxx.com", NodeType.USER, "data.z@dp.domain.com", Role.OWNER);
+        addMember("member2@xxx.com", NodeType.USER, "data.y@dp.domain.com", Role.MEMBER);
+        addMember("member3@xxx.com", NodeType.USER, "users.x@dp.domain.com", Role.OWNER);
+        addMember("member3@xxx.com", NodeType.USER, "users.y@dp.domain.com", Role.MEMBER);
+        addMember("member4@xxx.com", NodeType.USER, "users.y@dp.domain.com", Role.OWNER);
+        addMember("data.y@dp.domain.com", NodeType.GROUP, "data.x@dp.domain.com", Role.MEMBER);
+        addMember("data.z@dp.domain.com", NodeType.GROUP, "data.x@dp.domain.com", Role.MEMBER);
+        addMember("users.x@dp.domain.com", NodeType.GROUP, "data.y@dp.domain.com", Role.MEMBER);
+        addMember("users.y@dp.domain.com", NodeType.GROUP, "data.y@dp.domain.com", Role.MEMBER);
+
+        EntityNode groupNode = EntityNode.createNodeFromGroupEmail("data.x@dp.domain.com");
+        ChildrenTreeDto childrenUsers = retrieveGroupRepo.loadAllChildrenUsers(groupNode);
+        Assert.assertEquals(4, childrenUsers.getChildrenUserIds().size());
+        Assert.assertTrue(childrenUsers.getChildrenUserIds().containsAll(Arrays.asList("member1@xxx.com", "member2@xxx.com", "member3@xxx.com", "member4@xxx.com")));
     }
 
     @Test

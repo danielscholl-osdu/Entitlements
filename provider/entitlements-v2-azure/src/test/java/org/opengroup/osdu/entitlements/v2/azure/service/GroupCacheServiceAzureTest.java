@@ -8,6 +8,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.AdditionalAnswers;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
 import org.opengroup.osdu.core.common.cache.RedisCache;
@@ -34,6 +35,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import redis.embedded.RedisServer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,10 +44,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -57,7 +62,9 @@ import static org.mockito.Mockito.when;
         "redisson.lock.expiration=5000",
         "cache.retry.max=15",
         "cache.retry.interval=200",
-        "cache.retry.random.factor=0.1"})
+        "cache.retry.random.factor=0.1",
+        "cache.flush.ttl.base=500",
+        "cache.flush.ttl.jitter=1000"})
 @RunWith(SpringRunner.class)
 public class GroupCacheServiceAzureTest {
     @TestConfiguration
@@ -77,7 +84,8 @@ public class GroupCacheServiceAzureTest {
 
     private Set<ParentReference> parents = new HashSet<>();
     private ParentReferences parentReferences = new ParentReferences();
-    private EntityNode requester;
+    private EntityNode requester1;
+    private EntityNode requester2;
 
     @MockBean
     private RetrieveGroupRepo retrieveGroupRepo;
@@ -132,28 +140,32 @@ public class GroupCacheServiceAzureTest {
         parents.add(parent2);
         parentReferences.setParentReferencesOfUser(parents);
 
-        requester = EntityNode.createMemberNodeForNewUser("requesterId", "dp");
+        requester1 = EntityNode.createMemberNodeForNewUser("requesterId1", "dp");
+        requester2 = EntityNode.createMemberNodeForNewUser("requesterId2", "dp");
         when(partitionCacheTtlService.getCacheTtlOfPartition("dp")).thenReturn(2000L);
+        when(partitionCacheTtlService.getCacheFlushTtlBaseOfPartition("dp")).thenReturn(500L);
+        when(partitionCacheTtlService.getCacheFlushTtlJitterOfPartition("dp")).thenReturn(1000L);
+
     }
 
     @Test
     public void shouldGetAllParentsFromRepoForTheFirstTime() {
-        when(this.redisGroupCache.get("requesterId-dp")).thenReturn(null);
-        when(this.retrieveGroupRepo.loadAllParents(this.requester)).thenReturn(this.parentTreeDto);
+        when(this.redisGroupCache.get("requesterId1-dp")).thenReturn(null);
+        when(this.retrieveGroupRepo.loadAllParents(this.requester1)).thenReturn(this.parentTreeDto);
         when(this.parentTreeDto.getParentReferences()).thenReturn(this.parents);
 
-        Set<ParentReference> result = this.sut.getFromPartitionCache("requesterId", "dp");
+        Set<ParentReference> result = this.sut.getFromPartitionCache("requesterId1", "dp");
         assertEquals(this.parents, result);
-        verify(this.retrieveGroupRepo).loadAllParents(this.requester);
-        verify(this.redisGroupCache).put("requesterId-dp", 2000L, this.parentReferences);
+        verify(this.retrieveGroupRepo).loadAllParents(this.requester1);
+        verify(this.redisGroupCache).put("requesterId1-dp", 2000L, this.parentReferences);
         verify(this.metricService).sendMissesMetric();
     }
 
     @Test
     public void shouldGetAllParentsFromCacheForTheSecondTime() {
-        when(this.redisGroupCache.get("requesterId-dp")).thenReturn(this.parentReferences);
+        when(this.redisGroupCache.get("requesterId1-dp")).thenReturn(this.parentReferences);
 
-        Set<ParentReference> result = this.sut.getFromPartitionCache("requesterId", "dp");
+        Set<ParentReference> result = this.sut.getFromPartitionCache("requesterId1", "dp");
         assertEquals(this.parents, result);
         verifyNoInteractions(this.retrieveGroupRepo);
         verify(this.metricService, times(1)).sendHitsMetric();
@@ -166,8 +178,8 @@ public class GroupCacheServiceAzureTest {
             cacheValues.add(null);
         }
         cacheValues.add(this.parentReferences);
-        when(this.redisGroupCache.get("requesterId-dp")).thenAnswer(AdditionalAnswers.returnsElementsOf(cacheValues));
-        when(this.retrieveGroupRepo.loadAllParents(this.requester)).thenAnswer((Answer<ParentTreeDto>) invocationOnMock -> {
+        when(this.redisGroupCache.get("requesterId1-dp")).thenAnswer(AdditionalAnswers.returnsElementsOf(cacheValues));
+        when(this.retrieveGroupRepo.loadAllParents(this.requester1)).thenAnswer((Answer<ParentTreeDto>) invocationOnMock -> {
             await().pollDelay(Duration.FIVE_SECONDS).until(() -> true);
             return parentTreeDto;
         });
@@ -178,14 +190,14 @@ public class GroupCacheServiceAzureTest {
         List<Callable<Set<ParentReference>>> tasks = new ArrayList<>();
 
         for (int i = 0; i < threads; i++) {
-            Callable<Set<ParentReference>> task = () -> sut.getFromPartitionCache("requesterId", "dp");
+            Callable<Set<ParentReference>> task = () -> sut.getFromPartitionCache("requesterId1", "dp");
             tasks.add(task);
         }
 
         List<Future<Set<ParentReference>>> responses = executor.invokeAll(tasks);
         executor.shutdown();
 
-        verify(this.retrieveGroupRepo, times(1)).loadAllParents(this.requester);
+        verify(this.retrieveGroupRepo, times(1)).loadAllParents(this.requester1);
         responses.forEach(result -> {
             try {
                 assertEquals(this.parents, result.get());
@@ -197,8 +209,8 @@ public class GroupCacheServiceAzureTest {
 
     @Test
     public void shouldThrowExceptionIfTimeout() throws InterruptedException {
-        when(this.redisGroupCache.get("requesterId-dp")).thenReturn(null);
-        when(this.retrieveGroupRepo.loadAllParents(this.requester)).thenAnswer((Answer<ParentTreeDto>) invocationOnMock -> {
+        when(this.redisGroupCache.get("requesterId1-dp")).thenReturn(null);
+        when(this.retrieveGroupRepo.loadAllParents(this.requester1)).thenAnswer((Answer<ParentTreeDto>) invocationOnMock -> {
             await().pollDelay(Duration.FIVE_SECONDS).until(() -> true);
             return parentTreeDto;
         });
@@ -209,14 +221,14 @@ public class GroupCacheServiceAzureTest {
         List<Callable<Set<ParentReference>>> tasks = new ArrayList<>();
 
         for (int i = 0; i < threads; i++) {
-            Callable<Set<ParentReference>> task = () -> sut.getFromPartitionCache("requesterId", "dp");
+            Callable<Set<ParentReference>> task = () -> sut.getFromPartitionCache("requesterId1", "dp");
             tasks.add(task);
         }
 
         List<Future<Set<ParentReference>>> responses = executor.invokeAll(tasks);
         executor.shutdown();
 
-        verify(this.retrieveGroupRepo, times(1)).loadAllParents(this.requester);
+        verify(this.retrieveGroupRepo, times(1)).loadAllParents(this.requester1);
         assertEquals(1, responses.stream().filter(result -> {
             try {
                 return this.parents.equals(result.get());
@@ -235,5 +247,44 @@ public class GroupCacheServiceAzureTest {
             }
             return false;
         }).count());
+    }
+
+    @Test
+    public void shouldRefreshListGroupCache() {
+        this.redisGroupCache.put("requesterId1-dp", 600000L, this.parentReferences);
+        this.redisGroupCache.put("requesterId2-dp", 600000L, this.parentReferences);
+        when(this.redisGroupCache.getTtl("requesterId1-dp")).thenReturn(600000L);
+        when(this.redisGroupCache.getTtl("requesterId2-dp")).thenReturn(600000L);
+        ArgumentCaptor<Long> ttlCapture1 = ArgumentCaptor.forClass(Long.class);
+        ArgumentCaptor<Long> ttlCapture2 = ArgumentCaptor.forClass(Long.class);
+        this.sut.refreshListGroupCache(new HashSet<>(Arrays.asList("requesterId1", "requesterId2")), "dp");
+
+        verify(this.redisGroupCache, times(1)).getTtl("requesterId1-dp");
+        verify(this.redisGroupCache, times(1)).getTtl("requesterId2-dp");
+        verify(this.redisGroupCache, times(1)).updateTtl(eq("requesterId1-dp"), ttlCapture1.capture());
+        verify(this.redisGroupCache, times(1)).updateTtl(eq("requesterId2-dp"), ttlCapture2.capture());
+        await().pollDelay(ttlCapture1.getValue(), TimeUnit.MILLISECONDS);
+        assertNull(this.redisGroupCache.get("requesterId1-dp"));
+        await().pollDelay(ttlCapture2.getValue(), TimeUnit.MILLISECONDS);
+        assertNull(this.redisGroupCache.get("requesterId2-dp"));
+    }
+
+    @Test
+    public void shouldFlushListGroupCacheForUserIfRedisEntryExists() {
+        this.redisGroupCache.put("requesterId1-dp", 600000L, this.parentReferences);
+        when(this.redisGroupCache.getTtl("requesterId1-dp")).thenReturn(600000L);
+        ArgumentCaptor<Long> ttlCapture = ArgumentCaptor.forClass(Long.class);
+        this.sut.flushListGroupCacheForUser("requesterId1", "dp");
+        verify(this.redisGroupCache, times(1)).getTtl("requesterId1-dp");
+        verify(this.redisGroupCache, times(1)).updateTtl(eq("requesterId1-dp"), ttlCapture.capture());
+        await().pollDelay(ttlCapture.getValue(), TimeUnit.MILLISECONDS);
+        assertNull(this.redisGroupCache.get("requesterId1-dp"));
+    }
+
+    @Test
+    public void shouldDoNothingWhenFlushListGroupCacheAndRedisEntryDoesNotExist() {
+        this.sut.flushListGroupCacheForUser("requesterId1", "dp");
+        verify(this.redisGroupCache, times(1)).getTtl("requesterId1-dp");
+        assertNull(this.redisGroupCache.get("requesterId1-dp"));
     }
 }

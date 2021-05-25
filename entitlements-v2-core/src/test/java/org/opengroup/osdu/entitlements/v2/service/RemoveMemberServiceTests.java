@@ -25,6 +25,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,6 +42,8 @@ import static org.mockito.Mockito.when;
 public class RemoveMemberServiceTests {
     @MockBean
     private RetrieveGroupRepo retrieveGroupRepo;
+    @MockBean
+    private GroupCacheService groupCacheService;
     @MockBean
     private RemoveMemberRepo removeMemberRepo;
     @MockBean
@@ -109,10 +112,12 @@ public class RemoveMemberServiceTests {
                 .requesterId("requesterid")
                 .partitionId("common")
                 .build();
+        when(removeMemberRepo.removeMember(any(), any(), any())).thenReturn(Collections.emptySet());
 
         removeMemberService.removeMember(removeMemberServiceDto);
 
         verify(removeMemberRepo).removeMember(groupNode, memberNode, removeMemberServiceDto);
+        verify(groupCacheService).refreshListGroupCache(Collections.emptySet(), "common");
     }
 
     @Test
@@ -149,9 +154,11 @@ public class RemoveMemberServiceTests {
                 .requesterId("datafier@evd-ddl-us-common.iam.gserviceaccount.com")
                 .partitionId("common")
                 .build();
+        when(removeMemberRepo.removeMember(any(), any(), any())).thenReturn(Collections.emptySet());
 
         removeMemberService.removeMember(removeMemberServiceDto);
 
+        verify(groupCacheService).refreshListGroupCache(Collections.emptySet(), "common");
         verify(removeMemberRepo).removeMember(groupNode, memberNode, removeMemberServiceDto);
     }
 

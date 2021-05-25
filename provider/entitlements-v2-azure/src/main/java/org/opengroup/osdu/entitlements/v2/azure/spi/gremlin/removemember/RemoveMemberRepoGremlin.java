@@ -8,10 +8,13 @@ import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.removemember.RemoveMemberServiceDto;
 import org.opengroup.osdu.entitlements.v2.spi.removemember.RemoveMemberRepo;
+import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -21,6 +24,9 @@ public class RemoveMemberRepoGremlin implements RemoveMemberRepo {
     private GraphTraversalSourceUtilService graphTraversalSourceUtilService;
 
     @Autowired
+    private RetrieveGroupRepo retrieveGroupRepo;
+
+    @Autowired
     private AuditLogger auditLogger;
 
     /**
@@ -28,17 +34,19 @@ public class RemoveMemberRepoGremlin implements RemoveMemberRepo {
      */
     @Override
     public Set<String> removeMember(EntityNode groupNode, EntityNode memberNode, RemoveMemberServiceDto removeMemberServiceDto) {
+        Set<String> impactedUsers;
         try {
-            executeRemoveMemberOperation(groupNode, memberNode);
+            impactedUsers = executeRemoveMemberOperation(groupNode, memberNode);
             auditLogger.removeMember(AuditStatus.SUCCESS, groupNode.getNodeId(), memberNode.getNodeId(), removeMemberServiceDto.getRequesterId());
-            return new HashSet<>();
+            return impactedUsers;
         } catch (Exception e) {
             auditLogger.removeMember(AuditStatus.FAILURE, groupNode.getNodeId(), memberNode.getNodeId(), removeMemberServiceDto.getRequesterId());
             throw e;
         }
     }
 
-    private void executeRemoveMemberOperation(EntityNode groupNode, EntityNode memberNode) {
+    private Set<String> executeRemoveMemberOperation(EntityNode groupNode, EntityNode memberNode) {
+        List<String> impactedUsers = retrieveGroupRepo.loadAllChildrenUsers(memberNode).getChildrenUserIds();
         RemoveEdgeDto removeChildEdgeDto = RemoveEdgeDto.builder()
                 .fromNodeId(groupNode.getNodeId())
                 .fromDataPartitionId(groupNode.getDataPartitionId())
@@ -55,5 +63,6 @@ public class RemoveMemberRepoGremlin implements RemoveMemberRepo {
                 .build();
         graphTraversalSourceUtilService.removeEdge(removeChildEdgeDto);
         graphTraversalSourceUtilService.removeEdge(removeParentEdgeDto);
+        return (impactedUsers == null) ? Collections.emptySet() : new HashSet<>(impactedUsers);
     }
 }

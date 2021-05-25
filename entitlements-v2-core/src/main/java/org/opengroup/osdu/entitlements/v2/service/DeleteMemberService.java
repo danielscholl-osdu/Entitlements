@@ -18,12 +18,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DeleteMemberService {
     private final JaxRsDpsLog log;
-    private final RetrieveGroupRepo retrieveGroup;
+    private final RetrieveGroupRepo retrieveGroupRepo;
+    private final GroupCacheService groupCacheService;
     private final RemoveMemberService removeMemberService;
 
     public void deleteMember(DeleteMemberDto deleteMemberDto) {
         log.info(String.format("Remove member %s from all groups", deleteMemberDto.getMemberEmail()));
         createRemoveMemberServiceDtos(deleteMemberDto).forEach(this::removeMemberFromGroup);
+        groupCacheService.flushListGroupCacheForUser(deleteMemberDto.getMemberEmail(), deleteMemberDto.getPartitionId());
     }
 
     private List<RemoveMemberServiceDto> createRemoveMemberServiceDtos(DeleteMemberDto deleteMemberDto) {
@@ -42,7 +44,7 @@ public class DeleteMemberService {
     }
 
     private Set<String> loadDirectParentsEmails(DeleteMemberDto deleteMemberDto) {
-        List<ParentReference> directParents = retrieveGroup.loadDirectParents(
+        List<ParentReference> directParents = retrieveGroupRepo.loadDirectParents(
                 deleteMemberDto.getPartitionId(), deleteMemberDto.getMemberEmail());
         return directParents.stream()
                 .map(ParentReference::getId)

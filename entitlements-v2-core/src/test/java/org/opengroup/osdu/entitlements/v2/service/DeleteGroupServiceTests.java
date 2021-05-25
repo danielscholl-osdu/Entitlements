@@ -22,7 +22,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -36,9 +38,11 @@ import static org.mockito.Mockito.when;
 public class DeleteGroupServiceTests {
 
     @MockBean
-    private DeleteGroupRepo deleteGroupRepoRedis;
+    private DeleteGroupRepo deleteGroupRepo;
     @MockBean
     private RetrieveGroupRepo retrieveGroupRepo;
+    @MockBean
+    private GroupCacheService groupCacheService;
     @MockBean
     private JaxRsDpsLog logger;
     @MockBean
@@ -68,10 +72,13 @@ public class DeleteGroupServiceTests {
                 .requesterId("callerdesid")
                 .partitionId("common").build();
         when(defaultGroupsService.isDefaultGroupName("data.x.viewers")).thenReturn(false);
+        Set<String> impactedUsers = new HashSet<>(Collections.singletonList("callerdesid"));
+        when(deleteGroupRepo.deleteGroup(any())).thenReturn(impactedUsers);
 
         this.service.run(groupNode, deleteGroupServiceDto);
 
-        verify(deleteGroupRepoRedis).deleteGroup(groupNode);
+        verify(deleteGroupRepo).deleteGroup(groupNode);
+        verify(groupCacheService).refreshListGroupCache(impactedUsers, "common");
     }
 
     @Test
@@ -85,7 +92,7 @@ public class DeleteGroupServiceTests {
 
         this.service.run(groupNode, deleteGroupServiceDto);
 
-        verify(deleteGroupRepoRedis, never()).deleteGroup(any(EntityNode.class));
+        verify(deleteGroupRepo, never()).deleteGroup(any(EntityNode.class));
     }
 
     @Test

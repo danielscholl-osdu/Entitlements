@@ -7,4 +7,8 @@ import java.util.Set;
 public interface GroupCacheService {
 
     Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId);
+
+    void refreshListGroupCache(final Set<String> userIds, String partitionId);
+
+    void flushListGroupCacheForUser(String userId, String partitionId);
 }

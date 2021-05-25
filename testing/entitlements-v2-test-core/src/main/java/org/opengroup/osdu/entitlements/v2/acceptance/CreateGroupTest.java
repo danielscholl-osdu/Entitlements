@@ -8,12 +8,10 @@ import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupItem;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.Token;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.response.ErrorResponse;
-import org.opengroup.osdu.entitlements.v2.acceptance.model.response.ListGroupResponse;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.ConfigurationService;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.TokenService;
 
 public abstract class CreateGroupTest extends AcceptanceBaseTest {
-
     private final ErrorResponse expectedConflictResponse = ErrorResponse.builder().code(409).reason("Conflict")
             .message("This group already exists").build();
 
@@ -31,8 +29,6 @@ public abstract class CreateGroupTest extends AcceptanceBaseTest {
 
         Assert.assertEquals(expectedGroup, entitlementsV2Service.createGroup(groupName, token.getValue()));
 
-        verifyGroupCanBeRetrieved(expectedGroup, token);
-
         verifyConflictException(groupName, token.getValue());
     }
 
@@ -40,17 +36,6 @@ public abstract class CreateGroupTest extends AcceptanceBaseTest {
     protected void cleanup() throws Exception {
         String tokenValue = tokenService.getToken().getValue();
         entitlementsV2Service.deleteGroup(configurationService.getIdOfGroup("groupName-" + currentTime), tokenValue);
-    }
-
-    private void verifyGroupCanBeRetrieved(GroupItem expectedGroup, Token token) throws Exception {
-        ListGroupResponse listGroupResponse = entitlementsV2Service.getGroups(token.getValue());
-        Assert.assertEquals(token.getUserId(), listGroupResponse.getDesId());
-        Assert.assertEquals(token.getUserId(), listGroupResponse.getMemberEmail());
-        GroupItem groupItemFromGetGroups = listGroupResponse.getGroups()
-                .stream()
-                .filter(groupItem -> groupItem.getEmail().equals(configurationService.getIdOfGroup(expectedGroup.getName())))
-                .findFirst().orElse(null);
-        Assert.assertEquals(expectedGroup, groupItemFromGetGroups);
     }
 
     private void verifyConflictException(String groupName, String token) throws Exception {

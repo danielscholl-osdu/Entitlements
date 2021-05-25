@@ -20,6 +20,7 @@ import java.util.Set;
 public class RemoveMemberService {
     private final RemoveMemberRepo removeMemberRepo;
     private final RetrieveGroupRepo retrieveGroupRepo;
+    private final GroupCacheService groupCacheService;
     private final JaxRsDpsLog log;
     private final ServiceAccountsConfigurationService serviceAccountsConfigurationService;
     private final BootstrapGroupsConfigurationService bootstrapGroupsConfigurationService;
@@ -62,7 +63,9 @@ public class RemoveMemberService {
                             memberNode.getName(), existingGroupEntityNode.getName()));
         }
 
-        return removeMemberRepo.removeMember(existingGroupEntityNode, memberNode, removeMemberServiceDto);
+        Set<String> impactedUsers = removeMemberRepo.removeMember(existingGroupEntityNode, memberNode, removeMemberServiceDto);
+        groupCacheService.refreshListGroupCache(impactedUsers, removeMemberServiceDto.getPartitionId());
+        return impactedUsers;
     }
 
     private EntityNode getEntityNode(String id, String partitionId) {

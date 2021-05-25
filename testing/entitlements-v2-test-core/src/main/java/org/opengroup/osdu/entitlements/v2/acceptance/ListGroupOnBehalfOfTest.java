@@ -14,16 +14,12 @@ import org.opengroup.osdu.entitlements.v2.acceptance.util.TokenService;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
 public abstract class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
-    private static final String TEST_APP_ID_1 = "test-app-id-1";
-    private static final String TEST_APP_ID_2 = "test-app-id-2";
     private final List<String> groupsForFurtherDeletion;
     private final Token token;
 
@@ -65,33 +61,6 @@ public abstract class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
         assertEquals(createdGroups.get(0).getEmail(), foundGroups.get(0));
         assertEquals(createdGroups.get(1).getEmail(), foundGroups.get(1));
         assertEquals(createdGroups.get(2).getEmail(), foundGroups.get(2));
-    }
-
-    @Test
-    public void shouldReturnAllFilteredGroupsByAppIdThatGivenMemberBelongsTo() throws Exception {
-        String memberEmail = "testMember@test.com";
-
-        List<GroupItem> createdGroups = setup(memberEmail);
-
-        GetGroupsRequestData getGroupsRequestData = GetGroupsRequestData.builder()
-                .memberEmail(memberEmail)
-                .type(GroupType.NONE)
-                .appId(TEST_APP_ID_1)
-                .build();
-        ListGroupResponse groups = entitlementsV2Service.getGroups(getGroupsRequestData, token.getValue());
-
-        assertEquals(memberEmail.toLowerCase(), groups.getDesId());
-        assertEquals(memberEmail.toLowerCase(), groups.getMemberEmail());
-        List<String> foundGroups = groups.getGroups().stream()
-                .filter(group -> group.getEmail().equals(createdGroups.get(0).getEmail())
-                        || group.getEmail().equals(createdGroups.get(1).getEmail())
-                        || group.getEmail().equals(createdGroups.get(2).getEmail()))
-                .map(GroupItem::getEmail)
-                .sorted(String::compareTo)
-                .collect(Collectors.toList());
-        assertEquals(2, foundGroups.size());
-        assertEquals(createdGroups.get(0).getEmail(), foundGroups.get(0));
-        assertEquals(createdGroups.get(1).getEmail(), foundGroups.get(1));
     }
 
     @Test
@@ -141,18 +110,10 @@ public abstract class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
         groups.add(group1Item);
 
         GroupItem group2Item = entitlementsV2Service.createGroup(group2Name, token.getValue());
-        Set<String> appIds2 = new HashSet<String>() {{
-            add(TEST_APP_ID_1);
-        }};
-        entitlementsV2Service.updateGroupAppIds(group2Name, appIds2, token.getValue());
         groupsForFurtherDeletion.add(group2Item.getEmail());
         groups.add(group2Item);
 
         GroupItem group3Item = entitlementsV2Service.createGroup(group3Name, token.getValue());
-        Set<String> appIds3 = new HashSet<String>() {{
-            add(TEST_APP_ID_2);
-        }};
-        entitlementsV2Service.updateGroupAppIds(group3Name, appIds3, token.getValue());
         groupsForFurtherDeletion.add(group3Item.getEmail());
         groups.add(group3Item);
 

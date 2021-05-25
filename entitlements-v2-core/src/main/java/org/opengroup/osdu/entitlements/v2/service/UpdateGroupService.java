@@ -1,5 +1,6 @@
 package org.opengroup.osdu.entitlements.v2.service;
 
+import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.updategroup.UpdateGroupResponseDto;
@@ -8,27 +9,24 @@ import org.opengroup.osdu.entitlements.v2.spi.renamegroup.RenameGroupRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.opengroup.osdu.entitlements.v2.spi.updateappids.UpdateAppIdsRepo;
 import org.opengroup.osdu.entitlements.v2.util.GroupCreationUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class UpdateGroupService {
 
-    @Autowired
-    private RetrieveGroupRepo retrieveGroupRepo;
-    @Autowired
-    private RenameGroupRepo renameGroupRepo;
-    @Autowired
-    private UpdateAppIdsRepo updateAppIdsRepo;
-    @Autowired
-    private DefaultGroupsService defaultGroupsService;
-    @Autowired
-    private PermissionService permissionService;
+    private final RetrieveGroupRepo retrieveGroupRepo;
+    private final GroupCacheService groupCacheService;
+    private final RenameGroupRepo renameGroupRepo;
+    private final UpdateAppIdsRepo updateAppIdsRepo;
+    private final DefaultGroupsService defaultGroupsService;
+    private final PermissionService permissionService;
 
     public UpdateGroupResponseDto updateGroup(UpdateGroupServiceDto updateGroupServiceDto) {
         String existingGroupEmail = updateGroupServiceDto.getExistingGroupEmail();
@@ -44,6 +42,7 @@ public class UpdateGroupService {
         existingAppIds.addAll(existingGroupEntityNode.getAppIds());
         UpdateGroupResponseDto result = new UpdateGroupResponseDto(existingGroupName, existingGroupEmail, existingAppIds);
 
+        Set<String> impactedUsers = new HashSet<>();
         if (updateGroupServiceDto.getRenameOperation() != null) {
             validateIfGroupIsNotDataGroup(existingGroupEmail, existingGroupEntityNode);
             String newGroupName = updateGroupServiceDto.getRenameOperation().getValue().get(0).toLowerCase();
@@ -52,17 +51,17 @@ public class UpdateGroupService {
             String newGroupEmail = GroupCreationUtil.createGroupEmail(newGroupName, partitionDomain);
             validateIfNewGroupNameDoesNotExist(newGroupName, partitionId, newGroupEmail);
 
-            renameGroupRepo.run(existingGroupEntityNode, newGroupName);
+            impactedUsers.addAll(renameGroupRepo.run(existingGroupEntityNode, newGroupName));
             result.setEmail(newGroupEmail);
             result.setName(newGroupName);
         }
 
-        if (updateGroupServiceDto.getAppIdsOperation()!= null) {
+        if (updateGroupServiceDto.getAppIdsOperation() != null) {
             List<String> allowedAppIdsList = updateGroupServiceDto.getAppIdsOperation().getValue();
-            updateAppIdsRepo.updateAppIds(existingGroupEntityNode, new HashSet<>(allowedAppIdsList));
+            impactedUsers.addAll(updateAppIdsRepo.updateAppIds(existingGroupEntityNode, new HashSet<>(allowedAppIdsList)));
             result.setAppIds(allowedAppIdsList);
         }
-
+        groupCacheService.refreshListGroupCache(new HashSet<>(impactedUsers), updateGroupServiceDto.getPartitionId());
         return result;
     }
 
