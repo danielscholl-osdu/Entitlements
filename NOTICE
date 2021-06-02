@@ -18,6 +18,33 @@ The following software have components provided under the terms of this license:
 - ASM Core (from )
 - ASM based accessors helper used by json-smart (from )
 - ASM based accessors helper used by json-smart (from )
+- AWS Event Stream (from https://github.com/awslabs/aws-eventstream-java)
+- AWS Java SDK :: AWS Core (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK :: Annotations (from )
+- AWS Java SDK :: Auth (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK :: Core :: Protocols :: AWS Json Protocol (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK :: Core :: Protocols :: Protocol Core (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK :: HTTP Client Interface (from )
+- AWS Java SDK :: HTTP Clients :: Apache (from )
+- AWS Java SDK :: HTTP Clients :: Netty Non-Blocking I/O (from )
+- AWS Java SDK :: Profiles (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK :: Regions (from )
+- AWS Java SDK :: SDK Core (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK :: Services :: AWS Simple Systems Management (SSM) (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK :: Utilities (from )
+- AWS Java SDK for AWS Elemental MediaLive (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK for AWS KMS (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK for AWS Lambda (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK for AWS STS (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK for AWS Secrets Manager (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK for Amazon CloudWatch Logs (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK for Amazon Cognito Identity Provider Service (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK for Amazon DynamoDB (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK for Amazon S3 (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK for Amazon SNS (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK for Amazon SQS (from https://aws.amazon.com/sdkforjava)
+- AWS Java SDK for the AWS Simple Systems Management (SSM) Service (from https://aws.amazon.com/sdkforjava)
+- AWS SDK for Java - Core (from https://aws.amazon.com/sdkforjava)
 - Adapter: RxJava (from )
 - Admin Directory API directory_v1-rev77-1.22.0 (from )
 - Apache Commons BeanUtils (from http://commons.apache.org/proper/commons-beanutils/)
@@ -100,6 +127,7 @@ The following software have components provided under the terms of this license:
 - JCIP Annotations under Apache License (from http://stephenc.github.com/jcip-annotations)
 - JCL 1.1.1 implemented over SLF4J (from http://www.slf4j.org)
 - JLine (from )
+- JMES Path Query library (from https://aws.amazon.com/sdkforjava)
 - JSON Small and Fast Parser (from http://www.minidev.net/)
 - JSON Small and Fast Parser (from http://www.minidev.net/)
 - JSON Web Token support for the JVM (from https://github.com/jwtk/jjwt.git)
@@ -108,6 +136,7 @@ The following software have components provided under the terms of this license:
 - JSR107 API and SPI (from https://github.com/jsr107/jsr107spec)
 - Jackson (from http://jackson.codehaus.org)
 - Jackson 2 extensions to the Google HTTP Client Library for Java. (from https://github.com/google/google-http-java-client.git/google-http-client-jackson2)
+- Jackson dataformat: CBOR (from http://github.com/FasterXML/jackson-dataformats-binary)
 - Jackson datatype: JSR310 (from http://wiki.fasterxml.com/JacksonModuleJSR310)
 - Jackson extensions to the Google HTTP Client Library for Java. (from )
 - Jackson-annotations (from http://github.com/FasterXML/jackson)
@@ -129,6 +158,7 @@ The following software have components provided under the terms of this license:
 - Javassist (from http://www.javassist.org/)
 - Javassist (from http://www.javassist.org/)
 - Joda-Time (from http://www.joda.org/joda-time/)
+- Joda-Time (from http://www.joda.org/joda-time/)
 - Json Path (from https://github.com/jayway/JsonPath)
 - KeePassJava2 :: All (from https://repo1.maven.org/maven2/org/linguafranca/pwdb/KeePassJava2)
 - KeePassJava2 :: DOM (from https://repo1.maven.org/maven2/org/linguafranca/pwdb/KeePassJava2-dom)
@@ -148,6 +178,8 @@ The following software have components provided under the terms of this license:
 - Microsoft Azure SDK for SQL API of Azure Cosmos DB Service (from https://github.com/Azure/azure-sdk-for-java)
 - Mockito (from http://www.mockito.org)
 - Mockito (from http://mockito.org)
+- Netty Reactive Streams HTTP support (from )
+- Netty Reactive Streams Implementation (from )
 - Netty Reactive Streams Implementation (from )
 - Netty/All-in-One (from )
 - Netty/Buffer (from http://netty.io/)
@@ -168,6 +200,7 @@ The following software have components provided under the terms of this license:
 - Nimbus JOSE+JWT (from https://bitbucket.org/connect2id/nimbus-jose-jwt)
 - Nimbus LangTag (from https://bitbucket.org/connect2id/nimbus-language-tags)
 - Non-Blocking Reactive Foundation for the JVM (from https://github.com/reactor/reactor)
+- Non-Blocking Reactive Foundation for the JVM (from https://github.com/reactor/reactor)
 - OAuth 2.0 SDK with OpenID Connect extensions (from https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions)
 - Objenesis (from http://objenesis.org)
 - Objenesis (from http://objenesis.org)
@@ -183,6 +216,7 @@ The following software have components provided under the terms of this license:
 - PowerMock (from http://www.powermock.org)
 - Protocol Buffer extensions to the Google HTTP Client Library for Java. (from )
 - Reactive Streams Netty driver (from https://github.com/reactor/reactor-netty)
+- Reactive Streams Netty driver (from https://github.com/reactor/reactor-netty)
 - Redisson (from http://redisson.org)
 - Redisson (from http://redisson.org)
 - Retrofit (from )
@@ -192,6 +226,7 @@ The following software have components provided under the terms of this license:
 - Spring Beans (from https://github.com/spring-projects/spring-framework)
 - Spring Boot (from http://projects.spring.io/spring-boot/)
 - Spring Boot AutoConfigure (from http://projects.spring.io/spring-boot/)
+- Spring Boot Dependencies (from http://projects.spring.io/spring-boot/)
 - Spring Boot Json Starter (from https://projects.spring.io/spring-boot/#/spring-boot-parent/spring-boot-starters/spring-boot-starter-json)
 - Spring Boot Log4J2 Starter (from http://projects.spring.io/spring-boot/)
 - Spring Boot Logging Starter (from http://projects.spring.io/spring-boot/)
@@ -228,6 +263,10 @@ The following software have components provided under the terms of this license:
 - Zipkin Reporter: Core (from )
 - Zipkin v2 (from )
 - aalto-xml (from )
+- argparse (from https://github.com/ThomasWaldmann/argparse/)
+- aws-ssm-java-caching-client (from https://github.com/awslabs/aws-ssm-java-caching-client)
+- boto3 (from https://github.com/boto/boto3)
+- botocore (from https://github.com/boto/botocore)
 - brave (from )
 - com.google.api.grpc:proto-google-cloud-monitoring-v3 (from https://github.com/googleapis/googleapis)
 - com.google.api.grpc:proto-google-common-protos (from https://github.com/googleapis/googleapis)
@@ -250,9 +289,11 @@ The following software have components provided under the terms of this license:
 - io.grpc:grpc-protobuf (from https://github.com/grpc/grpc-java)
 - io.grpc:grpc-protobuf-lite (from https://github.com/grpc/grpc-java)
 - io.grpc:grpc-stub (from https://github.com/grpc/grpc-java)
+- ion-java (from https://github.com/amznlabs/ion-java/)
 - jackson-databind (from http://github.com/FasterXML/jackson)
 - javatuples (from http://www.javatuples.org)
 - javax.inject (from http://code.google.com/p/atinject/)
+- jose4j (from https://bitbucket.org/b_c/jose4j/)
 - lettuce (from http://github.com/mp911de/lettuce/wiki)
 - micrometer-core (from https://github.com/micrometer-metrics/micrometer)
 - micrometer-registry-azure-monitor (from https://github.com/micrometer-metrics/micrometer)
@@ -271,6 +312,7 @@ The following software have components provided under the terms of this license:
 - proto-google-cloud-redis-v1 (from https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-redis-v1)
 - proto-google-cloud-redis-v1beta1 (from https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-redis-v1beta1)
 - proton-j (from )
+- requests (from http://python-requests.org)
 - resilience4j (from https://github.com/resilience4j/resilience4j)
 - resilience4j (from https://github.com/resilience4j/resilience4j)
 - resilience4j (from https://github.com/resilience4j/resilience4j)
@@ -293,6 +335,8 @@ The following software have components provided under the terms of this license:
 - swagger-annotations (from )
 - swagger-jaxrs (from )
 - swagger-models (from )
+- tomcat-annotations-api (from http://tomcat.apache.org/)
+- tomcat-embed-core (from http://tomcat.apache.org/)
 - tomcat-embed-core (from http://tomcat.apache.org/)
 - tomcat-embed-websocket (from http://tomcat.apache.org/)
 - wildfly-common (from )
@@ -408,6 +452,7 @@ The following software have components provided under the terms of this license:
 
 - JavaBeans Activation Framework (from )
 - tomcat-embed-core (from http://tomcat.apache.org/)
+- tomcat-embed-core (from http://tomcat.apache.org/)
 
 ========================================================================
 CPL-1.0
@@ -465,7 +510,9 @@ GPL-2.0-only
 The following software have components provided under the terms of this license:
 
 - JavaBeans Activation Framework (from )
+- argparse (from https://github.com/ThomasWaldmann/argparse/)
 - javax.annotation-api (from http://jcp.org/en/jsr/detail?id=250)
+- tomcat-embed-core (from http://tomcat.apache.org/)
 - tomcat-embed-core (from http://tomcat.apache.org/)
 
 ========================================================================
@@ -489,6 +536,7 @@ The following software have components provided under the terms of this license:
 - JavaBeans Activation Framework (from )
 - jakarta.annotation-api (from https://projects.eclipse.org/projects/ee4j.ca)
 - javax.annotation-api (from http://jcp.org/en/jsr/detail?id=250)
+- tomcat-embed-core (from http://tomcat.apache.org/)
 - tomcat-embed-core (from http://tomcat.apache.org/)
 
 ========================================================================
@@ -556,6 +604,7 @@ MIT
 ========================================================================
 The following software have components provided under the terms of this license:
 
+- AWS Java SDK for AWS Lambda (from https://aws.amazon.com/sdkforjava)
 - Animal Sniffer Annotations (from )
 - Azure Java Client Authentication Library for AutoRest (from https://github.com/Azure/autorest-clientruntime-for-java)
 - Azure Java Client Runtime for ARM (from https://github.com/Azure/autorest-clientruntime-for-java)
@@ -591,11 +640,13 @@ The following software have components provided under the terms of this license:
 - Netty/Common (from )
 - Project Lombok (from https://projectlombok.org)
 - Project Lombok (from https://projectlombok.org)
+- PyJWT (from http://github.com/jpadilla/pyjwt)
 - SLF4J API Module (from http://www.slf4j.org)
 - Spongy Castle (from http://rtyley.github.io/spongycastle/)
 - Spring Data for Azure Cosmos DB SQL API (from https://github.com/Azure/azure-sdk-for-java/tree/master/sdk/cosmos/azure-spring-data-cosmos)
 - adal4j (from https://github.com/AzureAD/azure-activedirectory-library-for-java)
 - azure-documentdb (from https://azure.microsoft.com/en-us/services/cosmos-db/)
+- botocore (from https://github.com/boto/botocore)
 - documentdb-bulkexecutor (from http://azure.microsoft.com/en-us/services/documentdb/)
 - jbcrypt (from http://www.mindrot.org/)
 - micrometer-core (from https://github.com/micrometer-metrics/micrometer)
@@ -636,8 +687,16 @@ The following software have components provided under the terms of this license:
 
 - Guava: Google Core Libraries for Java (from https://github.com/google/guava.git)
 - Joda-Time (from http://www.joda.org/joda-time/)
+- Joda-Time (from http://www.joda.org/joda-time/)
 - LatencyUtils (from http://latencyutils.github.io/LatencyUtils/)
 - Spongy Castle (from http://rtyley.github.io/spongycastle/)
+
+========================================================================
+Python-2.0
+========================================================================
+The following software have components provided under the terms of this license:
+
+- argparse (from https://github.com/ThomasWaldmann/argparse/)
 
 ========================================================================
 SPL-1.0
@@ -658,6 +717,7 @@ public-domain
 ========================================================================
 The following software have components provided under the terms of this license:
 
+- AWS Java SDK :: SDK Core (from https://aws.amazon.com/sdkforjava)
 - Asynchronous Http Client (from )
 - Guava: Google Core Libraries for Java (from https://github.com/google/guava.git)
 - Guava: Google Core Libraries for Java (from https://github.com/google/guava.git)
@@ -671,6 +731,7 @@ The following software have components provided under the terms of this license:
 - Project Lombok (from https://projectlombok.org)
 - Spring Web (from https://github.com/spring-projects/spring-framework)
 - azure-documentdb (from https://azure.microsoft.com/en-us/services/cosmos-db/)
+- botocore (from https://github.com/boto/botocore)
 - msal4j (from https://github.com/AzureAD/microsoft-authentication-library-for-java)
 - reactive-streams (from http://www.reactive-streams.org/)
 

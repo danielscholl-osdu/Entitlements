@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.main.basedir>${project.basedir}</project.main.basedir>
         <jackson.version>2.10.1</jackson.version>
-        <core-lib-aws.version>0.9.1-SNAPSHOT</core-lib-aws.version>
+        <core-lib-aws.version>0.9.1</core-lib-aws.version>
         <junit.version>4.12</junit.version>
         <netty-all.version>4.1.50.Final</netty-all.version>
     </properties>
