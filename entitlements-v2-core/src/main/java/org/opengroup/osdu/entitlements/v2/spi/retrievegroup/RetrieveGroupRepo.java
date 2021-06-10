@@ -16,6 +16,8 @@ public interface RetrieveGroupRepo {
 
     Optional<EntityNode> getEntityNode(String entityEmail, String partitionId);
 
+    EntityNode getMemberNodeForRemovalFromGroup(String memberId, String partitionId);
+
     Set<EntityNode> getEntityNodes(String partitionId, List<String> nodeIds);
 
     Map<String, Set<String>> getUserPartitionAssociations(Set<String> userIds);
