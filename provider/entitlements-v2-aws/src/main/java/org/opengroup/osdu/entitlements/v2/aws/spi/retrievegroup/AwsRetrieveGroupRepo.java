@@ -91,6 +91,14 @@ public class AwsRetrieveGroupRepo implements RetrieveGroupRepo {
     }
 
     @Override
+    public EntityNode getMemberNodeForRemovalFromGroup(String memberId, String partitionId) {
+        if (!memberId.endsWith(String.format("@%s.%s", partitionId, config.getDomain()))) {
+            return EntityNode.createMemberNodeForNewUser(memberId, partitionId);
+        }
+        return EntityNode.createNodeFromGroupEmail(memberId);
+    }
+
+    @Override
     public Set<EntityNode> getEntityNodes(String partitionId, List<String> nodeIds) {
         if (nodeIds.isEmpty()) {
             return Collections.emptySet();

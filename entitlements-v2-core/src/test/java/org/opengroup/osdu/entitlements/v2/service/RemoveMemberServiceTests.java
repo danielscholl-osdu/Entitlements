@@ -77,7 +77,7 @@ public class RemoveMemberServiceTests {
                 .name("member")
                 .dataPartitionId("common")
                 .build();
-        when(retrieveGroupRepo.getEntityNode("member@xxx.com", "common")).thenReturn(Optional.of(memberNode));
+        when(retrieveGroupRepo.getMemberNodeForRemovalFromGroup("member@xxx.com", "common")).thenReturn(memberNode);
         EntityNode groupNode = EntityNode.builder()
                 .type(NodeType.GROUP)
                 .nodeId("data.x@common.contoso.com")
@@ -128,7 +128,7 @@ public class RemoveMemberServiceTests {
                 .name("member")
                 .dataPartitionId("common")
                 .build();
-        when(retrieveGroupRepo.getEntityNode("member@xxx.com", "common")).thenReturn(Optional.of(memberNode));
+        when(retrieveGroupRepo.getMemberNodeForRemovalFromGroup("member@xxx.com", "common")).thenReturn(memberNode);
         EntityNode groupNode = EntityNode.builder()
                 .type(NodeType.GROUP)
                 .nodeId("data.x@common.contoso.com")
@@ -170,7 +170,7 @@ public class RemoveMemberServiceTests {
                 .name("member")
                 .dataPartitionId("common")
                 .build();
-        when(retrieveGroupRepo.getEntityNode("member@xxx.com", "common")).thenReturn(Optional.of(memberNode));
+        when(retrieveGroupRepo.getMemberNodeForRemovalFromGroup("member@xxx.com", "common")).thenReturn(memberNode);
         EntityNode groupNode = EntityNode.builder()
                 .type(NodeType.GROUP)
                 .nodeId("data.x@common.contoso.com")
@@ -219,7 +219,7 @@ public class RemoveMemberServiceTests {
                 .name("member")
                 .dataPartitionId("common")
                 .build();
-        when(retrieveGroupRepo.getEntityNode("member@xxx.com", "common")).thenReturn(Optional.of(memberNode));
+        when(retrieveGroupRepo.getMemberNodeForRemovalFromGroup("member@xxx.com", "common")).thenReturn(memberNode);
         EntityNode groupNode = EntityNode.builder()
                 .type(NodeType.GROUP)
                 .nodeId("data.x@common.contoso.com")
@@ -271,7 +271,7 @@ public class RemoveMemberServiceTests {
                 .name("users")
                 .dataPartitionId("common")
                 .build();
-        when(retrieveGroupRepo.getEntityNode("users@common.contoso.com", "common")).thenReturn(Optional.of(memberNode));
+        when(retrieveGroupRepo.getMemberNodeForRemovalFromGroup("users@common.contoso.com", "common")).thenReturn(memberNode);
         EntityNode groupNode = EntityNode.builder()
                 .type(NodeType.GROUP)
                 .nodeId("data.default.owners@common.contoso.com")
@@ -328,7 +328,7 @@ public class RemoveMemberServiceTests {
                 .name("member")
                 .dataPartitionId("common")
                 .build();
-        when(retrieveGroupRepo.getEntityNode("member@xxx.com", "common")).thenReturn(Optional.of(memberNode));
+        when(retrieveGroupRepo.getMemberNodeForRemovalFromGroup("member@xxx.com", "common")).thenReturn(memberNode);
         EntityNode entityNode = EntityNode.builder()
                 .type(NodeType.USER)
                 .nodeId("member@xxx.com")
@@ -378,8 +378,8 @@ public class RemoveMemberServiceTests {
                 .name("datafier")
                 .dataPartitionId("common")
                 .build();
-        when(retrieveGroupRepo.getEntityNode(
-                "datafier@evd-ddl-us-common.iam.gserviceaccount.com", "common")).thenReturn(Optional.of(memberNode));
+        when(retrieveGroupRepo.getMemberNodeForRemovalFromGroup(
+                "datafier@evd-ddl-us-common.iam.gserviceaccount.com", "common")).thenReturn(memberNode);
         EntityNode groupNode = EntityNode.builder()
                 .type(NodeType.GROUP)
                 .nodeId("users.data.root@common.contoso.com")
@@ -437,8 +437,8 @@ public class RemoveMemberServiceTests {
                 .name("users.data.root")
                 .dataPartitionId("common")
                 .build();
-        when(retrieveGroupRepo.getEntityNode(
-                "users.data.root@common.contoso.com", "common")).thenReturn(Optional.of(memberNode));
+        when(retrieveGroupRepo.getMemberNodeForRemovalFromGroup(
+                "users.data.root@common.contoso.com", "common")).thenReturn(memberNode);
         EntityNode groupNode = EntityNode.builder()
                 .type(NodeType.GROUP)
                 .nodeId("users.test@common.contoso.com")

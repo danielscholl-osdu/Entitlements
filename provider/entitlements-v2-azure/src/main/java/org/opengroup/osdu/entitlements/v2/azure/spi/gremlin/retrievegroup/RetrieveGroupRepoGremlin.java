@@ -55,6 +55,15 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
     }
 
     @Override
+    public EntityNode getMemberNodeForRemovalFromGroup(String memberId, String partitionId) {
+        return getEntityNode(memberId, partitionId)
+                .orElseThrow(() -> new AppException(
+                        HttpStatus.NOT_FOUND.value(),
+                        HttpStatus.NOT_FOUND.getReasonPhrase(),
+                        String.format("Not found entity node by email: %s and partitionId: %s", memberId, partitionId)));
+    }
+
+    @Override
     public Set<EntityNode> getEntityNodes(String partitionId, List<String> nodeIds) {
         return new HashSet<>();
     }

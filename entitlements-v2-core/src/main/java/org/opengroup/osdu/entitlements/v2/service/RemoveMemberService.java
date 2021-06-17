@@ -42,7 +42,7 @@ public class RemoveMemberService {
                 !removeMemberServiceDto.getRequesterId().equalsIgnoreCase(serviceAccountId)) {
             throw new AppException(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase(), "Not authorized to manage members");
         }
-        EntityNode memberNode = getEntityNode(memberEmail, partitionId);
+        EntityNode memberNode = retrieveGroupRepo.getMemberNodeForRemovalFromGroup(memberEmail, partitionId);
         removeMemberServiceDto.setChildrenReference(memberNode.getDirectChildReference(retrieveGroupRepo, existingGroupEntityNode).orElseThrow(
                 () -> new AppException(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), String.format("Group %s does not have %s as a child/member", groupEmail, memberEmail))
         ));
@@ -66,13 +66,5 @@ public class RemoveMemberService {
         Set<String> impactedUsers = removeMemberRepo.removeMember(existingGroupEntityNode, memberNode, removeMemberServiceDto);
         groupCacheService.refreshListGroupCache(impactedUsers, removeMemberServiceDto.getPartitionId());
         return impactedUsers;
-    }
-
-    private EntityNode getEntityNode(String id, String partitionId) {
-        return retrieveGroupRepo.getEntityNode(id, partitionId)
-                .orElseThrow(() -> new AppException(
-                        HttpStatus.NOT_FOUND.value(),
-                        HttpStatus.NOT_FOUND.getReasonPhrase(),
-                        String.format("Not found entity node by email: %s and partitionId: %s", id, partitionId)));
     }
 }
