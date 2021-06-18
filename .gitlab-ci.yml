@@ -9,6 +9,7 @@ variables:
   AWS_SERVICE: entitlements-v2
   AWS_ENVIRONMENT: dev
 
+  OSDU_GCP_HELM_PACKAGE_CHARTS: "devops/gcp/deploy devops/gcp/configmap"
 
 
 include:

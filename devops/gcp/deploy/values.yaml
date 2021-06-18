@@ -1,0 +1,10 @@
+data:
+  serviceAccountName: ""
+  image: ""
+  cloud_sql_proxy_version: "1.20.0"
+  sql_connection_string: ""
+
+conf:
+  configmap: "entitlements-config"
+  app_name: "entitlements-sql"
+  secret_name: "entitlements-secret"
