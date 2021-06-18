@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: "{{ .Values.conf.app_name }}"
+  name: "{{ .Values.conf.configmap }}"
+  namespace: "{{ .Release.Namespace }}"
+data:
+  DOMAIN: "{{ .Values.data.domain }}"
+  REDIS_GROUP_HOST: "{{ .Values.data.redis_group_host }}"
+  REDIS_GROUP_PORT: "{{ .Values.data.redis_group_port }}"
+  SPRING_DATASOURCE_URL: "{{ .Values.data.spring_datasource_url }}"
+  GOOGLE_AUDIENCES: "{{ .Values.data.google_audiences }}"
+  SPRING_DATASOURCE_USERNAME: "{{ .Values.data.spring_datasource_username }}"
+  PARTITION_API: "{{ .Values.data.partition_api }}"
+  LOG_PREFIX: "{{ .Values.data.log_prefix }}"
+  SPRING_PROFILES_ACTIVE: "{{ .Values.data.spring_profiles_active }}"
+  LOG_LEVEL: "{{ .Values.data.log_level }}"

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.conf.app_name }}"
+  namespace: "{{ .Release.Namespace }}"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{{ .Values.conf.app_name }}"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Values.conf.app_name }}"
+    spec:
+      containers:
+      - image: "{{ .Values.data.image }}"
+        imagePullPolicy: Always
+        name: "{{ .Values.conf.app_name }}"
+        envFrom:
+        - configMapRef:
+            name: "{{ .Values.conf.configmap }}"
+        - secretRef:
+            name: "{{ .Values.conf.secret_name }}"
+      - image: "gcr.io/cloudsql-docker/gce-proxy:{{ .Values.data.cloud_sql_proxy_version }}"
+        name: cloud-sql-proxy
+        command:
+          - /cloud_sql_proxy
+          - "-instances={{ .Values.data.sql_connection_string }}=tcp:5432"
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 0
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: "0.25"
+            memory: "128M"
+          limits:
+            cpu: "1"
+            memory: "1G"
+      serviceAccountName: "{{ .Values.data.serviceAccountName }}"

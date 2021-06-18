@@ -1,0 +1,17 @@
+data:
+  domain: ""
+  google_audiences: ""
+  redis_group_host: ""
+  redis_group_port: 9423
+  spring_datasource_url: ""
+  spring_datasource_username: ""
+  spring_datasource_password: ""
+  spring_profiles_active: "dev"
+  partition_api: ""
+  log_prefix: "ent-v2"
+  log_level: ""
+
+conf:
+  configmap: "entitlements-config"
+  app_name: "entitlements-sql"
+  secret_name: "entitlements-secret"
