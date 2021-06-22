@@ -9,6 +9,9 @@ variables:
   AWS_SERVICE: entitlements-v2
   AWS_ENVIRONMENT: dev
 
+  IBM_BUILD_SUBDIR: provider/entitlements-v2-ibm
+  IBM_INT_TEST_SUBDIR: testing/entitlements-v2-test-ibm
+
   OSDU_GCP_HELM_PACKAGE_CHARTS: "devops/gcp/deploy devops/gcp/configmap"
 
 
@@ -33,3 +36,7 @@ include:
 
   - project: "osdu/platform/ci-cd-pipelines"
     file: "publishing/pages.yml"
+    
+  - project: "osdu/platform/ci-cd-pipelines"
+    ref: "entitlements-v2-ibm-cicd"
+    file: "cloud-providers/ibm.yml"
