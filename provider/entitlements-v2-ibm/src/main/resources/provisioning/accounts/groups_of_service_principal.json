@@ -1,0 +1,169 @@
+{
+  "users": [
+    {
+      "email": "SERVICE_PRINCIPAL",
+      "role": "OWNER"
+    }
+  ],
+  "ownersOf": [
+    {
+      "groupName": "users"
+    },
+    {
+      "groupName": "users.data.root"
+    },
+    {
+      "groupName": "users.datalake.ops"
+    },
+    {
+      "groupName": "service.storage.admin"
+    },
+    {
+      "groupName": "users.datalake.admins"
+    },
+    {
+      "groupName": "users.datalake.editors"
+    },
+    {
+      "groupName": "users.datalake.viewers"
+    },
+    {
+      "groupName": "service.entitlements.admin"
+    },
+    {
+      "groupName": "service.legal.editor"
+    },
+    {
+      "groupName": "service.storage.creator"
+    },
+    {
+      "groupName": "service.legal.user"
+    },
+    {
+      "groupName": "service.legal.admin"
+    },
+    {
+      "groupName": "service.messaging.user"
+    },
+    {
+      "groupName": "service.plugin.user"
+    },
+    {
+      "groupName": "service.entitlements.user"
+    },
+    {
+      "groupName": "service.search.user"
+    },
+    {
+      "groupName": "service.storage.viewer"
+    },
+    {
+      "groupName": "service.search.admin"
+    },
+    {
+      "groupName": "service.schema-service.editors"
+    },
+    {
+      "groupName": "service.schema-service.viewers"
+    },
+    {
+      "groupName": "service.schema-service.admin"
+    },
+    {
+      "groupName": "service.file.editors"
+    },
+    {
+      "groupName": "service.file.viewers"
+    },
+    {
+      "groupName": "service.workflow.creator"
+    },
+    {
+      "groupName": "service.workflow.viewer"
+    },
+    {
+      "groupName": "service.workflow.admin"
+    },
+    {
+      "groupName": "service.indexer.admin"
+    },
+    {
+      "groupName": "service.indexer.creator"
+    },
+    {
+      "groupName": "service.indexer.viewer"
+    },
+    {
+      "groupName": "service.unit.admin"
+    },
+    {
+      "groupName": "service.unit.creator"
+    },
+    {
+      "groupName": "service.unit.viewer"
+    },
+    {
+      "groupName": "service.ingest.admin"
+    },
+    {
+      "groupName": "service.ingest.creator"
+    },
+    {
+      "groupName": "service.ingest.viewer"
+    },
+    {
+      "groupName": "service.seismic-store.viewer"
+    },
+    {
+      "groupName": "service.seismic-store.admin"
+    },
+    {
+      "groupName": "service.seismic-store.creator"
+    },
+    {
+      "groupName": "service.binarydms.admin"
+    },
+    {
+      "groupName": "service.binarydms.creator"
+    },
+    {
+      "groupName": "service.binarydms.viewer"
+    },
+    {
+      "groupName": "service.edsdms.admin"
+    },
+    {
+      "groupName": "service.edsdms.creator"
+    },
+    {
+      "groupName": "service.edsdms.viewer"
+    },
+    {
+      "groupName": "service.edsdms.user"
+    },
+    {
+      "groupName": "service.csv-parser.admin"
+    },
+    {
+      "groupName": "service.csv-parser.creator"
+    },
+    {
+      "groupName": "service.csv-parser.viewer"
+    },
+    {
+      "groupName": "service.policy.admin"
+    },
+    {
+      "groupName": "service.policy.creator"
+    },
+    {
+      "groupName": "service.policy.viewer"
+    },
+    {
+      "groupName": "service.delivery.viewer"
+    },
+    {
+      "groupName": "cron.job"
+    }
+  ]
+}
