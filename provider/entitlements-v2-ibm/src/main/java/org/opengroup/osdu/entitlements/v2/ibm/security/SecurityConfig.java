@@ -16,7 +16,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().disable()
                 .csrf().disable().authorizeRequests().anyRequest()
-                .authenticated().and().oauth2ResourceServer().jwt();  //disable default authN. AuthN handled by endpoints proxy
+                .authenticated().and().oauth2ResourceServer().jwt();  
     }
 }
 
