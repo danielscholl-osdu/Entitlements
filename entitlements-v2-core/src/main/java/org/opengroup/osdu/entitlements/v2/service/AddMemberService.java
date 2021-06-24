@@ -40,7 +40,12 @@ public class AddMemberService {
         log.info(String.format("requested by %s", addMemberServiceDto.getRequesterId()));
         String memberDesId = addMemberDto.getEmail();
         EntityNode memberNode = retrieveGroupRepo.getEntityNode(memberDesId, addMemberServiceDto.getPartitionId()).orElseGet(
-                () -> createNewMemberNode(addMemberDto.getEmail(), memberDesId, addMemberServiceDto.getPartitionId()));
+
+                () -> {
+                    System.out.println("No user Node found, adding it");
+                    return  createNewMemberNode(addMemberDto.getEmail(), memberDesId, addMemberServiceDto.getPartitionId())
+                }
+                );
         EntityNode existingGroupEntityNode = retrieveGroupRepo.groupExistenceValidation(addMemberServiceDto.getGroupEmail(), addMemberServiceDto.getPartitionId());
         EntityNode requesterNode = EntityNode.createMemberNodeForRequester(addMemberServiceDto.getRequesterId(), addMemberServiceDto.getPartitionId());
         if (!permissionService.hasOwnerPermissionOf(requesterNode, existingGroupEntityNode)) {
