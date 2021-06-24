@@ -43,7 +43,7 @@ public class AddMemberService {
 
                 () -> {
                     System.out.println("No user Node found, adding it");
-                    return  createNewMemberNode(addMemberDto.getEmail(), memberDesId, addMemberServiceDto.getPartitionId())
+                    return  createNewMemberNode(addMemberDto.getEmail(), memberDesId, addMemberServiceDto.getPartitionId());
                 }
                 );
         EntityNode existingGroupEntityNode = retrieveGroupRepo.groupExistenceValidation(addMemberServiceDto.getGroupEmail(), addMemberServiceDto.getPartitionId());
