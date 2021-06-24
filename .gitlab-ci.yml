@@ -38,5 +38,4 @@ include:
     file: "publishing/pages.yml"
     
   - project: "osdu/platform/ci-cd-pipelines"
-    ref: "entitlements-v2-ibm-cicd"
     file: "cloud-providers/ibm.yml"
