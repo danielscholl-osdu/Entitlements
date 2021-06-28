@@ -81,9 +81,7 @@ public class AwsRetrieveGroupRepo implements RetrieveGroupRepo {
             commands.select(config.getPartitionEntityNode());
             String groupNodeJson = commands.get(entityEmail);
             EntityNode groupNode = null;
-            System.out.println("The value of GropNodeJson is " +groupNodeJson);
             if (!StringUtils.isEmpty(groupNodeJson)) {
-
                 groupNode = JsonConverter.fromJson(groupNodeJson, EntityNode.class);
             }
             return Optional.ofNullable(groupNode);
