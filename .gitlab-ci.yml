@@ -39,3 +39,8 @@ include:
     
   - project: "osdu/platform/ci-cd-pipelines"
     file: "cloud-providers/ibm.yml"
+
+#Include osdu-gcp-global.yml at k8s common pipeline 
+  - project: "osdu/platform/ci-cd-pipelines"
+    file: 'cloud-providers/osdu-gcp-global.yml'
+
