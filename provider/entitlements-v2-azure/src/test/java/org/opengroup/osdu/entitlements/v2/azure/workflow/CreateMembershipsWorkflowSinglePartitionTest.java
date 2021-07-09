@@ -933,6 +933,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "service.entitlements.user@common.contoso.com", "service.search.admin@common.contoso.com",
                 "service.storage.admin@common.contoso.com", "users.datalake.viewers@common.contoso.com",
                 "service.storage.creator@common.contoso.com", "service.workflow.admin@common.contoso.com",
-                "data.default.viewers@common.contoso.com"}, performListGroupRequest(servicePrincipal));
+                "data.default.viewers@common.contoso.com", "service.dataset.editors@common.contoso.com",
+                "service.dataset.viewers@common.contoso.com"}, performListGroupRequest(servicePrincipal));
     }
 }
