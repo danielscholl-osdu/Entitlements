@@ -49,23 +49,24 @@ public class RedisConnector {
         getRedisConnectionPool();
     }
 
-    private RedisClient getRedisClient(String host, int port) {
+    private RedisClient getRedisClient(String host, int port, String token) {
         String key = String.format(CONNECTION_KEY_FORMATTER, host, port);
         if (!this.redisClientMap.containsKey(key)) {
-            RedisClient redisClient = RedisClient.create(RedisURI.create(host, port));
+            String temp ="rediss://"+token+"@"+host+":"+port;
+	        RedisClient redisClient = RedisClient.create(RedisURI.create(temp));
             this.redisClientMap.putIfAbsent(key, redisClient);
             return redisClient;
         }
         return this.redisClientMap.get(key);
     }
 
-    private RedisConnectionPool getRedisConnectionPool(String host, int port) {
+    private RedisConnectionPool getRedisConnectionPool(String host, int port, String token) {
         String key = String.format(CONNECTION_KEY_FORMATTER, host, port);
         this.connectionCreationLockMap.putIfAbsent(key, new Object());
         if (!this.redisConnectionPoolMap.containsKey(key)) {
             synchronized (this.connectionCreationLockMap.get(key)) {
                 if (!this.redisConnectionPoolMap.containsKey(key)) {
-                    GenericObjectPool<StatefulRedisConnection<String, String>> pool = ConnectionPoolSupport.createGenericObjectPool(() -> this.getRedisClient(host, port).connect(), this.poolConfig);
+                    GenericObjectPool<StatefulRedisConnection<String, String>> pool = ConnectionPoolSupport.createGenericObjectPool(() -> this.getRedisClient(host, port, token).connect(), this.poolConfig);
                     RedisConnectionPool redisConnectionPool = new RedisConnectionPool(pool);
                     this.redisConnectionPoolMap.putIfAbsent(key, redisConnectionPool);
                 }
@@ -80,13 +81,15 @@ public class RedisConnector {
     public RedisConnectionPool getPartitionRedisConnectionPool(String partitionId) {
          String host = config.getRedisHost();
         int port = config.getRedisPort();
-        return getRedisConnectionPool(host, port);
+        String key = config.getRedisKey();
+        return getRedisConnectionPool(host, port, key);
     }
 
     public RedisConnectionPool getRedisConnectionPool() {
         String host = config.getRedisHost();
         int port = config.getRedisPort();
-        return getRedisConnectionPool(host, port);
+        String key = config.getRedisKey();
+        return getRedisConnectionPool(host, port, key);
     }
 
 }

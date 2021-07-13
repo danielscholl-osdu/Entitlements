@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.logging.audit.AuditStatus;
 import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.entitlements.v2.aws.spi.operation.CreateGroupOperationImpl;
 import org.opengroup.osdu.entitlements.v2.di.WhitelistSvcAccBeanConfiguration;
 import org.opengroup.osdu.entitlements.v2.aws.AwsAppProperties;
 import org.opengroup.osdu.entitlements.v2.aws.spi.BaseRepo;
@@ -84,13 +85,23 @@ public class AwsAddMemberRepo extends BaseRepo implements AddMemberRepo {
             throw new AppException(HttpStatus.PRECONDITION_FAILED.value(), HttpStatus.PRECONDITION_FAILED.getReasonPhrase(), String.format("%s's relationship depth quota hit. The relationship depth can't be deeper than %d", addMemberRepoDto.getMemberNode().getNodeId(), MAX_DEPTH));
         }
         final List<String> impactedUsers = childrenUserDto.getChildrenUserIds();
+
         executedCommandsDeque.push(executeParentUpdate(groupEntityNode, addMemberRepoDto.getMemberNode(), addMemberRepoDto.getRole()));
         executedCommandsDeque.push(executeChildrenUpdate(groupEntityNode, addMemberRepoDto.getMemberNode()));
+        Optional<EntityNode> val =retrieveGroupRepo.getEntityNode(addMemberRepoDto.getMemberNode().getNodeId(), addMemberRepoDto.getPartitionId());
+        if (!val.isPresent()){
+            executedCommandsDeque.push(createUserAsAGroupNode(addMemberRepoDto.getMemberNode()));
+        }
         executeUserPartitionAssociationUpdate(groupEntityNode, addMemberRepoDto.getMemberNode(), addMemberRepoDto.getPartitionId())
                 .ifPresent(executedCommandsDeque::push);
+
         return new HashSet<>(impactedUsers);
     }
-
+    private Operation createUserAsAGroupNode(EntityNode memberNode){
+        Operation op = CreateGroupOperationImpl.builder().redisConnector(redisConnector).groupNode(memberNode).log(log).config(config).build();
+        op.execute();
+        return op;
+    }
     private Operation executeParentUpdate(EntityNode groupEntityNode, EntityNode memberNode, Role role) {
         Operation updateParentOperation = AddMemberParentUpdateOperationImpl.builder().redisConnector(redisConnector)
                 .retry(retry).log(log).config(config).groupNode(groupEntityNode).childrenReference(ChildrenReference.createChildrenReference(memberNode, role)).build();
