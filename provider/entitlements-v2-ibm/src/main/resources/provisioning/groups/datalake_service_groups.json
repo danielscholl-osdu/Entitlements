@@ -716,6 +716,51 @@
           "name": "users.datalake.editors"
         }
       ]
+    },
+    {
+      "name": "service.legal.viewer",
+      "description": "Legal serice users",
+      "members": [
+        {
+          "name": "users.datalake.viewers"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.policy.user",
+      "description": "policy serice users",
+      "members": [
+        {
+          "name": "users.datalake.viewers"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.file.admin",
+      "description": "file serice users",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
     }
   ]
 }
