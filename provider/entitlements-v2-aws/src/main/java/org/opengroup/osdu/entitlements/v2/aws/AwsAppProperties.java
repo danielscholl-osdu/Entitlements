@@ -34,6 +34,8 @@ public class AwsAppProperties extends AppProperties {
     private String redishost;
     @Value("${redisport}")
     private String redisport;
+    @Value("${rediskey}")
+    private String rediskey;
     @Value("${redis.partition.association}")
     private int redispartitionAssociation;
     @Value("${partition.entitynode}")
@@ -53,6 +55,9 @@ public class AwsAppProperties extends AppProperties {
         return Integer.parseInt(redisport);
     }
 
+    public String getRedisKey() {
+        return rediskey;
+    }
 
     public int getRedisPartitionAssociation() {
         return redispartitionAssociation;
