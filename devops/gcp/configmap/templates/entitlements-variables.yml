@@ -3,12 +3,12 @@ kind: ConfigMap
 metadata:
   labels:
     app: "{{ .Values.conf.app_name }}"
+  annotations:
+    rollme: {{ randAlphaNum 5 | quote }}
   name: "{{ .Values.conf.configmap }}"
   namespace: "{{ .Release.Namespace }}"
 data:
   DOMAIN: "{{ .Values.data.domain }}"
-  REDIS_GROUP_HOST: "{{ .Values.data.redis_group_host }}"
-  REDIS_GROUP_PORT: "{{ .Values.data.redis_group_port }}"
   SPRING_DATASOURCE_URL: "{{ .Values.data.spring_datasource_url }}"
   GOOGLE_AUDIENCES: "{{ .Values.data.google_audiences }}"
   SPRING_DATASOURCE_USERNAME: "{{ .Values.data.spring_datasource_username }}"

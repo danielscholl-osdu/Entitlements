@@ -6,5 +6,5 @@ data:
 
 conf:
   configmap: "entitlements-config"
-  app_name: "entitlements-sql"
+  app_name: "entitlements"
   secret_name: "entitlements-secret"
