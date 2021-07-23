@@ -1,0 +1,32 @@
+{
+  "groups": [
+    {
+      "name": "users.datalake.ops",
+      "description": "Datalake ops"
+    },
+    {
+      "name": "users.datalake.admins",
+      "description": "Datalake admins"
+    },
+    {
+      "name": "users.datalake.editors",
+      "description": "Datalake editors"
+    },
+    {
+      "name": "users.datalake.viewers",
+      "description": "Datalake viewers"
+    },
+    {
+      "name": "users",
+      "description": "Datalake users"
+    },
+    {
+      "name": "users.data.root",
+      "description": "Datalake root users"
+    },
+    {
+      "name": "users.wellbore-data.viewers",
+      "description": "Wellbore data viewers"
+    }
+  ]
+}
