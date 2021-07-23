@@ -23,6 +23,7 @@
         <module>provider/entitlements-v2-gcp</module>
         <module>provider/entitlements-v2-aws</module>
 		<module>provider/entitlements-v2-ibm</module>
+        <module>provider/entitlements-v2-jdbc</module>
     </modules>
 
     <licenses>
