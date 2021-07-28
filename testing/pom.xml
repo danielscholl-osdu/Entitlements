@@ -4,13 +4,14 @@
 
     <groupId>org.opengroup.osdu.entitlements.v2</groupId>
     <artifactId>os-entitlements-v2-testing</artifactId>
-    <version>0.10.0-SNAPSHOT</version>
+    <version>0.11.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>entitlements-v2-test-core</module>
         <module>entitlements-v2-test-azure</module>
         <module>entitlements-v2-test-aws</module>
+        <module>entitlements-v2-test-jdbc</module>
         <module>entitlements-v2-test-ibm</module>
     </modules>
 

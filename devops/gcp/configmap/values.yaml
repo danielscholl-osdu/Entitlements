@@ -1,8 +1,6 @@
 data:
   domain: ""
   google_audiences: ""
-  redis_group_host: ""
-  redis_group_port: 9423
   spring_datasource_url: ""
   spring_datasource_username: ""
   spring_datasource_password: ""
@@ -13,5 +11,5 @@ data:
 
 conf:
   configmap: "entitlements-config"
-  app_name: "entitlements-sql"
+  app_name: "entitlements"
   secret_name: "entitlements-secret"

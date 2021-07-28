@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.core.common.partition.PartitionException;
 import org.opengroup.osdu.entitlements.v2.validation.PartitionHeaderValidationService;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,10 @@ public class SpringExceptionMapper extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AppException.class)
     protected ResponseEntity<Object> handleAppException(AppException e) {
+        if (e.getOriginalException() instanceof PartitionException) {
+            e.getError().setCode(HttpStatus.UNAUTHORIZED.value());
+        }
+
         return this.getErrorResponse(e);
     }
 
