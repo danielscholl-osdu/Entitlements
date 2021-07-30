@@ -1,23 +1,13 @@
 package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.updateappids;
 
-import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
-import static org.junit.Assert.assertTrue;
-import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.DATA_PARTITION_ID;
-import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.getDataGroupNode;
-import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.getRequesterNode;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.entitlements.v2.jdbc.model.GroupInfoEntity;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.addmember.AddMemberRepoJdbc;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.GroupRepository;
+import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.JdbcTemplateRunner;
+import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.MemberRepository;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.retrievegroup.RetrieveGroupRepoJdbc;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
@@ -27,13 +17,21 @@ import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:db/create-db-script.sql")
-@Sql(executionPhase = ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:db/drop-db-script.sql")
-@AutoConfigureEmbeddedDatabase(provider = ZONKY)
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.verify;
+import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.*;
+import static org.powermock.api.mockito.PowerMockito.when;
+
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class UpdateAppIdsJdbcTest {
@@ -46,30 +44,36 @@ public class UpdateAppIdsJdbcTest {
     @Autowired
     private UpdateAppIdsRepoJdbc sut;
 
-    @Autowired
+    @MockBean
     private GroupRepository groupRepository;
+    @MockBean
+    private JdbcTemplateRunner jdbcTemplateRunner;
+    @MockBean
+    private MemberRepository memberRepository;
 
     @Autowired
     private RetrieveGroupRepoJdbc retrieveGroupRepoJdbc;
-    @Autowired
-    private AddMemberRepoJdbc addMemberRepoJdbc;
 
     @Test
     public void should_updateAppIds() {
         EntityNode requesterNode = getRequesterNode();
         EntityNode groupNode = getDataGroupNode("x");
+        groupNode.setAppIds(new HashSet<>(Arrays.asList("app1", "app2")));
 
-        groupRepository.save(GroupInfoEntity.fromEntityNode(groupNode));
-        addMemberRepoJdbc.addMember(groupNode, AddMemberRepoDto.builder()
-                .memberNode(requesterNode)
-                .role(Role.MEMBER)
-                .partitionId(DATA_PARTITION_ID)
-                .build());
+        GroupInfoEntity savedGroup = GroupInfoEntity.fromEntityNode(groupNode);
+        savedGroup.setId(1L);
+
+        when(jdbcTemplateRunner.getRecursiveParentIds(any())).thenReturn(Collections.singletonList(1L));
+        when(groupRepository.findAllById(anyList())).thenReturn(Collections.singletonList(savedGroup));
+        when(groupRepository.findByEmail(any())).thenReturn(Collections.singletonList(savedGroup));
 
         //when
         sut.updateAppIds(groupNode, new HashSet<>(Arrays.asList("app1", "app2")));
 
         //then
+        verify(groupRepository).updateAppId(1L, "app1");
+        verify(groupRepository).updateAppId(1L, "app2");
+
 
         Set<ParentReference> groups = retrieveGroupRepoJdbc.loadAllParents(requesterNode).getParentReferences();
         Set<ParentReference> noAppIdParents = retrieveGroupRepoJdbc.filterParentsByAppId(groups,

@@ -1,23 +1,5 @@
 package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.retrievegroup;
 
-import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.DATA_PARTITION_ID;
-import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.getDataGroupNode;
-import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.getMemberNode;
-import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.getUsersGroupNode;
-
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
@@ -36,13 +18,20 @@ import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:db/create-db-script.sql")
-@Sql(executionPhase = ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:db/drop-db-script.sql")
-@AutoConfigureEmbeddedDatabase(provider = ZONKY)
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.*;
+import static org.powermock.api.mockito.PowerMockito.when;
+
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class RetrieveGroupRepoJdbcTest {
@@ -56,21 +45,12 @@ public class RetrieveGroupRepoJdbcTest {
 
     @Autowired
     private RetrieveGroupRepoJdbc sut;
-    @Autowired
+    @MockBean
     private GroupRepository groupRepository;
-    @Autowired
+    @MockBean
     private MemberRepository memberRepository;
-    @Autowired
+    @MockBean
     private JdbcTemplateRunner jdbcTemplateRunner;
-
-    @Test
-    public void shouldReturnGroupNodeIfGroupExist() {
-        EntityNode group = getUsersGroupNode("x");
-
-        groupRepository.save(GroupInfoEntity.fromEntityNode(group));
-
-        assertNotNull(sut.groupExistenceValidation(group.getNodeId(), DATA_PARTITION_ID));
-    }
 
     @Test
     public void shouldThrow404IfGroupDoesNotExist() {
@@ -102,16 +82,12 @@ public class RetrieveGroupRepoJdbcTest {
         EntityNode group2 = getUsersGroupNode("y");
         EntityNode group3 = getUsersGroupNode("z");
 
-        GroupInfoEntity savedGroup1 = groupRepository.save(GroupInfoEntity.fromEntityNode(group1));
-        GroupInfoEntity savedGroup2 = groupRepository.save(GroupInfoEntity.fromEntityNode(group2));
-        GroupInfoEntity savedGroup3 = groupRepository.save(GroupInfoEntity.fromEntityNode(group3));
+        GroupInfoEntity savedGroup1 = GroupInfoEntity.fromEntityNode(group1);
+        GroupInfoEntity savedGroup2 = GroupInfoEntity.fromEntityNode(group2);
+        GroupInfoEntity savedGroup3 = GroupInfoEntity.fromEntityNode(group3);
 
-        Long memberId = jdbcTemplateRunner.saveMemberInfoEntity(MemberInfoEntity.fromEntityNode(member, Role.MEMBER));
-
-        groupRepository.addChildGroupById(savedGroup2.getId(), savedGroup3.getId());
-
-        groupRepository.addMemberById(savedGroup1.getId(), memberId, Role.MEMBER.getValue());
-        groupRepository.addMemberById(savedGroup3.getId(), memberId, Role.MEMBER.getValue());
+        when(memberRepository.findByEmail(any())).thenReturn(Collections.singletonList(MemberInfoEntity.fromEntityNode(member, Role.MEMBER)));
+        when(groupRepository.findDirectGroups(anyList())).thenReturn(Arrays.asList(savedGroup1, savedGroup3));
 
         List<String> parentIds = sut.loadDirectParents(DATA_PARTITION_ID, member.getNodeId()).stream()
                 .map(ParentReference::getId)
@@ -141,16 +117,11 @@ public class RetrieveGroupRepoJdbcTest {
         EntityNode group2 = getUsersGroupNode("y");
         EntityNode group3 = getUsersGroupNode("z");
 
-        GroupInfoEntity savedGroup1 = groupRepository.save(GroupInfoEntity.fromEntityNode(group1));
-        GroupInfoEntity savedGroup2 = groupRepository.save(GroupInfoEntity.fromEntityNode(group2));
-        GroupInfoEntity savedGroup3 = groupRepository.save(GroupInfoEntity.fromEntityNode(group3));
+        GroupInfoEntity savedGroup1 = GroupInfoEntity.fromEntityNode(group1);
+        GroupInfoEntity savedGroup2 = GroupInfoEntity.fromEntityNode(group2);
+        GroupInfoEntity savedGroup3 = GroupInfoEntity.fromEntityNode(group3);
 
-        Long memberId = jdbcTemplateRunner.saveMemberInfoEntity(MemberInfoEntity.fromEntityNode(member, Role.MEMBER));
-
-        groupRepository.addChildGroupById(savedGroup2.getId(), savedGroup3.getId());
-
-        groupRepository.addMemberById(savedGroup1.getId(), memberId, Role.MEMBER.getValue());
-        groupRepository.addMemberById(savedGroup3.getId(), memberId, Role.MEMBER.getValue());
+        when(groupRepository.findAllById(anyList())).thenReturn(Arrays.asList(savedGroup1, savedGroup2, savedGroup3));
 
         Set<String> parentIds = sut.loadAllParents(member).getParentReferences().stream()
                 .map(ParentReference::getId)
