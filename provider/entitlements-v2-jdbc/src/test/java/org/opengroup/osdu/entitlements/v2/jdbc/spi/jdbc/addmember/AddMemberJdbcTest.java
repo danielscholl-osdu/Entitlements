@@ -1,17 +1,5 @@
 package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.addmember;
 
-import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.DATA_PARTITION_ID;
-import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.getMemberNode;
-import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.getDataViewersGroupNode;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-
-import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
@@ -20,6 +8,7 @@ import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.entitlements.v2.jdbc.model.GroupInfoEntity;
 import org.opengroup.osdu.entitlements.v2.jdbc.model.MemberInfoEntity;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.GroupRepository;
+import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.JdbcTemplateRunner;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.MemberRepository;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
@@ -29,14 +18,19 @@ import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:db/create-db-script.sql")
-@Sql(executionPhase = ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:db/drop-db-script.sql")
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.*;
+import static org.powermock.api.mockito.PowerMockito.when;
+
 @SpringBootTest
-@AutoConfigureEmbeddedDatabase(provider = ZONKY)
 @RunWith(SpringRunner.class)
 public class AddMemberJdbcTest{
 
@@ -49,10 +43,12 @@ public class AddMemberJdbcTest{
 	@Autowired
 	private AddMemberRepoJdbc sut;
 
-	@Autowired
+	@MockBean
 	private MemberRepository memberRepository;
-	@Autowired
+	@MockBean
 	private GroupRepository groupRepository;
+	@MockBean
+	private JdbcTemplateRunner jdbcTemplateRunner;
 
 	@Test
 	public void should_createAndSetMemberReference_whenInsertAUser_andAddedMemberNodeDoesNotExist() {
@@ -65,13 +61,17 @@ public class AddMemberJdbcTest{
 				.partitionId(DATA_PARTITION_ID)
 				.build();
 
-		GroupInfoEntity group = groupRepository.save(GroupInfoEntity.fromEntityNode(groupNode));
+		List<MemberInfoEntity> expected = Collections.singletonList(MemberInfoEntity.fromEntityNode(memberNode, addMemberRepoDto.getRole()));
+
+		GroupInfoEntity group = GroupInfoEntity.fromEntityNode(groupNode);
+
+		when(memberRepository.findMemberByEmailInGroup(any(), any())).thenReturn(expected);
+		when(groupRepository.findByEmail(any())).thenReturn(Collections.singletonList(GroupInfoEntity.fromEntityNode(groupNode)));
 
 		//when
 		sut.addMember(groupNode, addMemberRepoDto);
 
 		//then
-		List<MemberInfoEntity> expected = Collections.singletonList(MemberInfoEntity.fromEntityNode(memberNode, addMemberRepoDto.getRole()));
 		List<MemberInfoEntity> actual = memberRepository.findMemberByEmailInGroup(group.getId(), addMemberRepoDto.getMemberNode().getNodeId());
 
 		assertEquals(1, actual.size());
@@ -111,17 +111,18 @@ public class AddMemberJdbcTest{
 				.partitionId(DATA_PARTITION_ID)
 				.build();
 
-		GroupInfoEntity firstGroup = groupRepository.save(GroupInfoEntity.fromEntityNode(firstGroupNode));
-		GroupInfoEntity secondGroup = groupRepository.save(GroupInfoEntity.fromEntityNode(secondGroupNode));
+		List<MemberInfoEntity> expected = Collections.singletonList(MemberInfoEntity.fromEntityNode(memberNode, addMemberRepoDto
+				.getRole()));
 
-		sut.addMember(firstGroupNode, addMemberRepoDto);
+		GroupInfoEntity secondGroup = GroupInfoEntity.fromEntityNode(secondGroupNode);
+
+		when(memberRepository.findMemberByEmailInGroup(any(), any())).thenReturn(expected);
+		when(groupRepository.findByEmail(any())).thenReturn(Collections.singletonList(secondGroup));
 
 		//when
 		sut.addMember(secondGroupNode, addMemberRepoDto);
 
 		//then
-		List<MemberInfoEntity> expected = Collections.singletonList(MemberInfoEntity.fromEntityNode(memberNode, addMemberRepoDto
-				.getRole()));
 		List<MemberInfoEntity> actual = memberRepository.findMemberByEmailInGroup(secondGroup.getId(), addMemberRepoDto
 				.getMemberNode().getNodeId());
 
@@ -157,14 +158,17 @@ public class AddMemberJdbcTest{
 				.partitionId(DATA_PARTITION_ID)
 				.build();
 
-		GroupInfoEntity firstGroup = groupRepository.save(GroupInfoEntity.fromEntityNode(firstGroupNode));
-		GroupInfoEntity secondGroup = groupRepository.save(GroupInfoEntity.fromEntityNode(secondGroupNode));
+		GroupInfoEntity firstGroup = GroupInfoEntity.fromEntityNode(firstGroupNode);
+		GroupInfoEntity secondGroup = GroupInfoEntity.fromEntityNode(secondGroupNode);
+		List<GroupInfoEntity> expected = Collections.singletonList(secondGroup);
+
+		when(groupRepository.findChildByEmail(any(), any())).thenReturn(expected);
+		when(groupRepository.findByEmail(any())).thenReturn(Collections.singletonList(firstGroup));
 
 		//when
 		sut.addMember(firstGroupNode, addMemberRepoDto);
 
 		//then
-		List<GroupInfoEntity> expected = Collections.singletonList(GroupInfoEntity.fromEntityNode(secondGroupNode));
 		List<GroupInfoEntity> actual = groupRepository.findChildByEmail(firstGroup.getId(), addMemberRepoDto.getMemberNode().getNodeId());
 
 		assertEquals(expected.size(), actual.size());

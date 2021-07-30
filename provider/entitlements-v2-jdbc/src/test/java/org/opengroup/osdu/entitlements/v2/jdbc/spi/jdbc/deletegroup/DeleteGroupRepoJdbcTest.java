@@ -1,15 +1,5 @@
 package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.deletegroup;
 
-import static io.zonky.test.db.AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.getCommonGroup;
-import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.getDataGroupNode;
-import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.getUsersGroupNode;
-
-import java.util.Collections;
-
-import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
@@ -18,19 +8,24 @@ import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.entitlements.v2.jdbc.model.GroupInfoEntity;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.GroupRepository;
+import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.MemberRepository;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.util.RequestInfoUtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:db/create-db-script.sql")
-@Sql(executionPhase = ExecutionPhase.AFTER_TEST_METHOD, scripts = "classpath:db/drop-db-script.sql")
-@AutoConfigureEmbeddedDatabase(provider = ZONKY)
+import java.util.Collections;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.*;
+
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class DeleteGroupRepoJdbcTest {
@@ -44,9 +39,11 @@ public class DeleteGroupRepoJdbcTest {
     @MockBean
     private RequestInfoUtilService requestInfoUtilService;
     @Autowired
-    private DeleteGroupRepoJdbc deleteGroupRepoJdbc;
-    @Autowired
+    private DeleteGroupRepoJdbc sut;
+    @MockBean
     private GroupRepository groupRepository;
+    @MockBean
+    private MemberRepository memberRepository;
 
     @Test
     public void shouldDeleteGroupAndPreserveParents() {
@@ -56,17 +53,21 @@ public class DeleteGroupRepoJdbcTest {
         EntityNode childGroup2 = getDataGroupNode("y");
         EntityNode childGroup3 = getDataGroupNode("z");
 
-        GroupInfoEntity savedChild1 = groupRepository.save(GroupInfoEntity.fromEntityNode(childGroup1));
-        GroupInfoEntity savedChild2 = groupRepository.save(GroupInfoEntity.fromEntityNode(childGroup2));
-        GroupInfoEntity savedChild3 = groupRepository.save(GroupInfoEntity.fromEntityNode(childGroup3));
-        GroupInfoEntity savedGroupToDelete = groupRepository.save(GroupInfoEntity.fromEntityNode(groupToDelete));
+        GroupInfoEntity savedChild1 = GroupInfoEntity.fromEntityNode(childGroup1);
+        GroupInfoEntity savedChild2 = GroupInfoEntity.fromEntityNode(childGroup2);
+        GroupInfoEntity savedChild3 = GroupInfoEntity.fromEntityNode(childGroup3);
+        GroupInfoEntity savedGroupToDelete = GroupInfoEntity.fromEntityNode(groupToDelete);
 
         groupRepository.addChildGroupById(savedGroupToDelete.getId(), savedChild1.getId());
         groupRepository.addChildGroupById(savedGroupToDelete.getId(), savedChild2.getId());
         groupRepository.addChildGroupById(savedGroupToDelete.getId(), savedChild3.getId());
 
+        when(groupRepository.findDirectParents(anyList())).thenReturn(Collections.emptyList());
+        when(groupRepository.findByEmail(any())).thenReturn(Collections.singletonList(savedGroupToDelete));
+
         //when
-        deleteGroupRepoJdbc.deleteGroup(groupToDelete);
+        sut.deleteGroup(groupToDelete);
+        when(groupRepository.findByEmail(any())).thenReturn(Collections.emptyList());
 
         //then
         assertTrue(groupRepository.findByEmail(groupToDelete.getNodeId()).isEmpty());
@@ -86,17 +87,17 @@ public class DeleteGroupRepoJdbcTest {
         EntityNode parentGroup2 = getDataGroupNode("y");
         EntityNode parentGroup3 = getDataGroupNode("z");
 
-        GroupInfoEntity savedParent1 = groupRepository.save(GroupInfoEntity.fromEntityNode(parentGroup1));
-        GroupInfoEntity savedParent2 = groupRepository.save(GroupInfoEntity.fromEntityNode(parentGroup2));
-        GroupInfoEntity savedParent3 = groupRepository.save(GroupInfoEntity.fromEntityNode(parentGroup3));
-        GroupInfoEntity savedGroupToDelete = groupRepository.save(GroupInfoEntity.fromEntityNode(groupToDelete));
+        GroupInfoEntity savedParent1 = GroupInfoEntity.fromEntityNode(parentGroup1);
+        GroupInfoEntity savedParent2 = GroupInfoEntity.fromEntityNode(parentGroup2);
+        GroupInfoEntity savedParent3 = GroupInfoEntity.fromEntityNode(parentGroup3);
+        GroupInfoEntity savedGroupToDelete = GroupInfoEntity.fromEntityNode(groupToDelete);
 
-        groupRepository.addChildGroupById(savedParent1.getId(), savedGroupToDelete.getId());
-        groupRepository.addChildGroupById(savedParent2.getId(), savedGroupToDelete.getId());
-        groupRepository.addChildGroupById(savedParent3.getId(), savedGroupToDelete.getId());
+        when(groupRepository.findDirectParents(anyList())).thenReturn(Collections.emptyList());
+        when(groupRepository.findByEmail(any())).thenReturn(Collections.singletonList(savedGroupToDelete));
 
         //when
-        deleteGroupRepoJdbc.deleteGroup(groupToDelete);
+        sut.deleteGroup(groupToDelete);
+        when(groupRepository.findByEmail(any())).thenReturn(Collections.emptyList());
 
         //then
         assertTrue(groupRepository.findByEmail(groupToDelete.getNodeId()).isEmpty());
@@ -112,7 +113,7 @@ public class DeleteGroupRepoJdbcTest {
     public void shouldReturnIfTheGivenGroupIsNotFoundWhenDeleteGroup() throws Exception{
         EntityNode groupNode = getCommonGroup("newgroup");
 
-        deleteGroupRepoJdbc.deleteGroup(groupNode);
+        sut.deleteGroup(groupNode);
 
         verify(auditLogger).deleteGroup(AuditStatus.SUCCESS, groupNode.getNodeId());
         verify(auditLogger).deleteGroup(AuditStatus.SUCCESS, groupNode.getNodeId());
