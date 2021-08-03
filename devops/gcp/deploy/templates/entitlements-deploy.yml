@@ -38,9 +38,9 @@ spec:
         - containerPort: 8080
         resources:
           requests:
-            cpu: "0.25"
-            memory: "128M"
+            cpu: "{{ .Values.data.requests_cpu }}"
+            memory: "{{ .Values.data.requests_memory }}"
           limits:
-            cpu: "1"
-            memory: "1G"
+            cpu: "{{ .Values.data.limits_cpu }}"
+            memory: "{{ .Values.data.limits_memory }}"
       serviceAccountName: "{{ .Values.data.serviceAccountName }}"
