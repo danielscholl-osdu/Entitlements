@@ -28,6 +28,10 @@ spec:
         app: {{ .Chart.Name }}
         aadpodidbinding: osdu-identity
     spec:
+{{- if .Values.global.isAutoscalingEnabled }}
+      nodeSelector:
+        nodepool: {{ .Values.global.nodepool }} 
+{{- end }}  
       volumes:
         - name: azure-keyvault
           csi:
@@ -78,4 +82,4 @@ spec:
             - name: redis_ttl_seconds
               value: "{{ .Values.config.redis.ttl.seconds }}"
             - name: azure_istioauth_enabled
-              value: "true"
+              value: "true" 
