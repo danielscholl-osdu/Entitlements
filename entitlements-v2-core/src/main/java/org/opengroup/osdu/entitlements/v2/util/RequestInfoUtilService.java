@@ -23,13 +23,13 @@ public class RequestInfoUtilService {
 
     public String getAppId(final DpsHeaders dpsHeaders) {
         String appId = dpsHeaders.getAppId();
-        log.info(String.format("Getting App Id from Headers: %s", appId));
+        log.debug(String.format("Getting App Id from Headers: %s", appId));
         return appId;
     }
 
     public String getUserId(final DpsHeaders dpsHeaders) {
         String userId = dpsHeaders.getUserId();
-        log.info(String.format("Getting User Id from Headers: %s", userId));
+        log.debug(String.format("Getting User Id from Headers: %s", userId));
         return userId;
     }
 

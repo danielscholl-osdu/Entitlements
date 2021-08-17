@@ -38,7 +38,7 @@ public class ResponseLogFilter implements Filter {
                          FilterChain filterChain) throws IOException, ServletException {
         String uri = requestInfo.getUri();
         if (isNotHealthCheckRequest(uri)) {
-            logger.info(String.format("ResponseLogFilter#doFilter start timestamp: %d", System.currentTimeMillis()));
+            logger.debug(String.format("ResponseLogFilter#doFilter start timestamp: %d", System.currentTimeMillis()));
         }
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
@@ -62,7 +62,7 @@ public class ResponseLogFilter implements Filter {
         } finally {
             if (isNotHealthCheckRequest(uri)) {
                 logRequest(uri, httpServletRequest, httpServletResponse, startTime);
-                logger.info(String.format("ResponseLogFilter#doFilter done timestamp: %d", System.currentTimeMillis()));
+                logger.debug(String.format("ResponseLogFilter#doFilter done timestamp: %d", System.currentTimeMillis()));
             }
         }
     }
