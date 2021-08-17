@@ -14,6 +14,8 @@
 
 global:
   replicaCount: 1
+  nodepool: services
+  isAutoscalingEnabled: false
 
 image:
   repository: community.opengroup.org:5555/osdu/platform/security-and-compliance/entitlements
