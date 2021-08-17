@@ -44,7 +44,7 @@ public class CreateGroupService {
                 throw new AppException(HttpStatus.PRECONDITION_FAILED.value(), HttpStatus.PRECONDITION_FAILED.getReasonPhrase(), String.format("%s's group quota hit. Identity can't belong to more than %d groups",
                         dataRootGroupNode.getNodeId(), dataRootGroupQuota));
             }
-            log.info(String.format("Creating a group with root group node: %s", dataRootGroupNode.getName()));
+            log.debug(String.format("Creating a group with root group node: %s", dataRootGroupNode.getName()));
             CreateGroupRepoDto createGroupRepoDto = CreateGroupRepoDto.builder()
                     .requesterNode(requesterNode)
                     .dataRootGroupNode(dataRootGroupNode)
@@ -52,7 +52,7 @@ public class CreateGroupService {
                     .partitionId(createGroupServiceDto.getPartitionId()).build();
             createGroup(groupNode, createGroupRepoDto);
         } else {
-            log.info("Creating a group with no root group node");
+            log.debug("Creating a group with no root group node");
             CreateGroupRepoDto createGroupRepoDto = CreateGroupRepoDto.builder()
                     .requesterNode(requesterNode)
                     .dataRootGroupNode(null)

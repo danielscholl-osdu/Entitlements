@@ -24,13 +24,13 @@ public class ListGroupService {
     private final GroupCacheService groupCacheService;
 
     public Set<ParentReference> getGroups(ListGroupServiceDto listGroupServiceDto) {
-        log.info(String.format("ListGroupService#run timestamp: %d", System.currentTimeMillis()));
+        log.debug(String.format("ListGroupService#run timestamp: %d", System.currentTimeMillis()));
         String requesterId = listGroupServiceDto.getRequesterId();
         log.info(String.format("requested by %s", requesterId));
         Set<ParentReference> groups = new HashSet<>();
         listGroupServiceDto.getPartitionIds().forEach(partitionId ->
                 groups.addAll(groupCacheService.getFromPartitionCache(requesterId, partitionId)));
-        log.info(String.format("ListGroupService#run cache look up done timestamp: %d", System.currentTimeMillis()));
+        log.debug(String.format("ListGroupService#run cache look up done timestamp: %d", System.currentTimeMillis()));
         String serviceAccount = requestInfo.getTenantInfo().getServiceAccount();
         if (serviceAccount.equalsIgnoreCase(requesterId) || Strings.isNullOrEmpty(listGroupServiceDto.getAppId())) {
             return groups;
@@ -41,11 +41,11 @@ public class ListGroupService {
     private Set<ParentReference> filterGroupsByAppId(Set<ParentReference> groups,
                                                      ListGroupServiceDto listGroupServiceDto) {
         String appId = listGroupServiceDto.getAppId();
-        log.info(String.format("Filtering groups based on caller's appId: %s", appId));
+        log.debug(String.format("Filtering groups based on caller's appId: %s", appId));
         Set<ParentReference> accessibleGroups = new HashSet<>();
         listGroupServiceDto.getPartitionIds().forEach(partitionId ->
                 accessibleGroups.addAll(retrieveGroupRepo.filterParentsByAppId(groups, partitionId, appId)));
-        log.info(String.format(
+        log.debug(String.format(
                 "ListGroupService#run cache app id filter done timestamp: %d", System.currentTimeMillis()));
         return accessibleGroups;
     }

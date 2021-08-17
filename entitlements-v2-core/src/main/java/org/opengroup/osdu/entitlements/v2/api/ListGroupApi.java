@@ -46,7 +46,7 @@ public class ListGroupApi {
                 .desId(userId)
                 .memberEmail(userId)
                 .build();
-        log.info(String.format("ListGroupResponseDto#create done timestamp: %d", System.currentTimeMillis()));
+        log.debug(String.format("ListGroupResponseDto#create done timestamp: %d", System.currentTimeMillis()));
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 }
