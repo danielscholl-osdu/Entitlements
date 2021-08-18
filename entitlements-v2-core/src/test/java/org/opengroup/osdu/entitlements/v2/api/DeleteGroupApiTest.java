@@ -1,6 +1,5 @@
 package org.opengroup.osdu.entitlements.v2.api;
 
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +10,7 @@ import org.opengroup.osdu.core.common.model.tenant.TenantInfo;
 import org.opengroup.osdu.core.common.provider.interfaces.ITenantFactory;
 import org.opengroup.osdu.entitlements.v2.auth.AuthorizationService;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
+import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.deletegroup.DeleteGroupServiceDto;
 import org.opengroup.osdu.entitlements.v2.service.DeleteGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -34,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = DeleteGroupApi.class)
 @ComponentScan("org.opengroup.osdu.entitlements.v2")
-public class DeleteGroupApiTests {
+public class DeleteGroupApiTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -68,16 +67,22 @@ public class DeleteGroupApiTests {
         performDeleteGroupRequest(groupId).andExpect(status().isBadRequest());
     }
 
-
     @Test
     public void shouldCallService() throws Exception {
-        ArgumentCaptor<EntityNode> captor1 = ArgumentCaptor.forClass(EntityNode.class);
-        ArgumentCaptor<DeleteGroupServiceDto> captor2 = ArgumentCaptor.forClass(DeleteGroupServiceDto.class);
+        ArgumentCaptor<EntityNode> entityNodeArgumentCaptor = ArgumentCaptor.forClass(EntityNode.class);
+        ArgumentCaptor<DeleteGroupServiceDto> dgsDtoArgumentCaptor = ArgumentCaptor.forClass(DeleteGroupServiceDto.class);
         String groupId = "service.VIEWERS@common.contoso.com";
         performDeleteGroupRequest(groupId).andExpect(status().isNoContent());
 
-        verify(service, times(1)).run(captor1.capture(), captor2.capture());
-        assertThat(captor1.getValue().getNodeId()).isEqualTo("service.viewers@common.contoso.com");
+        verify(service).run(entityNodeArgumentCaptor.capture(), dgsDtoArgumentCaptor.capture());
+        EntityNode actualEntityNode = entityNodeArgumentCaptor.getValue();
+        assertThat(actualEntityNode.getNodeId()).isEqualTo("service.viewers@common.contoso.com");
+        assertThat(actualEntityNode.getName()).isEqualTo("service.viewers");
+        assertThat(actualEntityNode.getDataPartitionId()).isEqualTo("common");
+        assertThat(actualEntityNode.getType()).isEqualTo(NodeType.GROUP);
+        DeleteGroupServiceDto deleteGroupServiceDto = dgsDtoArgumentCaptor.getValue();
+        assertThat(deleteGroupServiceDto.getRequesterId()).isEqualTo("a@b.com");
+        assertThat(deleteGroupServiceDto.getPartitionId()).isEqualTo("common");
     }
 
     private ResultActions performDeleteGroupRequest(String groupEmail) throws Exception {
