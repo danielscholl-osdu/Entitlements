@@ -8,6 +8,8 @@ variables:
   AWS_TEST_SUBDIR: testing/entitlements-v2-test-aws
   AWS_SERVICE: entitlements-v2
   AWS_ENVIRONMENT: dev
+  AWS_DEPLOY_TARGET: EKS
+
 
   IBM_BUILD_SUBDIR: provider/entitlements-v2-ibm
   IBM_INT_TEST_SUBDIR: testing/entitlements-v2-test-ibm
@@ -29,34 +31,36 @@ include:
   - project: "osdu/platform/ci-cd-pipelines"
     file: "build/maven.yml"
 
-  - project: "osdu/platform/ci-cd-pipelines"
-    file: "scanners/fossa-maven.yml"
+  # - project: "osdu/platform/ci-cd-pipelines"
+  #   file: "scanners/fossa-maven.yml"
 
-  - project: "osdu/platform/ci-cd-pipelines"
-    file: "scanners/gitlab-ultimate.yml"
+  # - project: "osdu/platform/ci-cd-pipelines"
+  #   file: "scanners/gitlab-ultimate.yml"
 
-  - project: "osdu/platform/ci-cd-pipelines"
-    file: "cloud-providers/azure.yml"
+  # - project: "osdu/platform/ci-cd-pipelines"
+  #   file: "cloud-providers/azure.yml"
 
   - project: "osdu/platform/ci-cd-pipelines"
     file: "cloud-providers/aws-global.yml"
+    ref: aws-update
 
   - project: "osdu/platform/ci-cd-pipelines"
     file: "cloud-providers/aws-maven.yml"
+    ref: aws-update
 
-  - project: "osdu/platform/ci-cd-pipelines"
-    file: "publishing/pages.yml"
+#   - project: "osdu/platform/ci-cd-pipelines"
+#     file: "publishing/pages.yml"
     
-  - project: "osdu/platform/ci-cd-pipelines"
-    file: "cloud-providers/ibm.yml"
+#   - project: "osdu/platform/ci-cd-pipelines"
+#     file: "cloud-providers/ibm.yml"
 
-  - project: "osdu/platform/ci-cd-pipelines"
-    file: "cloud-providers/osdu-gcp-gke.yml"
+#   - project: "osdu/platform/ci-cd-pipelines"
+#     file: "cloud-providers/osdu-gcp-gke.yml"
 
-#Include osdu-gcp-global.yml at k8s common pipeline
-  - project: "osdu/platform/ci-cd-pipelines"
-    file: 'cloud-providers/osdu-gcp-global.yml'
+# #Include osdu-gcp-global.yml at k8s common pipeline
+#   - project: "osdu/platform/ci-cd-pipelines"
+#     file: 'cloud-providers/osdu-gcp-global.yml'
 
-osdu-gcp-deploy-deployment:
-  variables:
-    OSDU_GCP_SERVICE: entitlements
+# osdu-gcp-deploy-deployment:
+#   variables:
+#     OSDU_GCP_SERVICE: entitlements
