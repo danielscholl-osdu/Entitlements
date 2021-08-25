@@ -54,6 +54,17 @@ limitations under the License.
                 <azure.devops.token>no-default</azure.devops.token>
             </properties>
         </profile>
+        <profile>
+            <id>sonar</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <sonar.host.url>
+                    ${env.SONAR_URL}
+                </sonar.host.url>
+            </properties>
+        </profile>
     </profiles>
 
     <servers>

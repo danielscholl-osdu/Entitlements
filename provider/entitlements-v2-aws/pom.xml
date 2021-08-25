@@ -13,7 +13,7 @@
     <artifactId>entitlements-v2-aws</artifactId>
 
     <properties>
-        <core-lib-aws.version>0.10.0</core-lib-aws.version>
+        <core-lib-aws.version>0.11.0-SNAPSHOT</core-lib-aws.version>
         <reactor.netty.version>0.9.5.RELEASE</reactor.netty.version>
         <reactor.core.version>3.3.0.RELEASE</reactor.core.version>
         <springfox-version>2.7.0</springfox-version>
@@ -192,6 +192,18 @@
                             <classifier>spring-boot</classifier>
                             <mainClass>org.opengroup.osdu.entitlements.v2.aws.EntitlementsV2Application</mainClass>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>6.2.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

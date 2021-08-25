@@ -21,6 +21,11 @@ env:
   secrets-manager:
     DOCKER_USERNAME: /osdu/devops/docker_credentials:username
     DOCKER_PASSWORD: /osdu/devops/docker_credentials:password
+    SONAR_USERNAME: /osdu/devops/sonar_credentials:username
+    SONAR_PASSWORD: /osdu/devops/sonar_credentials:password
+  
+  parameter-store:
+    SONAR_URL: /osdu/devops/sonar_url
 
 phases:
   install:
@@ -58,7 +63,7 @@ phases:
       - printenv
 
       - echo "Building primary service assemblies..."
-      - mvn -ntp -B test install -pl entitlements-v2-core,provider/entitlements-v2-aws -Ddeployment.environment=prod
+      - mvn -ntp -B test install sonar:sonar -pl .,entitlements-v2-core,provider/entitlements-v2-aws -Ddeployment.environment=prod -Dsonar.login=${SONAR_USERNAME} -Dsonar.password=${SONAR_PASSWORD} -Dsonar.branch.name=${BRANCH_NAME} 
 
       - echo "Building integration testing assemblies and gathering artifacts..."
       - ./testing/entitlements-v2-test-aws/build-aws/prepare-dist.sh
@@ -82,6 +87,9 @@ phases:
         python provider/entitlements-v2-aws/build-aws/build-info.py --branch ${CODEBUILD_SOURCE_VERSION} --commit ${CODEBUILD_RESOLVED_SOURCE_VERSION} \
           --buildid ${CODEBUILD_BUILD_ID} --buildnumber ${CODEBUILD_BUILD_NUMBER} --reponame ${REPO_NAME} --outdir ${OUTPUT_DIR} \
           --artifact ${ECR_IMAGE}
+  post_build:
+    commands:
+      - cp provider/entitlements-v2-aws/target/dependency-check-report.html ${OUTPUT_DIR}
 reports:
   SurefireReports: # CodeBuild will create a report group called "SurefireReports".
     files: #Store all of the files
