@@ -61,7 +61,7 @@ public class RequestHeaderInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws IOException {
-        if (TRUE.equals(validateSwaggerRequest(request))) {
+        if (isSwaggerRequest(request) || isVersionInfo(request)) {
             return true;
         }
 
@@ -90,9 +90,14 @@ public class RequestHeaderInterceptor implements HandlerInterceptor {
         return false;
     }
 
-    private Boolean validateSwaggerRequest(HttpServletRequest request) {
+    private boolean isSwaggerRequest(HttpServletRequest request) {
         String endpoint = request.getRequestURI().replace(request.getContextPath(), "");
         return endpoint.startsWith("/swagger") || endpoint.startsWith("/webjars");
+    }
+
+    private boolean isVersionInfo(HttpServletRequest request) {
+        String endpoint = request.getRequestURI().replace(request.getContextPath(), "");
+        return endpoint.startsWith("/info");
     }
 
     private UserInfo getUserInfoFromToken(String token) {

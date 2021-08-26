@@ -33,6 +33,8 @@ tags:
     description: Update Group Api
   - name: list-member-api
     description: List Member Api
+  - name: info
+    description: Version info endpoint
 paths:
   /_ah/liveness_check:
     get:
@@ -481,6 +483,21 @@ paths:
       security:
         - JWT:
             - global
+  /info:
+    get:
+      tags:
+        - info
+      summary: Version info
+      description: For deployment available public `/info` endpoint, \
+          \ which provides build and git related information.
+      operationId: Version info
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Version info.
+          schema:
+            $ref: '#/definitions/VersionInfo'
 securityDefinitions:
   JWT:
     type: apiKey
@@ -501,3 +518,43 @@ definitions:
     type: object
   UpdateGroupResponseDto:
     type: object
+  VersionInfo:
+    type: object
+    properties:
+      groupId:
+        type: string
+        description: Maven artifact group ID.
+      actifactId:
+        type: string
+        description: Maven artifact ID.
+      version:
+        type: string
+        description: Maven artifact version
+      buildTime:
+        type: string
+        description: Maven artifact build time
+      branch:
+        type: string
+        description: Current git branch
+      commitId:
+        type: string
+        description: Latest commit hash
+      commitMessage:
+        type: string
+        description: Latest commit message
+      connectedOuterServices:
+        type: array
+        description: Connected outer services information
+        items:
+          $ref: '#/definitions/ConnectedOuterService'
+    description: Version info.
+  ConnectedOuterService:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Connected outer service name.
+      version:
+        type: string
+        description: Connected outer service version.
+    description: Connected outer service information.
