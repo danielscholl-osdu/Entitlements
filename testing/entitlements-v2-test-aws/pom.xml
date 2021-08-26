@@ -50,11 +50,17 @@
             <artifactId>os-core-lib-aws</artifactId>
             <version>${core-lib-aws.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.opengroup.osdu</groupId>
+                    <artifactId>os-core-common</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.opengroup.osdu</groupId>
             <artifactId>os-core-common</artifactId>
-            <version>0.10.0</version>
+            <version>0.11.0-rc4</version>
             <scope>test</scope>
         </dependency>
         <dependency>

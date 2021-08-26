@@ -3,6 +3,7 @@ package org.opengroup.osdu.entitlements.v2.acceptance.util;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import lombok.extern.slf4j.Slf4j;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.request.RequestData;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -21,6 +22,7 @@ import java.util.LinkedHashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
+@Slf4j
 public class HttpClientService {
 
     private final Client client;
@@ -32,7 +34,9 @@ public class HttpClientService {
     }
 
     public ClientResponse send(RequestData requestData) throws Exception {
-        WebResource webResource = client.resource(new URL(baseUrl + requestData.getRelativePath()).toString());
+        String resourceUrl = new URL(baseUrl + requestData.getRelativePath()).toString();
+        log.info("Sending request to URL: {}", resourceUrl);
+        WebResource webResource = client.resource(resourceUrl);
         if (!requestData.getQueryParams().isEmpty()) {
             for (Entry<String, String> entry : requestData.getQueryParams().entrySet()) {
                 webResource = webResource.queryParam(entry.getKey(), entry.getValue());

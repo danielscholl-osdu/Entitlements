@@ -15,6 +15,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(requestHeaderInterceptor).addPathPatterns("/**").excludePathPatterns("/_ah/**");
+        registry
+            .addInterceptor(requestHeaderInterceptor)
+            .addPathPatterns("/**")
+            .excludePathPatterns("/_ah/**", "/info");
     }
 }
