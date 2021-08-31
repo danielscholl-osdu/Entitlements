@@ -44,7 +44,10 @@ public class RemoveMemberService {
         }
         EntityNode memberNode = retrieveGroupRepo.getMemberNodeForRemovalFromGroup(memberEmail, partitionId);
         removeMemberServiceDto.setChildrenReference(memberNode.getDirectChildReference(retrieveGroupRepo, existingGroupEntityNode).orElseThrow(
-                () -> new AppException(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), String.format("Group %s does not have %s as a child/member", groupEmail, memberEmail))
+                () -> new AppException(HttpStatus.NOT_FOUND.value(),
+                    HttpStatus.NOT_FOUND.getReasonPhrase(), String.format("Group %s does not have"
+                    + " %s as a direct child/member. Please check the group hierarchy for an "
+                    + "explicit member declaration.", groupEmail, memberEmail))
         ));
 
         if (serviceAccountsConfigurationService.isMemberProtectedServiceAccount(memberNode, existingGroupEntityNode)) {
