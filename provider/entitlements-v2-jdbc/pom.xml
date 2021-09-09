@@ -57,12 +57,6 @@
       <groupId>org.opengroup.osdu</groupId>
       <artifactId>core-lib-gcp</artifactId>
       <version>0.11.0</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.opengroup.osdu</groupId>
-          <artifactId>os-core-common</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
