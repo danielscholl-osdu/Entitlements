@@ -28,3 +28,5 @@ config:
   redis:
     ttl:
       seconds: #{ENTV2_REDIS_TTL_SECONDS}#
+
+istioDnsHost: #{ISTIO_DNS_HOST}#
