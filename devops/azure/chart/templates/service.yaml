@@ -23,5 +23,6 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
+      name: http
   selector:
     app: {{ .Chart.Name }}
