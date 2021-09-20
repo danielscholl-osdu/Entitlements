@@ -26,6 +26,7 @@ spec:
       - Authorization
       - Data-Partition-Id
       - Correlation-Id
+      - Content-Type
       allowMethods:
       - POST
       - GET
