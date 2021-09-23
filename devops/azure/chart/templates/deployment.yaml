@@ -28,10 +28,10 @@ spec:
         app: {{ .Chart.Name }}
         aadpodidbinding: osdu-identity
     spec:
-{{- if .Values.global.isAutoscalingEnabled }}
+      {{- if .Values.global.isAutoscalingEnabled }}
       nodeSelector:
         nodepool: {{ .Values.global.nodepool }} 
-{{- end }}  
+      {{- end }}
       volumes:
         - name: azure-keyvault
           csi:
@@ -45,6 +45,15 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+          {{- if has .Values.env .Values.featureFlag.resourceLimits.enabledEnvs }}
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "600Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1300Mi"
+          {{- end }}
           readinessProbe:
             httpGet:
               path: {{ .Values.server.servlet.contextPath }}/_ah/readiness_check

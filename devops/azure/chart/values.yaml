@@ -37,3 +37,10 @@ config:
       seconds: 1
 
 istioDnsHost: ""
+
+env: demo
+
+featureFlag:
+  resourceLimits:
+    enabledEnvs:
+    - demo
