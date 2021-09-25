@@ -62,21 +62,23 @@ public class RequestHeaderInterceptor implements HandlerInterceptor {
         log.info("Intercepted the request. Now validating token..");
 
         Map<String,String> headers = dpsheaders.getHeaders();
-        //validate JWT token here
-        // extract custom attribute from the JWT token using OAuth 2.0 and
-        String memberEmail = validateJwt(headers);
-        if(memberEmail!=null) {
-            // If JWT validation succeeds/ can extract user identity
-            //       return true = requests moves forward to the core API code
-            // Update the request Header to include user identity
-            headers.put("x-user-id", memberEmail);
-
-            return true;
-        }
-        else //If JWT validation fails/ cannot extract user identity
-            //       return false = response is handled here
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
+        log.info(headers.get("jwt_decoded"));
+        return true;
+//        //validate JWT token here
+//        // extract custom attribute from the JWT token using OAuth 2.0 and
+//        String memberEmail = validateJwt(headers);
+//        if(memberEmail!=null) {
+//            // If JWT validation succeeds/ can extract user identity
+//            //       return true = requests moves forward to the core API code
+//            // Update the request Header to include user identity
+//            headers.put("x-user-id", memberEmail);
+//
+//            return true;
+//        }
+//        else //If JWT validation fails/ cannot extract user identity
+//            //       return false = response is handled here
+//            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+//            return false;
     }
 
 
