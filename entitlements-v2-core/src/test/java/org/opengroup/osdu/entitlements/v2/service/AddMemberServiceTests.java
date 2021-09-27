@@ -84,6 +84,7 @@ public class AddMemberServiceTests {
                 .dataPartitionId("common").description("member@contoso.com").appIds(Collections.emptySet()).build();
         ParentTreeDto parentTreeDto = ParentTreeDto.builder().parentReferences(Collections.emptySet()).maxDepth(2).build();
         when(retrieveGroupRepo.loadAllParents(memberNode)).thenReturn(parentTreeDto);
+        when(retrieveGroupRepo.loadAllParents(groupNode)).thenReturn(parentTreeDto);
 
         AddMemberDto addMemberDto = new AddMemberDto("member@contoso.com", Role.MEMBER);
         AddMemberServiceDto addMemberServiceDto = AddMemberServiceDto.builder()
@@ -118,6 +119,7 @@ public class AddMemberServiceTests {
                 .dataPartitionId("common").description("member@xxx.com").appIds(Collections.emptySet()).build();
         ParentTreeDto parentTreeDto = ParentTreeDto.builder().parentReferences(Collections.emptySet()).maxDepth(2).build();
         when(retrieveGroupRepo.loadAllParents(memberNode)).thenReturn(parentTreeDto);
+        when(retrieveGroupRepo.loadAllParents(groupNode)).thenReturn(parentTreeDto);
 
         AddMemberDto addMemberDto = new AddMemberDto("member@xxx.com", Role.MEMBER);
         AddMemberServiceDto addMemberServiceDto = AddMemberServiceDto.builder()
@@ -181,6 +183,7 @@ public class AddMemberServiceTests {
         when(retrieveGroupRepo.hasDirectChild(rootDataGroupNode, ChildrenReference.createChildrenReference(requesterNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
         ParentTreeDto parentTreeDto = ParentTreeDto.builder().parentReferences(Collections.emptySet()).maxDepth(2).build();
         when(retrieveGroupRepo.loadAllParents(memberNode)).thenReturn(parentTreeDto);
+        when(retrieveGroupRepo.loadAllParents(groupNode)).thenReturn(parentTreeDto);
 
         AddMemberDto addMemberDto = new AddMemberDto("member@xxx.com", Role.MEMBER);
         AddMemberServiceDto addMemberServiceDto = AddMemberServiceDto.builder()
@@ -390,6 +393,43 @@ public class AddMemberServiceTests {
                     .partitionId("common")
                     .build();
 
+            addMemberService.run(addMemberDto, addMemberServiceDto);
+            fail("should throw exception");
+        } catch (AppException ex) {
+            verify(addMemberRepo, never()).addMember(any(), any());
+            assertThat(ex.getError().getCode()).isEqualTo(400);
+        } catch (Exception ex) {
+            fail(String.format("should not throw exception: %s", ex.getMessage()));
+        }
+    }
+
+    @Test
+    public void should_throw400_ifCyclicMembershipExists() {
+        HashSet<ParentReference> parents = new HashSet<>();
+        parents.add(ParentReference.builder().id("users.x@common.contoso.com").dataPartitionId("common").build());
+
+        EntityNode memberNode = EntityNode.builder().nodeId("users.x@common.contoso.com").name("users.x")
+                .type(NodeType.GROUP).dataPartitionId("common").build();
+        EntityNode groupNode = EntityNode.builder().nodeId("data.x@common.contoso.com").name("data.x")
+                .type(NodeType.GROUP).dataPartitionId("common").build();
+        EntityNode requesterNode = EntityNode.builder().nodeId("requesterid").name("requesterid").type(NodeType.USER).dataPartitionId("common").build();
+        when(config.getDomain()).thenReturn("contoso.com");
+        when(retrieveGroupRepo.getEntityNode("users.x@common.contoso.com", "common")).thenReturn(Optional.of(memberNode));
+        when(retrieveGroupRepo.groupExistenceValidation("data.x@common.contoso.com", "common")).thenReturn(groupNode);
+        when(retrieveGroupRepo.getEntityNode("requesterid", "common")).thenReturn(Optional.of(requesterNode));
+        when(retrieveGroupRepo.groupExistenceValidation("users.x@common.contoso.com", "common")).thenReturn(groupNode);
+        when(retrieveGroupRepo.hasDirectChild(groupNode, ChildrenReference.createChildrenReference(requesterNode, Role.OWNER))).thenReturn(Boolean.TRUE);
+        when(retrieveGroupRepo.loadAllParents(memberNode)).thenReturn(ParentTreeDto.builder().parentReferences(Collections.emptySet()).maxDepth(2).build());
+        when(retrieveGroupRepo.loadAllParents(groupNode)).thenReturn(ParentTreeDto.builder().parentReferences(parents).maxDepth(2).build());
+
+        AddMemberDto addMemberDto = new AddMemberDto("users.x@common.contoso.com", Role.MEMBER);
+        AddMemberServiceDto addMemberServiceDto = AddMemberServiceDto.builder()
+                .groupEmail("data.x@common.contoso.com")
+                .requesterId("requesterid")
+                .partitionId("common")
+                .build();
+
+        try {
             addMemberService.run(addMemberDto, addMemberServiceDto);
             fail("should throw exception");
         } catch (AppException ex) {

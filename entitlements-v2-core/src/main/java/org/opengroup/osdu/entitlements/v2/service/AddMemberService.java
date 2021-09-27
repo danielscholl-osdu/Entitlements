@@ -59,8 +59,9 @@ public class AddMemberService {
             log.error(String.format("Identity %s already belong to %d groups", addMemberDto.getEmail(), allExistingParents.size()));
             throw new AppException(HttpStatus.PRECONDITION_FAILED.value(), HttpStatus.PRECONDITION_FAILED.getReasonPhrase(), String.format("%s's group quota hit. Identity can't belong to more than %d groups", addMemberDto.getEmail(), EntityNode.MAX_PARENTS));
         }
-        if (existingGroupEntityNode.getNodeId().equalsIgnoreCase(addMemberDto.getEmail())) {
-            throw new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Cyclic membership is not allowed");
+        Set<ParentReference> allParentsOfGroup = retrieveGroupRepo.loadAllParents(existingGroupEntityNode).getParentReferences();
+        Set<String> allParentsOfGroupEmails = allParentsOfGroup.stream().map(ref -> ref.getId()).collect(Collectors.toSet());
+        if (allParentsOfGroupEmails.contains(addMemberDto.getEmail()) || existingGroupEntityNode.getNodeId().equalsIgnoreCase(addMemberDto.getEmail())) {            throw new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Cyclic membership is not allowed");
         }
         AddMemberRepoDto addMemberRepoDto = AddMemberRepoDto.builder().memberNode(memberNode).role(addMemberDto.getRole()).
                 partitionId(addMemberServiceDto.getPartitionId()).existingParents(allExistingParents).build();
