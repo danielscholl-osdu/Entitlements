@@ -12,7 +12,11 @@ public class ApiInputValidation {
     public static void validateEmailAndBelongsToPartition(String groupEmail, String partitionDomain) {
         validateEmail(groupEmail);
         if (!groupEmail.endsWith("@" + partitionDomain)) {
-            throw new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Data Partition Id does not match with the group");
+      throw new AppException(
+          HttpStatus.BAD_REQUEST.value(),
+          HttpStatus.BAD_REQUEST.getReasonPhrase(),
+          "Wrong partition domain for email: 'DataPartitionId.Domain' pattern should be used. "
+              + "Data Partition Id should match with the group.");
         }
     }
 

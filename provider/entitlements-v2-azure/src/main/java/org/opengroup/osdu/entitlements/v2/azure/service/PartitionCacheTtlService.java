@@ -91,7 +91,7 @@ public class PartitionCacheTtlService {
      * Refresh the ttl info cache every 5 minutes
      */
     @Scheduled(cron = "0 */5 * ? * *")
-    private void refreshTtlInfo() {
+    protected void refreshTtlInfo() {
         logger.info(LOGGER_NAME, "Starting a scheduled cron job to update cache ttls for data partitions", null);
         DpsHeaders dpsHeaders = new DpsHeaders();
         dpsHeaders.put(DpsHeaders.AUTHORIZATION, "Bearer " + tokenService.getAuthorizationToken());

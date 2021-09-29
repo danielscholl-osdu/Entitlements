@@ -28,3 +28,12 @@ config:
   redis:
     ttl:
       seconds: #{ENTV2_REDIS_TTL_SECONDS}#
+
+istioDnsHost: #{ISTIO_DNS_HOST}#
+
+env: #{ENVIRONMENT_NAME}#
+
+featureFlag:
+  resourceLimits:
+    enableEnvs:
+    - demo

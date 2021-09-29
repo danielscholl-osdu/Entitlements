@@ -12,7 +12,8 @@ public class ApiInputValidationTest {
             ApiInputValidation.validateEmailAndBelongsToPartition("data.x.viewers@common.contoso.com", "common2.contoso.com");
             Assert.fail();
         } catch (AppException e) {
-            Assert.assertEquals("Data Partition Id does not match with the group", e.getError().getMessage());
+            Assert.assertEquals("Wrong partition domain for email: 'DataPartitionId.Domain' "
+                + "pattern should be used. Data Partition Id should match with the group.", e.getError().getMessage());
             Assert.assertEquals(400, e.getError().getCode());
             Assert.assertEquals("Bad Request", e.getError().getReason());
         }

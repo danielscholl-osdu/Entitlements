@@ -3,6 +3,7 @@ package org.opengroup.osdu.entitlements.v2.errors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
+import org.opengroup.osdu.core.common.model.http.AppError;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.partition.PartitionException;
 import org.opengroup.osdu.entitlements.v2.validation.PartitionHeaderValidationService;
@@ -34,7 +35,7 @@ public class SpringExceptionMapper extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AppException.class)
     protected ResponseEntity<Object> handleAppException(AppException e) {
         if (e.getOriginalException() instanceof PartitionException) {
-            e.getError().setCode(HttpStatus.UNAUTHORIZED.value());
+            handlePartitionException(e.getError());
         }
 
         return this.getErrorResponse(e);
@@ -69,6 +70,12 @@ public class SpringExceptionMapper extends ResponseEntityExceptionHandler {
             return this.getErrorResponse(new AppException(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase(), PartitionHeaderValidationService.INVALID_DP_HEADER_ERROR));
         }
         return this.getErrorResponse(new AppException(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), "An unknown error has occurred", e));
+    }
+
+    private void handlePartitionException(AppError error) {
+        error.setCode(HttpStatus.UNAUTHORIZED.value());
+        error.setReason("Partition Service issue");
+        error.setMessage("Cannot authorize user in requested partition");
     }
 
     private ResponseEntity<Object> getErrorResponse(AppException e) {
