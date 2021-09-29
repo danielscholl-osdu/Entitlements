@@ -6,14 +6,14 @@
     <parent>
         <artifactId>entitlements-v2-service</artifactId>
         <groupId>org.opengroup.osdu.entitlements.v2</groupId>
-        <version>0.11.0-SNAPSHOT</version>
+        <version>0.12.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>entitlements-v2-aws</artifactId>
 
     <properties>
-        <core-lib-aws.version>0.11.0-SNAPSHOT</core-lib-aws.version>
+        <core-lib-aws.version>0.11.0</core-lib-aws.version>
         <reactor.netty.version>0.9.5.RELEASE</reactor.netty.version>
         <reactor.core.version>3.3.0.RELEASE</reactor.core.version>
         <springfox-version>2.7.0</springfox-version>
@@ -30,12 +30,6 @@
             <groupId>org.opengroup.osdu.core.aws</groupId>
             <artifactId>os-core-lib-aws</artifactId>
             <version>${core-lib-aws.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.opengroup.osdu</groupId>
-                    <artifactId>os-core-common</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.opengroup.osdu</groupId>

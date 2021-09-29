@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.opengroup.osdu.entitlements.v2</groupId>
         <artifactId>os-entitlements-v2-testing</artifactId>
-        <version>0.11.0-SNAPSHOT</version>
+        <version>0.12.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>entitlements-v2-test-aws</artifactId>
-    <version>0.11.0-SNAPSHOT</version>
+    <version>0.12.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.main.basedir>${project.basedir}</project.main.basedir>
         <jackson.version>2.10.1</jackson.version>
-        <core-lib-aws.version>0.11.0-SNAPSHOT</core-lib-aws.version>
+        <core-lib-aws.version>0.11.0</core-lib-aws.version>
         <junit.version>4.12</junit.version>
         <netty-all.version>4.1.50.Final</netty-all.version>
     </properties>
@@ -50,17 +50,11 @@
             <artifactId>os-core-lib-aws</artifactId>
             <version>${core-lib-aws.version}</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.opengroup.osdu</groupId>
-                    <artifactId>os-core-common</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.opengroup.osdu</groupId>
             <artifactId>os-core-common</artifactId>
-            <version>0.11.0-rc4</version>
+            <version>0.11.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>

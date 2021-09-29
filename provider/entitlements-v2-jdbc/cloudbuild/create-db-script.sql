@@ -13,7 +13,7 @@ email character varying COLLATE pg_catalog."default",
 partition_id character varying COLLATE pg_catalog."default",
 CONSTRAINT group_pkey PRIMARY KEY (id),
 CONSTRAINT group_email_key UNIQUE (email),
-CONSTRAINT group_name_key UNIQUE (name)
+CONSTRAINT group_name_partition_id_key UNIQUE (name, partition_id)
 )
 
 TABLESPACE pg_default;
