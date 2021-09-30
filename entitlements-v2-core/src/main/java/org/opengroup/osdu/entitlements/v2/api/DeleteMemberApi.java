@@ -2,6 +2,7 @@ package org.opengroup.osdu.entitlements.v2.api;
 
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
+import org.opengroup.osdu.entitlements.v2.AppProperties;
 import org.opengroup.osdu.entitlements.v2.model.deletemember.DeleteMemberDto;
 import org.opengroup.osdu.entitlements.v2.service.DeleteMemberService;
 import org.opengroup.osdu.entitlements.v2.util.RequestInfoUtilService;
@@ -22,7 +23,7 @@ public class DeleteMemberApi {
     private final PartitionHeaderValidationService partitionHeaderValidationService;
 
     @DeleteMapping("/members/{member_email}")
-    @PreAuthorize("@authorizationFilter.hasAnyPermission()")
+    @PreAuthorize("@authorizationFilter.hasAnyPermission('" + AppProperties.OPS + "')")
     public ResponseEntity<Void> deleteMember(@PathVariable("member_email") String memberEmail) {
         String partitionId = requestInfo.getHeaders().getPartitionId();
         partitionHeaderValidationService.validateSinglePartitionProvided(partitionId);
