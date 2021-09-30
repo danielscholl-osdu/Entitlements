@@ -10,7 +10,6 @@ import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.model.http.Request;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
-import org.opengroup.osdu.entitlements.v2.AppProperties;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.servlet.FilterChain;
@@ -24,6 +23,7 @@ import java.util.Collection;
 import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -80,7 +80,7 @@ public class ResponseLogFilterTests {
         responseLogFilter.doFilter(servletRequest, servletResponse, filterChain);
         assertEquals(200, servletResponse.getStatus());
         ArgumentCaptor<Request> argument = ArgumentCaptor.forClass(Request.class);
-        verify(logger).request(argument.capture());
+        verify(logger).request(eq(ResponseLogFilter.class.getName()), argument.capture());
         Request result = argument.getValue();
         assertEquals("127.0.0.1", result.getIp());
         assertEquals(200, result.getStatus());
