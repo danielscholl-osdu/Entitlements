@@ -18,7 +18,10 @@ metadata:
   name: {{ .Release.Name }}
   namespace: osdu
 spec:
+  {{- if has .Values.env .Values.featureFlag.hpa.enabledEnvs }}
+  {{- else }}
   replicas: {{ .Values.global.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       app: {{ .Chart.Name }}
