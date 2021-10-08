@@ -59,8 +59,14 @@ spec:
           {{- end }}
           readinessProbe:
             httpGet:
-              path: {{ .Values.server.servlet.contextPath }}/_ah/readiness_check
-              port: 80
+              path: /actuator/health
+              port: 8081
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 250
+            periodSeconds: 10
           volumeMounts:
             - name: azure-keyvault
               mountPath: '/mnt/azure-keyvault'
@@ -95,3 +101,5 @@ spec:
               value: "{{ .Values.config.redis.ttl.seconds }}"
             - name: azure_istioauth_enabled
               value: "true" 
+            - name: SPRING_CONFIG_NAME
+              value: "common,application"

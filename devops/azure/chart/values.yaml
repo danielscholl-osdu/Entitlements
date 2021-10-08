@@ -24,9 +24,6 @@ image:
   branch: master
   tag: latest
 
-server:
-  servlet:
-    contextPath: /api/entitlements/v2
 
 config:
   quota:
