@@ -319,6 +319,15 @@
       ]
     },
     {
+      "name": "notification.pubsub",
+      "description": "Notification PubSub group",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
       "name": "service.attribute_catalog.viewers",
       "description": "Attribute Catalog viewers group",
       "members": [
