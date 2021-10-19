@@ -1,7 +1,11 @@
 package org.opengroup.osdu.entitlements.v2.aws.mongodb.core.config;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+
+import org.opengroup.osdu.core.aws.ssm.K8sLocalParameterProvider;
+import org.opengroup.osdu.core.aws.ssm.K8sParameterNotFoundException;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.core.config.converter.SqlDateReadConverter;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.core.config.converter.SqlDateWriteConverter;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.core.helper.BasicMongoDBHelper;
@@ -23,6 +27,7 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Basic configuration for MongoDB beans.
@@ -34,14 +39,52 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
     public static final String SQL_TIMESTAMP_REPLACER_NAME = "_sql_timestamp_replacer_";
     public static final String DOT_NAME_REPLACER = "_dot_replacer_";
 
-    @Value("${osdu.mongodb.uri}")
-    private String mongoURI;
+    @Value("${osdu.mongodb.username}")
+    private String username;
+    @Value("${osdu.mongodb.password}")
+    private String password;
+    @Value("${osdu.mongodb.endpoint}")
+    private String endpoint;
+    @Value("${osdu.mongodb.authDatabase}")
+    private String authDatabase;
+    @Value("${osdu.mongodb.port}")
+    private String port;
+    @Value("${osdu.mongodb.retryWrites}")
+    private String retryWrites;
+    @Value("${osdu.mongodb.writeMode}")
+    private String writeMode;
+    @Value("${osdu.mongodb.useSrvEndpoint}")
+    private String useSrvEndpointStr;
+    @Value("${osdu.mongodb.enableTLS}")
+    private String enableTLS;
+
+    public MongoConfig() throws K8sParameterNotFoundException, JsonProcessingException {
+
+        K8sLocalParameterProvider provider = new K8sLocalParameterProvider();
+
+        if (!provider.getLocalMode()) {
+            Map<String,String> credentials = provider.getCredentialsAsMap("mongodb_credentials");
+
+            if (credentials != null) {
+                username = credentials.get("username");
+                password = credentials.get("password");
+                authDatabase = credentials.get("authDB");
+            }
+
+            endpoint = provider.getParameterAsStringOrDefault("mongodb_host", endpoint);
+            port = provider.getParameterAsStringOrDefault("mongodb_port", port);
+
+        }
+
+    }
+
+    //TODO: use partition to decide DB?
     @Value("${osdu.mongodb.database}")
     private String databaseName;
 
     @Override
     public MongoClient mongoClient() {
-        return MongoClients.create(mongoURI);
+        return MongoClients.create(getMongoURI());
     }
 
     @Override
@@ -53,9 +96,43 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
         this.databaseName = databaseName;
     }
 
-    public void setMongoURI(String mongoURI) {
-        this.mongoURI = mongoURI;
+    public String getMongoURI() {
+
+        Boolean useSrvEndpoint = Boolean.parseBoolean(useSrvEndpointStr);
+
+        if (useSrvEndpoint) {
+
+            String srvUriFormat = "mongodb+srv://%s:%s@%s/%s?ssl=%s&retryWrites=%s&w=%s";
+
+            String srvUri = String.format(
+                srvUriFormat, 
+                username, 
+                password, 
+                endpoint, 
+                authDatabase,
+                enableTLS, 
+                retryWrites, 
+                writeMode);
+
+            return srvUri;            
+        }        
+        else {
+            String uriFormat = "mongodb://%s:%s@%s/%s?ssl=%s&retryWrites=%s&w=%s";
+
+            String uri = String.format(
+                uriFormat, 
+                username, 
+                password, 
+                endpoint, 
+                authDatabase,
+                enableTLS, 
+                retryWrites, 
+                writeMode);
+
+            return uri;
+        }
     }
+    //mongodb://admin:Ymbh%3D48IdQ%26~-XyR@mongodb-0.mongodb-svc.mongodb.svc.cluster.local:27017,mongodb-1.mongodb-svc.mongodb.svc.cluster.local:27017,mongodb-2.mongodb-svc.mongodb.svc.cluster.local:27017/admin?ssl=false
 
     @Bean
     @Autowired
