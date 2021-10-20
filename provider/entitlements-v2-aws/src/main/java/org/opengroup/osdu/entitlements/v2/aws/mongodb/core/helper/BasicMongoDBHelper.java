@@ -38,8 +38,8 @@ public class BasicMongoDBHelper {
      * @param index for creating.
      * @param <T>   class to determinate MongoDB collection.
      */
-    public <T> void ensureIndex(Class<T> clazz, Index index) {
-        mongoOperations.indexOps(clazz).ensureIndex(index);
+    public <T> void ensureIndex(String collectionName, Index index) {
+        mongoOperations.indexOps(collectionName).ensureIndex(index);
     }
 
     /**
@@ -54,8 +54,8 @@ public class BasicMongoDBHelper {
         return mongoOperations.exists(Query.query(Criteria.where(fieldName).is(fieldValue)), clazz);
     }
 
-    public <T> boolean existsByQuery(Query query, Class<T> clazz) {
-        return mongoOperations.exists(query, clazz);
+    public <T> boolean existsByQuery(Query query, String collectionName) {
+        return mongoOperations.exists(query, collectionName);
     }
 
     /**
@@ -72,8 +72,8 @@ public class BasicMongoDBHelper {
      *
      * @param documentToSave document for saving.
      */
-    public <T> void insert(T documentToSave) {
-        mongoOperations.insert(documentToSave);
+    public <T> void insert(T documentToSave, String collectionName) {
+        mongoOperations.insert(documentToSave, collectionName);
     }
 
     /**
@@ -110,8 +110,8 @@ public class BasicMongoDBHelper {
      * @param clazz  entity to update
      * @return update result
      */
-    public UpdateResult updateMulti(Query query, Update update, Class<?> clazz) {
-        return mongoOperations.updateMulti(query, update, clazz);
+    public UpdateResult updateMulti(Query query, Update update, Class<?> clazz, String collectionName) {
+        return mongoOperations.updateMulti(query, update, clazz, collectionName);
     }
 
     /**
@@ -120,8 +120,8 @@ public class BasicMongoDBHelper {
      * @param clazz class to determinate MongoDB collection.
      * @return found document.
      */
-    public <T> T getById(Object id, Class<T> clazz) {
-        return mongoOperations.findById(id, clazz);
+    public <T> T getById(Object id, Class<T> clazz, String collectionName) {
+        return mongoOperations.findById(id, clazz, collectionName);
     }
 
     /**
@@ -153,11 +153,10 @@ public class BasicMongoDBHelper {
      *
      * @param fieldName field name to be searched for.
      * @param value     objects with fieldName and this value will be deleted.
-     * @param clazz     class to determinate MongoDB collection.
      * @return was any entity deleted
      */
-    public <T> boolean delete(String fieldName, Object value, Class<T> clazz) {
-        return mongoOperations.remove(Query.query(Criteria.where(fieldName).is(value)), clazz).getDeletedCount() > 0;
+    public <T> boolean delete(String fieldName, Object value, String collectionName) {
+        return mongoOperations.remove(Query.query(Criteria.where(fieldName).is(value)), collectionName).getDeletedCount() > 0;
     }
 
     /**
@@ -166,8 +165,8 @@ public class BasicMongoDBHelper {
      * @param clazz class to determinate MongoDB collection.
      * @param query query for search.
      */
-    public <T> List<T> find(Query query, Class<T> clazz) {
-        return mongoOperations.find(query, clazz);
+    public <T> List<T> find(Query query, Class<T> clazz, String collectionName) {
+        return mongoOperations.find(query, clazz, collectionName);
     }
 
     /**
@@ -183,8 +182,8 @@ public class BasicMongoDBHelper {
     /**
      * To perform update operations the following method returns API for updating
      */
-    public <T> ExecutableUpdateOperation.ExecutableUpdate<T> update(Class<T> clazz) {
-        return mongoOperations.update(clazz);
+    public <T> ExecutableUpdateOperation.UpdateWithQuery<T> update(Class<T> clazz, String collectionName) {
+        return mongoOperations.update(clazz).inCollection(collectionName);
     }
 
     /**
@@ -198,7 +197,7 @@ public class BasicMongoDBHelper {
      * @return {@link QueryPageResult} found document list with cursor for next page (if page exists).
      */
     public <T extends BasicMongoDBDoc> QueryPageResult<T> queryPage(
-            Query searchQuery, String idFieldName, String cursorValue, Class<T> clazz, Integer limit) throws InvalidCursorException {
+            Query searchQuery, String idFieldName, String cursorValue, Class<T> clazz, Integer limit, String collectionName) throws InvalidCursorException {
 
         if (cursorValue != null) {
             if (!mongoOperations.exists(Query.query(Criteria.where(idFieldName).is(cursorValue)), clazz)) {
@@ -210,7 +209,7 @@ public class BasicMongoDBHelper {
         searchQuery.with(Sort.by(idFieldName).ascending())
                 .limit(limit);
 
-        List<T> results = find(searchQuery, clazz);
+        List<T> results = find(searchQuery, clazz, collectionName);
         String newCursor = null;
 
         if (!results.isEmpty() && results.size() >= limit) {
@@ -230,7 +229,7 @@ public class BasicMongoDBHelper {
     /**
      * Performs aggregation operation on DB
      */
-    public <T> AggregationResults<T> pipeline(Aggregation aggregation, Class<?> inputType, Class<T> outputType) {
-        return mongoOperations.aggregate(aggregation, inputType, outputType);
+    public <T> AggregationResults<T> pipeline(Aggregation aggregation, String collectionName, Class<T> outputType) {
+        return mongoOperations.aggregate(aggregation, collectionName, outputType);
     }
 }

@@ -10,15 +10,12 @@ import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,35 +36,23 @@ import static org.opengroup.osdu.entitlements.v2.aws.spi.BasicEntitlementsHelper
 @Component
 public class GroupHelper extends NodeHelper {
 
-    @PostConstruct
-    //TODO: recheck indexes
-    public void init() {
-        helper.ensureIndex(GroupDoc.class, new Index().on("_id.dataPartitionId", Sort.Direction.ASC));
-        helper.ensureIndex(GroupDoc.class, new Index().on("_id.nodeId", Sort.Direction.ASC));
-        helper.ensureIndex(GroupDoc.class, new Index().on("directParents", Sort.Direction.ASC));
-        helper.ensureIndex(GroupDoc.class, new Index().on("directParents.role", Sort.Direction.ASC));
-        helper.ensureIndex(GroupDoc.class, new Index().on("directParents.parentId", Sort.Direction.ASC));
-        helper.ensureIndex(GroupDoc.class, new Index().on("directParents.parentId.nodeId", Sort.Direction.ASC));
-        helper.ensureIndex(GroupDoc.class, new Index().on("directParents.parentId.dataPartitionId", Sort.Direction.ASC));
-    }
-
     @Autowired
-    public GroupHelper(BasicMongoDBHelper helper) {
-        super(helper);
+    public GroupHelper(BasicMongoDBHelper helper, IndexUpdater indexUpdater) {
+        super(helper, indexUpdater);
     }
 
     public void save(GroupDoc groupDoc) {
         if (groupDoc == null) {
             throw ExceptionGenerator.groupIsNull();
         }
-        helper.insert(groupDoc);
+        helper.insert(groupDoc, getGroupCollection(groupDoc.getId().getDataPartitionId()));
     }
 
     public GroupDoc getById(IdDoc groupId) {
         if (groupId == null) {
             throw ExceptionGenerator.idIsNull();
         }
-        return helper.getById(groupId, GroupDoc.class);
+        return helper.getById(groupId, GroupDoc.class, getGroupCollection(groupId.getDataPartitionId()));
     }
 
     public Set<NodeRelationDoc> getAllParentRelations(GroupDoc group) {
@@ -115,11 +100,12 @@ public class GroupHelper extends NodeHelper {
         helper.updateMulti(
                 Query.query(Criteria.where(ID).is(groupId)),
                 new Update().addToSet(DIRECT_PARENTS, parentRelation),
-                GroupDoc.class).getModifiedCount();
+                GroupDoc.class,
+                getGroupCollection(groupId.getDataPartitionId()));
     }
 
     public void removeAllDirectChildrenRelations(IdDoc parentGroup) {
-        helper.update(GroupDoc.class)
+        helper.update(GroupDoc.class, getGroupCollection(parentGroup.getDataPartitionId()))
                 .matching(
                         Query.query(
                                 Criteria.where(DIRECT_PARENTS).elemMatch(
@@ -141,23 +127,27 @@ public class GroupHelper extends NodeHelper {
         if (CollectionUtils.isEmpty(ids)) {
             return Collections.emptyList();
         }
-        return helper.find(Query.query(Criteria.where(ID).in(ids)), GroupDoc.class);
+        return helper.find(
+                Query.query(Criteria.where(ID).in(ids)),
+                GroupDoc.class,
+                getGroupCollection(ids.stream().findAny().get().getDataPartitionId())
+        );
     }
 
     public Set<ChildrenReference> getDirectChildren(IdDoc parentGroup) {
-        return super.getDirectChildren(parentGroup, GroupDoc.class);
+        return super.getDirectChildren(parentGroup, getGroupCollection(parentGroup.getDataPartitionId()));
     }
 
     public boolean checkDirectParent(IdDoc nodeToCheckParent, NodeRelationDoc relationForCheck) {
-        return super.checkDirectParent(nodeToCheckParent, relationForCheck, GroupDoc.class);
+        return super.checkDirectParent(nodeToCheckParent, relationForCheck, getGroupCollection(nodeToCheckParent.getDataPartitionId()));
     }
 
     public void delete(IdDoc groupId) {
-        helper.delete(ID, groupId, GroupDoc.class);
+        helper.delete(ID, groupId, getGroupCollection(groupId.getDataPartitionId()));
     }
 
     public List<ParentReference> loadDirectParents(IdDoc groupId) {
-        GroupDoc group = getById(groupId);
+        GroupDoc group = this.getById(groupId);
         Set<NodeRelationDoc> directRelations = group.getDirectParents();
         List<ParentReference> parentReferences = new ArrayList<>();
         for (NodeRelationDoc directRelation : directRelations) {
@@ -171,16 +161,35 @@ public class GroupHelper extends NodeHelper {
     }
 
     public void removeDirectParentRelation(IdDoc groupToRemoveParent, IdDoc groupToRemoveFromParents) {
-        super.removeDirectParentRelation(groupToRemoveParent, groupToRemoveFromParents, GroupDoc.class);
+        super.removeDirectParentRelation(
+                groupToRemoveParent,
+                groupToRemoveFromParents,
+                GroupDoc.class,
+                getGroupCollection(groupToRemoveParent.getDataPartitionId()));
     }
 
     public void renameGroup(IdDoc groupToRename, String newGroupName) {
         Query query = Query.query(Criteria.where(ID).is(groupToRename));
-        helper.updateMulti(query, Update.update(NAME, newGroupName), GroupDoc.class);
+        helper.updateMulti(
+                query,
+                Update.update(NAME, newGroupName),
+                GroupDoc.class,
+                getGroupCollection(groupToRename.getDataPartitionId())
+        );
     }
 
     public void updateAppIds(EntityNode groupToUpdateIds, Set<String> allowedAppIds) {
         Query query = Query.query(Criteria.where(ID).in(groupToUpdateIds));
-        helper.updateMulti(query, new Update().set(APP_IDS, allowedAppIds), GroupDoc.class);
+        helper.updateMulti(
+                query,
+                new Update().set(APP_IDS, allowedAppIds),
+                GroupDoc.class,
+                getGroupCollection(groupToUpdateIds.getDataPartitionId())
+        );
+    }
+
+    private String getGroupCollection(String dataPartitionId) {
+        indexUpdater.checkIndex(dataPartitionId);
+        return "Group-" + dataPartitionId;
     }
 }

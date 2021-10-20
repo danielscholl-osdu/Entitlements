@@ -8,7 +8,6 @@ import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.GroupD
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.UserDoc;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.internal.IdDoc;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.internal.NodeRelationDoc;
-import org.opengroup.osdu.entitlements.v2.aws.util.ExceptionGenerator;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenTreeDto;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
@@ -130,8 +129,10 @@ public class RetrieveGroupMongoDB extends BasicEntitlementsHelper implements Ret
                     .build();
         }
         if (memberNode.getType() == NodeType.USER) {
-            UserDoc userToCheckParents = conversionService.convert(memberNode, UserDoc.class);
-            userToCheckParents = userHelper.getOrCreate(userToCheckParents);
+            UserDoc userToCheckParents = userHelper.getById(new IdDoc(memberNode.getNodeId(), memberNode.getDataPartitionId()));
+            if (userToCheckParents == null) {
+                return ParentTreeDto.builder().parentReferences(new HashSet<>()).build();
+            }
             Set<IdDoc> allParentIDs = userToCheckParents.getAllParents().stream().map(NodeRelationDoc::getParentId).collect(Collectors.toSet());
             List<GroupDoc> allParentGroups = groupHelper.getGroups(allParentIDs);
 

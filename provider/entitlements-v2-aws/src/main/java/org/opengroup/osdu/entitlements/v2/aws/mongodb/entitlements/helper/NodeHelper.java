@@ -22,13 +22,15 @@ import static org.opengroup.osdu.entitlements.v2.aws.spi.BasicEntitlementsHelper
 public abstract class NodeHelper {
 
     protected final BasicMongoDBHelper helper;
+    protected final IndexUpdater indexUpdater;
 
-    public NodeHelper(BasicMongoDBHelper helper) {
+    public NodeHelper(BasicMongoDBHelper helper, IndexUpdater indexUpdater) {
         this.helper = helper;
+        this.indexUpdater = indexUpdater;
     }
 
     //TODO: check performance limitations and rewrite if necessary.
-    protected Set<ChildrenReference> getDirectChildren(IdDoc parentGroup, Class<?> collection) {
+    protected Set<ChildrenReference> getDirectChildren(IdDoc parentGroup, String collectionName) {
         AggregationOperation match = Aggregation.match(
                 Criteria.where(DIRECT_PARENTS).elemMatch(
                         Criteria.where("parentId").is(parentGroup)
@@ -36,8 +38,8 @@ public abstract class NodeHelper {
         );
         AggregationOperation project = Aggregation.project()
                 .and("directParents").as("directParents")
-                .and("id.nodeId").as("nodeId")
-                .and("id.dataPartitionId").as("dataPartitionId")
+                .and("_id.nodeId").as("nodeId")
+                .and("_id.dataPartitionId").as("dataPartitionId")
                 .andExclude("_id");
         AggregationOperation unwind = Aggregation.unwind("directParents");
         AggregationOperation matchAfterUnwind = Aggregation.match(
@@ -49,19 +51,19 @@ public abstract class NodeHelper {
                 .and("dataPartitionId").as("dataPartitionId")
                 .and("directParents.role").as("role");
         Aggregation aggregation = Aggregation.newAggregation(match, project, unwind, matchAfterUnwind, projectAfterUnwind);
-        AggregationResults<ChildrenReference> results = helper.pipeline(aggregation, collection, ChildrenReference.class);
+        AggregationResults<ChildrenReference> results = helper.pipeline(aggregation, collectionName, ChildrenReference.class);
         return new HashSet<>(results.getMappedResults());
     }
 
-    public boolean checkDirectParent(IdDoc nodeToCheckParent, NodeRelationDoc relationForCheck, Class<?> collection) {
+    public boolean checkDirectParent(IdDoc nodeToCheckParent, NodeRelationDoc relationForCheck, String collectionName) {
         return helper.existsByQuery(
                 Query.query(Criteria.where(ID).is(nodeToCheckParent).and(DIRECT_PARENTS).is(relationForCheck)),
-                collection
+                collectionName
         );
     }
 
-    public void removeDirectParentRelation(IdDoc nodeToRemoveParent, IdDoc groupToRemoveFromParents, Class<?> collection) {
-        helper.update(collection)
+    public void removeDirectParentRelation(IdDoc nodeToRemoveParent, IdDoc groupToRemoveFromParents, Class<?> clazz, String collectionName) {
+        helper.update(clazz, collectionName)
                 .matching(Query.query(Criteria.where(ID).is(nodeToRemoveParent)))
                 .apply(
                         new Update().pull(
@@ -69,7 +71,7 @@ public abstract class NodeHelper {
                                 Query.query(Criteria.where("parentId").is(groupToRemoveFromParents))
                         )
                 )
-                .all();
+                .first();
     }
 
 
