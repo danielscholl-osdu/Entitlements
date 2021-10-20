@@ -85,7 +85,7 @@ public class ResponseLogFilter implements Filter {
     }
 
     private void logRequest(String uri, HttpServletRequest request, HttpServletResponse response, long startTime) {
-        logger.request(Request.builder()
+        logger.request(ResponseLogFilter.class.getName(), Request.builder()
                 .requestMethod(request.getMethod())
                 .latency(Duration.ofMillis(System.currentTimeMillis() - startTime))
                 .requestUrl(uri)

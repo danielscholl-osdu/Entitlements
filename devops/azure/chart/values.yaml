@@ -14,6 +14,8 @@
 
 global:
   replicaCount: 1
+  maxReplicaCount: 2
+  minReplicaCount: 2
   nodepool: services
   isAutoscalingEnabled: false
 
@@ -22,9 +24,6 @@ image:
   branch: master
   tag: latest
 
-server:
-  servlet:
-    contextPath: /api/entitlements/v2
 
 config:
   quota:
@@ -44,3 +43,5 @@ featureFlag:
   resourceLimits:
     enabledEnvs:
     - demo
+  hpa:
+    enabledEnvs: []
