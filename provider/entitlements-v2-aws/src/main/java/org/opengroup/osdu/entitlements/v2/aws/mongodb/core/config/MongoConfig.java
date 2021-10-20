@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 /**
  * Basic configuration for MongoDB beans.
  * Will be imported from other services
@@ -57,9 +59,9 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
     private String useSrvEndpointStr;
     @Value("${osdu.mongodb.enableTLS}")
     private String enableTLS;
-
-    public MongoConfig() throws K8sParameterNotFoundException, JsonProcessingException {
-
+    
+    @PostConstruct
+    private void init() throws K8sParameterNotFoundException, JsonProcessingException {
         K8sLocalParameterProvider provider = new K8sLocalParameterProvider();
 
         if (!provider.getLocalMode()) {
@@ -75,7 +77,6 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
             port = provider.getParameterAsStringOrDefault("mongodb_port", port);
 
         }
-
     }
 
     //TODO: use partition to decide DB?
