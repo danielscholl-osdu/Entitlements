@@ -1,0 +1,65 @@
+package org.opengroup.osdu.entitlements.v2.aws.mongodb.core.config;
+
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import org.opengroup.osdu.core.aws.ssm.K8sLocalParameterProvider;
+import org.opengroup.osdu.core.aws.ssm.K8sParameterNotFoundException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import lombok.Data;
+
+@Data
+@Component
+public class MongoProperties {
+
+    @Value("${osdu.mongodb.username}")
+    private String username;
+    @Value("${osdu.mongodb.password}")
+    private String password;
+    @Value("${osdu.mongodb.endpoint}")
+    private String endpoint;
+    @Value("${osdu.mongodb.authDatabase}")
+    private String authDatabase;
+    @Value("${osdu.mongodb.port}")
+    private String port;
+    @Value("${osdu.mongodb.retryWrites}")
+    private String retryWrites;
+    @Value("${osdu.mongodb.writeMode}")
+    private String writeMode;
+    @Value("${osdu.mongodb.useSrvEndpoint}")
+    private String useSrvEndpointStr;
+    @Value("${osdu.mongodb.enableTLS}")
+    private String enableTLS;
+
+    //TODO: use partition to decide DB?
+    @Value("${osdu.mongodb.database}")
+    private String databaseName;
+
+    @PostConstruct
+    private void init() throws K8sParameterNotFoundException, JsonProcessingException {
+
+        K8sLocalParameterProvider provider = new K8sLocalParameterProvider();
+
+        if (!provider.getLocalMode()) {
+            Map<String,String> credentials = provider.getCredentialsAsMap("mongodb_credentials");
+
+            if (credentials != null) {
+                username = credentials.get("username");
+                password = credentials.get("password");
+                authDatabase = credentials.get("authDB");
+            }
+
+            endpoint = provider.getParameterAsStringOrDefault("mongodb_host", endpoint);
+            port = provider.getParameterAsStringOrDefault("mongodb_port", port);
+
+        }
+    }
+
+    
+    
+}
