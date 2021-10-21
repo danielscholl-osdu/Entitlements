@@ -45,6 +45,7 @@ public class DeleteGroupRepoMongoDB extends BasicEntitlementsHelper implements D
 
         Set<IdDoc> usersToUpdateParentRelations = userHelper.getAllChildUsers(groupToRemove.getId());
         groupHelper.removeAllDirectChildrenRelations(groupToRemove.getId());
+        userHelper.removeAllDirectChildrenRelations(groupToRemove.getId());
         //TODO: slow but safe update for now (from user to group). Rewrite to faster implementation in reverse update (from group to user)
         for (IdDoc userIdToUpdateParentRelations : usersToUpdateParentRelations) {
             UserDoc userForUpdate = userHelper.getById(userIdToUpdateParentRelations);

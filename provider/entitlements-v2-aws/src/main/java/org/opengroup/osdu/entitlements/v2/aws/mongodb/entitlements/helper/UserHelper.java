@@ -149,6 +149,10 @@ public class UserHelper extends NodeHelper {
                 .first();
     }
 
+    public void removeAllDirectChildrenRelations(IdDoc parentGroup) {
+        super.removeAllDirectChildrenRelations(parentGroup, UserDoc.class, getUserCollection(parentGroup.getDataPartitionId()));
+    }
+
     public void removeDirectParentRelation(IdDoc userToRemoveParent, IdDoc groupToRemoveFromParents) {
         super.removeDirectParentRelation(
                 userToRemoveParent,

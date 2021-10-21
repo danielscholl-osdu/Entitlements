@@ -89,5 +89,23 @@ public abstract class NodeHelper {
                 .first();
     }
 
+    protected void removeAllDirectChildrenRelations(IdDoc parentNode, Class<?> clazz, String collectionName) {
+        helper.update(clazz, collectionName)
+                .matching(
+                        Query.query(
+                                Criteria.where(DIRECT_PARENTS).elemMatch(
+                                        Criteria.where("parentId").is(parentNode)
+                                )
+                        )
+                )
+                .apply(
+                        new Update().pull(
+                                DIRECT_PARENTS,
+                                Query.query(Criteria.where("parentId").is(parentNode)
+                                )
+                        )
+                )
+                .all();
+    }
 
 }

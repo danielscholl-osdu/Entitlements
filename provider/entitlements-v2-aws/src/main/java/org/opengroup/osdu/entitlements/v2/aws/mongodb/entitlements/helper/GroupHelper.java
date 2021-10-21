@@ -120,22 +120,7 @@ public class GroupHelper extends NodeHelper {
     }
 
     public void removeAllDirectChildrenRelations(IdDoc parentGroup) {
-        helper.update(GroupDoc.class, getGroupCollection(parentGroup.getDataPartitionId()))
-                .matching(
-                        Query.query(
-                                Criteria.where(DIRECT_PARENTS).elemMatch(
-                                        Criteria.where("parentId").is(parentGroup)
-                                )
-                        )
-                )
-                .apply(
-                        new Update().pull(
-                                DIRECT_PARENTS,
-                                Query.query(Criteria.where("parentId").is(parentGroup)
-                                )
-                        )
-                )
-                .all();
+        super.removeAllDirectChildrenRelations(parentGroup, GroupDoc.class, getGroupCollection(parentGroup.getDataPartitionId()));
     }
 
     public List<GroupDoc> getGroups(Collection<IdDoc> ids) {
