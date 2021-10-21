@@ -22,18 +22,12 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @ComponentScan({
-        "org.opengroup.osdu.core",
-        "org.opengroup.osdu.aws",
-        "org.opengroup.osdu.entitlements.v2"
+        "org.opengroup.osdu",
 })
 @SpringBootApplication
 @EnableAsync
 public class EntitlementsV2Application {
     public static void main(String[] args) {
-        Class<?>[] sources = new Class<?>[]{
-                EntitlementsV2Application.class
-
-        };
-        SpringApplication.run(sources, args);
+        SpringApplication.run(new Class[]{EntitlementsV2Application.class}, args);
     }
 }

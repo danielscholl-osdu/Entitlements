@@ -1,3 +1,4 @@
+// Copyright MongoDB, Inc or its affiliates. All Rights Reserved.
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,19 +13,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.opengroup.osdu.entitlements.v2.aws.service;
+package org.opengroup.osdu.entitlements.v2.aws.mongodb.core.config.converter;
 
-import lombok.AllArgsConstructor;
-import org.opengroup.osdu.entitlements.v2.service.HealthService;
-import org.springframework.stereotype.Service;
+import org.bson.Document;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.convert.ReadingConverter;
 
-@Service
-@AllArgsConstructor
-public class HealthServiceAws implements HealthService {
+import java.sql.Date;
 
+import static org.opengroup.osdu.entitlements.v2.aws.mongodb.core.config.MongoConfig.SQL_TIMESTAMP_REPLACER_NAME;
+
+
+@ReadingConverter
+public class SqlDateReadConverter implements Converter<Document, Date> {
 
     @Override
-    public void performHealthCheck() {
-        //To-do
+    public Date convert(Document date) {
+        return new Date(date.getLong(SQL_TIMESTAMP_REPLACER_NAME));
     }
 }

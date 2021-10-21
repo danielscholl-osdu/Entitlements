@@ -1,3 +1,4 @@
+// Copyright MongoDB, Inc or its affiliates. All Rights Reserved.
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,19 +13,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.opengroup.osdu.entitlements.v2.aws.service;
+package org.opengroup.osdu.entitlements.v2.aws.mongodb.core.exception;
 
-import lombok.AllArgsConstructor;
-import org.opengroup.osdu.entitlements.v2.service.HealthService;
-import org.springframework.stereotype.Service;
+public class InvalidCursorException extends RuntimeException {
+    Exception innerException;
 
-@Service
-@AllArgsConstructor
-public class HealthServiceAws implements HealthService {
+    public InvalidCursorException(String message)
+    {
+        super(message);
+    }
 
-
-    @Override
-    public void performHealthCheck() {
-        //To-do
+    public InvalidCursorException(Exception innerException){
+        super(innerException);
+        this.innerException = innerException;
     }
 }
