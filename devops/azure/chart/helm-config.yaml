@@ -3,6 +3,8 @@ global:
 
   # Service(s) Replica Count
   replicaCount: 2
+  maxReplicaCount: 30
+  minReplicaCount: 4
   nodepool: services
   isAutoscalingEnabled: false
 
@@ -14,10 +16,6 @@ image:
   repository: #{container-registry}#.azurecr.io
   branch: #{ENVIRONMENT_NAME}#
   tag: #{Build.SourceVersion}#
-
-server:
-  servlet:
-    contextPath: /api/entitlements/v2
 
 config:
   quota:
@@ -35,5 +33,7 @@ env: #{ENVIRONMENT_NAME}#
 
 featureFlag:
   resourceLimits:
-    enableEnvs:
+    enabledEnvs:
     - demo
+  hpa:
+    enabledEnvs: []

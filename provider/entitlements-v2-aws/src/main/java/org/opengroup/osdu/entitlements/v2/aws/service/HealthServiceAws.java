@@ -15,8 +15,6 @@
 package org.opengroup.osdu.entitlements.v2.aws.service;
 
 import lombok.AllArgsConstructor;
-import org.opengroup.osdu.core.common.cache.ICache;
-import org.opengroup.osdu.entitlements.v2.model.ParentReferences;
 import org.opengroup.osdu.entitlements.v2.service.HealthService;
 import org.springframework.stereotype.Service;
 
