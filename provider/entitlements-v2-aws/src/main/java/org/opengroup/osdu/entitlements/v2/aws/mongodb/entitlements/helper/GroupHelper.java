@@ -43,6 +43,7 @@ import static org.opengroup.osdu.entitlements.v2.aws.spi.BasicEntitlementsHelper
 import static org.opengroup.osdu.entitlements.v2.aws.spi.BasicEntitlementsHelper.DIRECT_PARENTS;
 import static org.opengroup.osdu.entitlements.v2.aws.spi.BasicEntitlementsHelper.ID;
 import static org.opengroup.osdu.entitlements.v2.aws.spi.BasicEntitlementsHelper.NAME;
+import static org.opengroup.osdu.entitlements.v2.aws.spi.BasicEntitlementsHelper.NODE_ID;
 
 
 /**
@@ -179,7 +180,7 @@ public class GroupHelper extends NodeHelper {
     }
 
     public void updateAppIds(EntityNode groupToUpdateIds, Set<String> allowedAppIds) {
-        Query query = Query.query(Criteria.where(ID).in(groupToUpdateIds));
+        Query query = Query.query(Criteria.where(NODE_ID).is(groupToUpdateIds.getNodeId()));
         helper.updateMulti(
                 query,
                 new Update().set(APP_IDS, allowedAppIds),
