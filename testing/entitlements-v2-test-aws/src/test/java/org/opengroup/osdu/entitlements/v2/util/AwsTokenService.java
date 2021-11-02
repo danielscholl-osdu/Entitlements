@@ -34,8 +34,6 @@ public class AwsTokenService implements TokenService {
             String sptoken  = utils.getAccessToken();
             sptoken = sptoken.replace("Bearer ","");
             TOKEN = sptoken;
-
-
         }
         return Token.builder()
                 .value(TOKEN)
