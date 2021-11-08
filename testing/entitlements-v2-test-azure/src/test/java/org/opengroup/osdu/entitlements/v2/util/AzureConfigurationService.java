@@ -12,7 +12,11 @@ public class AzureConfigurationService implements ConfigurationService {
 
     @Override
     public String getTenantId() {
-        return "opendes";
+        String tenantId = System.getProperty("TENANT_NAME", System.getenv("TENANT_NAME"));
+        if (Strings.isNullOrEmpty(tenantId)) {
+            tenantId = "opendes";
+        }
+        return tenantId;
     }
 
     @Override
