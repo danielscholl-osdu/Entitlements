@@ -46,28 +46,21 @@ public class IndexUpdater {
     //TODO: recheck indexes
     private void updateIndexes(String dataPartitionId) {
         String groupCollection = "Group-" + dataPartitionId;
-        String userCollection = "User-" + dataPartitionId;
-
         helper.ensureIndex(groupCollection, new Index().on("_id.dataPartitionId", Sort.Direction.ASC));
         helper.ensureIndex(groupCollection, new Index().on("_id.nodeId", Sort.Direction.ASC));
         helper.ensureIndex(groupCollection, new Index().on("directParents", Sort.Direction.ASC));
-        helper.ensureIndex(groupCollection, new Index().on("directParents.role", Sort.Direction.ASC));
         helper.ensureIndex(groupCollection, new Index().on("directParents.parentId", Sort.Direction.ASC));
         helper.ensureIndex(groupCollection, new Index().on("directParents.parentId.nodeId", Sort.Direction.ASC));
         helper.ensureIndex(groupCollection, new Index().on("directParents.parentId.dataPartitionId", Sort.Direction.ASC));
 
+        String userCollection = "User-" + dataPartitionId;
         helper.ensureIndex(userCollection, new Index().on("_id.dataPartitionId", Sort.Direction.ASC));
         helper.ensureIndex(userCollection, new Index().on("_id.nodeId", Sort.Direction.ASC));
-        helper.ensureIndex(userCollection, new Index().on("memberOf", Sort.Direction.ASC));
-        helper.ensureIndex(userCollection, new Index().on("memberOf.role", Sort.Direction.ASC));
         helper.ensureIndex(userCollection, new Index().on("memberOf.parentId", Sort.Direction.ASC));
-        helper.ensureIndex(userCollection, new Index().on("memberOf.parentId.dataPartitionId", Sort.Direction.ASC));
         helper.ensureIndex(userCollection, new Index().on("memberOf.parentId.nodeId", Sort.Direction.ASC));
         helper.ensureIndex(userCollection, new Index().on("directParents", Sort.Direction.ASC));
-        helper.ensureIndex(userCollection, new Index().on("directParents.role", Sort.Direction.ASC));
         helper.ensureIndex(userCollection, new Index().on("directParents.parentId", Sort.Direction.ASC));
         helper.ensureIndex(userCollection, new Index().on("directParents.parentId.nodeId", Sort.Direction.ASC));
         helper.ensureIndex(userCollection, new Index().on("directParents.parentId.dataPartitionId", Sort.Direction.ASC));
     }
-
 }
