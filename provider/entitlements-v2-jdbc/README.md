@@ -47,6 +47,9 @@ This project uses [Lombok](https://projectlombok.org/) for code generation. You 
 | `server_port` | ex `8080` | Port of the server | no | -- |
 | `GOOGLE_AUDIENCES` | ex `*****.apps.googleusercontent.com` | Client ID for getting access to cloud resources | yes | https://console.cloud.google.com/apis/credentials |
 | `GOOGLE_APPLICATION_CREDENTIALS` | `********` | Need this only if running locally, this service acc must have token sign access | yes | -- |
+| `GCP_X_USER_IDENTITY_HEADER_NAME` | ex `x-user-id` | The name of the header in which the "id of the authenticated user" is passed | no | -- |
+| `GCP_X_APPLICATION_IDENTITY_HEADER_NAME` | ex `x-app-id` | The name of the header in which the "id of the authenticated user application" is passed | no | -- |
+| `GCP_TRUST_EXTERNAL_AUTHENTICATION` | ex `false` | Need this only if running locally, this service acc must have token sign access | no | -- |
 
 ### Build and run the application
 

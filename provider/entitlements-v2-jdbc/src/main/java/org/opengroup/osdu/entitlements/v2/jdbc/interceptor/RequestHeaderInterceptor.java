@@ -22,12 +22,15 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
+import com.nimbusds.oauth2.sdk.id.Audience;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import com.nimbusds.openid.connect.sdk.UserInfoRequest;
 import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import com.nimbusds.openid.connect.sdk.validators.IDTokenValidator;
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -36,113 +39,152 @@ import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.IDTokenValidatorConfig;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.OpenIDProviderConfig;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsConfigurationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import static java.lang.Boolean.TRUE;
-
 @Component
 @RequiredArgsConstructor
 public class RequestHeaderInterceptor implements HandlerInterceptor {
 
-    public static final String USER_INFO_ISSUE_REASON = "Obtaining user info issue";
-    public static final String NOT_VALID_TOKEN_PROVIDED_MESSAGE = "Not valid token provided";
+  public static final String USER_INFO_ISSUE_REASON = "Obtaining user info issue";
+  public static final String NOT_VALID_TOKEN_PROVIDED_MESSAGE = "Not valid token provided";
+  private static final String GCP_TRUST_EXTERNAL_AUTHENTICATION = "gcp-trust-external-authentication";
 
-    @Autowired
-    private final DpsHeaders dpsHeaders;
+  @Autowired
+  private final DpsHeaders dpsHeaders;
 
-    private final JaxRsDpsLog log;
+  private final JaxRsDpsLog log;
 
-    private final OpenIDProviderConfig provider;
-    private final IDTokenValidatorConfig validatorProvider;
+  private final OpenIDProviderConfig provider;
+  private final IDTokenValidatorConfig validatorProvider;
+  private final EntitlementsConfigurationProperties properties;
 
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-            throws IOException {
-        if (isSwaggerRequest(request) || isVersionInfo(request)) {
-            return true;
-        }
+  @Override
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+      throws IOException {
+    if (isSwaggerRequest(request) || isVersionInfo(request)) {
+      return true;
+    }
 
-        log.info("Intercepted the request. Now validating token..");
+    log.info("Intercepted the request. Now validating token..");
 
-        if (dpsHeaders.getAuthorization() == null || dpsHeaders.getAuthorization().isEmpty()) {
-            throw new AppException(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase(),
-                    "Token is required");
-        }
+    if ((Objects.isNull(dpsHeaders.getAuthorization()) || dpsHeaders.getAuthorization().isEmpty())
+        && (Objects.isNull(request.getHeader(properties.getGcpXUserIdentityHeaderName())))
+        && (Objects.isNull(request.getHeader(properties.getGcpXApplicationIdentityHeaderName())))) {
+      throw new AppException(HttpStatus.UNAUTHORIZED.value(),
+          HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+          String.format("Token and headers %s and %s are required.",
+              properties.getGcpXUserIdentityHeaderName(),
+              properties.getGcpXApplicationIdentityHeaderName()));
 
-        String memberEmail = getUserInfoFromToken(dpsHeaders.getAuthorization()).getEmailAddress();
+    }
 
-        if (memberEmail != null) {
-            // If JWT validation succeeds/ can extract user identity
-            //       return true = requests moves forward to the core API code
-            // Update the request Header to include user identity
-            dpsHeaders.put("x-user-id", memberEmail);
+    if ((Objects.isNull(dpsHeaders.getAuthorization()) || dpsHeaders.getAuthorization().isEmpty())
+        && Boolean.FALSE.equals(properties.getGcpTrustExternalAuthentication())) {
+      throw new AppException(HttpStatus.UNAUTHORIZED.value(),
+          HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+          "Token and a flag 'gcp-trust-external-authentication' are required.");
+    }
 
-            return true;
+    if (Objects.isNull(dpsHeaders.getAuthorization())
+        && (Objects.nonNull(request.getHeader(properties.getGcpXApplicationIdentityHeaderName()))
+        || Objects.nonNull(request.getHeader(properties.getGcpXUserIdentityHeaderName())))) {
+      log.info("Trusted external authentication is used.");
+      return true;
+    }
+
+    if (Objects.nonNull(request.getHeader(properties.getGcpXApplicationIdentityHeaderName()))
+        && Objects.isNull(request.getHeader(properties.getGcpXUserIdentityHeaderName()))) {
+      throw new AppException(HttpStatus.UNAUTHORIZED.value(),
+          HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+          String.format("A header %s are required.",
+              properties.getGcpXUserIdentityHeaderName()));
+    }
+
+    UserInfo userInfo = getUserInfoFromToken(dpsHeaders.getAuthorization());
+
+    String memberEmail = userInfo.getEmailAddress();
+    List<Audience> audience = userInfo.getAudience();
+
+    String gcpUserIdentity = request.getHeader(properties.getGcpXUserIdentityHeaderName());
+    String gcpApplicationIdentity = request.getHeader(
+        properties.getGcpXApplicationIdentityHeaderName());
+
+    if (Objects.nonNull(memberEmail) && (Objects.nonNull(audience) && !audience.isEmpty())) {
+      if (Objects.nonNull(gcpUserIdentity) && Objects.nonNull(gcpApplicationIdentity)) {
+        Audience gcpApplicationAudience = new Audience(gcpApplicationIdentity);
+        if (!memberEmail.equals(gcpUserIdentity) && !audience.contains(gcpApplicationAudience)) {
+          response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         } else {
-            //If JWT validation fails/ cannot extract user identity
-            //return false = response is handled here
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+          return true;
         }
-
-        return false;
+      } else {
+        dpsHeaders.put(properties.getGcpXUserIdentityHeaderName(), memberEmail);
+        dpsHeaders.put(properties.getGcpXApplicationIdentityHeaderName(),
+            Audience.toStringList(audience).toString());
+        return true;
+      }
     }
 
-    private boolean isSwaggerRequest(HttpServletRequest request) {
-        String endpoint = request.getRequestURI().replace(request.getContextPath(), "");
-        return endpoint.startsWith("/swagger") || endpoint.startsWith("/webjars");
+    return false;
+  }
+
+  private boolean isSwaggerRequest(HttpServletRequest request) {
+    String endpoint = request.getRequestURI().replace(request.getContextPath(), "");
+    return endpoint.startsWith("/swagger") || endpoint.startsWith("/webjars");
+  }
+
+  private boolean isVersionInfo(HttpServletRequest request) {
+    String endpoint = request.getRequestURI().replace(request.getContextPath(), "");
+    return endpoint.startsWith("/info");
+  }
+
+  private UserInfo getUserInfoFromToken(String token) {
+    return getUserInfoFromIDToken(token);
+  }
+
+  private UserInfo getUserInfoFromAccessToken(String accessToken) {
+    try {
+      BearerAccessToken token = BearerAccessToken.parse(accessToken);
+      HTTPResponse httpResponseUserInfo = new UserInfoRequest(
+          provider.getProviderMetadata().getUserInfoEndpointURI(),
+          token)
+          .toHTTPRequest()
+          .send();
+      if (httpResponseUserInfo.indicatesSuccess()) {
+        return new UserInfo(httpResponseUserInfo.getContentAsJSONObject());
+      } else {
+        throw new AppException(HttpStatus.UNAUTHORIZED.value(),
+            USER_INFO_ISSUE_REASON,
+            NOT_VALID_TOKEN_PROVIDED_MESSAGE);
+      }
+    } catch (ParseException | IOException e) {
+      throw new AppException(HttpStatus.UNAUTHORIZED.value(),
+          USER_INFO_ISSUE_REASON,
+          NOT_VALID_TOKEN_PROVIDED_MESSAGE, e);
     }
+  }
 
-    private boolean isVersionInfo(HttpServletRequest request) {
-        String endpoint = request.getRequestURI().replace(request.getContextPath(), "");
-        return endpoint.startsWith("/info");
+  private UserInfo getUserInfoFromIDToken(String token) {
+    String aptToken = token.replace("Bearer ", "");
+    IDTokenValidator validator = validatorProvider.getValidator();
+
+    IDTokenClaimsSet claims = null;
+    try {
+
+      JWT jwt = JWTParser.parse(aptToken);
+      claims = validator.validate(jwt, null);
+      return UserInfo.parse(claims.toJSONString());
+
+    } catch (BadJOSEException | JOSEException | java.text.ParseException | ParseException e) {
+
+      log.info("id_token parsing failed. Trying access_token...");
+      log.info("Original exception: " + e.getMessage());
+
+      return getUserInfoFromAccessToken(token);
     }
-
-    private UserInfo getUserInfoFromToken(String token) {
-        return getUserInfoFromIDToken(token);
-    }
-
-    private UserInfo getUserInfoFromAccessToken(String accessToken) {
-        try {
-            BearerAccessToken token = BearerAccessToken.parse(accessToken);
-            HTTPResponse httpResponseUserInfo = new UserInfoRequest(
-                    provider.getProviderMetadata().getUserInfoEndpointURI(),
-                    token)
-                    .toHTTPRequest()
-                    .send();
-            if (httpResponseUserInfo.indicatesSuccess()) {
-                return new UserInfo(httpResponseUserInfo.getContentAsJSONObject());
-            } else {
-                throw new AppException(HttpStatus.UNAUTHORIZED.value(),
-                        USER_INFO_ISSUE_REASON,
-                        NOT_VALID_TOKEN_PROVIDED_MESSAGE);
-            }
-        } catch (ParseException | IOException e) {
-            throw new AppException(HttpStatus.UNAUTHORIZED.value(),
-                    USER_INFO_ISSUE_REASON,
-                    NOT_VALID_TOKEN_PROVIDED_MESSAGE, e);
-        }
-    }
-
-    private UserInfo getUserInfoFromIDToken(String token) {
-        String aptToken = token.replace("Bearer ", "");
-        IDTokenValidator validator = validatorProvider.getValidator();
-
-        IDTokenClaimsSet claims = null;
-        try {
-
-            JWT jwt = JWTParser.parse(aptToken);
-            claims = validator.validate(jwt, null);
-            return UserInfo.parse(claims.toJSONString());
-
-        } catch (BadJOSEException | JOSEException | java.text.ParseException | ParseException e) {
-
-            log.info("id_token parsing failed. Trying access_token...");
-            log.info("Original exception: " + e.getMessage());
-
-            return getUserInfoFromAccessToken(token);
-        }
-    }
+  }
 }
