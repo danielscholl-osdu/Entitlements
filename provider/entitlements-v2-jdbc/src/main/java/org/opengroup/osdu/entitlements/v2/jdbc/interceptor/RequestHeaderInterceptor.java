@@ -29,11 +29,14 @@ import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import com.nimbusds.openid.connect.sdk.validators.IDTokenValidator;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import net.minidev.json.JSONObject;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
@@ -45,6 +48,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import static com.nimbusds.openid.connect.sdk.claims.ClaimsSet.AUD_CLAIM_NAME;
+
 @Component
 @RequiredArgsConstructor
 public class RequestHeaderInterceptor implements HandlerInterceptor {
@@ -52,6 +57,7 @@ public class RequestHeaderInterceptor implements HandlerInterceptor {
   public static final String USER_INFO_ISSUE_REASON = "Obtaining user info issue";
   public static final String NOT_VALID_TOKEN_PROVIDED_MESSAGE = "Not valid token provided";
   private static final String GCP_TRUST_EXTERNAL_AUTHENTICATION = "gcp-trust-external-authentication";
+  public static final String TOKEN_INFO_ENDPOINT = "https://www.googleapis.com/oauth2/v1/tokeninfo";
 
   @Autowired
   private final DpsHeaders dpsHeaders;
@@ -129,6 +135,7 @@ public class RequestHeaderInterceptor implements HandlerInterceptor {
       }
     }
 
+    response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     return false;
   }
 
@@ -155,16 +162,32 @@ public class RequestHeaderInterceptor implements HandlerInterceptor {
           .toHTTPRequest()
           .send();
       if (httpResponseUserInfo.indicatesSuccess()) {
-        return new UserInfo(httpResponseUserInfo.getContentAsJSONObject());
+        JSONObject userInfoResponse = httpResponseUserInfo.getContentAsJSONObject();
+        String audience = getAudienceForAccessToken(token);
+
+        userInfoResponse.put(AUD_CLAIM_NAME, audience);
+        return new UserInfo(userInfoResponse);
       } else {
-        throw new AppException(HttpStatus.UNAUTHORIZED.value(),
-            USER_INFO_ISSUE_REASON,
-            NOT_VALID_TOKEN_PROVIDED_MESSAGE);
+        throw unauthorizedException();
       }
-    } catch (ParseException | IOException e) {
+    } catch (ParseException | URISyntaxException | IOException e) {
       throw new AppException(HttpStatus.UNAUTHORIZED.value(),
           USER_INFO_ISSUE_REASON,
           NOT_VALID_TOKEN_PROVIDED_MESSAGE, e);
+    }
+  }
+
+  private String getAudienceForAccessToken(BearerAccessToken token) throws IOException, URISyntaxException, ParseException {
+    HTTPResponse tokenInfoResponse = new UserInfoRequest(
+            new URI(TOKEN_INFO_ENDPOINT),
+            token)
+            .toHTTPRequest()
+            .send();
+    if (tokenInfoResponse.indicatesSuccess()) {
+      return tokenInfoResponse.getContentAsJSONObject().getAsString("audience");
+    }
+    else {
+      throw unauthorizedException();
     }
   }
 
@@ -186,5 +209,11 @@ public class RequestHeaderInterceptor implements HandlerInterceptor {
 
       return getUserInfoFromAccessToken(token);
     }
+  }
+
+  private AppException unauthorizedException() {
+    return new AppException(HttpStatus.UNAUTHORIZED.value(),
+            USER_INFO_ISSUE_REASON,
+            NOT_VALID_TOKEN_PROVIDED_MESSAGE);
   }
 }
