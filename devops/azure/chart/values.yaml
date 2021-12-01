@@ -35,7 +35,7 @@ config:
     ttl:
       seconds: 1
 
-istioDnsHost: ""
+istioDnsHost: "contoso.com"
 
 env: demo
 
