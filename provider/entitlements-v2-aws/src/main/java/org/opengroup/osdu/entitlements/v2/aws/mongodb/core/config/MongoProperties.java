@@ -68,13 +68,10 @@ public class MongoProperties {
                 password = credentials.get("password");
                 authDatabase = credentials.get("authDB");
             }
-
             endpoint = provider.getParameterAsStringOrDefault("mongodb_host", endpoint);
             port = provider.getParameterAsStringOrDefault("mongodb_port", port);
-
         }
+
     }
 
-    
-    
 }
