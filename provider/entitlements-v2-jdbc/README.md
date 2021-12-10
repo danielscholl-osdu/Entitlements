@@ -47,9 +47,44 @@ This project uses [Lombok](https://projectlombok.org/) for code generation. You 
 | `server_port` | ex `8080` | Port of the server | no | -- |
 | `GOOGLE_AUDIENCES` | ex `*****.apps.googleusercontent.com` | Client ID for getting access to cloud resources | yes | https://console.cloud.google.com/apis/credentials |
 | `GOOGLE_APPLICATION_CREDENTIALS` | `********` | Need this only if running locally, this service acc must have token sign access | yes | -- |
+| `GCP_AUTHENTICATION_MODE` | `IAP` OR `EXTERNAL` OR `INTERNAL`|  | no | -- |
+
+
+#### Authentication modes
+
+**IAP** Use it with enabled IAP, this mode use combined authentication with OpenID provider, which will be used inside secured perimeter with service to service communication and IAP tokens verification that came with users requests.
+
+| name | value | description | sensitive? | source |
+| ---  | ---   | ---         | ---        | ---    |
+| `IAP_PROVIDER_JWT_HEADER` | ex `x-goog-iap-jwt-assertion` | Header that will contain IAP token | no | - |
+| `IAP_PROVIDER_USER_ID_HEADER` | ex `x-goog-authenticated-user-email` | Header that will contain user email added by IAP | no | - |
+| `IAP_PROVIDER_ISSUER_URL` | ex `https://cloud.google.com/iap` | IAP issuer url | no | - |
+| `IAP_PROVIDER_AUD` | ex `/projects/${iap.provider.project-number}/global/backendServices/${iap.provider.backend-service-id}` | IAP client id(audiences) | no | - |
+| `IAP_PROVIDER_PROJECT_NUMBER` | ex `12345` | Google project number | no | - |
+| `IAP_PROVIDER_BACKEND_SERVICE_ID` | ex `12345` | Google backend service id | no | - |
+| `IAP_PROVIDER_JWK_URL` | ex `https://www.gstatic.com/iap/verify/public_key-jwk` | IAP jwk url | no | - |
+| `IAP_PROVIDER_ALGORITHM` | ex `ES256` | IAP token algorithm | no | - |
+| `OPENID_PROVIDER_URL` | ex `https://accounts.google.com` | OpenID provider | no | - |
+| `OPENID_PROVIDER_CLIENT_ID` | ex `123.apps.googleusercontent.com` | OpenID client id | no | - |
+| `OPENID_PROVIDER_ALGORITHM` | ex `RS256` | OpenID token algorithm | no | - |
+
+**EXTERNAL**  Use it with enabled external authentication method, this mode use combined authentication with OpenID provider, if the request will contain both token and user-id header
+
+| name | value | description | sensitive? | source |
+| ---  | ---   | ---         | ---        | ---    |
+| `OPENID_PROVIDER_URL` | ex `https://accounts.google.com` | OpenID provider | no | - |
+| `OPENID_PROVIDER_CLIENT_ID` | ex `123.apps.googleusercontent.com` | OpenID client id | no | - |
+| `OPENID_PROVIDER_ALGORITHM` | ex `RS256` | OpenID token algorithm | no | - |
 | `GCP_X_USER_IDENTITY_HEADER_NAME` | ex `x-user-id` | The name of the header in which the "id of the authenticated user" is passed | no | -- |
-| `GCP_X_APPLICATION_IDENTITY_HEADER_NAME` | ex `x-app-id` | The name of the header in which the "id of the authenticated user application" is passed | no | -- |
-| `GCP_TRUST_EXTERNAL_AUTHENTICATION` | ex `false` | Need this only if running locally, this service acc must have token sign access | no | -- |
+
+**INTERNAL** Use it when authentication should be processed by entitlements, OpenID provider will be used for token validation.
+
+| name | value | description | sensitive? | source |
+| ---  | ---   | ---         | ---        | ---    |
+| `OPENID_PROVIDER_URL` | ex `https://accounts.google.com` | OpenID provider | no | - |
+| `OPENID_PROVIDER_CLIENT_ID` | ex `123.apps.googleusercontent.com` | OpenID client id | no | - |
+| `OPENID_PROVIDER_ALGORITHM` | ex `RS256` | OpenID token algorithm | no | - |
+| `GCP_X_USER_IDENTITY_HEADER_NAME` | ex `x-user-id` | The name of the header in which the "id of the authenticated user" is passed | no | -- |
 
 ### Build and run the application
 
@@ -87,6 +122,8 @@ In order to run integration tests, you need to have the following environment va
 | `INTEGRATION_TESTER` | `********` | System identity to assume for API calls. Note: This user must have entitlements already configured | yes | -- |
 | `INTEGRATION_TEST_AUDIENCE` | `********` | Client Id for `$INTEGRATION_TESTER` | yes | -- |
 | `GOOGLE_APPLICATION_CREDENTIALS` | `********` | System identity to provide access for cleaning up groups created during test | yes | -- |
+| `AUTH_MODE` | `IAP` | Should be configured only if IAP enabled | no | -- |
+| `IAP_URL` | `https://dev.osdu.club` | Should be configured only if IAP enabled | no | -- |
 
 **Entitlements configuration for integration accounts**
 

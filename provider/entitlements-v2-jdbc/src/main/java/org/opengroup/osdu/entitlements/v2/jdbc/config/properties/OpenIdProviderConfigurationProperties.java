@@ -29,4 +29,5 @@ import org.springframework.context.annotation.Configuration;
 public class OpenIdProviderConfigurationProperties {
 	private String clientId;
 	private String url;
+	private String algorithm;
 }
