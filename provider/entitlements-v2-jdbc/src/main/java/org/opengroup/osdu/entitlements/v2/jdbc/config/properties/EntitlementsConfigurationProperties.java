@@ -26,7 +26,6 @@ import org.springframework.context.annotation.Configuration;
 @Data
 public class EntitlementsConfigurationProperties {
 
-  private String gcpXUserIdentityHeaderName;
-  private String gcpXApplicationIdentityHeaderName;
-  private Boolean gcpTrustExternalAuthentication = false;
+    private String gcpXUserIdentityHeaderName;
+    private String gcpXApplicationIdentityHeaderName;
 }
