@@ -13,14 +13,13 @@
     <artifactId>entitlements-v2-azure</artifactId>
 
     <properties>
-        <core-lib-azure.version>0.12.0</core-lib-azure.version>
+        <core-lib-azure.version>0.13.0-rc4</core-lib-azure.version>
         <gremlin.version>3.5.0</gremlin.version>
         <redisson.version>3.15.3</redisson.version>
         <resilience4j.version>1.7.0</resilience4j.version>
         <embedded-resdis.version>0.7.1</embedded-resdis.version>
         <awaitility.version>3.0.0</awaitility.version>
         <awaitility.proxy.version>3.0.0</awaitility.proxy.version>
-        <json-smart.version>2.4.6</json-smart.version>
     </properties>
 
     <dependencies>
@@ -52,15 +51,6 @@
                     <artifactId>simple-xml</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <!--
-        Many dependencies contain library with vulnerabilities: net.minidev:json-smart:jar:2.3
-        because of that we need to enforce the higher version
-        -->
-        <dependency>
-            <groupId>net.minidev</groupId>
-            <artifactId>json-smart</artifactId>
-            <version>${json-smart.version}</version>
         </dependency>
 
         <dependency>
