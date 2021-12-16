@@ -22,35 +22,36 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.openid.connect.sdk.validators.IDTokenValidator;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
-import javax.annotation.PostConstruct;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.IapConfigurationProperties;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.OpenIdProviderConfigurationProperties;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@DependsOn({"openIDProviderConfig"})
-@Component
+@Configuration
 public class IDTokenValidatorConfig {
 
-	@Autowired
-	private OpenIdProviderConfigurationProperties properties;
+    @Bean
+    @Qualifier("opendIdValidator")
+    public IDTokenValidator getOpenIdValidator(OpenIDProviderConfig openIDProviderConfig, OpenIdProviderConfigurationProperties properties)
+        throws MalformedURLException {
+        Issuer iss = openIDProviderConfig.getProviderMetadata().getIssuer();
+        URL jwkSetURL = openIDProviderConfig.getProviderMetadata().getJWKSetURI().toURL();
+        ClientID clientID = new ClientID(properties.getClientId());
+        JWSAlgorithm jwsAlg = JWSAlgorithm.parse(properties.getAlgorithm());
+        return new IDTokenValidator(iss, clientID, jwsAlg, jwkSetURL);
+    }
 
-	@Autowired
-	private OpenIDProviderConfig providerConfig;
-
-	private IDTokenValidator validator;
-
-	@PostConstruct
-	public void setUp() throws MalformedURLException {
-		Issuer iss = providerConfig.getProviderMetadata().getIssuer();
-		URL jwkSetURL = providerConfig.getProviderMetadata().getJWKSetURI().toURL();
-		ClientID clientID = new ClientID(properties.getClientId());
-		JWSAlgorithm jwsAlg = JWSAlgorithm.RS256;
-		validator = new IDTokenValidator(iss, clientID, jwsAlg, jwkSetURL);
-	}
-
-	public IDTokenValidator getValidator() {
-		return validator;
-	}
+    @Bean
+    @Qualifier("iapValidator")
+    public IDTokenValidator getIapValidator(IapConfigurationProperties properties) throws MalformedURLException {
+        Issuer iss = new Issuer(properties.getIssuerUrl());
+        URL jwkSetURL = URI.create(properties.getJwkUrl()).toURL();
+        String clientId = properties.getAud();
+        JWSAlgorithm jwsAlgorithm = JWSAlgorithm.parse(properties.getAlgorithm());
+        ClientID clientID = new ClientID(clientId);
+        return new IDTokenValidator(iss, clientID, jwsAlgorithm, jwkSetURL);
+    }
 }

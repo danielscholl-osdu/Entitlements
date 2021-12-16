@@ -17,17 +17,15 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.config.properties;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "openid.provider")
-@Getter
-@Setter
-public class OpenIdProviderConfigurationProperties {
-	private String clientId;
-	private String url;
-	private String algorithm;
+@ConfigurationProperties
+@Data
+public class EntitlementsConfigurationProperties {
+
+    private String gcpXUserIdentityHeaderName;
+    private String gcpXApplicationIdentityHeaderName;
 }

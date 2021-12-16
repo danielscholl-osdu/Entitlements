@@ -10,6 +10,7 @@ import org.opengroup.osdu.core.common.partition.IPartitionProvider;
 import org.opengroup.osdu.core.common.partition.PartitionException;
 import org.opengroup.osdu.core.common.partition.PartitionInfo;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+@Lazy // To prevent global lazy override by @Scheduled.
 @Service
 @RequiredArgsConstructor
 public class PartitionCacheTtlService {
