@@ -13,7 +13,7 @@
     <artifactId>entitlements-v2-azure</artifactId>
 
     <properties>
-        <core-lib-azure.version>0.13.0-rc5</core-lib-azure.version>
+        <core-lib-azure.version>0.13.0-rc6</core-lib-azure.version>
         <gremlin.version>3.5.0</gremlin.version>
         <redisson.version>3.15.3</redisson.version>
         <resilience4j.version>1.7.0</resilience4j.version>
