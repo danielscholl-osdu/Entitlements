@@ -45,11 +45,12 @@ In order to run the service locally or remotely, you will need to have the follo
 | `LOG_LEVEL` | `DEBUG` | yes | The Log Level severity to use (https://www.tutorialspoint.com/log4j/log4j_logging_levels.htm) | no |
 | `SSM_ENABLED` | `true` | yes | Set to 'true' to use SSM to resolve config properties, otherwise use env vars | no |
 | `SSL_ENABLED` | `false` | no | Set to 'false' to disable SSL for local development | no |
-| `MONGODB_ENDPOINT` | `localhost` or `https://some-hosted-url` | yes | Specify the base url for mongo server. | no |
+| `MONGODB_ENDPOINT` | `localhost` or `https://some-hosted-url` | yes | Specify the base url for mongo server | no |
 | `MONGODB_USE_SRV_ENDPOINT` | `false` or `true` | yes | To run the service locally, set this to false | no | 
 | `MONGODB_PORT` | `27017` | no | Specify the port on which the mongo server is running. Default is 27017 | no |
-| `MONGODB_AUTH_DATABASE` | `admin` | no | Specify the database name. | no |
-   
+| `MONGODB_AUTH_DATABASE` | `admin` | no | Specify the database name | no |
+| `MONGODB_USERNAME` | `admin` | yes | Specify the username on the running mongo server | no |
+| `MONGODB_PASSWORD` | `admin` | yes | Specify the password on the running mongo server | no |
 
 ### Run Locally
 Check that maven is installed:
