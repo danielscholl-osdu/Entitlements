@@ -4,6 +4,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.request.RequestData;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -27,6 +28,9 @@ public class HttpClientService {
 
     private final Client client;
     private final String baseUrl;
+    //set this mode to true if running the service and tests locally
+    private Boolean localMode;
+    private String header_x_user_id;
 
     public HttpClientService(ConfigurationService configurationService) {
         this.client = getClient();
@@ -43,10 +47,35 @@ public class HttpClientService {
             }
         }
         WebResource.Builder builder = webResource.getRequestBuilder();
+
+        localMode= Boolean.parseBoolean(System.getenv("LOCAL_MODE"));
+        if (!localMode) {
+
         builder.accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + requestData.getToken())
                 .header("data-partition-id", requestData.getDataPartitionId());
+        }
+        else
+        {
+            header_x_user_id=System.getenv("HEADER_X_USER_ID");
+            if(!StringUtils.isEmpty(requestData.getToken())) {
+                builder.accept(MediaType.APPLICATION_JSON)
+                        .type(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + requestData.getToken())
+                        .header("data-partition-id", requestData.getDataPartitionId())
+                        .header("x-user-id", header_x_user_id);
+            }
+            else
+            {
+                builder.accept(MediaType.APPLICATION_JSON)
+                        .type(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + requestData.getToken())
+                        .header("data-partition-id", requestData.getDataPartitionId());
+
+            }
+        }
+
         if (requestData.getBody() != null) {
             return builder.method(requestData.getMethod(), ClientResponse.class, requestData.getBody());
         }

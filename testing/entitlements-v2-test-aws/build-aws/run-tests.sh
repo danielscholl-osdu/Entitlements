@@ -34,8 +34,9 @@ echo "$SCRIPT_SOURCE_DIR"
 export ENTITLEMENTS_URL=$ENTITLEMENT_V2_URL
 export SERVICE_PRINCIPAL_EMAIL=serviceprincipal@testing.com
 export TENANT='opendes'
-
-
+export HEADER_X_USER_ID=serviceprincipal@testing.com
+export LOCAL_MODE="${LOCAL_MODE:=false}"
+export HEADER_X_USER_ID=serviceprincipal@testing.com
 #### RUN INTEGRATION TEST #########################################################################
 
 mvn -ntp test -f "$SCRIPT_SOURCE_DIR"/../pom.xml
