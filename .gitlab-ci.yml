@@ -18,7 +18,7 @@ variables:
   OSDU_GCP_VENDOR: jdbc
   OSDU_GCP_HELM_NAMESPACE: default
   OSDU_GCP_HELM_CONFIG_SERVICE_VARS: "--set data.domain=$DOMAIN --set data.spring_datasource_url=jdbc:postgresql://127.0.0.1:5432/entitlements --set data.spring_datasource_password=$OSDU_GCP_SPRING_DATASOURCE_PASSWORD --set data.spring_datasource_username=postgres --set data.google_audiences=$GOOGLE_AUDIENCE --set data.log_level=INFO --set data.partition_api=$OSDU_GCP_PARTITION_API"
-  OSDU_GCP_HELM_DEPLOYMENT_SERVICE_VARS: "--set data.image=$CI_REGISTRY_IMAGE/osdu-gcp:$CI_COMMIT_SHORT_SHA --set data.serviceAccountName=$OSDU_GCP_SERVICE-k8s --set data.sql_connection_string=nice-etching-277309:us-central1:entitlements-v2"
+  OSDU_GCP_HELM_DEPLOYMENT_SERVICE_VARS: "--set data.image=$CI_REGISTRY_IMAGE/osdu-gcp:$CI_COMMIT_SHORT_SHA --set data.serviceAccountName=$OSDU_GCP_SERVICE-k8s --set data.sql_connection_string=$OSDU_GCP_SQL_CONNECTION_STRING"
   OSDU_GCP_HELM_CONFIG_SERVICE: entitlements-config
   OSDU_GCP_HELM_DEPLOYMENT_SERVICE: entitlements-deploy
 
