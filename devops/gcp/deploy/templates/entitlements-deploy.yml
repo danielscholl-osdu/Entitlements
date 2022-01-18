@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - image: "{{ .Values.data.image }}"
-        imagePullPolicy: Always
+        imagePullPolicy: "{{ .Values.data.imagePullPolicy }}"
         name: "{{ .Values.conf.app_name }}"
         envFrom:
         - configMapRef:
@@ -27,6 +27,7 @@ spec:
         - secretRef:
             name: "{{ .Values.conf.secret_name }}"
       - image: "gcr.io/cloudsql-docker/gce-proxy:{{ .Values.data.cloud_sql_proxy_version }}"
+        imagePullPolicy: "{{ .Values.data.imagePullPolicy }}"
         name: cloud-sql-proxy
         command:
           - /cloud_sql_proxy
