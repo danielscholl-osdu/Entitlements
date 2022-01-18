@@ -3,7 +3,6 @@ variables:
   AZURE_BUILD_SUBDIR: provider/entitlements-v2-azure
   AZURE_TEST_SUBDIR: testing/entitlements-v2-test-azure
 
-
   AWS_BUILD_SUBDIR: provider/entitlements-v2-aws/build-aws
   AWS_TEST_SUBDIR: testing/entitlements-v2-test-aws
   AWS_SERVICE: entitlements-v2
@@ -22,7 +21,6 @@ variables:
   OSDU_GCP_HELM_DEPLOYMENT_SERVICE_VARS: "--set data.image=$CI_REGISTRY_IMAGE/osdu-gcp:$CI_COMMIT_SHORT_SHA --set data.serviceAccountName=$OSDU_GCP_SERVICE-k8s --set data.sql_connection_string=nice-etching-277309:us-central1:entitlements-v2"
   OSDU_GCP_HELM_CONFIG_SERVICE: entitlements-config
   OSDU_GCP_HELM_DEPLOYMENT_SERVICE: entitlements-deploy
-
 
 include:
   - project: "osdu/platform/ci-cd-pipelines"
@@ -48,7 +46,7 @@ include:
 
   - project: "osdu/platform/ci-cd-pipelines"
     file: "publishing/pages.yml"
-    
+
   - project: "osdu/platform/ci-cd-pipelines"
     file: "cloud-providers/ibm.yml"
 
@@ -56,5 +54,9 @@ include:
     file: "cloud-providers/osdu-gcp-gke.yml"
 
 osdu-gcp-deploy-deployment:
+  variables:
+    OSDU_GCP_SERVICE: entitlements
+
+osdu-gcp-dev2-deploy-deployment:
   variables:
     OSDU_GCP_SERVICE: entitlements
