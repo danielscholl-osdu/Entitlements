@@ -8,10 +8,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <redisson.version>3.13.2</redisson.version>
         <protobuf-java.version>3.12.4</protobuf-java.version>
-        <!-- When upgrading springfox version make sure to verify how the updated UI is displayed.
-         Latest versions of springfox library have issues with displaying content
-        -->
-        <springfox-version>2.7.0</springfox-version>
+        <springfox.version>3.0.0</springfox.version>
     </properties>
 
     <parent>
@@ -48,27 +45,6 @@
             <artifactId>dsl-json-java8</artifactId>
             <version>1.9.7</version>
         </dependency>
-
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${springfox-version}</version>
-            <exclusions>
-                <exclusion>
-                    <!--
-                    Excluding com.google.guava:guava:jar:18.0, because it has security vulnerability
-                    -->
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${springfox-version}</version>
-        </dependency>
-
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito2</artifactId>
@@ -108,6 +84,12 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
+        </dependency>
+        <!--Swagger-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>${springfox.version}</version>
         </dependency>
     </dependencies>
     <build>
