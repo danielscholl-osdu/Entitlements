@@ -16,7 +16,6 @@
         <reactor.netty.version>0.9.5.RELEASE</reactor.netty.version>
         <reactor.core.version>3.3.0.RELEASE</reactor.core.version>
         <springfox-version>2.7.0</springfox-version>
-        <tomcat-embed-core.version>9.0.37</tomcat-embed-core.version>
         <surefire.version>3.0.0-M5</surefire.version>
     </properties>
 
@@ -66,7 +65,6 @@
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
-            <version>${tomcat-embed-core.version}</version>
         </dependency>
         <dependency>
             <groupId>io.lettuce</groupId>
