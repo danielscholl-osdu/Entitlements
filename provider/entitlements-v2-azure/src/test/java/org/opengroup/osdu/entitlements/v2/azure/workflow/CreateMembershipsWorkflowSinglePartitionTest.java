@@ -150,8 +150,6 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "data.default.owners@common.contoso.com",
                 "users.myusers.operators@common.contoso.com"}, performListGroupRequest(userA));
 
-        testProtectionAgainstUsersDataRootGroupRemoval("users.myusers.operators");
-
         //create data group
         performCreateGroupRequest("data.mydata1.operators", userA);
         assertGroupsEquals(new String[]{
@@ -160,6 +158,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 "data.default.viewers@common.contoso.com",
                 "users.myusers.operators@common.contoso.com",
                 "data.mydata1.operators@common.contoso.com"}, performListGroupRequest(userA));
+
+        testProtectionAgainstUsersDataRootGroupRemoval("data.mydata1.operators");
 
         updateGroupMetadata();
 
@@ -197,7 +197,6 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
 
         assertMembersEquals(new String[]{userA,
                 userB,
-                "users.data.root@common.contoso.com",
                 "users.myusers2.operators@common.contoso.com"}, performListMemberRequest(userGroup1, userA));
         assertGroupsEquals(new String[]{
                 "data.default.owners@common.contoso.com",
@@ -234,6 +233,18 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         testGroupUpdateApi();
 
         testDeleteMemberApi();
+    }
+
+    private void testProtectionAgainstUsersDataRootGroupRemoval(String dataGroup) {
+        try {
+            performRemoveMemberRequest(dataGroup + "@common.contoso.com",
+                    "users.data.root@common.contoso.com", servicePrincipal)
+                    .andExpect(status().isBadRequest())
+                    .andExpect(content().json("{\"code\":400,\"reason\":\"Bad Request\",\"message\":\"Users" +
+                            " data root group hierarchy is enforced, member users.data.root cannot be removed\"}"));
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
     }
 
     private void removeDataGroup1FromDataGroup2(String dataGroup1, String dataGroup2) {
@@ -281,18 +292,6 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                     .andExpect(content().json("{\"code\":400,\"reason\":\"Bad Request\",\"message\":\"Key service" +
                             " accounts hierarchy is enforced, service_principal.com cannot" +
                             " be removed from group users.datalake.ops@common.contoso.com\"}"));
-        } catch (Exception e) {
-            Assert.fail(e.getMessage());
-        }
-    }
-
-    private void testProtectionAgainstUsersDataRootGroupRemoval(String usersGroup) {
-        try {
-            performRemoveMemberRequest(usersGroup + "@common.contoso.com",
-                    "users.data.root@common.contoso.com", servicePrincipal)
-                    .andExpect(status().isBadRequest())
-                    .andExpect(content().json("{\"code\":400,\"reason\":\"Bad Request\",\"message\":\"Users" +
-                            " data root group hierarchy is enforced, member users.data.root cannot be removed\"}"));
         } catch (Exception e) {
             Assert.fail(e.getMessage());
         }
@@ -384,7 +383,6 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         performAddMemberRequest(new AddMemberDto(newUser, Role.MEMBER), userGroup, userA);
         assertMembersEquals(new String[]{
                 userA,
-                "users.data.root@common.contoso.com",
                 userB}, performListMemberRequest(userGroup, userA));
 
         assertGroupsEquals(new String[]{
@@ -522,7 +520,6 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         performAddMemberRequest(new AddMemberDto(usersGroup2Email, Role.MEMBER), usersGroup1Email, userA);
         assertMembersEquals(new String[]{
                 userA,
-                "users.data.root@common.contoso.com",
                 usersGroup2Email
         }, performListMemberRequest(usersGroup1Email, userA));
 
@@ -555,7 +552,6 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         // users group 2 still is a member of users group 1 even after the updated email
         assertMembersEquals(new String[]{
                 userA,
-                "users.data.root@common.contoso.com",
                 usersGroup2Email}, performListMemberRequest(usersGroup1Email, userA)); // updated email
 
         // clean-up

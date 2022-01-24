@@ -55,7 +55,7 @@ public class RemoveMemberService {
                     String.format("Key service accounts hierarchy is enforced, %s cannot be removed from group %s", memberEmail, groupEmail));
         }
 
-        if (memberNode.isUsersDataRootGroup() && (existingGroupEntityNode.isDataGroup() || existingGroupEntityNode.isUserGroup())) {
+        if (memberNode.isUsersDataRootGroup() && existingGroupEntityNode.isDataGroup()) {
             throw new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(),
                     "Users data root group hierarchy is enforced, member users.data.root cannot be removed");
         }

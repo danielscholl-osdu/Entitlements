@@ -36,7 +36,7 @@ public class CreateGroupService {
             log.error(String.format("Identity %s already belong to %d groups", createGroupServiceDto.getRequesterId(), allExistingParents.size()));
             throw new AppException(HttpStatus.PRECONDITION_FAILED.value(), HttpStatus.PRECONDITION_FAILED.getReasonPhrase(), String.format("%s's group quota hit. Identity can't belong to more than %d groups", createGroupServiceDto.getRequesterId(), EntityNode.MAX_PARENTS));
         }
-        if ((groupNode.isDataGroup() || groupNode.isUserGroup()) && defaultGroupsService.isNotDefaultGroupName(groupNode.getName())) {
+        if (groupNode.isDataGroup() && defaultGroupsService.isNotDefaultGroupName(groupNode.getName())) {
             EntityNode dataRootGroupNode = retrieveGroupRepo.groupExistenceValidation(String.format(EntityNode.ROOT_DATA_GROUP_EMAIL_FORMAT, createGroupServiceDto.getPartitionDomain()), createGroupServiceDto.getPartitionId());
             Set<ParentReference> allExistingParentsOfRootDataGroup = retrieveGroupRepo.loadAllParents(dataRootGroupNode).getParentReferences();
             if (allExistingParentsOfRootDataGroup.size() >= dataRootGroupQuota) {

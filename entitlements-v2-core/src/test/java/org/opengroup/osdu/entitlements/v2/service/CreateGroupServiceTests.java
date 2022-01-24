@@ -121,7 +121,7 @@ public class CreateGroupServiceTests {
     }
 
     @Test
-    public void shouldCallRepoAddDataRootGroupIfUserOrDataGroup() {
+    public void shouldCallRepoAddDataRootGroupIfDataGroup() {
         EntityNode groupNode = EntityNode.builder()
                 .nodeId("data.x@dp.domain.com")
                 .type(NodeType.GROUP)
@@ -156,7 +156,7 @@ public class CreateGroupServiceTests {
     }
 
     @Test
-    public void shouldCallRepoAndNotAddDataRootGroupIfNotUserOrDataGroup() {
+    public void shouldCallRepoAndNotAddDataRootGroupIfNotDataGroup() {
         EntityNode groupNode = EntityNode.builder()
                 .nodeId("service.x@dp.domain.com")
                 .type(NodeType.GROUP)
