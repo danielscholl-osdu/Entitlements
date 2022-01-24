@@ -430,7 +430,7 @@ public class RemoveMemberServiceTests {
     }
 
     @Test
-    public void shouldThrow400IfDeleteUsersdatarootGroupFromAnyDataOrUsersGroup() {
+    public void shouldThrow400IfDeleteUsersdatarootGroupFromAnyDataGroup() {
         EntityNode memberNode = EntityNode.builder()
                 .type(NodeType.GROUP)
                 .nodeId("users.data.root@common.contoso.com")
@@ -441,8 +441,8 @@ public class RemoveMemberServiceTests {
                 "users.data.root@common.contoso.com", "common")).thenReturn(memberNode);
         EntityNode groupNode = EntityNode.builder()
                 .type(NodeType.GROUP)
-                .nodeId("users.test@common.contoso.com")
-                .name("users.test")
+                .nodeId("data.test@common.contoso.com")
+                .name("data.test")
                 .dataPartitionId("common")
                 .build();
         EntityNode requesterNode = EntityNode.builder()
@@ -452,7 +452,7 @@ public class RemoveMemberServiceTests {
                 .dataPartitionId("common")
                 .build();
         when(retrieveGroupRepo.groupExistenceValidation(
-                "users.test@common.contoso.com", "common")).thenReturn(groupNode);
+                "data.test@common.contoso.com", "common")).thenReturn(groupNode);
         when(retrieveGroupRepo.getEntityNode("requesterid", "common")).thenReturn(Optional.of(requesterNode));
         EntityNode rootDataGroupNode = EntityNode.builder()
                 .type(NodeType.GROUP)
@@ -471,7 +471,7 @@ public class RemoveMemberServiceTests {
         when(requestInfoUtilService.getDomain("common")).thenReturn("common.contoso.com");
 
         RemoveMemberServiceDto removeMemberServiceDto = RemoveMemberServiceDto.builder()
-                .groupEmail("users.test@common.contoso.com")
+                .groupEmail("data.test@common.contoso.com")
                 .memberEmail("users.data.root@common.contoso.com")
                 .requesterId("requesterid")
                 .partitionId("common")

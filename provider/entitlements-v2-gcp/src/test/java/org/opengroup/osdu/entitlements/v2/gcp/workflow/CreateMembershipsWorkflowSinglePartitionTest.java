@@ -220,7 +220,6 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
 
         assertMembersEquals(new String[]{userA,
                 userB,
-                "users.data.root@common.contoso.com",
                 "users.myusers2.operators@common.contoso.com"}, performListMemberRequest(userGroup1, jwtA, userA));
         assertGroupsEquals(new String[]{
                 "users@common.contoso.com",
@@ -299,7 +298,6 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         performAddMemberRequest(new AddMemberDto(newUser, Role.MEMBER), userGroup, jwtA, userA);
 
         assertMembersEquals(new String[]{userA,
-                "users.data.root@common.contoso.com",
                 userB}, performListMemberRequest(userGroup, jwtA, userA));
 
         assertGroupsEquals(new String[]{
@@ -431,7 +429,6 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         performAddMemberRequest(new AddMemberDto(usersGroup2Email, Role.MEMBER), usersGroup1Email, jwtA, userA);
         assertMembersEquals(new String[]{
                 userA,
-                "users.data.root@common.contoso.com",
                 usersGroup2Email
         }, performListMemberRequest(usersGroup1Email, jwtA, userA));
 
@@ -463,7 +460,6 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         // users group 2 still is a member of users group 1 even after the updated email
         assertMembersEquals(new String[]{
                 userA,
-                "users.data.root@common.contoso.com",
                 usersGroup2Email
         }, performListMemberRequest(usersGroup1Email, jwtA, userA)); // updated email
 
