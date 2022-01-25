@@ -2,10 +2,12 @@ package org.opengroup.osdu.entitlements.v2.logging;
 
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.http.ResponseHeaders;
+import org.opengroup.osdu.core.common.http.ResponseHeadersFactory;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.model.http.Request;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.Filter;
@@ -26,6 +28,12 @@ import java.util.Map;
 public class ResponseLogFilter implements Filter {
     private final RequestInfo requestInfo;
     private final JaxRsDpsLog logger;
+
+    private ResponseHeadersFactory responseHeadersFactory = new ResponseHeadersFactory();
+
+    // defaults to * for any front-end, string must be comma-delimited if more than one domain
+    @Value("${ACCESS_CONTROL_ALLOW_ORIGIN_DOMAINS:*}")
+    String ACCESS_CONTROL_ALLOW_ORIGIN_DOMAINS;
 
     @Override
     public void init(FilterConfig filterConfig) {
@@ -68,11 +76,10 @@ public class ResponseLogFilter implements Filter {
     }
 
     private void setResponseHeaders(HttpServletResponse httpServletResponse) {
-        for (Map.Entry<String, List<Object>> header : ResponseHeaders.STANDARD_RESPONSE_HEADERS.entrySet()) {
-            StringBuilder builder = new StringBuilder();
-            header.getValue().forEach(builder::append);
-            httpServletResponse.addHeader(header.getKey(), builder.toString());
-        }
+            Map<String, String> responseHeaders = responseHeadersFactory.getResponseHeaders(ACCESS_CONTROL_ALLOW_ORIGIN_DOMAINS);
+            for(Map.Entry<String, String> header : responseHeaders.entrySet()){
+                httpServletResponse.addHeader(header.getKey(), header.getValue());
+            }
         httpServletResponse.addHeader(DpsHeaders.CORRELATION_ID, requestInfo.getHeaders().getCorrelationId());
     }
 
