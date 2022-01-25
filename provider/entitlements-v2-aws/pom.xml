@@ -12,7 +12,7 @@
     <artifactId>entitlements-v2-aws</artifactId>
 
     <properties>
-        <core-lib-aws.version>0.13.0-SNAPSHOT</core-lib-aws.version>
+        <core-lib-aws.version>0.13.0</core-lib-aws.version>
         <reactor.netty.version>0.9.5.RELEASE</reactor.netty.version>
         <reactor.core.version>3.3.0.RELEASE</reactor.core.version>
         <springfox-version>2.7.0</springfox-version>
