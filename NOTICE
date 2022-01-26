@@ -634,6 +634,7 @@ The following software have components provided under the terms of this license:
 - Microsoft Azure SDK for Service Bus (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure SDK for eventgrid (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure client library for Blob Storage (from https://github.com/Azure/azure-sdk-for-java)
+- Microsoft Azure client library for File Storage Data Lake (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure client library for Identity (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure client library for KeyVault Keys (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure client library for KeyVault Secrets (from https://github.com/Azure/azure-sdk-for-java)
@@ -717,6 +718,7 @@ The following software have components provided under the terms of this license:
 - Microsoft Azure SDK for EventGrid Management (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure SDK for SQL API of Azure Cosmos DB Service (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure client library for Blob Storage (from https://github.com/Azure/azure-sdk-for-java)
+- Microsoft Azure client library for File Storage Data Lake (from https://github.com/Azure/azure-sdk-for-java)
 - PostgreSQL JDBC Driver
 - Project Lombok (from http://projectlombok.org, https://projectlombok.org)
 - Spring Web (from http://www.springframework.org, https://github.com/spring-projects/spring-framework, https://repo1.maven.org/maven2/org/springframework/spring-web)
