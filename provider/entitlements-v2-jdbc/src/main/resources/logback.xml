@@ -18,7 +18,7 @@
 
 <configuration>
   <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-  <logger name="org.opengroup.osdu" level="DEBUG"/>
+  <logger name="org.opengroup.osdu" level="${LOG_LEVEL}"/>
   <springProfile name="local">
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
       <encoder>
