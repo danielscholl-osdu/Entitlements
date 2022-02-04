@@ -38,7 +38,9 @@ The following software have components provided under the terms of this license:
 - Apache Commons Collections (from http://commons.apache.org/proper/commons-collections/)
 - Apache Commons Compress (from http://commons.apache.org/compress/, http://commons.apache.org/proper/commons-compress/, https://commons.apache.org/proper/commons-compress/)
 - Apache Commons Configuration (from http://commons.apache.org/proper/commons-configuration/)
+- Apache Commons IO (from http://commons.apache.org/io/, https://commons.apache.org/proper/commons-io/, https://repo1.maven.org/maven2/commons-io/commons-io)
 - Apache Commons Lang (from http://commons.apache.org/proper/commons-lang/)
+- Apache Commons Logging (from http://commons.apache.org/logging/, http://commons.apache.org/proper/commons-logging/)
 - Apache Commons Pool (from https://commons.apache.org/proper/commons-pool/)
 - Apache Commons Text (from http://commons.apache.org/proper/commons-text, http://commons.apache.org/proper/commons-text/)
 - Apache Geronimo JMS Spec 2.0 (from http://geronimo.apache.org/maven/${siteId}/${version})
@@ -73,8 +75,6 @@ The following software have components provided under the terms of this license:
 - Cloud Key Management Service (KMS) API (from https://repo1.maven.org/maven2/com/google/apis/google-api-services-cloudkms)
 - Cloud Storage JSON API (from https://repo1.maven.org/maven2/com/google/apis/google-api-services-storage)
 - Collections (from https://repo1.maven.org/maven2/commons-collections/commons-collections)
-- Commons IO (from http://commons.apache.org/io/, https://repo1.maven.org/maven2/commons-io/commons-io)
-- Commons Logging (from http://commons.apache.org/logging/)
 - Converter: Jackson (from https://github.com/square/retrofit, https://repo1.maven.org/maven2/com/squareup/retrofit2/converter-jackson)
 - Core functionality for the Reactor Netty library (from https://github.com/reactor/reactor-netty)
 - FindBugs-jsr305 (from http://findbugs.sourceforge.net/)
@@ -166,8 +166,8 @@ The following software have components provided under the terms of this license:
 - Microsoft Azure SDK for SQL API of Azure Cosmos DB Service (from https://github.com/Azure/azure-sdk-for-java)
 - Mockito (from http://mockito.org, http://www.mockito.org, https://github.com/mockito/mockito)
 - MongoDB Driver (from http://www.mongodb.org)
-- MongoDB Java Driver Core (from http://www.mongodb.org)
-- Netty/All-in-One (from https://netty.io/netty-all/)
+- MongoDB Java Driver (from http://mongodb.org/, http://www.mongodb.org)
+- Netty/All-in-One (from https://netty.io/netty-all/, https://repo1.maven.org/maven2/io/netty/netty-all)
 - Netty/Buffer (from https://repo1.maven.org/maven2/io/netty/netty-buffer)
 - Netty/Codec (from https://repo1.maven.org/maven2/io/netty/netty-codec)
 - Netty/Codec/DNS (from https://repo1.maven.org/maven2/io/netty/netty-codec-dns)
@@ -201,13 +201,12 @@ The following software have components provided under the terms of this license:
 - Non-Blocking Reactive Foundation for the JVM (from https://github.com/reactor/reactor, https://github.com/reactor/reactor-core)
 - OAuth 2.0 SDK with OpenID Connect extensions (from https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions)
 - Objenesis (from http://objenesis.org)
-- OkHttp (from https://github.com/square/okhttp, https://repo1.maven.org/maven2/com/squareup/okhttp3/okhttp, https://square.github.io/okhttp/)
+- OkHttp (from https://repo1.maven.org/maven2/com/squareup/okhttp3/okhttp, https://square.github.io/okhttp/)
 - OkHttp Logging Interceptor (from https://github.com/square/okhttp, https://repo1.maven.org/maven2/com/squareup/okhttp3/logging-interceptor, https://square.github.io/okhttp/)
 - OkHttp URLConnection (from https://repo1.maven.org/maven2/com/squareup/okhttp3/okhttp-urlconnection, https://square.github.io/okhttp/)
 - Okio (from https://github.com/square/okio/, https://repo1.maven.org/maven2/com/squareup/okio/okio)
 - OpenCensus (from https://github.com/census-instrumentation/opencensus-java)
 - PWDB :: Database (from https://repo1.maven.org/maven2/org/linguafranca/pwdb/database)
-- PostgreSQL JDBC Driver
 - PowerMock (from http://www.powermock.org, https://repo1.maven.org/maven2/org/powermock/powermock-api-mockito)
 - Protocol Buffer extensions to the Google HTTP Client Library for Java. (from https://repo1.maven.org/maven2/com/google/http-client/google-http-client-protobuf)
 - Proton-J (from https://repo1.maven.org/maven2/org/apache/qpid/proton-j)
@@ -227,16 +226,16 @@ The following software have components provided under the terms of this license:
 - Spring Boot Actuator Starter (from http://projects.spring.io/spring-boot/, https://spring.io/projects/spring-boot)
 - Spring Boot AutoConfigure (from https://projects.spring.io/spring-boot/#/spring-boot-parent/spring-boot-autoconfigure, https://spring.io/projects/spring-boot)
 - Spring Boot Data JDBC Starter (from https://projects.spring.io/spring-boot/#/spring-boot-parent/spring-boot-starters/spring-boot-starter-data-jdbc, https://spring.io/projects/spring-boot)
-- Spring Boot Dependencies (from http://projects.spring.io/spring-boot/, https://spring.io/projects/spring-boot)
+- Spring Boot Dependencies (from http://projects.spring.io/spring-boot/, https://projects.spring.io/spring-boot/#, https://spring.io/projects/spring-boot)
 - Spring Boot JDBC Starter (from http://projects.spring.io/spring-boot/, https://spring.io/projects/spring-boot)
 - Spring Boot Json Starter (from https://projects.spring.io/spring-boot/#/spring-boot-parent/spring-boot-starters/spring-boot-starter-json, https://spring.io/projects/spring-boot)
 - Spring Boot Log4j 2 Starter (from http://projects.spring.io/spring-boot/, https://projects.spring.io/spring-boot/#/spring-boot-parent/spring-boot-starters/spring-boot-starter-log4j2, https://spring.io/projects/spring-boot)
 - Spring Boot Logging Starter (from http://projects.spring.io/spring-boot/, https://projects.spring.io/spring-boot/#/spring-boot-parent/spring-boot-starters/spring-boot-starter-logging, https://spring.io/projects/spring-boot)
 - Spring Boot Security Starter (from http://projects.spring.io/spring-boot/, https://spring.io/projects/spring-boot)
 - Spring Boot Starter (from http://projects.spring.io/spring-boot/, https://spring.io/projects/spring-boot)
-- Spring Boot Test (from http://projects.spring.io/spring-boot/, https://spring.io/projects/spring-boot)
-- Spring Boot Test Auto-Configure (from http://projects.spring.io/spring-boot/, https://spring.io/projects/spring-boot)
-- Spring Boot Test Starter (from http://projects.spring.io/spring-boot/, https://spring.io/projects/spring-boot)
+- Spring Boot Test (from http://projects.spring.io/spring-boot/, https://projects.spring.io/spring-boot/#/spring-boot-parent/spring-boot-test, https://spring.io/projects/spring-boot)
+- Spring Boot Test Auto-Configure (from http://projects.spring.io/spring-boot/, https://projects.spring.io/spring-boot/#/spring-boot-parent/spring-boot-test-autoconfigure, https://spring.io/projects/spring-boot)
+- Spring Boot Test Starter (from http://projects.spring.io/spring-boot/, https://projects.spring.io/spring-boot/#/spring-boot-parent/spring-boot-starters/spring-boot-starter-test, https://spring.io/projects/spring-boot)
 - Spring Boot Tomcat Starter (from http://projects.spring.io/spring-boot/, https://projects.spring.io/spring-boot/#/spring-boot-parent/spring-boot-starters/spring-boot-starter-tomcat, https://spring.io/projects/spring-boot)
 - Spring Boot Undertow Starter (from http://projects.spring.io/spring-boot/, https://projects.spring.io/spring-boot/#/spring-boot-parent/spring-boot-starters/spring-boot-starter-undertow)
 - Spring Boot Validation Starter (from http://projects.spring.io/spring-boot/, https://projects.spring.io/spring-boot/, https://spring.io/projects/spring-boot)
@@ -306,13 +305,14 @@ The following software have components provided under the terms of this license:
 - org.opentest4j:opentest4j (from https://github.com/ota4j-team/opentest4j)
 - org.xmlunit:xmlunit-core (from http://www.xmlunit.org/, https://www.xmlunit.org/)
 - perfmark:perfmark-api (from https://github.com/perfmark/perfmark)
+- pgdjbc Postgresql-jre6
 - picocli - a mighty tiny Command Line Interface (from http://picocli.info)
 - powermock-api-mockito2 (from https://repo1.maven.org/maven2/org/powermock/powermock-api-mockito2)
 - powermock-api-support (from https://repo1.maven.org/maven2/org/powermock/powermock-api-support)
 - powermock-module-junit4 (from http://www.powermock.org)
 - powermock-module-junit4-common (from https://repo1.maven.org/maven2/org/powermock/powermock-module-junit4-common)
 - powermock-reflect (from https://repo1.maven.org/maven2/org/powermock/powermock-reflect)
-- proto-google-cloud-datastore-v1 (from https://github.com/googleapis/googleapis, https://github.com/googleapis/java-datastore/proto-google-cloud-datastore-v1, https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-datastore-v1)
+- proto-google-cloud-datastore-v1 (from https://github.com/googleapis/googleapis, https://github.com/googleapis/java-datastore/proto-google-cloud-datastore-v1)
 - proto-google-cloud-iamcredentials-v1 (from https://github.com/googleapis/java-iamcredentials/proto-google-cloud-iamcredentials-v1, https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-iamcredentials-v1)
 - proto-google-cloud-logging-v2 (from https://github.com/googleapis/java-logging/proto-google-cloud-logging-v2, https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-logging-v2)
 - proto-google-cloud-monitoring-v3 (from https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-monitoring-v3)
@@ -364,10 +364,10 @@ The following software have components provided under the terms of this license:
 - JLine (from https://repo1.maven.org/maven2/jline/jline)
 - Jodd BeanUtil (from http://jodd.org)
 - Jodd Core (from http://jodd.org)
-- PostgreSQL JDBC Driver
 - Reflections (from http://code.google.com/p/reflections/, http://github.com/ronmamo/reflections)
 - Stax2 API (from http://github.com/FasterXML/stax2-api)
 - ThreeTen backport (from https://github.com/ThreeTen/threetenbp, https://www.threeten.org/threetenbp)
+- pgdjbc Postgresql-jre6
 
 ========================================================================
 BSD-3-Clause
@@ -401,7 +401,6 @@ The following software have components provided under the terms of this license:
 - Mockito (from http://mockito.org, http://www.mockito.org, https://github.com/mockito/mockito)
 - Netty/Codec/HTTP (from https://repo1.maven.org/maven2/io/netty/netty-codec-http)
 - Netty/Transport/Classes/KQueue (from https://repo1.maven.org/maven2/io/netty/netty-transport-classes-kqueue)
-- PostgreSQL JDBC Driver
 - Protocol Buffer Java API (from http://code.google.com/p/protobuf, https://repo1.maven.org/maven2/com/google/protobuf/protobuf-java)
 - Protocol Buffers [Util] (from https://repo1.maven.org/maven2/com/google/protobuf/protobuf-java-util)
 - Redisson (from http://redisson.org)
@@ -412,6 +411,7 @@ The following software have components provided under the terms of this license:
 - jBCrypt (from https://github.com/djmdjm/jBCrypt)
 - jcabi-log (from https://repo1.maven.org/maven2/com/jcabi/jcabi-log)
 - jcabi-manifests (from https://repo1.maven.org/maven2/com/jcabi/jcabi-manifests)
+- pgdjbc Postgresql-jre6
 
 ========================================================================
 CC-BY-2.5
@@ -420,7 +420,7 @@ The following software have components provided under the terms of this license:
 
 - Apache Groovy (from http://groovy-lang.org, http://groovy.codehaus.org/, https://groovy-lang.org)
 - FindBugs-jsr305 (from http://findbugs.sourceforge.net/)
-- MongoDB Java Driver Core (from http://www.mongodb.org)
+- MongoDB Java Driver (from http://mongodb.org/, http://www.mongodb.org)
 
 ========================================================================
 CC-BY-4.0
@@ -641,7 +641,7 @@ The following software have components provided under the terms of this license:
 - Microsoft Azure common module for Storage (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure internal Avro module for Storage (from https://github.com/Azure/azure-sdk-for-java)
 - Mockito (from http://mockito.org, http://www.mockito.org, https://github.com/mockito/mockito)
-- MongoDB Java Driver Core (from http://www.mongodb.org)
+- MongoDB Java Driver (from http://mongodb.org/, http://www.mongodb.org)
 - Netty/Codec/HTTP (from https://repo1.maven.org/maven2/io/netty/netty-codec-http)
 - Netty/Common (from https://repo1.maven.org/maven2/io/netty/netty-common)
 - Project Lombok (from http://projectlombok.org, https://projectlombok.org)
@@ -673,7 +673,7 @@ MPL-2.0
 The following software have components provided under the terms of this license:
 
 - Javassist (from http://www.javassist.org/)
-- OkHttp (from https://github.com/square/okhttp, https://repo1.maven.org/maven2/com/squareup/okhttp3/okhttp, https://square.github.io/okhttp/)
+- OkHttp (from https://repo1.maven.org/maven2/com/squareup/okhttp3/okhttp, https://square.github.io/okhttp/)
 
 ========================================================================
 PHP-3.01
@@ -719,12 +719,12 @@ The following software have components provided under the terms of this license:
 - Microsoft Azure SDK for SQL API of Azure Cosmos DB Service (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure client library for Blob Storage (from https://github.com/Azure/azure-sdk-for-java)
 - Microsoft Azure client library for File Storage Data Lake (from https://github.com/Azure/azure-sdk-for-java)
-- PostgreSQL JDBC Driver
 - Project Lombok (from http://projectlombok.org, https://projectlombok.org)
 - Spring Web (from http://www.springframework.org, https://github.com/spring-projects/spring-framework, https://repo1.maven.org/maven2/org/springframework/spring-web)
 - azure-documentdb (from http://azure.microsoft.com/en-us/services/documentdb/, https://azure.microsoft.com/en-us/services/cosmos-db/)
 - botocore (from https://github.com/boto/botocore)
 - msal4j (from https://github.com/AzureAD/microsoft-authentication-library-for-java)
+- pgdjbc Postgresql-jre6
 - reactive-streams (from http://www.reactive-streams.org/)
 
 ========================================================================
