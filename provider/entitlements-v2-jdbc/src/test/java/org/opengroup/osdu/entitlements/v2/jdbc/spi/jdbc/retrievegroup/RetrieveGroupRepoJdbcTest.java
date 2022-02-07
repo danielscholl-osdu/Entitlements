@@ -7,6 +7,7 @@ import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.entitlements.v2.jdbc.model.GroupInfoEntity;
 import org.opengroup.osdu.entitlements.v2.jdbc.model.MemberInfoEntity;
+import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.SpiJdbcTestConfig;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.GroupRepository;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.JdbcTemplateRunner;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.MemberRepository;
@@ -32,7 +33,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-@SpringBootTest
+@SpringBootTest(classes = SpiJdbcTestConfig.class)
 @RunWith(SpringRunner.class)
 public class RetrieveGroupRepoJdbcTest {
 

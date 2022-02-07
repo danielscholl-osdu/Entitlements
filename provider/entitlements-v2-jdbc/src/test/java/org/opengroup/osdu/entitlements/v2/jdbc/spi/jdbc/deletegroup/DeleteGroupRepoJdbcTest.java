@@ -7,6 +7,7 @@ import org.opengroup.osdu.core.common.logging.audit.AuditStatus;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.entitlements.v2.jdbc.model.GroupInfoEntity;
+import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.SpiJdbcTestConfig;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.GroupRepository;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.MemberRepository;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
@@ -26,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.*;
 
-@SpringBootTest
+@SpringBootTest(classes = SpiJdbcTestConfig.class)
 @RunWith(SpringRunner.class)
 public class DeleteGroupRepoJdbcTest {
 

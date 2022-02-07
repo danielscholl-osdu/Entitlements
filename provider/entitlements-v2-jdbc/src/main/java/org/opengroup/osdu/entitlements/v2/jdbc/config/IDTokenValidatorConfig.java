@@ -24,34 +24,62 @@ import com.nimbusds.openid.connect.sdk.validators.IDTokenValidator;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.IapConfigurationProperties;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.OpenIdProviderConfigurationProperties;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 
 @Configuration
+@RequiredArgsConstructor
 public class IDTokenValidatorConfig {
 
-    @Bean
-    @Qualifier("opendIdValidator")
-    public IDTokenValidator getOpenIdValidator(OpenIDProviderConfig openIDProviderConfig, OpenIdProviderConfigurationProperties properties)
-        throws MalformedURLException {
-        Issuer iss = openIDProviderConfig.getProviderMetadata().getIssuer();
-        URL jwkSetURL = openIDProviderConfig.getProviderMetadata().getJWKSetURI().toURL();
-        ClientID clientID = new ClientID(properties.getClientId());
-        JWSAlgorithm jwsAlg = JWSAlgorithm.parse(properties.getAlgorithm());
-        return new IDTokenValidator(iss, clientID, jwsAlg, jwkSetURL);
-    }
+  private final EntOpenIDProviderConfig entOpenIDProviderConfig;
+  private final OpenIdProviderConfigurationProperties openIdConfigurationProperties;
 
-    @Bean
-    @Qualifier("iapValidator")
-    public IDTokenValidator getIapValidator(IapConfigurationProperties properties) throws MalformedURLException {
-        Issuer iss = new Issuer(properties.getIssuerUrl());
-        URL jwkSetURL = URI.create(properties.getJwkUrl()).toURL();
-        String clientId = properties.getAud();
-        JWSAlgorithm jwsAlgorithm = JWSAlgorithm.parse(properties.getAlgorithm());
-        ClientID clientID = new ClientID(clientId);
-        return new IDTokenValidator(iss, clientID, jwsAlgorithm, jwkSetURL);
+  @Bean
+  @ConditionalOnExpression(value = "'${gcp-authentication-mode}' != 'IAP'")
+  public Map<String, IDTokenValidator> getOpenIdValidatorsMap() {
+    return openIdConfigurationProperties.getClientIds().stream()
+        .collect(Collectors.toMap(clientId -> clientId, this::createIdTokenValidator));
+  }
+
+  private IDTokenValidator createIdTokenValidator(String clientId) {
+    Issuer iss = entOpenIDProviderConfig.getProviderMetadata().getIssuer();
+    URL jwkSetURL = getJwkSetURL(entOpenIDProviderConfig.getProviderMetadata().getJWKSetURI());
+    ClientID clientID = new ClientID(clientId);
+    JWSAlgorithm jwsAlg = JWSAlgorithm.parse(openIdConfigurationProperties.getAlgorithm());
+    return new IDTokenValidator(iss, clientID, jwsAlg, jwkSetURL);
+  }
+
+  @Bean
+  @ConditionalOnProperty(value = "gcp-authentication-mode", havingValue = "IAP")
+  public Map<String, IDTokenValidator> getIapValidatorsMap(IapConfigurationProperties properties) {
+    Issuer iss = new Issuer(properties.getIssuerUrl());
+    URL jwkSetURL = getJwkSetURL(URI.create(properties.getJwkUrl()));
+    String clientId = properties.getAud();
+    JWSAlgorithm jwsAlgorithm = JWSAlgorithm.parse(properties.getAlgorithm());
+    ClientID clientID = new ClientID(clientId);
+    IDTokenValidator idTokenValidator =
+        new IDTokenValidator(iss, clientID, jwsAlgorithm, jwkSetURL);
+    return Collections.singletonMap(clientId, idTokenValidator);
+  }
+
+  private URL getJwkSetURL(URI jwkSetURI) {
+    try {
+      return jwkSetURI.toURL();
+    } catch (MalformedURLException e) {
+      throw new AppException(
+          HttpStatus.INTERNAL_SERVER_ERROR.value(),
+          HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+          "Cannot read jwkSetUrl from properties");
     }
+  }
 }

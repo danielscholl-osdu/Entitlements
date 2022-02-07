@@ -16,3 +16,4 @@ data:
   LOG_PREFIX: "{{ .Values.data.log_prefix }}"
   SPRING_PROFILES_ACTIVE: "{{ .Values.data.spring_profiles_active }}"
   LOG_LEVEL: "{{ .Values.data.log_level }}"
+  OPENID_PROVIDER_CLIENT_IDS: "{{ .Values.data.google_audiences }}"

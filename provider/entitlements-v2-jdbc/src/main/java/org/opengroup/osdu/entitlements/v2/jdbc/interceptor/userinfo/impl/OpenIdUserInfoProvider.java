@@ -17,46 +17,38 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.interceptor.userinfo.impl;
 
-import static com.nimbusds.openid.connect.sdk.claims.ClaimsSet.AUD_CLAIM_NAME;
-
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.proc.BadJOSEException;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.openid.connect.sdk.UserInfoRequest;
 import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import com.nimbusds.openid.connect.sdk.validators.IDTokenValidator;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import net.minidev.json.JSONObject;
+import java.util.List;
+import java.util.Map;
+import lombok.Getter;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
-import org.opengroup.osdu.entitlements.v2.jdbc.config.OpenIDProviderConfig;
 import org.opengroup.osdu.entitlements.v2.jdbc.interceptor.userinfo.IUserInfoProvider;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+@Getter
 @Component
+@ConditionalOnExpression(value = "'${openid.provider.url}' != 'https://accounts.google.com'")
 public class OpenIdUserInfoProvider implements IUserInfoProvider {
 
     public static final String USER_INFO_ISSUE_REASON = "Obtaining user info issue";
     public static final String NOT_VALID_TOKEN_PROVIDED_MESSAGE = "Not valid token provided";
-    public static final String TOKEN_INFO_ENDPOINT = "https://www.googleapis.com/oauth2/v1/tokeninfo";
 
     private final JaxRsDpsLog log;
-    private final OpenIDProviderConfig provider;
-    private final IDTokenValidator openIdValidator;
+    private final Map<String, IDTokenValidator> openIdValidators;
 
-    public OpenIdUserInfoProvider(JaxRsDpsLog log, OpenIDProviderConfig provider, @Qualifier("opendIdValidator") IDTokenValidator openIdValidator) {
+  public OpenIdUserInfoProvider(JaxRsDpsLog log, Map<String, IDTokenValidator> openIdValidators) {
         this.log = log;
-        this.provider = provider;
-        this.openIdValidator = openIdValidator;
+        this.openIdValidators = openIdValidators;
     }
 
     @Override
@@ -64,64 +56,30 @@ public class OpenIdUserInfoProvider implements IUserInfoProvider {
         try {
             return getUserInfoFromIDToken(token);
         } catch (BadJOSEException | JOSEException | java.text.ParseException | ParseException e) {
-
-            log.info("id_token parsing failed. Trying access_token...");
-            log.info("Original exception: " + e.getMessage());
-
-            return getUserInfoFromAccessToken(token);
-        }
-    }
-
-    private UserInfo getUserInfoFromAccessToken(String accessToken) {
-        try {
-            BearerAccessToken token = BearerAccessToken.parse(accessToken);
-            HTTPResponse httpResponseUserInfo = new UserInfoRequest(
-                provider.getProviderMetadata().getUserInfoEndpointURI(),
-                token)
-                .toHTTPRequest()
-                .send();
-            if (httpResponseUserInfo.indicatesSuccess()) {
-                JSONObject userInfoResponse = httpResponseUserInfo.getContentAsJSONObject();
-                String audience = getAudienceForAccessToken(token);
-
-                userInfoResponse.put(AUD_CLAIM_NAME, audience);
-                return new UserInfo(userInfoResponse);
-            } else {
-                throw unauthorizedException();
-            }
-        } catch (ParseException | URISyntaxException | IOException e) {
+            log.info("id_token parsing failed. Original exception: " + e.getMessage());
             throw new AppException(HttpStatus.UNAUTHORIZED.value(),
                 USER_INFO_ISSUE_REASON,
                 NOT_VALID_TOKEN_PROVIDED_MESSAGE, e);
         }
     }
 
-    private String getAudienceForAccessToken(BearerAccessToken token) throws IOException, URISyntaxException, ParseException {
-        HTTPResponse tokenInfoResponse = new UserInfoRequest(
-            new URI(TOKEN_INFO_ENDPOINT),
-            token)
-            .toHTTPRequest()
-            .send();
-        if (tokenInfoResponse.indicatesSuccess()) {
-            return tokenInfoResponse.getContentAsJSONObject().getAsString("audience");
-        } else {
-            throw unauthorizedException();
-        }
-    }
-
-    private UserInfo getUserInfoFromIDToken(String token) throws java.text.ParseException, BadJOSEException, JOSEException, ParseException {
-        String aptToken = token.replace("Bearer ", "");
-
-        IDTokenClaimsSet claims = null;
-
-        JWT jwt = JWTParser.parse(aptToken);
-        claims = openIdValidator.validate(jwt, null);
-        return UserInfo.parse(claims.toJSONString());
-    }
-
-    private AppException unauthorizedException() {
-        return new AppException(HttpStatus.UNAUTHORIZED.value(),
-            USER_INFO_ISSUE_REASON,
-            NOT_VALID_TOKEN_PROVIDED_MESSAGE);
-    }
+  private UserInfo getUserInfoFromIDToken(String token)
+      throws java.text.ParseException, BadJOSEException, JOSEException, ParseException {
+    String aptToken = token.replace("Bearer ", "");
+    JWT jwt = JWTParser.parse(aptToken);
+    List<String> audiences = jwt.getJWTClaimsSet().getAudience();
+    String validatorName =
+        audiences.stream()
+            .filter(openIdValidators::containsKey)
+            .findFirst()
+            .orElseThrow(
+                () ->
+                    new AppException(
+                        HttpStatus.UNAUTHORIZED.value(),
+                        USER_INFO_ISSUE_REASON,
+                        NOT_VALID_TOKEN_PROVIDED_MESSAGE));
+    IDTokenValidator openIdValidator = openIdValidators.get(validatorName);
+    IDTokenClaimsSet claims = openIdValidator.validate(jwt, null);
+    return UserInfo.parse(claims.toJSONString());
+  }
 }
