@@ -1,10 +1,24 @@
 package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.updateappids;
 
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.verify;
+import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.DATA_PARTITION_ID;
+import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.getDataGroupNode;
+import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.getRequesterNode;
+import static org.powermock.api.mockito.PowerMockito.when;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.entitlements.v2.jdbc.model.GroupInfoEntity;
-import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.addmember.AddMemberRepoJdbc;
+import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.SpiJdbcTestConfig;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.GroupRepository;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.JdbcTemplateRunner;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.MemberRepository;
@@ -12,27 +26,12 @@ import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.retrievegroup.RetrieveGr
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
-import org.opengroup.osdu.entitlements.v2.model.Role;
-import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.verify;
-import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.*;
-import static org.powermock.api.mockito.PowerMockito.when;
-
-@SpringBootTest
+@SpringBootTest(classes = SpiJdbcTestConfig.class)
 @RunWith(SpringRunner.class)
 public class UpdateAppIdsJdbcTest {
 

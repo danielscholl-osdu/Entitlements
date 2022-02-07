@@ -45,9 +45,12 @@ This project uses [Lombok](https://projectlombok.org/) for code generation. You 
 | `DOMAIN` | ex `opendes.com` | The name of the domain for which the service runs | no | -- |
 | `PARTITION_API` | ex `http://localhost:8080/api/partition/v1` | Partition service endpoint | no | - |
 | `server_port` | ex `8080` | Port of the server | no | -- |
-| `GOOGLE_AUDIENCES` | ex `*****.apps.googleusercontent.com` | Client ID for getting access to cloud resources | yes | https://console.cloud.google.com/apis/credentials |
+| `GOOGLE_AUDIENCES` | ex `*****.apps.googleusercontent.com` | Client ID for getting access to cloud resources and Partition service| yes | https://console.cloud.google.com/apis/credentials |
 | `GOOGLE_APPLICATION_CREDENTIALS` | `********` | Need this only if running locally, this service acc must have token sign access | yes | -- |
 | `GCP_AUTHENTICATION_MODE` | `IAP` OR `EXTERNAL` OR `INTERNAL`|  | no | -- |
+| `PARTITION_AUTH_ENABLED` | ex `true` or `false` | Disable or enable auth token provisioning for requests to Partition service | no | - |
+| `SERVICE_TOKEN_PROVIDER` | `GCP` OR `OPENID`| Service account token provider, `GCP` means use Google service account `OPEIND` means use OpenId provider like `Keycloak` | no | -- |
+| `OPENID_PROVIDER_CLIENT_IDS` | `123,abc,xyz`| List of client ids that can be authorized by Entitlements service | no | -- |
 
 
 #### Authentication modes
@@ -67,6 +70,7 @@ This project uses [Lombok](https://projectlombok.org/) for code generation. You 
 | `OPENID_PROVIDER_URL` | ex `https://accounts.google.com` | OpenID provider | no | - |
 | `OPENID_PROVIDER_CLIENT_ID` | ex `123.apps.googleusercontent.com` | OpenID client id | no | - |
 | `OPENID_PROVIDER_ALGORITHM` | ex `RS256` | OpenID token algorithm | no | - |
+| `OPENID_PROVIDER_USER_ID_CLAIM_NAME` | ex `email` | OpenID user id claim name | no | - |
 
 **EXTERNAL**  Use it with enabled external authentication method, this mode use combined authentication with OpenID provider, if the request will contain both token and user-id header
 

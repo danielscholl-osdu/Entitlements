@@ -23,7 +23,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@SpringBootTest(properties = "gcp-authentication-mode=INTERNAL", classes = AuthTestConfig.class)
+@SpringBootTest(
+    properties = {
+      "gcp-authentication-mode=INTERNAL",
+      "openid.provider.url=http://test",
+      "openid.provider.user-id-claim-name=email"
+    },
+    classes = AuthTestConfig.class)
 @RunWith(SpringRunner.class)
 public class InternalAuthTest {
 
@@ -50,7 +56,7 @@ public class InternalAuthTest {
 
     @Test
     public void testShouldAuthenticateWhenValidAuthorizationHeaderPresent() {
-        when(request.getHeader(DpsHeaders.AUTHORIZATION)).thenReturn(CORRECT_TOKEN);
+        when(request.getHeader(DpsHeaders.AUTHORIZATION)).thenReturn("Bearer " + CORRECT_TOKEN);
         assertTrue(interceptor.preHandle(request, response, handler));
         DpsHeaders headers = applicationContext.getBean(DpsHeaders.class);
         assertEquals(MATCHING_USER_EMAIL, headers.getUserId());
@@ -58,7 +64,7 @@ public class InternalAuthTest {
 
     @Test
     public void testShouldAuthenticateWhenValidAuthorizationAndUserIdHeadersPresent() {
-        when(request.getHeader(DpsHeaders.AUTHORIZATION)).thenReturn(CORRECT_TOKEN);
+        when(request.getHeader(DpsHeaders.AUTHORIZATION)).thenReturn("Bearer " + CORRECT_TOKEN);
         when(request.getHeader(entitlementsConfigurationProperties.getGcpXUserIdentityHeaderName())).thenReturn(MATCHING_USER_EMAIL);
         assertTrue(interceptor.preHandle(request, response, handler));
         DpsHeaders headers = applicationContext.getBean(DpsHeaders.class);

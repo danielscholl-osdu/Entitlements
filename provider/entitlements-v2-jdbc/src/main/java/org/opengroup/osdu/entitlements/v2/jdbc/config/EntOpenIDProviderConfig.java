@@ -27,10 +27,11 @@ import java.io.IOException;
 import javax.annotation.PostConstruct;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.OpenIdProviderConfigurationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OpenIDProviderConfig {
+public class EntOpenIDProviderConfig {
 
 	@Autowired
 	private OpenIdProviderConfigurationProperties properties;

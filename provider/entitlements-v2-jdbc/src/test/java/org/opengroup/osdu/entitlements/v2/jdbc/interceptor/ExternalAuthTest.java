@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.EntOpenIDProviderConfig;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsConfigurationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +25,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@SpringBootTest(properties = "gcp-authentication-mode=EXTERNAL", classes = AuthTestConfig.class)
+@SpringBootTest(
+    properties = {
+      "gcp-authentication-mode=EXTERNAL",
+      "openid.provider.url=http://test",
+      "openid.provider.user-id-claim-name=email"
+    },
+    classes = AuthTestConfig.class)
 @RunWith(SpringRunner.class)
 public class ExternalAuthTest {
 
@@ -36,6 +43,8 @@ public class ExternalAuthTest {
     private HttpServletResponse response;
     @MockBean
     private JaxRsDpsLog jaxRsDpsLog;
+    @MockBean
+    private EntOpenIDProviderConfig entOpenIDProviderConfig;
     @Autowired
     private EntitlementsConfigurationProperties entitlementsConfigurationProperties;
     @Autowired
