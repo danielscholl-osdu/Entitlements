@@ -105,12 +105,8 @@ public class GcpUserInfoProvider extends OpenIdUserInfoProvider {
             .toHTTPRequest()
             .send();
 
-        String audience = null;
         if (tokenInfoResponse.indicatesSuccess()) {
-            audience = tokenInfoResponse.getContentAsJSONObject().getAsString("audience");
-        }
-        if (Objects.nonNull(audience) && this.getOpenIdValidators().containsKey(audience)) {
-            return audience;
+            return tokenInfoResponse.getContentAsJSONObject().getAsString("audience");
         } else {
             throw new AppException(HttpStatus.UNAUTHORIZED.value(),
                 USER_INFO_ISSUE_REASON,
