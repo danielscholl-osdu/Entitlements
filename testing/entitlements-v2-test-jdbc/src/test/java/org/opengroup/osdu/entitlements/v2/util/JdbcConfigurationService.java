@@ -38,7 +38,7 @@ public class JdbcConfigurationService implements ConfigurationService {
         if (Strings.isNullOrEmpty(SERVICE_URL)) {
             String serviceUrl = System.getProperty("ENTITLEMENT_V2_URL", System.getenv("ENTITLEMENT_V2_URL"));
             if (serviceUrl == null || serviceUrl.contains("-null")) {
-                serviceUrl = "http://localhost:8080/api/entitlements/v2";
+                serviceUrl = "http://localhost:8080/api/entitlements/v2/";
             }
             SERVICE_URL = serviceUrl;
         }
@@ -49,7 +49,7 @@ public class JdbcConfigurationService implements ConfigurationService {
     public String getDomain() {
         String domain = System.getProperty("DOMAIN", System.getenv("DOMAIN"));
         if (Strings.isNullOrEmpty(domain)) {
-            domain = "contoso.com";
+            domain = "group";
         }
         return domain;
     }
