@@ -42,7 +42,7 @@ This project uses [Lombok](https://projectlombok.org/) for code generation. You 
 | `SPRING_PROFILES_ACTIVE` | ex `dev` | Spring profile to be active | no | - |
 | `LOG_PREFIX` | `entitlements-v2` | Logging prefix | no | - |
 | `LOG_LEVEL` | `INFO` | Logging level | no | - |
-| `DOMAIN` | ex `opendes.com` | The name of the domain for which the service runs | no | -- |
+| `DOMAIN` | `group` | The name of the domain groups are created for. The default (and recommended for `jdbc`) value is `group` | no | -- |
 | `PARTITION_API` | ex `http://localhost:8080/api/partition/v1` | Partition service endpoint | no | - |
 | `server_port` | ex `8080` | Port of the server | no | -- |
 | `GOOGLE_AUDIENCES` | ex `*****.apps.googleusercontent.com` | Client ID for getting access to cloud resources and Partition service| yes | https://console.cloud.google.com/apis/credentials |
