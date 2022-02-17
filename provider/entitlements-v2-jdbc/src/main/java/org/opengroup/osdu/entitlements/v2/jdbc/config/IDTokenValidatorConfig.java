@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.IapConfigurationProperties;
-import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.OpenIdProviderConfigurationProperties;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsOpenIdProviderConfigurationProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -42,7 +42,7 @@ import org.springframework.http.HttpStatus;
 public class IDTokenValidatorConfig {
 
   private final EntOpenIDProviderConfig entOpenIDProviderConfig;
-  private final OpenIdProviderConfigurationProperties openIdConfigurationProperties;
+  private final EntitlementsOpenIdProviderConfigurationProperties openIdConfigurationProperties;
 
   @Bean
   @ConditionalOnExpression(value = "'${gcp-authentication-mode}' != 'IAP'")
