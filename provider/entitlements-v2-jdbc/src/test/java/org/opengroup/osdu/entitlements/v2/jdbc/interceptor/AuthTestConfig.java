@@ -10,7 +10,7 @@ import java.util.Map;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.IDTokenValidatorConfig;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.EntOpenIDProviderConfig;
-import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.OpenIdProviderConfigurationProperties;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsOpenIdProviderConfigurationProperties;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.security.ExternalAuthConfiguration;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.security.InternalAuthConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -66,7 +66,7 @@ public class AuthTestConfig {
   @Primary
   @ConditionalOnExpression(value = "'${gcp-authentication-mode}' != 'INTERNAL'")
   public Map<String, IDTokenValidator> getOpenIdValidatorsMap(
-      EntOpenIDProviderConfig entOpenIDProviderConfig, OpenIdProviderConfigurationProperties properties) {
+      EntOpenIDProviderConfig entOpenIDProviderConfig, EntitlementsOpenIdProviderConfigurationProperties properties) {
     return Collections.singletonMap(
         "testClientId",
         new IDTokenValidator(

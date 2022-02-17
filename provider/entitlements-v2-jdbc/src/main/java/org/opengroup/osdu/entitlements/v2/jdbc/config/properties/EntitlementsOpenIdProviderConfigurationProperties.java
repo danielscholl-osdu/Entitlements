@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "openid.provider")
 @Getter
 @Setter
-public class OpenIdProviderConfigurationProperties {
+public class EntitlementsOpenIdProviderConfigurationProperties {
 	private List<String> clientIds;
 	private String url;
 	private String algorithm;
