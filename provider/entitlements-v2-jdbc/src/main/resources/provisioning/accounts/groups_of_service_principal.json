@@ -83,6 +83,9 @@
     },
     {
       "groupName": "service.workflow.admin"
+    },
+    {
+      "groupName": "service.workflow.system-admin"
     }
   ]
 }
