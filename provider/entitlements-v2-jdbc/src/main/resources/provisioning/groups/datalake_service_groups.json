@@ -301,6 +301,11 @@
       ]
     },
     {
+      "name": "service.workflow.system-admin",
+      "description": "Admin group for workflow system endpoints, allow to create and delete system workflows",
+      "members": []
+    },
+    {
       "name": "cron.job",
       "description": "Group for cron jobs",
       "members": [
