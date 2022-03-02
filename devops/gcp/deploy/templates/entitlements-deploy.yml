@@ -26,12 +26,14 @@ spec:
             name: "{{ .Values.conf.configmap }}"
         - secretRef:
             name: "{{ .Values.conf.secret_name }}"
+      {{- if not .Values.conf.on_prem_enabled }}
       - image: "gcr.io/cloudsql-docker/gce-proxy:{{ .Values.data.cloud_sql_proxy_version }}"
         imagePullPolicy: "{{ .Values.data.imagePullPolicy }}"
         name: cloud-sql-proxy
         command:
           - /cloud_sql_proxy
           - "-instances={{ .Values.data.sql_connection_string }}=tcp:5432"
+      {{- end }}
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 0
