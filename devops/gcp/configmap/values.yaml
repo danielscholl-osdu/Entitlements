@@ -1,15 +1,27 @@
 data:
+  # common
   domain: ""
-  google_audiences: ""
+  log_level: "INFO"
+  log_prefix: "ent-v2"
+  openid_provider_client_ids: ""
+  partition_api: ""
+  spring_datasource_password: ""
   spring_datasource_url: ""
   spring_datasource_username: ""
-  spring_datasource_password: ""
+  # onprem
+  gcp_authentication_mode: ""
+  openid_provider_client_id: ""
+  openid_provider_client_secret: ""
+  openid_provider_url: ""
+  openid_provider_user_id_claim_name: "preferred_username"
+  partition_auth_enabled: ""
+  service_token_provider: "OPENID"
+  # gcp
+  google_audiences: ""
   spring_profiles_active: "dev"
-  partition_api: ""
-  log_prefix: "ent-v2"
-  log_level: ""
 
 conf:
   configmap: "entitlements-config"
   app_name: "entitlements"
   secret_name: "entitlements-secret"
+  on_prem_enabled: false

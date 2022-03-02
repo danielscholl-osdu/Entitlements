@@ -1,11 +1,13 @@
 data:
+  # common
   requests_cpu: "0.1"
   requests_memory: "640M"
   limits_cpu: "1"
   limits_memory: "1G"
   serviceAccountName: ""
+  image: "" 
   imagePullPolicy: "IfNotPresent"
-  image: ""
+  # gcp
   cloud_sql_proxy_version: "1.20.0"
   sql_connection_string: ""
 
@@ -13,3 +15,4 @@ conf:
   configmap: "entitlements-config"
   app_name: "entitlements"
   secret_name: "entitlements-secret"
+  on_prem_enabled: false
