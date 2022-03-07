@@ -1,8 +1,8 @@
 package org.opengroup.osdu.entitlements.v2.aws.config;
 
 
+import org.opengroup.osdu.core.aws.mongodb.helper.BasicMongoDBHelper;
 import org.opengroup.osdu.entitlements.v2.aws.AwsAppProperties;
-import org.opengroup.osdu.entitlements.v2.aws.mongodb.core.helper.BasicMongoDBHelper;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.converter.EntityNodeToGroupDocConverter;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.converter.EntityNodeToUserDocConverter;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.converter.GroupDocToEntityNodeConverter;

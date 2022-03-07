@@ -2,9 +2,9 @@ package org.opengroup.osdu.entitlements.v2.aws.config;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import org.opengroup.osdu.entitlements.v2.aws.mongodb.core.config.converter.SqlDateReadConverter;
-import org.opengroup.osdu.entitlements.v2.aws.mongodb.core.config.converter.SqlDateWriteConverter;
-import org.opengroup.osdu.entitlements.v2.aws.mongodb.core.helper.BasicMongoDBHelper;
+import org.opengroup.osdu.core.aws.mongodb.config.converter.SqlDateReadConverter;
+import org.opengroup.osdu.core.aws.mongodb.config.converter.SqlDateWriteConverter;
+import org.opengroup.osdu.core.aws.mongodb.helper.BasicMongoDBHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.opengroup.osdu.entitlements.v2.aws.mongodb.core.config.MongoConfig.DOT_NAME_REPLACER;
+import static org.opengroup.osdu.core.aws.mongodb.config.MongoDBBasicFactory.DOT_NAME_REPLACER;
 
 @Configuration
 public class MongoConfigTest extends AbstractMongoClientConfiguration {
@@ -66,3 +66,4 @@ public class MongoConfigTest extends AbstractMongoClientConfiguration {
         return new MongoCustomConversions(converterList);
     }
 }
+

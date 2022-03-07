@@ -16,7 +16,7 @@
 package org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.helper;
 
 
-import org.opengroup.osdu.entitlements.v2.aws.mongodb.core.helper.BasicMongoDBHelper;
+import org.opengroup.osdu.core.aws.mongodb.helper.BasicMongoDBHelper;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.internal.IdDoc;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.internal.NodeRelationDoc;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;

@@ -15,7 +15,7 @@
 
 package org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.helper;
 
-import org.opengroup.osdu.entitlements.v2.aws.mongodb.core.helper.BasicMongoDBHelper;
+import org.opengroup.osdu.core.aws.mongodb.helper.BasicMongoDBHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.index.Index;
