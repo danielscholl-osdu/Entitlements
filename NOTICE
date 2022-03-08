@@ -56,7 +56,7 @@ The following software have components provided under the terms of this license:
 - Jackson-module-parameter-names (from https://repo1.maven.org/maven2/com/fasterxml/jackson/module/jackson-module-parameter-names)
 - Jakarta Bean Validation API (from https://beanvalidation.org)
 - Jakarta Servlet (from https://projects.eclipse.org/projects/ee4j.servlet)
-- Java Native Access (from https://github.com/java-native-access/jna, https://github.com/twall/jna)
+- Java Native Access (from https://github.com/java-native-access/jna, https://github.com/twall/jna, https://repo1.maven.org/maven2/net/java/dev/jna/jna)
 - Java Servlet 4.0 API
 - Java UUID Generator (from http://wiki.fasterxml.com/JugHome)
 - Javassist (from http://www.javassist.org/)
@@ -192,6 +192,8 @@ The following software have components provided under the terms of this license:
 - Logback Contrib :: JSON :: Core (from https://repo1.maven.org/maven2/ch/qos/logback/contrib/logback-json-core)
 - Logback Contrib :: Jackson (from https://repo1.maven.org/maven2/ch/qos/logback/contrib/logback-jackson)
 - SnakeYAML (from http://code.google.com/p/snakeyaml/, http://www.snakeyaml.org)
+- org.junit.jupiter:junit-jupiter-api (from http://junit.org/junit5/)
+- org.junit.platform:junit-platform-commons (from http://junit.org/junit5/)
 
 ========================================================================
 EPL-2.0
@@ -209,6 +211,8 @@ The following software have components provided under the terms of this license:
 - Jakarta Servlet (from https://projects.eclipse.org/projects/ee4j.servlet)
 - Java Servlet 4.0 API
 - Java(TM) API for WebSocket (from https://repo1.maven.org/maven2/org/jboss/spec/javax/websocket/jboss-websocket-api_1.1_spec)
+- org.junit.jupiter:junit-jupiter-api (from http://junit.org/junit5/)
+- org.junit.platform:junit-platform-commons (from http://junit.org/junit5/)
 
 ========================================================================
 GPL-2.0-only
@@ -265,7 +269,7 @@ LGPL-2.1-only
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- Java Native Access (from https://github.com/java-native-access/jna, https://github.com/twall/jna)
+- Java Native Access (from https://github.com/java-native-access/jna, https://github.com/twall/jna, https://repo1.maven.org/maven2/net/java/dev/jna/jna)
 - Javassist (from http://www.javassist.org/)
 - Logback Contrib :: JSON :: Classic (from https://repo1.maven.org/maven2/ch/qos/logback/contrib/logback-json-classic)
 - Logback Contrib :: JSON :: Core (from https://repo1.maven.org/maven2/ch/qos/logback/contrib/logback-json-core)
@@ -356,3 +360,5 @@ The following software have components provided under the terms of this license:
 - JUnit Platform Engine API (from http://junit.org/junit5/, https://junit.org/junit5/)
 - Jakarta Activation API (from https://github.com/eclipse-ee4j/jaf)
 - Jakarta XML Binding API (from https://repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api, https://repo1.maven.org/maven2/org/jboss/spec/javax/xml/bind/jboss-jaxb-api_2.3_spec)
+- org.junit.jupiter:junit-jupiter-api (from http://junit.org/junit5/)
+- org.junit.platform:junit-platform-commons (from http://junit.org/junit5/)
