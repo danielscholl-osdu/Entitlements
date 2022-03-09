@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: "{{ .Values.conf.app_name }}-bootstrap"
+  name: "{{ .Values.conf.app_name }}-bootstrap-job"
+  namespace: "{{ .Release.Namespace }}"
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "30"
+spec:
+  template:
+    spec:
+      {{- with .Values.conf.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: "{{ .Values.conf.app_name }}-bootstrap-job"
+          image: "{{ .Values.conf.image.repository }}:{{ .Values.conf.image.tag }}"
+          envFrom:            
+          - configMapRef:
+              name: "{{ .Values.conf.app_name }}-bootstrap-job-configmap"
+          - secretRef:
+              name: "{{ .Values.conf.app_name }}-bootstrap-job-secret"
+      restartPolicy: Never
+  backoffLimit: 3

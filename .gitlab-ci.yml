@@ -61,3 +61,11 @@ osdu-gcp-deploy-deployment:
 osdu-gcp-dev2-deploy-deployment:
   variables:
     OSDU_GCP_SERVICE: entitlements
+
+osdu-gcp-helm-charts-master:
+  variables:
+    OSDU_GCP_HELM_BOOTSTRAP_DIR: "devops/gcp/bootstrap"
+  script:
+    - helm cm-push $OSDU_GCP_HELM_CONFIG_DIR ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/stable --username gitlab-ci-token --password $CI_JOB_TOKEN
+    - helm cm-push $OSDU_GCP_HELM_DEPLOYMENT_DIR ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/stable --username gitlab-ci-token --password $CI_JOB_TOKEN
+    - helm cm-push $OSDU_GCP_HELM_BOOTSTRAP_DIR ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/stable --username gitlab-ci-token --password $CI_JOB_TOKEN
