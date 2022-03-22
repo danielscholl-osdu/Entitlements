@@ -223,6 +223,11 @@
       ]
     },
     {
+      "name": "service.schema-service.system-admin",
+      "description": "Admin group for Schema system endpoints, allow to manage system schemas",
+      "members": []
+    },
+    {
       "name": "service.file.editors",
       "description": "Editors group for file service",
       "members": [
