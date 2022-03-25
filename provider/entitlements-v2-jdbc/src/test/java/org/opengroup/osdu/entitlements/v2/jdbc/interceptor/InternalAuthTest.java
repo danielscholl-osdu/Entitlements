@@ -26,7 +26,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(
     properties = {
       "gcp-authentication-mode=INTERNAL",
-      "openid.provider.url=http://test",
+      "openid.provider.url=https://accounts.google.com",
       "openid.provider.user-id-claim-name=email"
     },
     classes = AuthTestConfig.class)

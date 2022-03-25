@@ -47,7 +47,7 @@ This project uses [Lombok](https://projectlombok.org/) for code generation. You 
 | `server_port` | ex `8080` | Port of the server | no | -- |
 | `GOOGLE_AUDIENCES` | ex `*****.apps.googleusercontent.com` | Client ID for getting access to cloud resources and Partition service| yes | https://console.cloud.google.com/apis/credentials |
 | `GOOGLE_APPLICATION_CREDENTIALS` | `********` | Need this only if running locally, this service acc must have token sign access | yes | -- |
-| `GCP_AUTHENTICATION_MODE` | `IAP` OR `EXTERNAL` OR `INTERNAL`|  | no | -- |
+| `GCP_AUTHENTICATION_MODE` | `IAP` OR `EXTERNAL` OR `INTERNAL` OR `ISTIO`|  | no | -- |
 | `PARTITION_AUTH_ENABLED` | ex `true` or `false` | Disable or enable auth token provisioning for requests to Partition service | no | - |
 | `SERVICE_TOKEN_PROVIDER` | `GCP` OR `OPENID`| Service account token provider, `GCP` means use Google service account `OPEIND` means use OpenId provider like `Keycloak` | no | -- |
 | `OPENID_PROVIDER_CLIENT_IDS` | `123,abc,xyz`| List of client ids that can be authorized by Entitlements service | no | -- |
@@ -82,6 +82,15 @@ This project uses [Lombok](https://projectlombok.org/) for code generation. You 
 | `GCP_X_USER_IDENTITY_HEADER_NAME` | ex `x-user-id` | The name of the header in which the "id of the authenticated user" is passed | no | -- |
 
 **INTERNAL** Use it when authentication should be processed by entitlements, OpenID provider will be used for token validation.
+
+| name | value | description | sensitive? | source |
+| ---  | ---   | ---         | ---        | ---    |
+| `OPENID_PROVIDER_URL` | ex `https://accounts.google.com` | OpenID provider | no | - |
+| `OPENID_PROVIDER_CLIENT_ID` | ex `123.apps.googleusercontent.com` | OpenID client id | no | - |
+| `OPENID_PROVIDER_ALGORITHM` | ex `RS256` | OpenID token algorithm | no | - |
+| `GCP_X_USER_IDENTITY_HEADER_NAME` | ex `x-user-id` | The name of the header in which the "id of the authenticated user" is passed | no | -- |
+
+**ISTIO** Use it when authentication should not be processed by entitlements, Istio will be used for token validation.
 
 | name | value | description | sensitive? | source |
 | ---  | ---   | ---         | ---        | ---    |
