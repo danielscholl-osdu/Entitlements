@@ -45,7 +45,7 @@ public class IDTokenValidatorConfig {
   private final EntitlementsOpenIdProviderConfigurationProperties openIdConfigurationProperties;
 
   @Bean
-  @ConditionalOnExpression(value = "'${gcp-authentication-mode}' != 'IAP'")
+  @ConditionalOnExpression(value = "'${gcp-authentication-mode}' == 'INTERNAL' || '${gcp-authentication-mode}' == 'EXTERNAL'")
   public Map<String, IDTokenValidator> getOpenIdValidatorsMap() {
     return openIdConfigurationProperties.getClientIds().stream()
         .collect(Collectors.toMap(clientId -> clientId, this::createIdTokenValidator));

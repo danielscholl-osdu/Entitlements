@@ -29,7 +29,8 @@ import org.springframework.test.context.junit4.SpringRunner;
     properties = {
       "gcp-authentication-mode=EXTERNAL",
       "openid.provider.url=http://test",
-      "openid.provider.user-id-claim-name=email"
+      "openid.provider.user-id-claim-name=email",
+      "service.token.provider=OPENID"
     },
     classes = AuthTestConfig.class)
 @RunWith(SpringRunner.class)
