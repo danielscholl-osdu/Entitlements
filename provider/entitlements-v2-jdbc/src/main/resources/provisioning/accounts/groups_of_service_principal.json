@@ -70,6 +70,9 @@
       "groupName": "service.schema-service.admin"
     },
     {
+      "groupName": "service.schema-service.system-admin"
+    },
+    {
       "groupName": "service.file.editors"
     },
     {
