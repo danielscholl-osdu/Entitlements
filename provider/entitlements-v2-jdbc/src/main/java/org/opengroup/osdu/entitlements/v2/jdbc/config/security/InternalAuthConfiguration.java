@@ -17,11 +17,11 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.config.security;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-@ConditionalOnProperty(value = "gcp-authentication-mode", havingValue = "INTERNAL", matchIfMissing = true)
+@ConditionalOnExpression(value = "'${gcp-authentication-mode}' == 'INTERNAL' || '${gcp-authentication-mode}' == 'ISTIO'")
 @ComponentScan(value = {
     "org.opengroup.osdu.core",
     "org.opengroup.osdu.jdbc",

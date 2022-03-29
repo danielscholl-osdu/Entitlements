@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
 
 @Getter
 @Component
-@ConditionalOnExpression(value = "'${openid.provider.url}' != 'https://accounts.google.com'")
+@ConditionalOnExpression(value = "'${openid.provider.url}' != 'https://accounts.google.com' && '${gcp-authentication-mode}' != 'ISTIO'")
 public class OpenIdUserInfoProvider implements IUserInfoProvider {
 
     public static final String USER_INFO_ISSUE_REASON = "Obtaining user info issue";

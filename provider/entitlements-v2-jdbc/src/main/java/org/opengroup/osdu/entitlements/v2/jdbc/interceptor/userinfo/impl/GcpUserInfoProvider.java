@@ -29,19 +29,18 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.EntOpenIDProviderConfig;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@ConditionalOnProperty(value = "openid.provider.url", havingValue = "https://accounts.google.com")
+@ConditionalOnExpression(value = "'${openid.provider.url}' == 'https://accounts.google.com' && '${gcp-authentication-mode}' != 'ISTIO'")
 public class GcpUserInfoProvider extends OpenIdUserInfoProvider {
 
     private static final String USER_INFO_ISSUE_REASON = "Obtaining user info issue";
