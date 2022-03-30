@@ -62,6 +62,10 @@ osdu-gcp-dev2-deploy-deployment:
   variables:
     OSDU_GCP_SERVICE: entitlements
 
+osdu-gcp-dev2-deploy-configmap:
+  variables:
+    OSDU_GCP_SERVICE: entitlements
+
 osdu-gcp-helm-charts-master:
   variables:
     OSDU_GCP_HELM_BOOTSTRAP_DIR: "devops/gcp/bootstrap"
