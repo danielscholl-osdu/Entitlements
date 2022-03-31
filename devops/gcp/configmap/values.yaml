@@ -1,6 +1,7 @@
 data:
+  # Don't change or use the parameter unless necessary
+  domain: "group"
   # common
-  domain: ""
   log_level: "INFO"
   log_prefix: "ent-v2"
   openid_provider_client_ids: ""
