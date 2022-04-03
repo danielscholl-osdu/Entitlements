@@ -4,7 +4,7 @@ data:
   requests_memory: "640M"
   limits_cpu: "1"
   limits_memory: "1G"
-  serviceAccountName: ""
+  serviceAccountName: "entitlements"
   image: "" 
   imagePullPolicy: "IfNotPresent"
   # gcp
@@ -15,4 +15,5 @@ conf:
   configmap: "entitlements-config"
   app_name: "entitlements"
   secret_name: "entitlements-secret"
+  openid_secret_name: "entitlements-openid-secret"
   on_prem_enabled: false
