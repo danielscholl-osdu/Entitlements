@@ -1,14 +1,12 @@
 data:
   data_partition_id: ""
-  entitlements_host: "http://entitlements.default.svc.cluster.local"
-  openid_provider_client_id: ""
-  openid_provider_url: ""
-  onprem_enabled: "true"
-secret:
-  openid_provider_client_secret: ""
+  entitlements_host: "http://entitlements"
 conf:
   app_name: "entitlements"
+  serviceAccountName: "entitlements-bootstrap"
+  openid_secret_name: "entitlements-openid-secret"
   image:
     repository: ""
     tag: ""
   imagePullSecrets: []
+  on_prem_enabled: false

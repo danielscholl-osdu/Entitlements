@@ -21,7 +21,12 @@ spec:
           envFrom:            
           - configMapRef:
               name: "{{ .Values.conf.app_name }}-bootstrap-job-configmap"
+          {{- if .Values.conf.on_prem_enabled }}
           - secretRef:
-              name: "{{ .Values.conf.app_name }}-bootstrap-job-secret"
+              name: "{{ .Values.conf.openid_secret_name }}"
+          {{- end }}
       restartPolicy: Never
-  backoffLimit: 3
+      {{- if .Values.conf.on_prem_enabled }}
+      serviceAccountName: "{{ .Values.conf.serviceAccountName }}"
+      {{- end }}
+  backoffLimit: 20
