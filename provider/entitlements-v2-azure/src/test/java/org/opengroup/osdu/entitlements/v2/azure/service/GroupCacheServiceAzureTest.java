@@ -11,6 +11,8 @@ import org.mockito.AdditionalAnswers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
+import org.opengroup.osdu.azure.cache.IRedisClientFactory;
+import org.opengroup.osdu.azure.cache.RedisAzureCache;
 import org.opengroup.osdu.core.common.cache.RedisCache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
@@ -50,6 +52,7 @@ import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -92,7 +95,7 @@ public class GroupCacheServiceAzureTest {
     @MockBean
     private HitsNMissesMetricService metricService;
     @MockBean
-    private RedisCache<String, ParentReferences> redisGroupCache;
+    private RedisAzureCache<String, ParentReferences> redisGroupCache;
     @MockBean
     private JaxRsDpsLog log;
     @MockBean
@@ -145,7 +148,7 @@ public class GroupCacheServiceAzureTest {
         when(partitionCacheTtlService.getCacheTtlOfPartition("dp")).thenReturn(2000L);
         when(partitionCacheTtlService.getCacheFlushTtlBaseOfPartition("dp")).thenReturn(500L);
         when(partitionCacheTtlService.getCacheFlushTtlJitterOfPartition("dp")).thenReturn(1000L);
-
+        when(redisGroupCache.getLock(any())).thenReturn(redissonClient.getLock("cache-key"));
     }
 
     @Test
