@@ -1,6 +1,7 @@
 package org.opengroup.osdu.entitlements.v2.azure.configuration;
 
-import org.opengroup.osdu.core.common.cache.RedisCache;
+import org.opengroup.osdu.azure.cache.RedisAzureCache;
+import org.opengroup.osdu.azure.di.RedisAzureConfiguration;
 import org.opengroup.osdu.entitlements.v2.model.ParentReferences;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -11,7 +12,7 @@ public class CacheTestConfiguration {
 
     @Primary
     @Bean
-    public RedisCache<String, ParentReferences> groupCache() {
-        return new RedisCache<>("localhost", 7000, 0, String.class, ParentReferences.class);
+    public RedisAzureCache<String, ParentReferences> groupCache() {
+        return new RedisAzureCache<>(String.class, ParentReferences.class, new RedisAzureConfiguration(0, 3600, 7000, 3600));
     }
 }

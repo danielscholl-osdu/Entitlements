@@ -2,6 +2,7 @@ package org.opengroup.osdu.entitlements.v2.azure.service;
 
 import io.github.resilience4j.retry.Retry;
 import lombok.RequiredArgsConstructor;
+import org.opengroup.osdu.azure.cache.RedisAzureCache;
 import org.opengroup.osdu.core.common.cache.RedisCache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
@@ -26,10 +27,9 @@ import java.util.concurrent.TimeUnit;
 public class GroupCacheServiceAzure implements GroupCacheService {
     private final JaxRsDpsLog log;
     private final RetrieveGroupRepo retrieveGroupRepo;
-    private final RedisCache<String, ParentReferences> redisGroupCache;
+    private final RedisAzureCache<String, ParentReferences> redisGroupCache;
     private final PartitionCacheTtlService partitionCacheTtlService;
     private final HitsNMissesMetricService metricService;
-    private final RedissonClient redissonClient;
     private final Retry retry;
     private static final String REDIS_KEY_FORMAT = "%s-%s";
 
@@ -44,7 +44,7 @@ public class GroupCacheServiceAzure implements GroupCacheService {
         ParentReferences parentReferences = redisGroupCache.get(cacheKey);
         if (parentReferences == null) {
             String lockKey = String.format("lock-%s", cacheKey);
-            RLock cacheEntryLock = redissonClient.getLock(lockKey);
+            RLock cacheEntryLock = redisGroupCache.getLock(lockKey);
             return lockCacheEntryAndRebuild(cacheEntryLock, cacheKey, requesterId, partitionId);
         } else {
             metricService.sendHitsMetric();
@@ -80,32 +80,38 @@ public class GroupCacheServiceAzure implements GroupCacheService {
      */
     private Set<ParentReference> lockCacheEntryAndRebuild(RLock cacheEntryLock, String key, String requesterId, String partitionId) {
         boolean locked = false;
-        try {
-            locked = cacheEntryLock.tryLock(redissonLockAcquisitionTimeOut, redissonLockExpiration, TimeUnit.MILLISECONDS);
-            if (locked) {
-                metricService.sendMissesMetric();
-                ParentReferences parentReferences = rebuildCache(requesterId, partitionId);
-                long ttlOfKey = partitionCacheTtlService.getCacheTtlOfPartition(partitionId);
-                redisGroupCache.put(key, ttlOfKey, parentReferences);
-                return parentReferences.getParentReferencesOfUser();
-            } else {
-                ParentReferences parentReferences = Retry.decorateSupplier(retry, () -> redisGroupCache.get(key)).get();
-                if (parentReferences == null) {
+        if (cacheEntryLock == null) {
+            log.info("Redis secrets are not available yet");
+            ParentReferences parentReferences = rebuildCache(requesterId, partitionId);
+            return parentReferences.getParentReferencesOfUser();
+        } else {
+            try {
+                locked = cacheEntryLock.tryLock(redissonLockAcquisitionTimeOut, redissonLockExpiration, TimeUnit.MILLISECONDS);
+                if (locked) {
                     metricService.sendMissesMetric();
-                } else {
-                    metricService.sendHitsMetric();
+                    ParentReferences parentReferences = rebuildCache(requesterId, partitionId);
+                    long ttlOfKey = partitionCacheTtlService.getCacheTtlOfPartition(partitionId);
+                    redisGroupCache.put(key, ttlOfKey, parentReferences);
                     return parentReferences.getParentReferencesOfUser();
+                } else {
+                    ParentReferences parentReferences = Retry.decorateSupplier(retry, () -> redisGroupCache.get(key)).get();
+                    if (parentReferences == null) {
+                        metricService.sendMissesMetric();
+                    } else {
+                        metricService.sendHitsMetric();
+                        return parentReferences.getParentReferencesOfUser();
+                    }
                 }
-            }
-        } catch (InterruptedException ex) {
-            log.error(String.format("InterruptedException caught when lock the cache key %s: %s", key, ex));
-            Thread.currentThread().interrupt();
-        } finally {
-            if (locked) {
-                try {
-                    cacheEntryLock.unlock();
-                } catch (Exception ex) {
-                    log.warning(String.format("unlock exception: %s", ex));
+            } catch (InterruptedException ex) {
+                log.error(String.format("InterruptedException caught when lock the cache key %s: %s", key, ex));
+                Thread.currentThread().interrupt();
+            } finally {
+                if (locked) {
+                    try {
+                        cacheEntryLock.unlock();
+                    } catch (Exception ex) {
+                        log.warning(String.format("unlock exception: %s", ex));
+                    }
                 }
             }
         }
