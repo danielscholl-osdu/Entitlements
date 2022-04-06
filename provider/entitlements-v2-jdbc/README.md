@@ -31,73 +31,12 @@ This project uses [Lombok](https://projectlombok.org/) for code generation. You 
  - [Intellij configuration](https://projectlombok.org/setup/intellij)
  - [VSCode configuration](https://projectlombok.org/setup/vscode)
 
+## Service Configuration
 
-### Environment Variables
-
-| name | value | description | sensitive? | source |
-| ---  | ---   | ---         | ---        | ---    |
-| `SPRING_DATASOURCE_URL` | ex `jdbc:postgresql://localhost:5432/entitlements` | The JDBC-valid connection string for database | yes | https://console.cloud.google.com/ |
-| `SPRING_DATASOURCE_USERNAME` | ex `postgres` | The username of database user | yes | - | 
-| `SPRING_DATASOURCE_PASSWORD` | ex `********` | The password of database user | yes | - |
-| `SPRING_PROFILES_ACTIVE` | ex `dev` | Spring profile to be active | no | - |
-| `LOG_PREFIX` | `entitlements-v2` | Logging prefix | no | - |
-| `LOG_LEVEL` | `INFO` | Logging level | no | - |
-| `DOMAIN` | `group` | The name of the domain groups are created for. The default (and recommended for `jdbc`) value is `group` | no | -- |
-| `PARTITION_API` | ex `http://localhost:8080/api/partition/v1` | Partition service endpoint | no | - |
-| `server_port` | ex `8080` | Port of the server | no | -- |
-| `GOOGLE_AUDIENCES` | ex `*****.apps.googleusercontent.com` | Client ID for getting access to cloud resources and Partition service| yes | https://console.cloud.google.com/apis/credentials |
-| `GOOGLE_APPLICATION_CREDENTIALS` | `********` | Need this only if running locally, this service acc must have token sign access | yes | -- |
-| `GCP_AUTHENTICATION_MODE` | `IAP` OR `EXTERNAL` OR `INTERNAL` OR `ISTIO`|  | no | -- |
-| `PARTITION_AUTH_ENABLED` | ex `true` or `false` | Disable or enable auth token provisioning for requests to Partition service | no | - |
-| `SERVICE_TOKEN_PROVIDER` | `GCP` OR `OPENID`| Service account token provider, `GCP` means use Google service account `OPEIND` means use OpenId provider like `Keycloak` | no | -- |
-| `OPENID_PROVIDER_CLIENT_IDS` | `123,abc,xyz`| List of client ids that can be authorized by Entitlements service | no | -- |
-
-
-#### Authentication modes
-
-**IAP** Use it with enabled IAP, this mode use combined authentication with OpenID provider, which will be used inside secured perimeter with service to service communication and IAP tokens verification that came with users requests.
-
-| name | value | description | sensitive? | source |
-| ---  | ---   | ---         | ---        | ---    |
-| `IAP_PROVIDER_JWT_HEADER` | ex `x-goog-iap-jwt-assertion` | Header that will contain IAP token | no | - |
-| `IAP_PROVIDER_USER_ID_HEADER` | ex `x-goog-authenticated-user-email` | Header that will contain user email added by IAP | no | - |
-| `IAP_PROVIDER_ISSUER_URL` | ex `https://cloud.google.com/iap` | IAP issuer url | no | - |
-| `IAP_PROVIDER_AUD` | ex `/projects/${iap.provider.project-number}/global/backendServices/${iap.provider.backend-service-id}` | IAP client id(audiences) | no | - |
-| `IAP_PROVIDER_PROJECT_NUMBER` | ex `12345` | Google project number | no | - |
-| `IAP_PROVIDER_BACKEND_SERVICE_ID` | ex `12345` | Google backend service id | no | - |
-| `IAP_PROVIDER_JWK_URL` | ex `https://www.gstatic.com/iap/verify/public_key-jwk` | IAP jwk url | no | - |
-| `IAP_PROVIDER_ALGORITHM` | ex `ES256` | IAP token algorithm | no | - |
-| `OPENID_PROVIDER_URL` | ex `https://accounts.google.com` | OpenID provider | no | - |
-| `OPENID_PROVIDER_CLIENT_ID` | ex `123.apps.googleusercontent.com` | OpenID client id | no | - |
-| `OPENID_PROVIDER_ALGORITHM` | ex `RS256` | OpenID token algorithm | no | - |
-| `OPENID_PROVIDER_USER_ID_CLAIM_NAME` | ex `email` | OpenID user id claim name | no | - |
-
-**EXTERNAL**  Use it with enabled external authentication method, this mode use combined authentication with OpenID provider, if the request will contain both token and user-id header
-
-| name | value | description | sensitive? | source |
-| ---  | ---   | ---         | ---        | ---    |
-| `OPENID_PROVIDER_URL` | ex `https://accounts.google.com` | OpenID provider | no | - |
-| `OPENID_PROVIDER_CLIENT_ID` | ex `123.apps.googleusercontent.com` | OpenID client id | no | - |
-| `OPENID_PROVIDER_ALGORITHM` | ex `RS256` | OpenID token algorithm | no | - |
-| `GCP_X_USER_IDENTITY_HEADER_NAME` | ex `x-user-id` | The name of the header in which the "id of the authenticated user" is passed | no | -- |
-
-**INTERNAL** Use it when authentication should be processed by entitlements, OpenID provider will be used for token validation.
-
-| name | value | description | sensitive? | source |
-| ---  | ---   | ---         | ---        | ---    |
-| `OPENID_PROVIDER_URL` | ex `https://accounts.google.com` | OpenID provider | no | - |
-| `OPENID_PROVIDER_CLIENT_ID` | ex `123.apps.googleusercontent.com` | OpenID client id | no | - |
-| `OPENID_PROVIDER_ALGORITHM` | ex `RS256` | OpenID token algorithm | no | - |
-| `GCP_X_USER_IDENTITY_HEADER_NAME` | ex `x-user-id` | The name of the header in which the "id of the authenticated user" is passed | no | -- |
-
-**ISTIO** Use it when authentication should not be processed by entitlements, Istio will be used for token validation.
-
-| name | value | description | sensitive? | source |
-| ---  | ---   | ---         | ---        | ---    |
-| `OPENID_PROVIDER_URL` | ex `https://accounts.google.com` | OpenID provider | no | - |
-| `OPENID_PROVIDER_CLIENT_ID` | ex `123.apps.googleusercontent.com` | OpenID client id | no | - |
-| `OPENID_PROVIDER_ALGORITHM` | ex `RS256` | OpenID token algorithm | no | - |
-| `GCP_X_USER_IDENTITY_HEADER_NAME` | ex `x-user-id` | The name of the header in which the "id of the authenticated user" is passed | no | -- |
+### Anthos Service Configuration:
+[Anthos service configuration ](docs/anthos/README.md)
+### GCP Service Configuration:
+[Gcp service configuration ](docs/gcp/README.md)
 
 ### Build and run the application
 

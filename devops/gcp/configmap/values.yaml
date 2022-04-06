@@ -16,7 +16,7 @@ data:
   service_token_provider: "OPENID"
   # gcp
   google_audiences: ""
-  spring_profiles_active: "dev"
+  spring_profiles_active: "gcp"
   
 conf:
   configmap: "entitlements-config"
