@@ -11,3 +11,6 @@ data:
   DATA_PARTITION_ID: "{{ .Values.data.data_partition_id }}"
   ENTITLEMENTS_HOST: "{{ .Values.data.entitlements_host }}"
   ONPREM_ENABLED: "{{ .Values.conf.on_prem_enabled }}"
+  {{- if .Values.conf.on_prem_enabled }}
+  ADMIN_USER_EMAIL: "{{ .Values.data.admin_user_email }}"
+  {{- end }}
