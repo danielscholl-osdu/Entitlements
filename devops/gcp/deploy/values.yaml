@@ -5,7 +5,7 @@ data:
   limits_cpu: "1"
   limits_memory: "1G"
   serviceAccountName: "entitlements"
-  image: "" 
+  image: ""
   imagePullPolicy: "IfNotPresent"
   # gcp
   cloud_sql_proxy_version: "1.20.0"
@@ -17,3 +17,8 @@ conf:
   secret_name: "entitlements-secret"
   openid_secret_name: "entitlements-openid-secret"
   on_prem_enabled: false
+
+auth:
+  public_url: ""
+  local_url: "http://keycloak"
+  realm: "osdu"
