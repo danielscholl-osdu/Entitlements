@@ -25,7 +25,7 @@ spec:
         - configMapRef:
             name: "{{ .Values.conf.configmap }}"
         - secretRef:
-            name: "{{ .Values.conf.secret_name }}"
+            name: "{{ .Values.conf.entitlements_postgres_secret_name }}"
         {{- if .Values.conf.on_prem_enabled }}
         - secretRef:
             name: "{{ .Values.conf.openid_secret_name }}"

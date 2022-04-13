@@ -14,7 +14,7 @@ data:
 conf:
   configmap: "entitlements-config"
   app_name: "entitlements"
-  secret_name: "entitlements-secret"
+  entitlements_postgres_secret_name: "entitlements-postgres-secret"
   openid_secret_name: "entitlements-openid-secret"
   on_prem_enabled: false
 
