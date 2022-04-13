@@ -11,14 +11,10 @@ data:
   LOG_PREFIX: "{{ .Values.data.log_prefix }}"
   OPENID_PROVIDER_CLIENT_IDS: "{{ .Values.data.openid_provider_client_ids }}"
   PARTITION_API: "{{ .Values.data.partition_api }}"
-  SPRING_DATASOURCE_URL: "{{ .Values.data.spring_datasource_url }}"
-  SPRING_DATASOURCE_USERNAME: "{{ .Values.data.spring_datasource_username }}"
+  SPRING_PROFILES_ACTIVE: "{{ .Values.data.spring_profiles_active }}"
   {{- if .Values.conf.on_prem_enabled }}
-  GCP_AUTHENTICATION_MODE: "{{ .Values.data.gcp_authentication_mode }}"
-  OPENID_PROVIDER_USER_ID_CLAIM_NAME: "{{ .Values.data.openid_provider_user_id_claim_name }}"
   PARTITION_AUTH_ENABLED: "{{ .Values.data.partition_auth_enabled }}"
   SERVICE_TOKEN_PROVIDER: "{{ .Values.data.service_token_provider }}"
   {{- else }}  
   GOOGLE_AUDIENCES: "{{ .Values.data.google_audiences }}" 
-  SPRING_PROFILES_ACTIVE: "{{ .Values.data.spring_profiles_active }}"
   {{- end }}
