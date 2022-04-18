@@ -72,6 +72,7 @@ public class GcpUserInfoProvider extends OpenIdUserInfoProvider {
             BearerAccessToken token = BearerAccessToken.parse(accessToken);
             return sendUserInfoRequest(token);
         } catch (ParseException | URISyntaxException | IOException e) {
+            log.warn("Could not authorize user, token {}, exception {}", accessToken, e);
             throw new AppException(HttpStatus.UNAUTHORIZED.value(),
                 USER_INFO_ISSUE_REASON,
                 NOT_VALID_TOKEN_PROVIDED_MESSAGE, e);

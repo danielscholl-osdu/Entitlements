@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.conf.bootstrap_name }}"
+  namespace: "{{ .Values.conf.bootstrap_namespace }}"
+  annotations:
+    rollme: {{ randAlphaNum 5 | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{{ .Values.conf.bootstrap_name }}"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Values.conf.bootstrap_name }}"
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+    spec:
+      containers:
+      - image: "{{ .Values.data.bootstrap_image }}"
+        imagePullPolicy: "{{ .Values.data.imagePullPolicy }}"
+        name: "{{ .Values.conf.bootstrap_name }}"
+        envFrom:
+        - configMapRef:
+            name: "{{ .Values.conf.bootstrap_configmap }}"
+        {{- if .Values.conf.on_prem_enabled }}
+        - secretRef:
+            name: "{{ .Values.conf.bootstrap_openid_secret_name }}"
+        {{- end }}
+        resources:
+          requests:
+            cpu: "{{ .Values.data.bootstrap_requests_cpu }}"
+            memory: "{{ .Values.data.bootstrap_requests_memory }}"
+          limits:
+            cpu: "{{ .Values.data.bootstrap_limits_cpu }}"
+            memory: "{{ .Values.data.bootstrap_limits_memory }}"
+      restartPolicy: Always
+      serviceAccountName: "{{ .Values.data.bootstrapServiceAccountName }}"

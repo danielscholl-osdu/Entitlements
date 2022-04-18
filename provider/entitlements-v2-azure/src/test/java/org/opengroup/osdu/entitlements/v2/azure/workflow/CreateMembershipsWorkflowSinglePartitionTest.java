@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.opengroup.osdu.azure.cache.RedisAzureCache;
 import org.opengroup.osdu.core.common.cache.RedisCache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
@@ -94,11 +95,9 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     @MockBean
     private AuthorizationService authService;
     @MockBean
-    private RedisCache<String, ParentReferences> redisGroupCache;
+    private RedisAzureCache<String, ParentReferences> redisGroupCache;
     @MockBean
     private CacheConfig cacheConfig;
-    @MockBean
-    private RedissonClient redissonClient;
     @Mock
     private RLock cacheLock;
     @MockBean
@@ -121,7 +120,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         tenantInfo.setServiceAccount("service_principal.com");
         Mockito.when(tenantFactory.getTenantInfo("common")).thenReturn(tenantInfo);
         when(authService.isAuthorized(any(), any())).thenReturn(true);
-        when(redissonClient.getLock(any())).thenReturn(cacheLock);
+        when(redisGroupCache.getLock(any())).thenReturn(cacheLock);
         when(cacheLock.tryLock(anyLong(), anyLong(), any())).thenReturn(true);
         when(partitionCacheTtlService.getCacheTtlOfPartition("common")).thenReturn(0L);
     }

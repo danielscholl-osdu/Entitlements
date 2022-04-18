@@ -4,15 +4,34 @@ data:
   requests_memory: "640M"
   limits_cpu: "1"
   limits_memory: "1G"
-  serviceAccountName: ""
-  image: "" 
+  serviceAccountName: "entitlements"
+  image: ""
   imagePullPolicy: "IfNotPresent"
   # gcp
   cloud_sql_proxy_version: "1.20.0"
   sql_connection_string: ""
+  # bootstrap common
+  bootstrap_requests_cpu: "0.03"
+  bootstrap_requests_memory: "120M"
+  bootstrap_limits_cpu: "0.1"
+  bootstrap_limits_memory: "200M"
+  bootstrap_image: ""
+  bootstrapServiceAccountName: "entitlements-bootstrap"
 
 conf:
   configmap: "entitlements-config"
   app_name: "entitlements"
-  secret_name: "entitlements-secret"
+  entitlements_postgres_secret_name: "entitlements-postgres-secret"
+  openid_secret_name: "entitlements-openid-secret"
+  # bootstrap onprem
+  bootstrap_openid_secret_name: "datafier-secret"
+  # bootstrap common
+  bootstrap_name: "entitlements-bootstrap"
+  bootstrap_namespace: "default"
+  bootstrap_configmap: "entitlements-bootstrap-configmap"
   on_prem_enabled: false
+
+auth:
+  public_url: ""
+  local_url: "http://keycloak"
+  realm: "osdu"
