@@ -12,7 +12,7 @@ data:
   admin_user_email: ""
   # onprem
   partition_auth_enabled: false
-  service_token_provider: "OPENID"
+  service_token_provider: "ISTIO"
   # gcp
   google_audiences: ""
   spring_profiles_active: "gcp"
@@ -21,7 +21,7 @@ data:
   airflow_composer_email: ""
   pub_sub_email: ""
   register_pubsub_identity: ""
-  
+
 conf:
   configmap: "entitlements-config"
   app_name: "entitlements"
