@@ -22,7 +22,6 @@ conf:
   configmap: "entitlements-config"
   app_name: "entitlements"
   entitlements_postgres_secret_name: "entitlements-postgres-secret"
-  openid_secret_name: "entitlements-openid-secret"
   # bootstrap onprem
   bootstrap_openid_secret_name: "datafier-secret"
   # bootstrap common
