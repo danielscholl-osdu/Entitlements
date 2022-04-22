@@ -12,9 +12,9 @@ data:
   ENTITLEMENTS_HOST: "{{ .Values.data.entitlements_host }}"
   ADMIN_USER_EMAIL: "{{ .Values.data.admin_user_email }}"
   DOMAIN: "{{ .Values.data.domain }}"
+  AIRFLOW_COMPOSER_EMAIL: "{{ .Values.data.airflow_composer_email }}"
   {{- if not .Values.conf.on_prem_enabled }}
   PROJECT_ID: "{{ .Values.data.project_id }}"
-  AIRFLOW_COMPOSER_EMAIL: "{{ .Values.data.airflow_composer_email }}"
   PUB_SUB_EMAIL: "{{ .Values.data.pub_sub_email }}"
   REGISTER_PUBSUB_IDENTITY: "{{ .Values.data.register_pubsub_identity }}"
   {{- end }}

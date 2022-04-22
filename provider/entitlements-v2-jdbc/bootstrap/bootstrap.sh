@@ -48,6 +48,35 @@ set -e
 }
 EOF
 
+# Add user ${AIRFLOW_COMPOSER_EMAIL} to groups:
+
+  cat <<EOF > /opt/user_airflow.json
+{
+"email": "${AIRFLOW_COMPOSER_EMAIL}",
+"role": "MEMBER"
+}
+EOF
+
+  cat <<EOF > /opt/group_airflow.txt
+service.storage.admin
+service.file.editors
+service.search.user
+service.workflow.admin
+service.workflow.creator
+service.schema-service.editors
+service.entitlements.user
+users
+EOF
+
+grep -v '^ *#' < /opt/group_airflow.txt | while IFS= read -r GROUP_EMAIL_AIRFLOW
+do
+    curl --location --request POST "${ENTITLEMENTS_HOST}/api/entitlements/v2/groups/$GROUP_EMAIL_AIRFLOW@$DATA_PARTITION_ID.$DOMAIN/members" \
+        --header 'Content-Type: application/json' \
+        --header "Authorization: Bearer ${ID_TOKEN}" \
+        --header "data-partition-id: ${DATA_PARTITION_ID}" \
+        --data @/opt/user_airflow.json
+done
+
   # shellcheck disable=SC2013
   for GROUP_EMAIL in $(cat /opt/group.txt); do
 
@@ -155,6 +184,7 @@ service.storage.admin
 service.file.editors
 service.search.user
 service.workflow.admin
+service.workflow.creator
 service.schema-service.editors
 service.entitlements.user
 users

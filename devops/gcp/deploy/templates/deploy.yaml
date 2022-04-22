@@ -26,10 +26,6 @@ spec:
             name: "{{ .Values.conf.configmap }}"
         - secretRef:
             name: "{{ .Values.conf.entitlements_postgres_secret_name }}"
-        {{- if .Values.conf.on_prem_enabled }}
-        - secretRef:
-            name: "{{ .Values.conf.openid_secret_name }}"
-        {{- end }}
       {{- if not .Values.conf.on_prem_enabled }}
       - image: "gcr.io/cloudsql-docker/gce-proxy:{{ .Values.data.cloud_sql_proxy_version }}"
         imagePullPolicy: "{{ .Values.data.imagePullPolicy }}"
