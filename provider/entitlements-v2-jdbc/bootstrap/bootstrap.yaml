@@ -15,4 +15,3 @@ osdu-gcp-containerize-bootstrap-entitlements:
   rules:
     - if: "$OSDU_GCP == 'true'"
       when: on_success
-
