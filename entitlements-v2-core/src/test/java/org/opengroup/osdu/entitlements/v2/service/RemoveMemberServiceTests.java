@@ -58,6 +58,8 @@ public class RemoveMemberServiceTests {
     private RequestInfoUtilService requestInfoUtilService;
     @MockBean
     private AppProperties appProperties;
+    @MockBean
+    private PermissionService permissionService;
     @Autowired
     private RemoveMemberService removeMemberService;
 
@@ -315,56 +317,6 @@ public class RemoveMemberServiceTests {
             verify(removeMemberRepo, never()).removeMember(any(), any(), any());
             assertThat(ex.getError().getCode()).isEqualTo(400);
             assertEquals("Bootstrap group hierarchy is enforced, member users cannot be removed from group data.default.owners", ex.getError().getMessage());
-        } catch (Exception ex) {
-            fail(String.format("should now throw exception: %s", ex.getMessage()));
-        }
-    }
-
-    @Test
-    public void shouldThrow401IfCallerDoesNotOwnTheGroup() {
-        EntityNode memberNode = EntityNode.builder()
-                .type(NodeType.USER)
-                .nodeId("member@xxx.com")
-                .name("member")
-                .dataPartitionId("common")
-                .build();
-        when(retrieveGroupRepo.getMemberNodeForRemovalFromGroup("member@xxx.com", "common")).thenReturn(memberNode);
-        EntityNode entityNode = EntityNode.builder()
-                .type(NodeType.USER)
-                .nodeId("member@xxx.com")
-                .name("shadowid@xxx.com")
-                .dataPartitionId("common")
-                .build();
-        EntityNode groupNode = EntityNode.builder()
-                .type(NodeType.GROUP)
-                .nodeId("data.x@common.contoso.com")
-                .name("data.x")
-                .dataPartitionId("common")
-                .build();
-        EntityNode requesterNode = EntityNode.builder()
-                .type(NodeType.USER)
-                .nodeId("requesterid")
-                .name("requesterid")
-                .dataPartitionId("common")
-                .build();
-        when(retrieveGroupRepo.getEntityNode("member@xxx.com", "common")).thenReturn(Optional.of(entityNode));
-        when(retrieveGroupRepo.groupExistenceValidation("data.x@common.contoso.com", "common")).thenReturn(groupNode);
-        when(retrieveGroupRepo.hasDirectChild(
-                groupNode,
-                ChildrenReference.createChildrenReference(requesterNode, Role.MEMBER))).thenReturn(Boolean.FALSE);
-        RemoveMemberServiceDto removeMemberServiceDto = RemoveMemberServiceDto.builder()
-                .groupEmail("data.x@common.contoso.com")
-                .memberEmail("member@xxx.com")
-                .requesterId("requesterid")
-                .partitionId("common")
-                .build();
-
-        try {
-            removeMemberService.removeMember(removeMemberServiceDto);
-            fail("should throw exception");
-        } catch (AppException ex) {
-            verify(removeMemberRepo, never()).removeMember(any(), any(), any());
-            assertThat(ex.getError().getCode()).isEqualTo(401);
         } catch (Exception ex) {
             fail(String.format("should now throw exception: %s", ex.getMessage()));
         }

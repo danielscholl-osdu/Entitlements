@@ -43,9 +43,7 @@ public class AddMemberService {
                 () -> createNewMemberNode(addMemberDto.getEmail(), memberDesId, addMemberServiceDto.getPartitionId()));
         EntityNode existingGroupEntityNode = retrieveGroupRepo.groupExistenceValidation(addMemberServiceDto.getGroupEmail(), addMemberServiceDto.getPartitionId());
         EntityNode requesterNode = EntityNode.createMemberNodeForRequester(addMemberServiceDto.getRequesterId(), addMemberServiceDto.getPartitionId());
-        if (!permissionService.hasOwnerPermissionOf(requesterNode, existingGroupEntityNode)) {
-            throw new AppException(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase(), "Not authorized to manage members");
-        }
+        permissionService.verifyCanManageMembers(requesterNode, existingGroupEntityNode);
         if (memberNode.isGroup() && Role.OWNER.equals(addMemberDto.getRole())) {
             throw new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Group can only be MEMBER of another group");
         }
