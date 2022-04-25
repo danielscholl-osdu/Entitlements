@@ -189,27 +189,6 @@ public class UpdateGroupServiceTests {
     }
 
     @Test
-    public void shouldThrow401IfUserDoesNotHaveOwnerPermission() {
-        EntityNode groupNode = createGroupNode(TEST_EXISTING_USER_GROUP_NAME, TEST_EXISTING_USER_GROUP_EMAIL);
-        UpdateGroupOperation appIdsOperation = createUpdateGroupOperation(APP_IDS_PATH, "app1", "app2");
-        UpdateGroupServiceDto serviceDto = createUpdateGroupServiceDto(TEST_EXISTING_USER_GROUP_EMAIL, null, appIdsOperation);
-
-        Mockito.when(retrieveGroupRepo.groupExistenceValidation(TEST_EXISTING_USER_GROUP_EMAIL, TEST_PARTITION)).thenReturn(groupNode);
-        Mockito.when(permissionService.hasOwnerPermissionOf(Mockito.any(), Mockito.any())).thenReturn(false);
-
-        try {
-            updateGroupService.updateGroup(serviceDto);
-            Assert.fail("Should not succeed");
-        } catch (AppException e) {
-            Assert.assertEquals(HttpStatus.SC_UNAUTHORIZED, e.getError().getCode());
-            Assert.assertEquals("Unauthorized", e.getError().getReason());
-            Assert.assertEquals("Not authorized to manage members", e.getError().getMessage());
-        } catch (Exception e) {
-            Assert.fail(String.format("should not throw exception: %s", e));
-        }
-    }
-
-    @Test
     public void shouldUpdateGroupAppIdsAndRenameSuccessfullyWhenUserHasOwnerPermissionOfTheUserGroup() {
         String newGroupName = "users.test.x";
         EntityNode groupNode = createGroupNode(TEST_EXISTING_USER_GROUP_NAME, TEST_EXISTING_USER_GROUP_EMAIL);

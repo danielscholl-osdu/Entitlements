@@ -49,6 +49,8 @@ public class DeleteGroupServiceTests {
     private DefaultGroupsService defaultGroupsService;
     @MockBean
     private RequestInfo requestInfo;
+    @MockBean
+    private PermissionService permissionService;
     @Autowired
     private DeleteGroupService service;
     @MockBean
@@ -93,32 +95,6 @@ public class DeleteGroupServiceTests {
         this.service.run(groupNode, deleteGroupServiceDto);
 
         verify(deleteGroupRepo, never()).deleteGroup(any(EntityNode.class));
-    }
-
-    @Test
-    public void shouldThrow401IfCallerDoesNotOwnTheGroup() {
-        EntityNode groupNode = EntityNode.builder().nodeId("data.x.viewers@common.contoso.com").name("users")
-                .type(NodeType.GROUP).dataPartitionId("common").build();
-        when(retrieveGroupRepo.getEntityNode("data.x.viewers@common.contoso.com", "common")).thenReturn(Optional.of(groupNode));
-        EntityNode requesterNode = EntityNode.builder().nodeId("callerdesid").name("callerdesid").type(NodeType.USER).dataPartitionId("common").build();
-        when(retrieveGroupRepo.getEntityNode("callerdesid", "common")).thenReturn(Optional.of(requesterNode));
-        when(retrieveGroupRepo.groupExistenceValidation("data.x.viewers@common.contoso.com", "common")).thenReturn(groupNode);
-        when(retrieveGroupRepo.hasDirectChild(groupNode, ChildrenReference.createChildrenReference(requesterNode, Role.OWNER))).thenReturn(Boolean.FALSE);
-        DeleteGroupServiceDto deleteGroupServiceDto = DeleteGroupServiceDto.builder()
-                .requesterId("callerdesid")
-                .partitionId("common").build();
-        when(defaultGroupsService.isDefaultGroupName("users")).thenReturn(false);
-        when(requestInfo.getTenantInfo()).thenReturn(new TenantInfo());
-        try {
-            this.service.run(groupNode, deleteGroupServiceDto);
-            fail("Should not succeed");
-        } catch (AppException e) {
-            assertEquals(HttpStatus.SC_UNAUTHORIZED, e.getError().getCode());
-            assertEquals("Unauthorized", e.getError().getReason());
-            assertEquals("Not authorized to manage members", e.getError().getMessage());
-        } catch (Exception e) {
-            fail(String.format("should not throw exception: %s", e));
-        }
     }
 
     @Test

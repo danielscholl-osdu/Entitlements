@@ -108,7 +108,7 @@ curl --request POST \
 *  **GET /entitlements/v1/groups/{group_email}/members** - Retrieves members that belong to a group_email within the data partition provided in _data-partition-id_ header.
 E.g. group_email value is {name}@{data-partition-id}.{domain}.com. Query parameter role can be specified to filter group
 members by role of OWNER or MEMBER. The user or service extracted from JWT in _Authorization_ header checked for
-membership within group_email as the OWNER or within users.datalake.admins group. This API lists the direct members of
+membership within group_email as the OWNER or within users.datalake.admins group or within users.datalake.ops group. This API lists the direct members of
 the group (excluding hierarchical groups). When we need to get all members in the hierarchy, client needs to implement
 its own recursive function, but "includeType=true" query parameter could be useful to determine whether a member is a USER or GROUP.
 
@@ -127,7 +127,8 @@ curl --request GET \
 *  **POST /entitlements/v1/groups/{group_email}/members** - Adds members to a group with group_email within the data partition provided in _data-partition-id_ header.
 The member added can either be a _user_ or a _group_. E.g. group_email value is {name}@{data-partition-id}.{domain}.com.
 Member body needs to have an email and role for a member. Member role can be OWNER or MEMBER. The user or service extracted from JWT in _Authorization_ header
-checked for OWNER role membership within group_email and within service.entitlements.user group.
+checked for OWNER role membership within group_email or within users.datalake.ops (ops user) group. In case the user is not ops user, it should be within service.entitlements.user
+or service.entitlements.admin group.
 
 <details>
 
@@ -148,7 +149,7 @@ curl --request POST \
 *  **DELETE /entitlements/v1/groups/{group_email}/members/{member_email}** - Deletes a member from a group with email group_email within the data partition provided in _data-partition-id_ header.
 The member deleted can either be a _user_ or a _group_. E.g. group_email value is {name}@{data-partition-id}.{domain}.com.
 Path parameter member_email needs an email of a member. The user or service extracted from JWT in _Authorization_ header checked for OWNER role membership within group_email
-and within service.entitlements.user group.
+and within users.datalake.ops (ops user) group.
 
 <details>
 
@@ -163,7 +164,7 @@ curl --request DELETE \
 &nbsp;
 
 *  **DELETE /groups/{group_email}** - Deletes entitlements group. The user or service extracted from JWT in _Authorization_ header checked for membership
-within group_email as the OWNER and within service.entitlements.admin group.
+within group_email as the OWNER or within users.datalake.ops (ops user) group. In case the user is not ops user, it should be within service.entitlements.admin group.
 
 <details>
 
@@ -177,8 +178,9 @@ curl --request DELETE \
 </details>
 &nbsp;
 
-*  **PATCH /groups/{group_email}** - Updates entitlements group. The user or service extracted from JWT in _Authorization_ header checked for membership
-within group_email as the OWNER and within service.entitlements.user group.
+* **PATCH /groups/{group_email}** - Updates entitlements group. The user or service extracted from JWT in _Authorization_ header checked for membership
+within group_email as the OWNER or within users.datalake.ops (ops user) group. In case user is not ops user, it should be within service.entitlements.admin
+or service.entitlements.user group.
 
 <details>
 
