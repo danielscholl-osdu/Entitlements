@@ -14,7 +14,7 @@ data:
   bootstrap_limits_cpu: "0.05"
   bootstrap_limits_memory: "50M"
   bootstrap_image: ""
-  bootstrapServiceAccountName: "entitlements-bootstrap"
+  bootstrapServiceAccountName: ""
 conf:
   configmap: "entitlements-config"
   app_name: "entitlements"
