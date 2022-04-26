@@ -21,7 +21,6 @@ data:
   airflow_composer_email: ""
   pub_sub_email: ""
   register_pubsub_identity: ""
-
 conf:
   configmap: "entitlements-config"
   app_name: "entitlements"
