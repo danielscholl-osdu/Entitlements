@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "{{ .Values.conf.bootstrap_name }}"
-  namespace: "{{ .Values.conf.bootstrap_namespace }}"
+  namespace: "{{ .Release.Namespace }}"
 spec:
   replicas: 1
   selector:
