@@ -11,13 +11,10 @@ data:
   cloud_sql_proxy_version: "1.20.0"
   sql_connection_string: ""
   # bootstrap common
-  bootstrap_requests_cpu: "0.03"
-  bootstrap_requests_memory: "120M"
-  bootstrap_limits_cpu: "0.1"
-  bootstrap_limits_memory: "200M"
+  bootstrap_limits_cpu: "0.05"
+  bootstrap_limits_memory: "50M"
   bootstrap_image: ""
   bootstrapServiceAccountName: "entitlements-bootstrap"
-
 conf:
   configmap: "entitlements-config"
   app_name: "entitlements"
@@ -29,7 +26,6 @@ conf:
   bootstrap_namespace: "default"
   bootstrap_configmap: "entitlements-bootstrap-configmap"
   on_prem_enabled: false
-
 auth:
   public_url: ""
   local_url: "http://keycloak"
