@@ -6,7 +6,7 @@ metadata:
   annotations:
     rollme: {{ randAlphaNum 5 | quote }}
   name: "{{ .Values.conf.bootstrap_configmap }}"
-  namespace: "{{ .Values.conf.bootstrap_namespace }}"
+  namespace: "{{ .Release.Namespace }}"
 data:
   DATA_PARTITION_ID: "{{ .Values.data.data_partition_id }}"
   ENTITLEMENTS_HOST: "{{ .Values.data.entitlements_host }}"
