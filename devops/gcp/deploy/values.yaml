@@ -27,5 +27,5 @@ conf:
   on_prem_enabled: false
 auth:
   public_url: ""
-  local_url: "http://keycloak"
+  local_url: "keycloak"
   realm: "osdu"
