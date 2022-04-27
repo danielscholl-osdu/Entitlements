@@ -13,6 +13,7 @@ variables:
   IBM_BUILD_SUBDIR: provider/entitlements-v2-ibm
   IBM_INT_TEST_SUBDIR: testing/entitlements-v2-test-ibm
 
+  OSDU_GCP_ENABLE_BOOTSTRAP: "true"
   OSDU_GCP_SERVICE: entitlements-v2
   OSDU_GCP_VENDOR: jdbc
   OSDU_GCP_HELM_NAMESPACE: default
@@ -83,14 +84,20 @@ include:
   - project: "osdu/platform/ci-cd-pipelines"
     file: "cloud-providers/osdu-gcp-gke.yml"
 
-  - local: "provider/entitlements-v2-jdbc/bootstrap/bootstrap.yaml"
+osdu-gcp-containerize-bootstrap-gitlab:
+  variables:
+    IMAGE_NAME: osdu-gcp-bootstrap-entitlements
+
+osdu-gcp-containerize-bootstrap-gcr:
+  variables:
+    IMAGE_NAME: osdu-gcp-bootstrap-entitlements
 
 osdu-gcp-deploy-deployment:
   variables:
     OSDU_GCP_SERVICE: entitlements
     OSDU_GCP_BOOTSTRAP_SERVICE: "entitlements-bootstrap"
     OSDU_GCP_BOOTSTRAP_SERVICE_ACCOUNT: "datafier-workload-identity-gke"
-  needs: ["osdu-gcp-containerize-gitlab", "osdu-gcp-containerize-bootstrap-entitlements", "osdu-gcp-deploy-configmap"]
+  needs: ["osdu-gcp-containerize-gitlab", "osdu-gcp-containerize-bootstrap-gitlab", "osdu-gcp-deploy-configmap"]
   after_script:
      - echo ----- Verify Bootstrap -----
      - kubectl rollout status deployment.v1.apps/$OSDU_GCP_BOOTSTRAP_SERVICE -n $OSDU_GCP_HELM_NAMESPACE --timeout=900s
@@ -114,7 +121,7 @@ osdu-gcp-dev2-deploy-deployment:
     OSDU_GCP_BOOTSTRAP_SERVICE: entitlements-bootstrap
     OSDU_GCP_BOOTSTRAP_SERVICE_ACCOUNT: workload-gke-bootstrap-sa
   # FIXME check if it possible to move variables to ci-cd pipelines repo, comment strings below if something is wrong with dev2 pipeline    
-  needs: ["osdu-gcp-containerize-gitlab", "osdu-gcp-containerize-bootstrap-entitlements", "osdu-gcp-dev2-deploy-configmap"]
+  needs: ["osdu-gcp-containerize-gitlab", "osdu-gcp-containerize-bootstrap-gitlab", "osdu-gcp-dev2-deploy-configmap"]
   after_script:
      - echo ----- Verify Bootstrap -----
      - kubectl rollout status deployment.v1.apps/$OSDU_GCP_BOOTSTRAP_SERVICE -n $OSDU_GCP_HELM_NAMESPACE --timeout=900s
