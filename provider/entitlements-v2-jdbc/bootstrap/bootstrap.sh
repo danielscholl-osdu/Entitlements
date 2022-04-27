@@ -99,7 +99,7 @@ done
 
   cat <<EOF > /opt/services.json
 {
-"storage":["users", "service.entitlements.user"],
+"storage":["users", "service.entitlements.user", "service.legal.user"],
 "notification":["users", "service.entitlements.user", "users.datalake.editors"],
 "indexer":["users", "service.entitlements.user", "service.storage.viewer", "service.schema-service.viewers", "data.default.viewers"]
 }
@@ -258,7 +258,7 @@ done
 
   cat <<EOF > /opt/services.json
 {
-"storage":["users", "service.entitlements.user"],
+"storage":["users", "service.entitlements.user", "service.legal.user"],
 "notification":["users", "service.entitlements.user", "users.datalake.editors"],
 "indexer":["users", "service.entitlements.user", "service.storage.viewer", "service.schema-service.viewers", "data.default.viewers"]
 }
