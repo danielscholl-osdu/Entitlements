@@ -303,3 +303,5 @@ else
   source ./validate-env.sh "PROJECT_ID"
   bootstrap_entitlements_gcp
 fi
+
+touch /tmp/bootstrap_ready
