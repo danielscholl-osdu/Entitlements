@@ -19,6 +19,11 @@ spec:
       - image: "{{ .Values.data.bootstrap_image }}"
         imagePullPolicy: "{{ .Values.data.imagePullPolicy }}"
         name: "{{ .Values.conf.bootstrap_name }}"
+        readinessProbe:
+          exec:
+            command:
+            - cat
+            - /tmp/bootstrap_ready
         envFrom:
         - configMapRef:
             name: "{{ .Values.conf.bootstrap_configmap }}"
