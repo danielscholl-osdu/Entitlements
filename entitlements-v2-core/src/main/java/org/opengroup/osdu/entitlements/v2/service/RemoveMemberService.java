@@ -3,7 +3,6 @@ package org.opengroup.osdu.entitlements.v2.service;
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
-import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.entitlements.v2.validation.BootstrapGroupsConfigurationService;
 import org.opengroup.osdu.entitlements.v2.validation.ServiceAccountsConfigurationService;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
@@ -24,7 +23,6 @@ public class RemoveMemberService {
     private final JaxRsDpsLog log;
     private final ServiceAccountsConfigurationService serviceAccountsConfigurationService;
     private final BootstrapGroupsConfigurationService bootstrapGroupsConfigurationService;
-    private final RequestInfo requestInfo;
     private final PermissionService permissionService;
 
     /**
@@ -37,11 +35,7 @@ public class RemoveMemberService {
         String partitionId = removeMemberServiceDto.getPartitionId();
         EntityNode existingGroupEntityNode = retrieveGroupRepo.groupExistenceValidation(groupEmail, partitionId);
         EntityNode requesterNode = EntityNode.createMemberNodeForRequester(removeMemberServiceDto.getRequesterId(), partitionId);
-        final String serviceAccountId = requestInfo.getTenantInfo().getServiceAccount();
-        if (!permissionService.hasOwnerPermissionOf(requesterNode, existingGroupEntityNode) &&
-                !removeMemberServiceDto.getRequesterId().equalsIgnoreCase(serviceAccountId)) {
-            throw new AppException(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase(), "Not authorized to manage members");
-        }
+        permissionService.verifyCanManageMembers(requesterNode, existingGroupEntityNode);
         EntityNode memberNode = retrieveGroupRepo.getMemberNodeForRemovalFromGroup(memberEmail, partitionId);
         removeMemberServiceDto.setChildrenReference(memberNode.getDirectChildReference(retrieveGroupRepo, existingGroupEntityNode).orElseThrow(
                 () -> new AppException(HttpStatus.NOT_FOUND.value(),

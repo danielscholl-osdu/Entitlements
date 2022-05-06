@@ -87,8 +87,6 @@ public class UpdateGroupService {
 
     private void validateGroupOwnerPermission(String requesterId, String partitionId, EntityNode existingGroupEntityNode) {
         EntityNode requesterNode = EntityNode.createMemberNodeForRequester(requesterId, partitionId);
-        if (!permissionService.hasOwnerPermissionOf(requesterNode, existingGroupEntityNode)) {
-            throw new AppException(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase(), "Not authorized to manage members");
-        }
+        permissionService.verifyCanManageMembers(requesterNode, existingGroupEntityNode);
     }
 }

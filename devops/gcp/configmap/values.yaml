@@ -21,12 +21,10 @@ data:
   airflow_composer_email: ""
   pub_sub_email: ""
   register_pubsub_identity: ""
-
 conf:
   configmap: "entitlements-config"
   app_name: "entitlements"
   # bootstrap
   bootstrap_name: "entitlements-bootstrap"
-  bootstrap_namespace: "default"
   bootstrap_configmap: "entitlements-bootstrap-configmap"
   on_prem_enabled: false

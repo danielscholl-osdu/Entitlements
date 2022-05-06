@@ -6,8 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
-import org.opengroup.osdu.core.common.model.http.RequestInfo;
-import org.opengroup.osdu.core.common.model.tenant.TenantInfo;
 import org.opengroup.osdu.entitlements.v2.AppProperties;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
@@ -55,17 +53,13 @@ public class AddMemberServiceTests {
     @MockBean
     private JaxRsDpsLog log;
     @MockBean
-    private RequestInfo requestInfo;
-
+    private PermissionService permissionService;
     @Autowired
     private AddMemberService addMemberService;
 
     @Before
     public void setup() {
         when(config.getDomain()).thenReturn("contoso.com");
-        TenantInfo tenantInfo = new TenantInfo();
-        tenantInfo.setServiceAccount("datafier@test.com");
-        when(requestInfo.getTenantInfo()).thenReturn(tenantInfo);
     }
 
     @Test
@@ -202,36 +196,6 @@ public class AddMemberServiceTests {
         assertThat(captor.getValue().getRole()).isEqualTo(Role.MEMBER);
         assertThat(captor.getValue().getPartitionId()).isEqualTo("common");
         verify(groupCacheService).refreshListGroupCache(allImpactUsers, "common");
-    }
-
-    @Test
-    public void should_throw401_ifCallerDoesNotOwnTheGroup() {
-        EntityNode entityNode = EntityNode.builder().nodeId("member@xxx.com").name("member@xxx.com").type(NodeType.USER).dataPartitionId("common").build();
-        EntityNode groupNode = EntityNode.builder().nodeId("data.x@common.contoso.com").name("data.x")
-                .type(NodeType.GROUP).dataPartitionId("common").build();
-        EntityNode requesterNode = EntityNode.builder().nodeId("requesterid").name("requesterid").type(NodeType.USER).dataPartitionId("common").build();
-        when(retrieveGroupRepo.getEntityNode("member@xxx.com", "common")).thenReturn(Optional.of(entityNode));
-        when(retrieveGroupRepo.groupExistenceValidation("data.x@common.contoso.com", "common")).thenReturn(groupNode);
-        when(retrieveGroupRepo.getEntityNode("requesterid", "common")).thenReturn(Optional.of(requesterNode));
-        when(retrieveGroupRepo.groupExistenceValidation("users.x@common.contoso.com", "common")).thenReturn(groupNode);
-        when(retrieveGroupRepo.hasDirectChild(groupNode, ChildrenReference.createChildrenReference(requesterNode, Role.OWNER))).thenReturn(Boolean.FALSE);
-
-        try {
-            AddMemberDto addMemberDto = new AddMemberDto("member@xxx.com", Role.MEMBER);
-            AddMemberServiceDto addMemberServiceDto = AddMemberServiceDto.builder()
-                    .groupEmail("data.x@common.contoso.com")
-                    .requesterId("requesterid")
-                    .partitionId("common")
-                    .build();
-
-            addMemberService.run(addMemberDto, addMemberServiceDto);
-            fail("should throw exception");
-        } catch (AppException ex) {
-            verify(addMemberRepo, never()).addMember(any(), any());
-            assertThat(ex.getError().getCode()).isEqualTo(401);
-        } catch (Exception ex) {
-            fail(String.format("should not throw exception: %s", ex.getMessage()));
-        }
     }
 
     @Test

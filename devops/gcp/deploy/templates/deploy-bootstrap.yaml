@@ -2,9 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "{{ .Values.conf.bootstrap_name }}"
-  namespace: "{{ .Values.conf.bootstrap_namespace }}"
-  annotations:
-    rollme: {{ randAlphaNum 5 | quote }}
+  namespace: "{{ .Release.Namespace }}"
 spec:
   replicas: 1
   selector:
@@ -21,6 +19,11 @@ spec:
       - image: "{{ .Values.data.bootstrap_image }}"
         imagePullPolicy: "{{ .Values.data.imagePullPolicy }}"
         name: "{{ .Values.conf.bootstrap_name }}"
+        readinessProbe:
+          exec:
+            command:
+            - cat
+            - /tmp/bootstrap_ready
         envFrom:
         - configMapRef:
             name: "{{ .Values.conf.bootstrap_configmap }}"
@@ -29,9 +32,6 @@ spec:
             name: "{{ .Values.conf.bootstrap_openid_secret_name }}"
         {{- end }}
         resources:
-          requests:
-            cpu: "{{ .Values.data.bootstrap_requests_cpu }}"
-            memory: "{{ .Values.data.bootstrap_requests_memory }}"
           limits:
             cpu: "{{ .Values.data.bootstrap_limits_cpu }}"
             memory: "{{ .Values.data.bootstrap_limits_memory }}"
