@@ -10,10 +10,9 @@ import org.opengroup.osdu.entitlements.v2.aws.config.EntitlementsTestConfig;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.GroupDoc;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,8 +26,7 @@ import static org.opengroup.osdu.entitlements.v2.aws.Util.NodeGenerator.generate
 
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
-@EnableAutoConfiguration
-@SpringJUnitConfig(classes = {EntitlementsTestConfig.class})
+@ContextConfiguration(classes = EntitlementsTestConfig.class)
 class UpdateAppIdsRepoMongoDBTest extends ParentUtil {
 
     @Autowired

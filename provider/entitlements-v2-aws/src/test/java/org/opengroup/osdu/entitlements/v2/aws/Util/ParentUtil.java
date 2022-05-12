@@ -5,6 +5,7 @@ import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.UserDo
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,6 +13,7 @@ import java.util.Collections;
 import static org.opengroup.osdu.entitlements.v2.aws.Util.GroupDocGenerator.generateGroupDoc;
 
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public abstract class ParentUtil extends DbUtil {
 
     protected MongoTemplateHelper mongoTemplateHelper;

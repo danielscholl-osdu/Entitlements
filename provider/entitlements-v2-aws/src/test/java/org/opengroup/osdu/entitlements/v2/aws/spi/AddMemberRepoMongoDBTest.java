@@ -13,10 +13,9 @@ import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -26,8 +25,7 @@ import static org.opengroup.osdu.entitlements.v2.aws.Util.NodeGenerator.generate
 
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
-@EnableAutoConfiguration
-@SpringJUnitConfig(classes = {EntitlementsTestConfig.class})
+@ContextConfiguration(classes = EntitlementsTestConfig.class)
 public class AddMemberRepoMongoDBTest extends ParentUtil {
 
     @Autowired
