@@ -10,18 +10,16 @@ import org.opengroup.osdu.entitlements.v2.aws.config.EntitlementsTestConfig;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.GroupDoc;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.opengroup.osdu.entitlements.v2.aws.Util.NodeGenerator.generateGroupNode;
 
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
-@EnableAutoConfiguration
-@SpringJUnitConfig(classes = {EntitlementsTestConfig.class})
+@ContextConfiguration(classes = EntitlementsTestConfig.class)
 public class RenameGroupRepoMongoDBTest extends ParentUtil {
 
     @Autowired

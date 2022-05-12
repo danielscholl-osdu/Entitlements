@@ -11,10 +11,9 @@ import org.opengroup.osdu.entitlements.v2.aws.config.EntitlementsTestConfig;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.listmember.ListMemberServiceDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.List;
 
@@ -23,8 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
-@EnableAutoConfiguration
-@SpringJUnitConfig(classes = {EntitlementsTestConfig.class})
+@ContextConfiguration(classes = EntitlementsTestConfig.class)
 public class ListMemberRepoMongoDBTest extends ParentUtil {
 
     @Autowired
