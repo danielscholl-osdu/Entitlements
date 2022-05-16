@@ -41,7 +41,7 @@ variables:
     --set data.register_pubsub_identity=$OSDU_GCP_REGISTER_PUBSUB_IDENTITY
   OSDU_GCP_HELM_DEPLOYMENT_SERVICE_VARS: >
     --set data.bootstrapServiceAccountName=$OSDU_GCP_BOOTSTRAP_SERVICE_ACCOUNT
-    --set data.image=$CI_REGISTRY_IMAGE/osdu-gcp:$CI_COMMIT_SHORT_SHA
+    --set data.image=$CI_REGISTRY_IMAGE/osdu-gcp-entitlements:$CI_COMMIT_SHORT_SHA
     --set data.bootstrap_image=$CI_REGISTRY_IMAGE/osdu-gcp-bootstrap-entitlements:$CI_COMMIT_SHORT_SHA
     --set data.serviceAccountName=$OSDU_GCP_SERVICE-k8s
     --set data.sql_connection_string=$OSDU_GCP_SQL_CONNECTION_STRING
@@ -83,6 +83,14 @@ include:
 
   - project: "osdu/platform/ci-cd-pipelines"
     file: "cloud-providers/osdu-gcp-gke.yml"
+
+osdu-gcp-containerize-gitlab:
+  variables:
+    IMAGE_NAME: osdu-gcp-entitlements
+
+osdu-gcp-containerize-gcr:
+  variables:
+    IMAGE_NAME: osdu-gcp-entitlements
 
 osdu-gcp-containerize-bootstrap-gitlab:
   variables:
