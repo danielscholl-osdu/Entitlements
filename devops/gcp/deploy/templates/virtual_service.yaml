@@ -1,11 +1,15 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: "{{ .Values.conf.app_name }}"
+  name: "{{ .Values.conf.appName }}"
   namespace: "{{ .Release.Namespace }}"
 spec:
   hosts:
+    {{- if .Values.auth.publicUrl }}
+    - {{ printf "osdu.%s" .Values.auth.publicUrl | quote }}
+    {{- else }}
     - "*"
+    {{- end }}
   gateways:
     - service-gateway
   http:
@@ -16,4 +20,4 @@ spec:
         - destination:
             port:
               number: 80
-            host: "{{ .Values.conf.app_name }}.{{ .Release.Namespace }}.svc.cluster.local"
+            host: "{{ .Values.conf.appName }}.{{ .Release.Namespace }}.svc.cluster.local"

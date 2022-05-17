@@ -1,30 +1,25 @@
 data:
   # Don't change or use the parameter unless necessary
-  domain: "group"
+  entitlementsDomain: "group"
   # common
-  log_level: "INFO"
-  log_prefix: "ent-v2"
-  openid_provider_client_ids: ""
-  partition_api: "http://partition/api/partition/v1/"
+  logLevel: "INFO"
+  openidProviderClientIds: ""
+  partitionApi: "http://partition/api/partition/v1/"
   # common bootstrap
-  data_partition_id: ""
-  entitlements_host: "http://entitlements"
-  admin_user_email: ""
+  dataPartitionId: ""
+  entitlementsHost: "http://entitlements"
+  adminUserEmail: ""
+  airflowComposerEmail: ""
   # onprem
-  partition_auth_enabled: false
-  service_token_provider: "ISTIO"
+  partitionAuthEnabled: false
   # gcp
-  google_audiences: ""
-  spring_profiles_active: "gcp"
+  googleAudiences: ""
+  springProfilesActive: "gcp"
   # gcp bootstrap
-  project_id: ""
-  airflow_composer_email: ""
-  pub_sub_email: ""
-  register_pubsub_identity: ""
+  projectId: ""
+  pubSubEmail: ""
+  registerPubsubIdentity: ""
 conf:
   configmap: "entitlements-config"
-  app_name: "entitlements"
-  # bootstrap
-  bootstrap_name: "entitlements-bootstrap"
-  bootstrap_configmap: "entitlements-bootstrap-configmap"
-  on_prem_enabled: false
+  appName: "entitlements"
+  onPremEnabled: false

@@ -2,19 +2,17 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    app: "{{ .Values.conf.app_name }}"
+    app: "{{ .Values.conf.appName }}"
   name: "{{ .Values.conf.configmap }}"
   namespace: "{{ .Release.Namespace }}"
 data:
-  DOMAIN: "{{ .Values.data.domain }}"
-  LOG_LEVEL: "{{ .Values.data.log_level }}"
-  LOG_PREFIX: "{{ .Values.data.log_prefix }}"
-  OPENID_PROVIDER_CLIENT_IDS: "{{ .Values.data.openid_provider_client_ids }}"
-  PARTITION_API: "{{ .Values.data.partition_api }}"
-  SPRING_PROFILES_ACTIVE: "{{ .Values.data.spring_profiles_active }}"
-  {{- if .Values.conf.on_prem_enabled }}
-  PARTITION_AUTH_ENABLED: "{{ .Values.data.partition_auth_enabled }}"
-  SERVICE_TOKEN_PROVIDER: "{{ .Values.data.service_token_provider }}"
-  {{- else }}  
-  GOOGLE_AUDIENCES: "{{ .Values.data.google_audiences }}" 
+  DOMAIN: "{{ .Values.data.entitlementsDomain }}"
+  LOG_LEVEL: "{{ .Values.data.logLevel }}"
+  PARTITION_API: "{{ .Values.data.partitionApi }}"
+  SPRING_PROFILES_ACTIVE: "{{ .Values.data.springProfilesActive }}"
+  {{- if .Values.conf.onPremEnabled }}
+  PARTITION_AUTH_ENABLED: "{{ .Values.data.partitionAuthEnabled }}"
+  {{- else }}
+  GOOGLE_AUDIENCES: "{{ .Values.data.googleAudiences }}"
+  OPENID_PROVIDER_CLIENT_IDS: "{{ .Values.data.openidProviderClientIds }}"
   {{- end }}

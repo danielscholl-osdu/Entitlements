@@ -1,0 +1,111 @@
+variables:
+  OSDU_GCP_ENABLE_BOOTSTRAP: "true"
+  OSDU_GCP_SERVICE: entitlements-v2
+  OSDU_GCP_VENDOR: jdbc
+  OSDU_GCP_HELM_CONFIG_SERVICE_VARS: >
+    --set data.entitlementsDomain=$DOMAIN
+    --set data.googleAudiences=$GOOGLE_AUDIENCE
+    --set data.openidProviderClientIds=$GOOGLE_AUDIENCE
+    --set data.partitionApi=$OSDU_GCP_PARTITION_API
+    --set data.dataPartitionId=$OSDU_GCP_TENANT
+    --set data.projectId=$OSDU_GCP_PROJECT
+    --set data.airflowComposerEmail=$OSDU_GCP_AIRFLOW_COMPOSER_EMAIL
+    --set data.adminUserEmail=$OSDU_GCP_ADMIN_USER_EMAIL
+    --set data.pubSubEmail=$OSDU_GCP_PUB_SUB_EMAIL
+    --set data.registerPubsubIdentity=$OSDU_GCP_REGISTER_PUBSUB_IDENTITY
+  OSDU_GCP_HELM_CONFIG_SERVICE_VARS_DEV2: >
+    --set data.entitlementsDomain=$DOMAIN
+    --set data.googleAudiences=$GOOGLE_AUDIENCE
+    --set data.openidProviderClientIds=$GOOGLE_AUDIENCE
+    --set data.partitionApi=$OSDU_GCP_PARTITION_API
+    --set data.dataPartitionId=$OSDU_GCP_TENANT
+    --set data.projectId=$OSDU_GCP_PROJECT
+    --set data.airflowComposerEmail=$OSDU_GCP_AIRFLOW_COMPOSER_EMAIL
+    --set data.adminUserEmail=$OSDU_GCP_ADMIN_USER_EMAIL
+    --set data.pubSubEmail=$OSDU_GCP_PUB_SUB_EMAIL
+    --set data.registerPubsubIdentity=$OSDU_GCP_REGISTER_PUBSUB_IDENTITY
+  OSDU_GCP_HELM_DEPLOYMENT_SERVICE_VARS: >
+    --set data.bootstrapServiceAccountName=datafier-workload-identity-gke
+    --set data.image=$CI_REGISTRY_IMAGE/osdu-gcp-entitlements:$CI_COMMIT_SHORT_SHA
+    --set data.bootstrapImage=$CI_REGISTRY_IMAGE/osdu-gcp-bootstrap-entitlements:$CI_COMMIT_SHORT_SHA
+    --set data.serviceAccountName=$OSDU_GCP_SERVICE-k8s
+    --set data.sqlConnectionString=$OSDU_GCP_SQL_CONNECTION_STRING
+  # FIXME add value below to DEV2 pipeline
+  OSDU_GCP_HELM_DEPLOYMENT_SERVICE_VARS_DEV2: >
+    --set data.bootstrapServiceAccountName=workload-gke-bootstrap-sa
+    --set data.bootstrapImage=$CI_REGISTRY_IMAGE/osdu-gcp-bootstrap-entitlements:${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
+  OSDU_GCP_HELM_CONFIG_SERVICE: entitlements-config
+  OSDU_GCP_HELM_DEPLOYMENT_SERVICE: entitlements-deploy
+
+osdu-gcp-containerize-gitlab:
+  variables:
+    IMAGE_NAME: osdu-gcp-entitlements
+
+osdu-gcp-containerize-gcr:
+  variables:
+    IMAGE_NAME: osdu-gcp-entitlements
+
+osdu-gcp-containerize-bootstrap-gitlab:
+  variables:
+    IMAGE_NAME: osdu-gcp-bootstrap-entitlements
+
+osdu-gcp-containerize-bootstrap-gcr:
+  variables:
+    IMAGE_NAME: osdu-gcp-bootstrap-entitlements
+
+osdu-gcp-deploy-deployment:
+  variables:
+    OSDU_GCP_SERVICE: entitlements
+  needs:
+    - osdu-gcp-containerize-gitlab
+    - osdu-gcp-containerize-bootstrap-gitlab
+    - osdu-gcp-deploy-configmap
+  after_script:
+    - echo ----- Verify Bootstrap -----
+    - kubectl rollout status deployment.v1.apps/$OSDU_GCP_SERVICE-bootstrap -n $OSDU_GCP_HELM_NAMESPACE --timeout=900s
+    - POD=$(kubectl get pod --sort-by=.metadata.creationTimestamp -n $OSDU_GCP_HELM_NAMESPACE | grep $OSDU_GCP_SERVICE-bootstrap | tail -1 | awk '{print $1}')
+    - STATUS=$(kubectl wait -n $OSDU_GCP_HELM_NAMESPACE --for=condition=Ready pod/$POD --timeout=300s)
+    - echo $STATUS
+    - if [[ "$STATUS" != *"met"* ]]; then echo "POD didn't start correctly" ; exit 1 ; fi
+
+osdu-gcp-deploy-configmap:
+  variables:
+    # FIXME check if it possible to move variables to ci-cd pipelines repo
+    OSDU_GCP_ADMIN_USER_EMAIL: datafier@nice-etching-277309.iam.gserviceaccount.com
+    OSDU_GCP_AIRFLOW_COMPOSER_EMAIL: osdu-community-sa-airflow@nice-etching-277309.iam.gserviceaccount.com
+    OSDU_GCP_PUB_SUB_EMAIL: pub-sub-indexer-queue@nice-etching-277309.iam.gserviceaccount.com
+    OSDU_GCP_REGISTER_PUBSUB_IDENTITY: register-pubsub-identity@nice-etching-277309.iam.gserviceaccount.com
+
+osdu-gcp-dev2-deploy-deployment:
+  variables:
+    OSDU_GCP_SERVICE: entitlements
+  # FIXME check if it possible to move variables to ci-cd pipelines repo, comment strings below if something is wrong with dev2 pipeline
+  needs:
+    - osdu-gcp-containerize-gitlab
+    - osdu-gcp-containerize-bootstrap-gitlab
+    - osdu-gcp-dev2-deploy-configmap
+  after_script:
+    - echo ----- Verify Bootstrap -----
+    - kubectl rollout status deployment.v1.apps/$OSDU_GCP_SERVICE-bootstrap -n $OSDU_GCP_HELM_NAMESPACE --timeout=900s
+    - POD=$(kubectl get pod --sort-by=.metadata.creationTimestamp -n $OSDU_GCP_HELM_NAMESPACE | grep $OSDU_GCP_SERVICE-bootstrap | tail -1 | awk '{print $1}')
+    - STATUS=$(kubectl wait -n $OSDU_GCP_HELM_NAMESPACE --for=condition=Ready pod/$POD --timeout=300s)
+    - echo $STATUS
+    - if [[ "$STATUS" != *"met"* ]]; then echo "POD didn't start correctly" ; exit 1 ; fi
+
+osdu-gcp-dev2-deploy-configmap:
+  variables:
+    # FIXME check if it possible to move variables to ci-cd pipelines repo
+    OSDU_GCP_ADMIN_USER_EMAIL: datafier@osdu-dev2.iam.gserviceaccount.com
+    OSDU_GCP_AIRFLOW_COMPOSER_EMAIL: osdu-sa-airflow-composer@osdu-dev2.iam.gserviceaccount.com
+    OSDU_GCP_PUB_SUB_EMAIL: pub-sub-indexer-queue@osdu-dev2.iam.gserviceaccount.com
+    OSDU_GCP_REGISTER_PUBSUB_IDENTITY: register-pubsub-identity@osdu-dev2.iam.gserviceaccount.com
+    OSDU_GCP_BOOTSTRAP_NAMESPACE: config
+    OSDU_GCP_ENTITLEMENTS_HOST: http://entitlements.$OSDU_GCP_HELM_NAMESPACE.svc.cluster
+
+osdu-gcp-anthos-deploy-deployment:
+  variables:
+    OSDU_GCP_SERVICE: entitlements
+  needs:
+    - osdu-gcp-containerize-gitlab
+    - osdu-gcp-containerize-bootstrap-gitlab
+    - osdu-gcp-anthos-deploy-configmap
