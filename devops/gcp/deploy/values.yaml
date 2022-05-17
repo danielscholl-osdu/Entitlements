@@ -21,9 +21,6 @@ conf:
   entitlements_postgres_secret_name: "entitlements-postgres-secret"
   # bootstrap onprem
   bootstrap_openid_secret_name: "datafier-secret"
-  # bootstrap common
-  bootstrap_name: "entitlements-bootstrap"
-  bootstrap_configmap: "entitlements-bootstrap-configmap"
   on_prem_enabled: false
 auth:
   public_url: ""
