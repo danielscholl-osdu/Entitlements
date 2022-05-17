@@ -5,7 +5,11 @@ metadata:
   namespace: "{{ .Release.Namespace }}"
 spec:
   hosts:
+    {{- if .Values.auth.public_url }}
+    - {{ printf "osdu.%s" .Values.auth.public_url | quote }}
+    {{- else }}
     - "*"
+    {{- end }}
   gateways:
     - service-gateway
   http:
