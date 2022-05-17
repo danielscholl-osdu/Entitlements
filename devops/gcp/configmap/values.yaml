@@ -1,25 +1,30 @@
 data:
   # Don't change or use the parameter unless necessary
-  entitlements_domain: "group"
+  domain: "group"
   # common
   log_level: "INFO"
+  log_prefix: "ent-v2"
   openid_provider_client_ids: ""
   partition_api: "http://partition/api/partition/v1/"
   # common bootstrap
   data_partition_id: ""
   entitlements_host: "http://entitlements"
   admin_user_email: ""
-  airflow_composer_email: ""
   # onprem
   partition_auth_enabled: false
+  service_token_provider: "ISTIO"
   # gcp
   google_audiences: ""
   spring_profiles_active: "gcp"
   # gcp bootstrap
   project_id: ""
+  airflow_composer_email: ""
   pub_sub_email: ""
   register_pubsub_identity: ""
 conf:
   configmap: "entitlements-config"
   app_name: "entitlements"
+  # bootstrap
+  bootstrap_name: "entitlements-bootstrap"
+  bootstrap_configmap: "entitlements-bootstrap-configmap"
   on_prem_enabled: false

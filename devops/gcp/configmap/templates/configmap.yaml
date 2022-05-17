@@ -6,13 +6,15 @@ metadata:
   name: "{{ .Values.conf.configmap }}"
   namespace: "{{ .Release.Namespace }}"
 data:
-  DOMAIN: "{{ .Values.data.entitlements_domain }}"
+  DOMAIN: "{{ .Values.data.domain }}"
   LOG_LEVEL: "{{ .Values.data.log_level }}"
+  LOG_PREFIX: "{{ .Values.data.log_prefix }}"
+  OPENID_PROVIDER_CLIENT_IDS: "{{ .Values.data.openid_provider_client_ids }}"
   PARTITION_API: "{{ .Values.data.partition_api }}"
   SPRING_PROFILES_ACTIVE: "{{ .Values.data.spring_profiles_active }}"
-  {{- if .Values.conf.on_prem_enabled }}  
+  {{- if .Values.conf.on_prem_enabled }}
   PARTITION_AUTH_ENABLED: "{{ .Values.data.partition_auth_enabled }}"
-  {{- else }}
-  GOOGLE_AUDIENCES: "{{ .Values.data.google_audiences }}"
-  OPENID_PROVIDER_CLIENT_IDS: "{{ .Values.data.openid_provider_client_ids }}"
+  SERVICE_TOKEN_PROVIDER: "{{ .Values.data.service_token_provider }}"
+  {{- else }}  
+  GOOGLE_AUDIENCES: "{{ .Values.data.google_audiences }}" 
   {{- end }}
