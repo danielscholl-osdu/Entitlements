@@ -3,8 +3,6 @@ kind: Deployment
 metadata:
   name: "{{ .Values.conf.app_name }}"
   namespace: "{{ .Release.Namespace }}"
-  annotations:
-    rollme: {{ randAlphaNum 5 | quote }}
 spec:
   replicas: 1
   selector:
