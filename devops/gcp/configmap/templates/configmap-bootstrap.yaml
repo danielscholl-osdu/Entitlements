@@ -2,18 +2,18 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   labels:
-    app: "{{ .Values.conf.app_name }}-bootstrap"
+    app: "{{ .Values.conf.appName }}-bootstrap"
   name: "{{ .Values.conf.configmap }}-bootstrap"
   namespace: "{{ .Release.Namespace }}"
 data:
-  DATA_PARTITION_ID: "{{ .Values.data.data_partition_id }}"
-  ENTITLEMENTS_HOST: "{{ .Values.data.entitlements_host }}"
-  ADMIN_USER_EMAIL: "{{ .Values.data.admin_user_email }}"
-  DOMAIN: "{{ .Values.data.entitlements_domain }}"
-  AIRFLOW_COMPOSER_EMAIL: "{{ .Values.data.airflow_composer_email }}"
-  {{- if not .Values.conf.on_prem_enabled }}
-  PROJECT_ID: "{{ .Values.data.project_id }}"
-  PUB_SUB_EMAIL: "{{ .Values.data.pub_sub_email }}"
-  REGISTER_PUBSUB_IDENTITY: "{{ .Values.data.register_pubsub_identity }}"
+  DATA_PARTITION_ID: "{{ .Values.data.dataPartitionId }}"
+  ENTITLEMENTS_HOST: "{{ .Values.data.entitlementsHost }}"
+  ADMIN_USER_EMAIL: "{{ .Values.data.adminUserEmail }}"
+  DOMAIN: "{{ .Values.data.entitlementsDomain }}"
+  AIRFLOW_COMPOSER_EMAIL: "{{ .Values.data.airflowComposerEmail }}"
+  {{- if not .Values.conf.onPremEnabled }}
+  PROJECT_ID: "{{ .Values.data.projectId }}"
+  PUB_SUB_EMAIL: "{{ .Values.data.pubSubEmail }}"
+  REGISTER_PUBSUB_IDENTITY: "{{ .Values.data.registerPubsubIdentity }}"
   {{- end }}
-  ONPREM_ENABLED: "{{ .Values.conf.on_prem_enabled }}"
+  ONPREM_ENABLED: "{{ .Values.conf.onPremEnabled }}"
