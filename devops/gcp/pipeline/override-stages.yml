@@ -3,37 +3,37 @@ variables:
   OSDU_GCP_SERVICE: entitlements-v2
   OSDU_GCP_VENDOR: jdbc
   OSDU_GCP_HELM_CONFIG_SERVICE_VARS: >
-    --set data.entitlements_domain=$DOMAIN
-    --set data.google_audiences=$GOOGLE_AUDIENCE
-    --set data.openid_provider_client_ids=$GOOGLE_AUDIENCE
-    --set data.partition_api=$OSDU_GCP_PARTITION_API
-    --set data.data_partition_id=$OSDU_GCP_TENANT
-    --set data.project_id=$OSDU_GCP_PROJECT
-    --set data.airflow_composer_email=$OSDU_GCP_AIRFLOW_COMPOSER_EMAIL
-    --set data.admin_user_email=$OSDU_GCP_ADMIN_USER_EMAIL
-    --set data.pub_sub_email=$OSDU_GCP_PUB_SUB_EMAIL
-    --set data.register_pubsub_identity=$OSDU_GCP_REGISTER_PUBSUB_IDENTITY
+    --set data.entitlementsDomain=$DOMAIN
+    --set data.googleAudiences=$GOOGLE_AUDIENCE
+    --set data.openidProviderClientIds=$GOOGLE_AUDIENCE
+    --set data.partitionApi=$OSDU_GCP_PARTITION_API
+    --set data.dataPartitionId=$OSDU_GCP_TENANT
+    --set data.projectId=$OSDU_GCP_PROJECT
+    --set data.airflowComposerEmail=$OSDU_GCP_AIRFLOW_COMPOSER_EMAIL
+    --set data.adminUserEmail=$OSDU_GCP_ADMIN_USER_EMAIL
+    --set data.pubSubEmail=$OSDU_GCP_PUB_SUB_EMAIL
+    --set data.registerPubsubIdentity=$OSDU_GCP_REGISTER_PUBSUB_IDENTITY
   OSDU_GCP_HELM_CONFIG_SERVICE_VARS_DEV2: >
-    --set data.entitlements_domain=$DOMAIN
-    --set data.google_audiences=$GOOGLE_AUDIENCE
-    --set data.openid_provider_client_ids=$GOOGLE_AUDIENCE
-    --set data.partition_api=$OSDU_GCP_PARTITION_API
-    --set data.data_partition_id=$OSDU_GCP_TENANT
-    --set data.project_id=$OSDU_GCP_PROJECT
-    --set data.airflow_composer_email=$OSDU_GCP_AIRFLOW_COMPOSER_EMAIL
-    --set data.admin_user_email=$OSDU_GCP_ADMIN_USER_EMAIL
-    --set data.pub_sub_email=$OSDU_GCP_PUB_SUB_EMAIL
-    --set data.register_pubsub_identity=$OSDU_GCP_REGISTER_PUBSUB_IDENTITY
+    --set data.entitlementsDomain=$DOMAIN
+    --set data.googleAudiences=$GOOGLE_AUDIENCE
+    --set data.openidProviderClientIds=$GOOGLE_AUDIENCE
+    --set data.partitionApi=$OSDU_GCP_PARTITION_API
+    --set data.dataPartitionId=$OSDU_GCP_TENANT
+    --set data.projectId=$OSDU_GCP_PROJECT
+    --set data.airflowComposerEmail=$OSDU_GCP_AIRFLOW_COMPOSER_EMAIL
+    --set data.adminUserEmail=$OSDU_GCP_ADMIN_USER_EMAIL
+    --set data.pubSubEmail=$OSDU_GCP_PUB_SUB_EMAIL
+    --set data.registerPubsubIdentity=$OSDU_GCP_REGISTER_PUBSUB_IDENTITY
   OSDU_GCP_HELM_DEPLOYMENT_SERVICE_VARS: >
     --set data.bootstrapServiceAccountName=datafier-workload-identity-gke
     --set data.image=$CI_REGISTRY_IMAGE/osdu-gcp-entitlements:$CI_COMMIT_SHORT_SHA
-    --set data.bootstrap_image=$CI_REGISTRY_IMAGE/osdu-gcp-bootstrap-entitlements:$CI_COMMIT_SHORT_SHA
+    --set data.bootstrapImage=$CI_REGISTRY_IMAGE/osdu-gcp-bootstrap-entitlements:$CI_COMMIT_SHORT_SHA
     --set data.serviceAccountName=$OSDU_GCP_SERVICE-k8s
-    --set data.sql_connection_string=$OSDU_GCP_SQL_CONNECTION_STRING
+    --set data.sqlConnectionString=$OSDU_GCP_SQL_CONNECTION_STRING
   # FIXME add value below to DEV2 pipeline
   OSDU_GCP_HELM_DEPLOYMENT_SERVICE_VARS_DEV2: >
     --set data.bootstrapServiceAccountName=workload-gke-bootstrap-sa
-    --set data.bootstrap_image=$CI_REGISTRY_IMAGE/osdu-gcp-bootstrap-entitlements:${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
+    --set data.bootstrapImage=$CI_REGISTRY_IMAGE/osdu-gcp-bootstrap-entitlements:${CI_COMMIT_TAG:-$CI_COMMIT_SHORT_SHA}
   OSDU_GCP_HELM_CONFIG_SERVICE: entitlements-config
   OSDU_GCP_HELM_DEPLOYMENT_SERVICE: entitlements-deploy
 
