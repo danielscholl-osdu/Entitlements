@@ -64,24 +64,10 @@ $ ./mvnw spring-boot:run -pl provider/entitlements-v2-jdbc
 
 In order to run integration tests, you need to have the following environment variables defined:
 
-**Required to run integration tests**
-
-| Name | Value | Description | Sensitive? | Source |
-| ---  | ---   | ---         | ---        | ---    |
-| `ENTITLEMENT_V2_URL` | ex `http://localhost:8080/api/entitlements/v2/` | The host where the service is running | no | -- |
-| `DOMAIN` | ex `contoso.com` | Must match the value of `service_domain_name` above | no | -- |
-| `TENANT_NAME` | ex `opendes` | OSDU tenant used for testing | no | -- |
-| `INTEGRATION_TESTER` | `********` | System identity to assume for API calls. Note: This user must have entitlements already configured | yes | -- |
-| `INTEGRATION_TEST_AUDIENCE` | `********` | Client Id for `$INTEGRATION_TESTER` | yes | -- |
-| `GOOGLE_APPLICATION_CREDENTIALS` | `********` | System identity to provide access for cleaning up groups created during test | yes | -- |
-| `AUTH_MODE` | `IAP` | Should be configured only if IAP enabled | no | -- |
-| `IAP_URL` | `https://dev.osdu.club` | Should be configured only if IAP enabled | no | -- |
-
-**Entitlements configuration for integration accounts**
-
-| INTEGRATION_TESTER  | 
-| --- |
-| users<br/>service.entitlements.user<br/>service.entitlements.admin |
+### Anthos Service Configuration:
+[Anthos service configuration ](docs/anthos/README.md)
+### GCP Service Configuration:
+[Gcp service configuration ](docs/gcp/README.md)
 
 
 #### Using Cloud Infrastructure

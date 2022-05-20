@@ -75,3 +75,22 @@ Defined in default application property file but possible to override:
 | name | value | description | sensitive? | source |
 | ---  | ---   | ---         | ---        | ---    |
 | `OPENID_PROVIDER_USER_ID_CLAIM_NAME` | ex `email` | OpenID user id claim name | no | - |
+
+**Required to run integration tests**
+
+| Name | Value | Description | Sensitive? | Source |
+| ---  | ---   | ---         | ---        | ---    |
+| `ENTITLEMENT_V2_URL` | ex `http://localhost:8080/api/entitlements/v2/` | The host where the service is running | no | -- |
+| `DOMAIN` | ex `contoso.com` | Must match the value of `service_domain_name` above | no | -- |
+| `TENANT_NAME` | ex `opendes` | OSDU tenant used for testing | no | -- |
+| `INTEGRATION_TESTER` | `********` | System identity to assume for API calls. Note: This user must have entitlements already configured | yes | -- |
+| `INTEGRATION_TEST_AUDIENCE` | `********` | Client Id for `$INTEGRATION_TESTER` | yes | -- |
+| `GOOGLE_APPLICATION_CREDENTIALS` | `********` | System identity to provide access for cleaning up groups created during test | yes | -- |
+| `AUTH_MODE` | `IAP` | Should be configured only if IAP enabled | no | -- |
+| `IAP_URL` | `https://dev.osdu.club` | Should be configured only if IAP enabled | no | -- |
+
+**Entitlements configuration for integration accounts**
+
+| INTEGRATION_TESTER  | 
+| --- |
+| users<br/>service.entitlements.user<br/>service.entitlements.admin |
