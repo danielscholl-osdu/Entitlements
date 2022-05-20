@@ -24,6 +24,5 @@ conf:
   onPremEnabled: false
 auth:
   publicUrl: ""
-  istioNamespace: "istio-ingress"
   localUrl: "keycloak"
   realm: "osdu"
