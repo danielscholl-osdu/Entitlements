@@ -89,6 +89,12 @@
     },
     {
       "groupName": "service.workflow.system-admin"
+    },
+    {
+      "groupName": "service.dataset.viewers"
+    },
+    {
+      "groupName": "service.dataset.editors"
     }
   ]
 }
