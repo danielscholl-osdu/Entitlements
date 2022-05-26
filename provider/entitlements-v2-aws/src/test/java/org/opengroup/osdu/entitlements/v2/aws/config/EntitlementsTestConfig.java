@@ -2,7 +2,7 @@ package org.opengroup.osdu.entitlements.v2.aws.config;
 
 import org.opengroup.osdu.core.aws.mongodb.helper.BasicMongoDBHelper;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.MongoConfig;
-import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.MongoPropertiesReader;
+import org.opengroup.osdu.core.aws.mongodb.config.MongoPropertiesReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
