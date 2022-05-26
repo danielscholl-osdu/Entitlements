@@ -17,21 +17,21 @@ package org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements;
 
 import org.opengroup.osdu.core.aws.mongodb.MongoDBSimpleFactory;
 import org.opengroup.osdu.core.aws.mongodb.helper.BasicMongoDBHelper;
+import org.opengroup.osdu.core.aws.mongodb.config.MongoPropertiesDefaultReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
 /**
- * Basic configuration for MongoDB beans.
- * Will be imported from other services
+ * Basic configuration for MongoDB beans. Will be imported from other services
  */
 @Configuration
 public class MongoConfig {
 
     @Bean
     @Autowired
-    public BasicMongoDBHelper mongoHelper(MongoDBSimpleFactory mongoDBSimpleFactory, MongoPropertiesReader propertiesReader) {
+    public BasicMongoDBHelper mongoHelper(MongoDBSimpleFactory mongoDBSimpleFactory, MongoPropertiesDefaultReader propertiesReader) {
         return mongoDBSimpleFactory.getHelper(propertiesReader.getProperties());
     }
 }
