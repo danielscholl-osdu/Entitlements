@@ -613,7 +613,7 @@
       ]
     },
     {
-      "name": "service.policy.viewer",
+      "name": "service.policy.user",
       "description": "The viewer of the datalake policy service",
       "members": [
         {
@@ -636,21 +636,6 @@
       "members": [
         {
           "name": "users.datalake.ops"
-        }
-      ]
-    },
-    {
-      "name": "service.policy.creator",
-      "description": "Datalake policy creators",
-      "members": [
-        {
-          "name": "users.datalake.ops"
-        },
-        {
-          "name": "users.datalake.admins"
-        },
-        {
-          "name": "users.datalake.editors"
         }
       ]
     },

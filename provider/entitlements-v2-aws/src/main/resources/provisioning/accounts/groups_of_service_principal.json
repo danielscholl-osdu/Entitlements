@@ -154,10 +154,7 @@
       "groupName": "service.policy.admin"
     },
     {
-      "groupName": "service.policy.creator"
-    },
-    {
-      "groupName": "service.policy.viewer"
+      "groupName": "service.policy.user"
     },
     {
       "groupName": "service.delivery.viewer"
