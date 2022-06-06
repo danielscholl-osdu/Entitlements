@@ -4,7 +4,7 @@
 
     <properties>
         <java.version>8</java.version>
-        <os-core-lib-ibm.version>0.15.0-rc2</os-core-lib-ibm.version>
+        <os-core-lib-ibm.version>0.15.0</os-core-lib-ibm.version>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
     </properties>
