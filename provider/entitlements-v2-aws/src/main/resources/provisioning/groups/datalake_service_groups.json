@@ -701,6 +701,39 @@
           "name": "users.datalake.editors"
         }
       ]
+    },
+    {
+      "name": "service.dataset.editors",
+      "description": "Editors group for Dataset service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        }
+      ]
+    },
+    {
+      "name": "service.dataset.viewers",
+      "description": "Viewers group for Dataset service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.viewers"
+        }
+      ]
     }
   ]
 }
