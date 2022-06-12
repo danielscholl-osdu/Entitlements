@@ -9,6 +9,8 @@
         <redisson.version>3.13.2</redisson.version>
         <protobuf-java.version>3.12.4</protobuf-java.version>
         <springfox.version>3.0.0</springfox.version>
+        <jackson-databind.version>2.13.2.2</jackson-databind.version>
+        <jackson.version>2.13.2</jackson.version>
     </properties>
 
     <parent>
@@ -65,6 +67,21 @@
         <dependency>
             <groupId>org.opengroup.osdu</groupId>
             <artifactId>os-core-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson-databind.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
         <dependency>
