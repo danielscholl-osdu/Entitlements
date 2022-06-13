@@ -42,6 +42,6 @@ include:
     file: "cloud-providers/ibm.yml"
 
   - project: "osdu/platform/ci-cd-pipelines"
-    file: "cloud-providers/osdu-gcp-gke.yml"
+    file: "cloud-providers/osdu-gcp-global.yml"
 
   - local: "devops/gcp/pipeline/override-stages.yml"
