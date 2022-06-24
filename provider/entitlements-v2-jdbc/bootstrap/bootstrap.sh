@@ -125,12 +125,13 @@ done
 {
 "storage":["users", "service.entitlements.user", "service.legal.user"],
 "notification":["users", "service.entitlements.user", "users.datalake.editors"],
-"indexer":["users", "service.entitlements.user", "service.storage.viewer", "service.schema-service.viewers", "data.default.viewers"]
+"indexer":["users", "service.entitlements.user", "service.storage.admin", "service.schema-service.viewers", "service.search.admin"],
+"indexer-queue":["users", "service.entitlements.user", "service.search.admin"]
 }
 EOF
 
   # shellcheck disable=SC2207,SC2002
-  SERVICE_NAME=( $(cat /opt/services.json | jq -r ' keys[]') )
+  SERVICE_NAME=( $(jq -r ' keys[]' /opt/services.json) )
 
   for SERVICE_NAME in "${SERVICE_NAME[@]}"; do
 
@@ -143,10 +144,10 @@ EOF
 EOF
 
   # shellcheck disable=SC2207,SC2002,SC2086
-  SERVICE_GROUP_NAME=( $(cat "/opt/services.json" | jq -r .${SERVICE_NAME}[]) )
+  SERVICE_GROUP_NAME=( $(jq -r .\"${SERVICE_NAME}\"[] /opt/services.json) )
   # shellcheck disable=SC2002
     for SERVICE_GROUP_NAME in "${SERVICE_GROUP_NAME[@]}"; do
-      SERVICE_GROUP_EMAIL=$(awk '{ if ($1 ~ /'"${SERVICE_GROUP_NAME}"'@'"${DATA_PARTITION_ID}"'\./) print }' /opt/group.txt)     
+      SERVICE_GROUP_EMAIL=$(awk '{ if ($1 ~ /'^"${SERVICE_GROUP_NAME}"'@'"${DATA_PARTITION_ID}"'\./) print }' /opt/group.txt)     
       status_code=$(curl --location --globoff --request POST "${ENTITLEMENTS_HOST}/api/entitlements/v2/groups/${SERVICE_GROUP_EMAIL}/members" \
         --write-out "%{http_code}" --silent --output "output.txt" \
         --header 'Content-Type: application/json' \
@@ -359,12 +360,13 @@ done
 {
 "storage":["users", "service.entitlements.user", "service.legal.user"],
 "notification":["users", "service.entitlements.user", "users.datalake.editors"],
-"indexer":["users", "service.entitlements.user", "service.storage.admin", "service.schema-service.viewers", "data.default.viewers", "service.search.admin"  ]
+"indexer":["users", "service.entitlements.user", "service.storage.admin", "service.schema-service.viewers", "service.search.admin"  ],
+"indexer-queue":["users", "service.entitlements.user", "service.search.admin"]
 }
 EOF
 
   # shellcheck disable=SC2207,SC2002
-  SERVICE_NAME=( $(cat /opt/services.json | jq -r ' keys[]') )
+  SERVICE_NAME=( $(jq -r ' keys[]' /opt/services.json) )
 
 
   for SERVICE_NAME in "${SERVICE_NAME[@]}"; do
@@ -378,10 +380,10 @@ EOF
 EOF
 
   # shellcheck disable=SC2207,SC2002,SC2086
-  SERVICE_GROUP_NAME=( $(cat "/opt/services.json" | jq -r .${SERVICE_NAME}[]) )
+  SERVICE_GROUP_NAME=( $( jq -r .\"${SERVICE_NAME}\"[] /opt/services.json) )
   # shellcheck disable=SC2002
     for SERVICE_GROUP_NAME in "${SERVICE_GROUP_NAME[@]}"; do
-      SERVICE_GROUP_EMAIL=$(awk '{ if ($1 ~ /'"${SERVICE_GROUP_NAME}"'@'"${DATA_PARTITION_ID}"'\./) print }' /opt/group.txt)
+      SERVICE_GROUP_EMAIL=$(awk '{ if ($1 ~ /'^"${SERVICE_GROUP_NAME}"'@'"${DATA_PARTITION_ID}"'\./) print }' /opt/group.txt)
       status_code=$(curl --location --globoff --request POST "${ENTITLEMENTS_HOST}/api/entitlements/v2/groups/${SERVICE_GROUP_EMAIL}/members" \
         --write-out "%{http_code}" --silent --output "output.txt" \
         --header 'Content-Type: application/json' \
