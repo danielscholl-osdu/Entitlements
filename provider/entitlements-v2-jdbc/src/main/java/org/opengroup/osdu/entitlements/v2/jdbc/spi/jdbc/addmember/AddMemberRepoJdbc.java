@@ -72,6 +72,12 @@ public class AddMemberRepoJdbc implements AddMemberRepo {
 						addMemberRepoDto.getMemberNode().getNodeId(),
 						groupEntityNode.getNodeId()));
 			}
+			if (e instanceof DuplicateKeyException) {
+				throw new DatabaseAccessException(HttpStatus.CONFLICT, format(
+						"%s is already a member of group %s",
+						addMemberRepoDto.getMemberNode().getNodeId(),
+						groupEntityNode.getNodeId()));
+			}
 			throw e;
 		}
 	}
