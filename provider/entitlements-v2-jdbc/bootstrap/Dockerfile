@@ -4,7 +4,7 @@ WORKDIR /opt
 
 RUN apt-get update && apt-get install -yq jq
 
-COPY ./provider/entitlements-v2-jdbc/bootstrap/*.sh /opt/
+COPY ./provider/entitlements-v2-jdbc/bootstrap/ /opt/
 
 RUN chmod +x bootstrap.sh validate-env.sh
 
