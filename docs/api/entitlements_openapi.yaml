@@ -431,8 +431,12 @@ paths:
         - name: type
           in: query
           description: type
-          required: false
-          type: string
+          required: true
+          enum:
+            - DATA
+            - NONE
+            - SERVICE
+            - USER
         - name: appid
           in: query
           description: appid
