@@ -50,7 +50,7 @@ public class RequestHeaderInterceptor implements HandlerInterceptor {
 
     private boolean isSwaggerRequest(HttpServletRequest request) {
         String endpoint = request.getRequestURI().replace(request.getContextPath(), "");
-        return endpoint.startsWith("/swagger") || endpoint.startsWith("/webjars");
+        return endpoint.startsWith("/swagger") || endpoint.startsWith("/webjars") || endpoint.startsWith("/v3/api-docs");
     }
 
     private boolean isVersionInfo(HttpServletRequest request) {

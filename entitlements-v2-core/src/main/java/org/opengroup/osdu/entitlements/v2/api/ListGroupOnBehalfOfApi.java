@@ -1,5 +1,6 @@
 package org.opengroup.osdu.entitlements.v2.api;
 
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
@@ -30,8 +31,10 @@ public class ListGroupOnBehalfOfApi {
     @GetMapping("/members/{member_email}/groups")
     @PreAuthorize("@authorizationFilter.hasAnyPermission('" + AppProperties.OPS + "', '" + AppProperties.ADMIN + "')")
     public ResponseEntity<ListGroupResponseDto> listGroupsOnBehalfOf(@PathVariable("member_email") String memberId,
-                                                                     @RequestParam(name="type", required = false) String type,
-                                                                     @RequestParam(name="appid", required = false) String appId) {
+        @ApiParam(name = "type", allowableValues = "NONE,DATA,USER,SERVICE", defaultValue = "NONE")
+        @RequestParam(name = "type") String type,
+        @RequestParam(name = "appid", required = false) String appId) {
+
         memberId = memberId.toLowerCase();
         String partitionId = requestInfo.getHeaders().getPartitionId();
         GroupType groupType = getTypeParameterCaseInsensitive(type);
