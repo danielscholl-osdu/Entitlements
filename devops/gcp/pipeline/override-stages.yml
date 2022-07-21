@@ -6,6 +6,7 @@ variables:
   OSDU_GCP_TEST_SUBDIR: "testing/$OSDU_GCP_SERVICE-v2-test-$OSDU_GCP_VENDOR"
   OSDU_GCP_TEST_PROJECT: "$OSDU_GCP_SERVICE-v2-test-core,$OSDU_GCP_SERVICE-v2-test-$OSDU_GCP_VENDOR"
   OSDU_GCP_VENDOR: jdbc
+  OSDU_GCP_HELM_TIMEOUT: "--timeout 10m"
 
 osdu-gcp-anthos-test:
   variables:
