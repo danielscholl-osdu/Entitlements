@@ -7,7 +7,8 @@
         <os-core-lib-ibm.version>0.15.2</os-core-lib-ibm.version>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
-    </properties>
+		<spring-webmvc.version>5.3.22</spring-webmvc.version>
+	</properties>
 
     <parent>
         <groupId>org.opengroup.osdu.entitlements.v2</groupId>
@@ -93,7 +94,12 @@
 				</exclusion>
 	 			</exclusions>
 		</dependency>
-	<dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring-webmvc.version}</version>
+		</dependency>
+		<dependency>
 		<groupId>io.projectreactor.netty</groupId>
 		<artifactId>reactor-netty</artifactId>
 		<exclusions>
