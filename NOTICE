@@ -70,6 +70,7 @@ The following software have components provided under the terms of this license:
 - Apache Commons Logging (from http://commons.apache.org/logging/, http://commons.apache.org/proper/commons-logging/)
 - Apache Commons Pool (from https://commons.apache.org/proper/commons-pool/)
 - Apache Commons Text (from http://commons.apache.org/proper/commons-text, http://commons.apache.org/proper/commons-text/, https://commons.apache.org/proper/commons-text)
+- Apache Commons Validator (from http://commons.apache.org/proper/commons-validator/, http://jakarta.apache.org/commons/${pom.artifactId.substring(8)}/, https://repo1.maven.org/maven2/commons-validator/commons-validator)
 - Apache Geronimo JMS Spec 2.0 (from http://geronimo.apache.org/maven/${siteId}/${version})
 - Apache Groovy (from http://groovy-lang.org, http://groovy.codehaus.org/, https://groovy-lang.org)
 - Apache HttpClient (from http://hc.apache.org/httpcomponents-client)
@@ -109,6 +110,7 @@ The following software have components provided under the terms of this license:
 - Cloud Storage JSON API v1-rev20220705-1.32.1 (from https://repo1.maven.org/maven2/com/google/apis/google-api-services-storage)
 - Cloud Storage JSON API v1-rev20220705-2.0.0 (from https://repo1.maven.org/maven2/com/google/apis/google-api-services-storage)
 - Collections (from https://repo1.maven.org/maven2/commons-collections/commons-collections)
+- Commons Digester (from http://commons.apache.org/digester/)
 - Converter: Jackson (from https://github.com/square/retrofit, https://repo1.maven.org/maven2/com/squareup/retrofit2/converter-jackson)
 - Core functionality for the Reactor Netty library (from https://github.com/reactor/reactor-netty)
 - Expression Language 3.0 (from http://el-spec.java.net, http://uel.java.net, https://projects.eclipse.org/projects/ee4j.el)
@@ -175,6 +177,7 @@ The following software have components provided under the terms of this license:
 - Jakarta Bean Validation API (from https://beanvalidation.org)
 - Jakarta Servlet (from https://projects.eclipse.org/projects/ee4j.servlet)
 - Jakarta XML Binding API (from https://repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api, https://repo1.maven.org/maven2/org/jboss/spec/javax/xml/bind/jboss-jaxb-api_2.3_spec)
+- Java Architecture for XML Binding (from http://jaxb.java.net/, https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api)
 - Java Native Access (from https://github.com/java-native-access/jna, https://github.com/twall/jna, https://repo1.maven.org/maven2/net/java/dev/jna/jna)
 - Java Native Access Platform (from https://github.com/java-native-access/jna)
 - Java Servlet 4.0 API
@@ -502,6 +505,8 @@ CDDL-1.0
 The following software have components provided under the terms of this license:
 
 - Apache Log4j Core (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core)
+- Jakarta Activation API (from https://github.com/eclipse-ee4j/jaf, https://repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api)
+- Java Architecture for XML Binding (from http://jaxb.java.net/, https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api)
 - JavaBeans Activation Framework (from https://repo1.maven.org/maven2/com/sun/activation/javax.activation)
 - javax.annotation-api (from http://jcp.org/en/jsr/detail?id=250)
 
@@ -510,6 +515,7 @@ CDDL-1.1
 ========================================================================
 The following software have components provided under the terms of this license:
 
+- Java Architecture for XML Binding (from http://jaxb.java.net/, https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api)
 - JavaBeans Activation Framework (from https://repo1.maven.org/maven2/com/sun/activation/javax.activation)
 - javax.annotation-api (from http://jcp.org/en/jsr/detail?id=250)
 - tomcat-embed-core (from http://tomcat.apache.org/)
@@ -583,6 +589,7 @@ The following software have components provided under the terms of this license:
 - JBoss Jakarta Annotations API (from https://github.com/jboss/jboss-jakarta-annotations-api_spec)
 - Jakarta Annotations API (from https://projects.eclipse.org/projects/ee4j.ca)
 - Jakarta WebSocket - Server API (from https://projects.eclipse.org/projects/ee4j.websocket)
+- Java Architecture for XML Binding (from http://jaxb.java.net/, https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api)
 - JavaBeans Activation Framework (from https://repo1.maven.org/maven2/com/sun/activation/javax.activation)
 - argparse (from https://github.com/ThomasWaldmann/argparse/)
 - javax.annotation-api (from http://jcp.org/en/jsr/detail?id=250)
@@ -609,6 +616,7 @@ The following software have components provided under the terms of this license:
 - Jakarta Servlet (from https://projects.eclipse.org/projects/ee4j.servlet)
 - Jakarta WebSocket - Server API (from https://projects.eclipse.org/projects/ee4j.websocket)
 - Jakarta XML Binding API (from https://repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api, https://repo1.maven.org/maven2/org/jboss/spec/javax/xml/bind/jboss-jaxb-api_2.3_spec)
+- Java Architecture for XML Binding (from http://jaxb.java.net/, https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api)
 - Java Servlet 4.0 API
 - Java(TM) API for WebSocket (from https://repo1.maven.org/maven2/org/jboss/spec/javax/websocket/jboss-websocket-api_1.1_spec)
 - JavaBeans Activation Framework (from https://repo1.maven.org/maven2/com/sun/activation/javax.activation)
@@ -624,6 +632,7 @@ The following software have components provided under the terms of this license:
 - JBoss Jakarta Annotations API (from https://github.com/jboss/jboss-jakarta-annotations-api_spec)
 - Jakarta Annotations API (from https://projects.eclipse.org/projects/ee4j.ca)
 - Jakarta Servlet (from https://projects.eclipse.org/projects/ee4j.servlet)
+- Java Architecture for XML Binding (from http://jaxb.java.net/, https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api)
 - Java Servlet 4.0 API
 - Project Lombok (from http://projectlombok.org, https://projectlombok.org)
 
