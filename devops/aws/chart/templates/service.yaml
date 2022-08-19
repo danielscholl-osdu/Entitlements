@@ -1,0 +1,4 @@
+{{- template "common.service" (list . "os-entitlements.service") -}}
+{{- define "os-entitlements.service" -}}
+## Define overrides for the service resource here
+{{- end -}}

@@ -1,0 +1,118 @@
+# Service Config
+image: __CONTAINER__
+imagePullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 8080
+  apiPath: /api/entitlements/v2/
+  readinessType: exec
+  readinessProbeHttpPath: /api/entitlements/v2/_ah/liveness_check
+  startupProbeHttpPath: /api/entitlements/v2/_ah/liveness_check
+serviceParameters:
+- objectName: "/osdu/{{ .Values.global.resourcePrefix }}/primary-region"
+  objectType: "ssmparameter"
+  objectAlias: primary-region
+- objectName: "/osdu/{{ .Values.global.resourcePrefix }}/mongodb/endpoint"
+  objectType: "ssmparameter"
+  objectAlias: "mongodb_host"
+- objectName: "/osdu/{{ .Values.global.resourcePrefix }}/mongodb/port"
+  objectType: "ssmparameter"
+  objectAlias: "mongodb_port"
+- objectName: "/osdu/{{ .Values.global.resourcePrefix }}/mongodb/credentials"
+  objectType: "secretsmanager"
+  objectAlias: "mongodb_credentials"
+environmentVariables:
+  - name: APPLICATION_PORT
+    value: "{{ .Values.service.port }}"
+  - name: AWS_REGION
+    value: "{{ .Values.global.region }}"
+  - name: ENVIRONMENT
+    value: "{{ .Values.global.resourcePrefix }}"
+  - name: JAVA_OPTS
+    value: "-Xms50M -Xmx900M"
+  - name: LOG_LEVEL
+    value: "{{ default `INFO` .Values.global.logLevel }}"
+  - name: SSM_ENABLED
+    value: "True"
+  - name: SSL_ENABLED
+    value: "false"
+  - name: PARAMETER_MOUNT_PATH
+    value: "/mnt/params"
+  - name: MONGODB_RETRY_WRITES
+    value: "true"
+  - name: MONGODB_WRITE_MODE
+    value: "majority"
+  - name: MONGODB_USE_SRV_ENDPOINT
+    value: "true"
+  - name: MONGODB_ENABLE_TLS
+    value: "false"
+  - name: SERVICE_DOMAIN_NAME
+    value: "{{ .Values.global.domainName }}"
+podAnnotations: {}
+
+# Resource Config
+maxConnections: 200
+replicaCount: 1
+resources:
+  limits:
+    memory: 900M
+  requests:
+    cpu: 500m
+    memory: 900M
+autoscaling:
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 90
+  coolDownPeriod: 120
+  ServiceRequestCountThreshold: 35
+  ServiceRequestDurationAverage: 500
+
+# Security Config
+serviceAccountRole: arn:aws:iam::{{ .Values.global.accountID }}:role/osdu-{{ .Values.global.resourcePrefix }}-{{ include "common.name" . }}
+cors:
+  maxAge: "60m"
+  allowCredentials: true
+  allowMethods: 
+    - POST
+    - GET
+    - PATCH
+    - DELETE
+  allowHeaders:
+    - Authorization
+    - Data-Partition-Id
+    - Correlation-Id
+    - Content-Type
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+allowedPrincipals:
+  - cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account
+  - cluster.local/ns/{{ .Release.Namespace }}/sa/os-crs-catalog
+  - cluster.local/ns/{{ .Release.Namespace }}/sa/os-crs-conversion
+  - cluster.local/ns/{{ .Release.Namespace }}/sa/os-dataset
+  - cluster.local/ns/{{ .Release.Namespace }}/sa/os-file
+  - cluster.local/ns/{{ .Release.Namespace }}/sa/os-file-dms
+  - cluster.local/ns/{{ .Release.Namespace }}/sa/os-indexer
+  - cluster.local/ns/{{ .Release.Namespace }}/sa/os-legal
+  - cluster.local/ns/{{ .Release.Namespace }}/sa/os-notification
+  - cluster.local/ns/{{ .Release.Namespace }}/sa/os-policy
+  - cluster.local/ns/{{ .Release.Namespace }}/sa/opa-agent-role
+  - cluster.local/ns/{{ .Release.Namespace }}/sa/os-register
+  - cluster.local/ns/{{ .Release.Namespace }}/sa/os-schema
+  - cluster.local/ns/{{ .Release.Namespace }}/sa/os-search
+  - cluster.local/ns/{{ .Release.Namespace }}/sa/os-storage
+  - cluster.local/ns/{{ .Release.Namespace }}/sa/os-unit
+  - cluster.local/ns/os-timeseries-dms/sa/os-timeseries-dms
+  - cluster.local/ns/aws-binary-dms/sa/binary-dms
+  - cluster.local/ns/osdu-airflow/sa/airflow-dag-upload
+  - cluster.local/ns/osdu-airflow/sa/airflow-webserver
+  - cluster.local/ns/osdu-airflow/sa/airflow-worker
+  - cluster.local/ns/osdu-ingest/sa/os-data-workflow
+  - cluster.local/ns/osdu-ingest/sa/os-ingestion-workflow
+  - cluster.local/ns/osdu-seismic-ddms/sa/os-seismic-store
+  - cluster.local/ns/osdu-well-delivery/sa/os-welldelivery
+  - cluster.local/ns/osdu-wellbore-ddms/sa/os-wellbore-ddms
