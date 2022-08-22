@@ -24,3 +24,5 @@ rm -rf "${OUTPUT_DIR}/devops"
 mkdir -p "${OUTPUT_DIR}/devops/aws"
 
 cp -r devops/aws/ "${OUTPUT_DIR}/devops/"
+
+mv ${OUTPUT_DIR}/devops/aws/chart ${OUTPUT_DIR}/
