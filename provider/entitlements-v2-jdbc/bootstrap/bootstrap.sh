@@ -126,8 +126,7 @@ done
 "storage":["users", "service.entitlements.user", "service.legal.user"],
 "notification":["users", "service.entitlements.user", "users.datalake.editors"],
 "indexer":["users", "service.entitlements.user", "service.storage.admin", "service.schema-service.viewers", "service.search.admin"],
-"indexer-queue":["users", "service.entitlements.user", "service.search.admin"],
-"wks":["users", "users.datalake.editors", "service.entitlements.user", "service.storage.creator", "service.schema-service.viewers"]
+"indexer-queue":["users", "service.entitlements.user", "service.search.admin"]
 }
 EOF
 
@@ -362,8 +361,7 @@ done
 "storage":["users", "service.entitlements.user", "service.legal.user"],
 "notification":["users", "service.entitlements.user", "users.datalake.editors"],
 "indexer":["users", "service.entitlements.user", "service.storage.admin", "service.schema-service.viewers", "service.search.admin"  ],
-"indexer-queue":["users", "service.entitlements.user", "service.search.admin"],
-"wks":["users", "users.datalake.editors", "service.entitlements.user", "service.storage.creator", "service.schema-service.viewers"]
+"indexer-queue":["users", "service.entitlements.user", "service.search.admin"]
 }
 EOF
 
