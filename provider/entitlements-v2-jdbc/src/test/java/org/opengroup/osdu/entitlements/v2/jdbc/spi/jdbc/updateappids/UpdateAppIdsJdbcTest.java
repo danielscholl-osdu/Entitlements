@@ -3,6 +3,7 @@ package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.updateappids;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.DATA_PARTITION_ID;
 import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.getDataGroupNode;
@@ -63,7 +64,8 @@ public class UpdateAppIdsJdbcTest {
         savedGroup.setId(1L);
 
         when(jdbcTemplateRunner.getRecursiveParentIds(any())).thenReturn(Collections.singletonList(1L));
-        when(groupRepository.findAllById(anyList())).thenReturn(Collections.singletonList(savedGroup));
+        when(groupRepository.findGroupsByIdAndPartition(anyList(), eq(requesterNode.getDataPartitionId())))
+                .thenReturn(Collections.singletonList(savedGroup));
         when(groupRepository.findByEmail(any())).thenReturn(Collections.singletonList(savedGroup));
 
         //when
