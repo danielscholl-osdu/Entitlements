@@ -122,7 +122,11 @@ public class RetrieveGroupRepoJdbc implements RetrieveGroupRepo {
     @Override
     public ParentTreeDto loadAllParents(EntityNode memberNode) {
         List<Long> parentIds = jdbcTemplateRunner.getRecursiveParentIds(memberNode);
-        List<GroupInfoEntity> parentGroupEntities = (List<GroupInfoEntity>) groupRepository.findAllById(parentIds);
+        List<GroupInfoEntity> parentGroupEntities = new ArrayList<>();
+        if (!parentIds.isEmpty()) {
+            parentGroupEntities = groupRepository
+                    .findGroupsByIdAndPartition(parentIds, memberNode.getDataPartitionId());
+        }
 
         Set<ParentReference> parents = parentGroupEntities.stream()
                 .map(GroupInfoEntity::toParentReference)
