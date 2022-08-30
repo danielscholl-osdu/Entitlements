@@ -362,6 +362,52 @@
           "name": "users.datalake.viewers"
         }
       ]
+    },
+    {
+      "name": "service.secret.viewer",
+      "description": "The viewer of the secret service",
+      "members": [
+        {
+          "name": "users.datalake.viewers"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.secret.admin",
+      "description": "Secret service admins",
+      "members": []
+    },
+    {
+      "name": "service.secret.editor",
+      "description": "Secret service editors",
+      "members": []
+    },
+    {
+      "name": "service.edsdms.user",
+      "description": "Secret service editors",
+      "members": [
+        {
+          "name": "users.datalake.viewers"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
     }
   ]
 }

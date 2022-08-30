@@ -89,6 +89,18 @@
     },
     {
       "groupName": "service.policy.admin"
+    },
+    {
+      "groupName": "service.secret.viewer"
+    },
+    {
+      "groupName": "service.secret.editor"
+    },
+    {
+      "groupName": "service.secret.admin"
+    },
+    {
+      "groupName": "service.edsdms.user"
     }
   ]
 }
