@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -123,10 +122,7 @@ public class RetrieveGroupRepoJdbcTest {
         GroupInfoEntity savedGroup2 = GroupInfoEntity.fromEntityNode(group2);
         GroupInfoEntity savedGroup3 = GroupInfoEntity.fromEntityNode(group3);
 
-        List<Long> parentsId = Collections.singletonList(1L);
-        when(jdbcTemplateRunner.getRecursiveParentIds(member)).thenReturn(parentsId);
-        when(groupRepository.findGroupsByIdAndPartition(anyList(), eq(member.getDataPartitionId())))
-                .thenReturn(Arrays.asList(savedGroup1, savedGroup2, savedGroup3));
+        when(groupRepository.findAllById(anyList())).thenReturn(Arrays.asList(savedGroup1, savedGroup2, savedGroup3));
 
         Set<String> parentIds = sut.loadAllParents(member).getParentReferences().stream()
                 .map(ParentReference::getId)
