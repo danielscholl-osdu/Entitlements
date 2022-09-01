@@ -46,9 +46,6 @@ public interface GroupRepository extends CrudRepository<GroupInfoEntity, Long> {
 	@Query("SELECT g.* FROM embedded_group as gg LEFT JOIN \"group\" as g ON gg.child_id = g.id WHERE gg.parent_id IN (:parentIds)")
 	List<GroupInfoEntity> findDirectChildren(@Param("parentIds") List<Long> parentIds);
 
-	@Query("SELECT * FROM \"group\" as gg WHERE gg.partition_Id = :partitionId AND gg.id IN (:groupIds)")
-	List<GroupInfoEntity> findGroupsByIdAndPartition(@Param("groupIds") List<Long> groupIds, @Param("partitionId") String partitionId);
-
 	@Modifying
 	@Query("INSERT INTO embedded_group VALUES (:parentId, :childId)")
 	void addChildGroupById(@Param("parentId") Long parentId, @Param("childId") Long childId);
