@@ -31,9 +31,5 @@ spec:
         - secretRef:
             name: "{{ .Values.conf.bootstrapOpenidSecretName }}"
         {{- end }}
-        resources:
-          limits:
-            cpu: "{{ .Values.data.bootstrapLimitsCpu }}"
-            memory: "{{ .Values.data.bootstrapLimitsMemory }}"
       restartPolicy: Always
       serviceAccountName: "{{ .Values.data.bootstrapServiceAccountName }}"
