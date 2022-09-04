@@ -18,6 +18,7 @@
 package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.retrievegroup;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.entitlements.v2.jdbc.JdbcAppProperties;
 import org.opengroup.osdu.entitlements.v2.jdbc.exception.DatabaseAccessException;
@@ -124,7 +125,9 @@ public class RetrieveGroupRepoJdbc implements RetrieveGroupRepo {
         List<Long> parentIds = jdbcTemplateRunner.getRecursiveParentIds(memberNode);
         List<GroupInfoEntity> parentGroupEntities = (List<GroupInfoEntity>) groupRepository.findAllById(parentIds);
 
+        String partitionId = Optional.ofNullable(memberNode.getDataPartitionId()).orElse(StringUtils.EMPTY);
         Set<ParentReference> parents = parentGroupEntities.stream()
+                .filter(parentGroup -> partitionId.equalsIgnoreCase(parentGroup.getPartitionId()))
                 .map(GroupInfoEntity::toParentReference)
                 .collect(Collectors.toSet());
 
