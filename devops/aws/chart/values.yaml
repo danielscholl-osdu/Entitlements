@@ -100,7 +100,7 @@ allowedPrincipals:
   - cluster.local/ns/{{ .Release.Namespace }}/sa/os-legal
   - cluster.local/ns/{{ .Release.Namespace }}/sa/os-notification
   - cluster.local/ns/{{ .Release.Namespace }}/sa/os-policy
-  - cluster.local/ns/{{ .Release.Namespace }}/sa/opa-agent-role
+  - cluster.local/ns/{{ .Release.Namespace }}/sa/opa-agent
   - cluster.local/ns/{{ .Release.Namespace }}/sa/os-register
   - cluster.local/ns/{{ .Release.Namespace }}/sa/os-schema
   - cluster.local/ns/{{ .Release.Namespace }}/sa/os-search
