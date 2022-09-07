@@ -26,9 +26,11 @@ import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.intern
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenTreeDto;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
+import org.opengroup.osdu.entitlements.v2.model.GroupType;
 import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.ParentTreeDto;
+import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupsOfPartitionDto;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -193,6 +195,11 @@ public class RetrieveGroupMongoDB extends BasicEntitlementsHelper implements Ret
 
     @Override
     public Map<String, Integer> getAllUserPartitionAssociations() {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public ListGroupsOfPartitionDto getGroupsInPartition(String dataPartitionId, GroupType groupType, String cursor, Integer limit) {
         throw new NotImplementedException();
     }
 

@@ -8,6 +8,7 @@ import io.lettuce.core.Value;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
@@ -17,8 +18,10 @@ import org.opengroup.osdu.entitlements.v2.gcp.spi.redis.connection.RedisConnecto
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenTreeDto;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
+import org.opengroup.osdu.entitlements.v2.model.GroupType;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.ParentTreeDto;
+import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupsOfPartitionDto;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.opengroup.osdu.entitlements.v2.util.JsonConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,6 +150,11 @@ public class RetrieveGroupRepoRedis implements RetrieveGroupRepo {
         } finally {
             connectionPool.returnConnection(connection, log);
         }
+    }
+
+    @Override
+    public ListGroupsOfPartitionDto getGroupsInPartition(String dataPartitionId, GroupType groupType, String cursor, Integer limit) {
+        throw new NotImplementedException();
     }
 
     @Override

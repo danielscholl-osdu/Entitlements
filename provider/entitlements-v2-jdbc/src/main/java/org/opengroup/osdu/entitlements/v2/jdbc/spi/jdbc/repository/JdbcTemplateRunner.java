@@ -20,10 +20,16 @@ package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.opengroup.osdu.entitlements.v2.jdbc.mapper.GroupInfoEntityListMapper;
+import org.opengroup.osdu.entitlements.v2.jdbc.model.GroupInfoEntityList;
 import org.opengroup.osdu.entitlements.v2.jdbc.model.MemberInfoEntity;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
+import org.opengroup.osdu.entitlements.v2.model.GroupType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -32,7 +38,9 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class JdbcTemplateRunner {
 
-	private final JdbcTemplate jdbcTemplate;
+    private final GroupInfoEntityListMapper groupInfoEntityListMapper;
+    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public Long saveMemberInfoEntity(MemberInfoEntity memberInfoEntity){
 		KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -59,6 +67,32 @@ public class JdbcTemplateRunner {
 
 		return jdbcTemplate.queryForList(sqlRequest,Long.class, entityNode.getNodeId());
 	}
+
+	public GroupInfoEntityList getGroupsInPartition(String dataPartitionId, GroupType groupType, Integer offset, Integer limit) {
+		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+		mapSqlParameterSource.addValue("partition", dataPartitionId);
+		mapSqlParameterSource.addValue("name_prefix", groupType.toString().toLowerCase() + "%");
+		mapSqlParameterSource.addValue("limit", limit);
+		mapSqlParameterSource.addValue("from_row", offset);
+		return namedParameterJdbcTemplate.queryForObject(getAllGroupsInPartitionRequest(groupType), mapSqlParameterSource, groupInfoEntityListMapper);
+	}
+
+    private String getAllGroupsInPartitionRequest(GroupType groupType) {
+        String groupNameFilter = !Objects.equals(groupType, GroupType.NONE) ? "AND name LIKE :name_prefix " : "";
+        return "SELECT "
+            + "(SELECT COUNT(*) FROM \"group\" "
+            + "WHERE partition_id = :partition) "
+            + "as totalCount, "
+            + "(SELECT json_agg(t.*) FROM "
+            + "(SELECT * FROM \"group\" "
+            + "WHERE partition_id = :partition "
+            + groupNameFilter
+            + "ORDER BY id ASC "
+            + "LIMIT :limit "
+			+ "OFFSET :from_row) "
+            + "AS t) "
+            + "AS groupInfoEntities";
+    }
 
 	private String getRecursiveGroupsRequestForGroup(){
 		return "WITH RECURSIVE search_children AS (\n"

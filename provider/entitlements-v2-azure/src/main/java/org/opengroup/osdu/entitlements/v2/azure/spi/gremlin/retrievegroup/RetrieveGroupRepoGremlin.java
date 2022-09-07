@@ -1,6 +1,7 @@
 package org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.retrievegroup;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__;
@@ -15,9 +16,11 @@ import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPrope
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenTreeDto;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
+import org.opengroup.osdu.entitlements.v2.model.GroupType;
 import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.ParentTreeDto;
+import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupsOfPartitionDto;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
@@ -174,6 +177,11 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
     @Override
     public Map<String, Integer> getAllUserPartitionAssociations() {
         return new HashMap<>();
+    }
+
+    @Override
+    public ListGroupsOfPartitionDto getGroupsInPartition(String dataPartitionId, GroupType groupType, String cursor, Integer limit) {
+        throw new NotImplementedException();
     }
 
     private int calculateMaxDepth() {

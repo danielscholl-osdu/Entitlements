@@ -1,6 +1,6 @@
 /*
- * Copyright 2021 Google LLC
- * Copyright 2021 EPAM Systems, Inc
+ * Copyright 2020-2022 Google LLC
+ * Copyright 2020-2022 EPAM Systems, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,23 +17,30 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.retrievegroup;
 
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
+import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.jdbc.JdbcAppProperties;
 import org.opengroup.osdu.entitlements.v2.jdbc.exception.DatabaseAccessException;
 import org.opengroup.osdu.entitlements.v2.jdbc.model.GroupInfoEntity;
+import org.opengroup.osdu.entitlements.v2.jdbc.model.GroupInfoEntityList;
 import org.opengroup.osdu.entitlements.v2.jdbc.model.MemberInfoEntity;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.GroupRepository;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.JdbcTemplateRunner;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.MemberRepository;
-import org.opengroup.osdu.entitlements.v2.model.*;
+import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
+import org.opengroup.osdu.entitlements.v2.model.ChildrenTreeDto;
+import org.opengroup.osdu.entitlements.v2.model.EntityNode;
+import org.opengroup.osdu.entitlements.v2.model.GroupType;
+import org.opengroup.osdu.entitlements.v2.model.ParentReference;
+import org.opengroup.osdu.entitlements.v2.model.ParentTreeDto;
+import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupsOfPartitionDto;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -186,6 +193,28 @@ public class RetrieveGroupRepoJdbc implements RetrieveGroupRepo {
         return Collections.emptyMap();
     }
 
+    @Override
+    public ListGroupsOfPartitionDto getGroupsInPartition(String dataPartitionId, GroupType groupType, String cursor, Integer limit) {
+        int offsetValue = 0;
+        if (Objects.nonNull(cursor) && !cursor.isEmpty()) {
+            try {
+                offsetValue = Integer.parseInt(cursor);
+            } catch (NumberFormatException e) {
+                throw new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_GATEWAY.getReasonPhrase(), "Malformed cursor, must be integer value");
+            }
+        }
+        GroupInfoEntityList groupsByPartition = jdbcTemplateRunner.getGroupsInPartition(dataPartitionId, groupType, offsetValue, limit);
+        List<GroupInfoEntity> groupInfoEntities = groupsByPartition.getGroupInfoEntities();
+        List<ParentReference> parentReferences = groupInfoEntities.stream()
+            .map(GroupInfoEntity::toParentReference)
+            .collect(Collectors.toList());
+
+        return ListGroupsOfPartitionDto.builder()
+            .groups(parentReferences)
+            .totalCount(groupsByPartition.getTotalCount())
+            .cursor(String.valueOf(offsetValue + limit))
+            .build();
+    }
 
     private boolean hasMemberInGroup(GroupInfoEntity parent, ChildrenReference childrenReference){
         return !memberRepository.findMemberByEmailInGroup(parent.getId(), childrenReference.getId()).isEmpty();

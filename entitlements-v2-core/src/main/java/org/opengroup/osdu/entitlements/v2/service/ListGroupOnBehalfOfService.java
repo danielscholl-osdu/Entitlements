@@ -1,5 +1,9 @@
 package org.opengroup.osdu.entitlements.v2.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.entitlements.v2.model.GroupType;
@@ -7,18 +11,16 @@ import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupOnBehalfOfServiceDto;
 import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupResponseDto;
 import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupServiceDto;
+import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupsOfPartitionDto;
+import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ListGroupOnBehalfOfService {
 
     private final ListGroupService listGroupService;
+    private final RetrieveGroupRepo retrieveGroupRepo;
     private final JaxRsDpsLog log;
 
     public ListGroupResponseDto getGroupsOnBehalfOfMember(ListGroupOnBehalfOfServiceDto listGroupOnBehalfOfServiceDto) {
@@ -34,6 +36,11 @@ public class ListGroupOnBehalfOfService {
         ListGroupResponseDto listGroupResponse = filterGroups(groups, listGroupOnBehalfOfServiceDto.getGroupType(), memberId);
 
         return listGroupResponse;
+    }
+
+    public ListGroupsOfPartitionDto getGroupsInPartition(String dataPartitionId, GroupType groupType, String cursor, Integer limit) {
+        log.info(String.format("requesting groups for partition: %s with type: %s cursor: %s and limit: %s", dataPartitionId, groupType, cursor, limit));
+        return retrieveGroupRepo.getGroupsInPartition(dataPartitionId, groupType, cursor, limit);
     }
 
     private ListGroupResponseDto filterGroups(Set<ParentReference> parents, GroupType groupType, String memberId) {
