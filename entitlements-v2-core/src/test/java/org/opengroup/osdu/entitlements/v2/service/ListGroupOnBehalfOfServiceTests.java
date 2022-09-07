@@ -9,6 +9,7 @@ import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupOnBehalfOfServiceDto;
 import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupResponseDto;
 import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupServiceDto;
+import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -32,6 +33,9 @@ public class ListGroupOnBehalfOfServiceTests {
 
     @MockBean
     private ListGroupService listGroupService;
+
+    @MockBean
+    private RetrieveGroupRepo retrieveGroupRepo;
 
     @Autowired
     ListGroupOnBehalfOfService service;

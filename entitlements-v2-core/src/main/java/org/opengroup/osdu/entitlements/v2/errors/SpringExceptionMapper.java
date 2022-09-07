@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -55,6 +56,12 @@ public class SpringExceptionMapper extends ResponseEntityExceptionHandler {
                 .collect(Collectors.toList());
         String errorMessage = String.join(", ", errorList);
         return this.getErrorResponse(new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), errorMessage, ex));
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status,
+        WebRequest request) {
+        return this.getErrorResponse(new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Invalid filter"));
     }
 
     @ExceptionHandler({ValidationException.class, JsonProcessingException.class, UnrecognizedPropertyException.class})

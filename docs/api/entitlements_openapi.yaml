@@ -487,6 +487,63 @@ paths:
       security:
         - JWT:
             - global
+  /api/entitlements/v2/groups/all:
+    get:
+      tags:
+        - list-group-on-behalf-of-api
+      summary: listAllPartitionGroups
+      operationId: listAllPartitionGroupsUsingGET
+      parameters:
+        - name: data-partition-id
+          in: header
+          description: tenant
+          required: true
+          type: string
+          default: common
+        - name: type
+          in: query
+          description: type
+          required: true
+          style: form
+          type: string
+          enum:
+            - DATA
+            - NONE
+            - SERVICE
+            - USER
+        - name: cursor
+          in: query
+          description: cursor
+          required: false
+          style: form
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: limit
+          required: false
+          style: form
+          schema:
+            minimum: 1
+            exclusiveMinimum: false
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/definitions/ListGroupsOfPartitionDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - JWT:
+            - global
   /info:
     get:
       tags:
@@ -515,6 +572,8 @@ definitions:
   GroupDto:
     type: object
   ListGroupResponseDto:
+    type: object
+  ListGroupsOfPartitionDto:
     type: object
   ListMemberResponseDto:
     type: object

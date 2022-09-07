@@ -2,21 +2,18 @@ package org.opengroup.osdu.entitlements.v2.acceptance.util;
 
 import com.google.gson.Gson;
 import com.sun.jersey.api.client.ClientResponse;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringJoiner;
 import lombok.RequiredArgsConstructor;
 import org.junit.Assert;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupItem;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.request.AddMemberRequestData;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.request.GetGroupsRequestData;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.request.RequestData;
-import org.opengroup.osdu.entitlements.v2.acceptance.model.request.UpdateGroupRequestData;
+import org.opengroup.osdu.entitlements.v2.acceptance.model.response.ListGroupInPartitionResponse;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.response.ListGroupResponse;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.response.ListMemberResponse;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Service has logic for successful scenarios.
@@ -136,5 +133,27 @@ public class EntitlementsV2Service {
         ClientResponse response = httpClientService.send(requestData);
         Assert.assertTrue(204 == response.getStatus() || 404 == response.getStatus());
         return response;
+    }
+
+    public ListGroupInPartitionResponse getGroupsWithinPartition(String token, String...params) throws Exception {
+        String joinedParams = "";
+        if(params.length > 0){
+            StringJoiner paramJoiner = new StringJoiner("&", "?", "");
+            for (String param: params){
+                paramJoiner.add(param);
+            }
+            joinedParams = paramJoiner.toString();
+        }
+        RequestData requestData = RequestData.builder()
+            .method("GET")
+            .relativePath("groups/all" + joinedParams)
+            .dataPartitionId(configurationService.getTenantId())
+            .token(token)
+            .build();
+
+        ClientResponse clientResponse = httpClientService.send(requestData);
+        Assert.assertEquals(200, clientResponse.getStatus());
+        String entity = clientResponse.getEntity(String.class);
+        return gson.fromJson(entity, ListGroupInPartitionResponse.class);
     }
 }
