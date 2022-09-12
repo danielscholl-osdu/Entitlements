@@ -18,6 +18,7 @@ import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberDto;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberServiceDto;
 import org.opengroup.osdu.entitlements.v2.model.creategroup.CreateGroupDto;
 import org.opengroup.osdu.entitlements.v2.model.creategroup.CreateGroupServiceDto;
+import org.opengroup.osdu.entitlements.v2.model.init.InitServiceDto;
 import org.opengroup.osdu.entitlements.v2.util.FileReaderService;
 import org.opengroup.osdu.entitlements.v2.util.RequestInfoUtilService;
 import org.springframework.http.HttpStatus;
@@ -250,7 +251,7 @@ public class DefaultTenantInitServiceImplTests {
         AddMemberServiceDto addMemberServiceDto2 = AddMemberServiceDto.builder().groupEmail("groupid2@dp.domain.com").requesterId("desId")
                 .partitionId("dp").build();
 
-        tenantInitService.bootstrapInitialAccounts();
+        tenantInitService.bootstrapInitialAccounts(InitServiceDto.builder().build());
 
         verify(addMemberService).run(addMemberDto, addMemberServiceDto1);
         verify(addMemberService).run(addMemberDto, addMemberServiceDto2);
@@ -266,7 +267,7 @@ public class DefaultTenantInitServiceImplTests {
         AddMemberServiceDto addMemberServiceDto2 = AddMemberServiceDto.builder().groupEmail("groupid2@dp.domain.com").requesterId("desId")
                 .partitionId("dp").build();
 
-        tenantInitService.bootstrapInitialAccounts();
+        tenantInitService.bootstrapInitialAccounts(InitServiceDto.builder().build());
 
         verify(addMemberService).run(addMemberDto, addMemberServiceDto1);
         verify(addMemberService).run(addMemberDto, addMemberServiceDto2);

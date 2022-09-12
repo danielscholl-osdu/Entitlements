@@ -118,6 +118,7 @@ public class EntitlementsV2Service {
         RequestData requestData = RequestData.builder()
                 .method("POST").dataPartitionId(configurationService.getTenantId())
                 .relativePath("tenant-provisioning")
+                .body("{}")
                 .token(token).build();
         ClientResponse response = httpClientService.send(requestData);
         Assert.assertEquals(200, response.getStatus());

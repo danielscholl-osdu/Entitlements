@@ -39,10 +39,6 @@ public class RetrieveGroupRepoJdbcTest {
 
     @MockBean
     protected AuditLogger auditLogger;
-    @MockBean
-    protected RequestInfo requestInfo;
-    @MockBean
-    protected JaxRsDpsLog logger;
 
     @Autowired
     private RetrieveGroupRepoJdbc sut;
