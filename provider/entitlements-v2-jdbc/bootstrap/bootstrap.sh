@@ -57,14 +57,16 @@ EOF
 EOF
 
   cat <<EOF > /opt/group_airflow.txt
-service.storage.admin
+users
+service.entitlements.user
 service.file.editors
+service.legal.user
 service.search.user
+service.schema-service.viewers
+service.schema-service.editors
+service.storage.admin
 service.workflow.admin
 service.workflow.creator
-service.schema-service.editors
-service.entitlements.user
-users
 EOF
 
 # shellcheck disable=SC2002
@@ -238,14 +240,16 @@ cat <<EOF > /opt/user_airflow.json
 EOF
 
 cat <<EOF > /opt/group_airflow.txt
-service.storage.admin
+users
+service.entitlements.user
 service.file.editors
+service.legal.user
 service.search.user
+service.schema-service.viewers
+service.schema-service.editors
+service.storage.admin
 service.workflow.admin
 service.workflow.creator
-service.schema-service.editors
-service.entitlements.user
-users
 EOF
 
 # shellcheck disable=SC2002
