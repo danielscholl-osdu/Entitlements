@@ -35,6 +35,10 @@ import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestData
 public class CreateGroupJdbcTest {
     @MockBean
     protected AuditLogger auditLogger;
+    @MockBean
+    protected RequestInfo requestInfo;
+    @MockBean
+    protected JaxRsDpsLog logger;
 
     @Autowired
     private CreateGroupRepoJdbc sut;

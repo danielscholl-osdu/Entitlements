@@ -17,7 +17,6 @@ public abstract class TenantInitTest extends AcceptanceBaseTest {
         return RequestData.builder()
                 .method("POST").dataPartitionId(configurationService.getTenantId())
                 .relativePath("tenant-provisioning")
-                .body("{}")
                 .build();
     }
 

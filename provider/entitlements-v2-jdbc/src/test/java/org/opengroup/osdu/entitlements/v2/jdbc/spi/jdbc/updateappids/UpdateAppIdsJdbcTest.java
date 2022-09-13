@@ -36,6 +36,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class UpdateAppIdsJdbcTest {
 
     @MockBean
+    private JaxRsDpsLog log;
+    @MockBean
     private AuditLogger auditLogger;
 
     @Autowired

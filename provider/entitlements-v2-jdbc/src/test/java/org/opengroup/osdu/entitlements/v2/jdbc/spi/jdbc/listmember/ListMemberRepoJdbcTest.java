@@ -38,6 +38,10 @@ import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestData
 public class ListMemberRepoJdbcTest {
     @MockBean
     protected AuditLogger auditLogger;
+    @MockBean
+    protected RequestInfo requestInfo;
+    @MockBean
+    protected JaxRsDpsLog logger;
 
     @Autowired
     private ListMemberRepoJdbc sut;

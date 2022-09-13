@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import java.util.*;
 import lombok.AllArgsConstructor;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
@@ -16,12 +15,16 @@ import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberDto;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberServiceDto;
 import org.opengroup.osdu.entitlements.v2.model.creategroup.CreateGroupDto;
 import org.opengroup.osdu.entitlements.v2.model.creategroup.CreateGroupServiceDto;
-import org.opengroup.osdu.entitlements.v2.model.init.InitServiceDto;
 import org.opengroup.osdu.entitlements.v2.util.FileReaderService;
 import org.opengroup.osdu.entitlements.v2.util.RequestInfoUtilService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -41,11 +44,9 @@ public class DefaultTenantInitServiceImpl implements TenantInitService {
     }
 
     @Override
-    public void bootstrapInitialAccounts(InitServiceDto initServiceDto) {
-        appProperties.setInitServiceDto(initServiceDto);
-        final Map<String, String> userEmails = createUserEmails(initServiceDto);
+    public void bootstrapInitialAccounts() {
+        final Map<String, String> userEmails = createUserEmails();
         List<String> fileNames = appProperties.getGroupsOfInitialUsers();
-
         for (String fileName : fileNames) {
             final String fileContent = fileReaderService.readFile(fileName);
             final JsonObject userElement = getUserJsonObject(fileContent);
@@ -188,15 +189,9 @@ public class DefaultTenantInitServiceImpl implements TenantInitService {
         }
     }
 
-    private Map<String, String> createUserEmails(
-        InitServiceDto initServiceDto) {
+    private Map<String, String> createUserEmails() {
         Map<String, String> userEmails = new HashMap<>();
         userEmails.put("SERVICE_PRINCIPAL", requestInfo.getTenantInfo().getServiceAccount());
-
-        if (Objects.nonNull(initServiceDto) && !CollectionUtils.isEmpty(initServiceDto.getAliasMappings())){
-            initServiceDto.getAliasMappings().forEach((e) -> userEmails.put(e.getAlias(), e.getId()));
-        }
-
         return userEmails;
     }
 
