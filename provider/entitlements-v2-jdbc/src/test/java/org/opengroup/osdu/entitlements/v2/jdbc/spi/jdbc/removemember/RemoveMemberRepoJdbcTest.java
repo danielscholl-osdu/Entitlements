@@ -38,7 +38,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class RemoveMemberRepoJdbcTest {
 
     @MockBean
+    private RequestInfo requestInfo;
+    @MockBean
     private AuditLogger auditLogger;
+    @MockBean
+    private JaxRsDpsLog log;
 
     @Autowired
     private RemoveMemberRepoJdbc sut;

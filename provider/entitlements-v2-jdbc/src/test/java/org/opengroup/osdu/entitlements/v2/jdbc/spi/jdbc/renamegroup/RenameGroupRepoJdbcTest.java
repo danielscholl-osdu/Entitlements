@@ -29,7 +29,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class RenameGroupRepoJdbcTest {
 
     @MockBean
+    private RequestInfo requestInfo;
+    @MockBean
     private AuditLogger auditLogger;
+    @MockBean
+    private JaxRsDpsLog logger;
 
     @Autowired
     private RenameGroupRepoJdbc sut;

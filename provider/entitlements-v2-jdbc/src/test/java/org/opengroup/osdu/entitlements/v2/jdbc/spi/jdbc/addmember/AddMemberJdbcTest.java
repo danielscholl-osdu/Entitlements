@@ -38,6 +38,10 @@ public class AddMemberJdbcTest{
 
 	@MockBean
 	protected AuditLogger auditLogger;
+	@MockBean
+	protected RequestInfo requestInfo;
+	@MockBean
+	protected JaxRsDpsLog logger;
 	@Autowired
 	private AddMemberRepoJdbc sut;
 

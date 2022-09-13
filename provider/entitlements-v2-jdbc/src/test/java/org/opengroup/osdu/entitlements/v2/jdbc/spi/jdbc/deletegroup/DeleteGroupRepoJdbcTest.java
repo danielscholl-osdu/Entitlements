@@ -32,7 +32,11 @@ import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestData
 public class DeleteGroupRepoJdbcTest {
 
     @MockBean
+    private RequestInfo requestInfo;
+    @MockBean
     private AuditLogger auditLogger;
+    @MockBean
+    private JaxRsDpsLog logger;
     @MockBean
     private RequestInfoUtilService requestInfoUtilService;
     @Autowired
