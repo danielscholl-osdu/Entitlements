@@ -48,7 +48,7 @@ Values for deploy:
     imagePullPolicy: "IfNotPresent" # default
     serviceAccountName: ""
     # gcp
-    cloud_sql_proxy_version: "1.20.0" # default
+    cloud_sql_proxy_version: "1.32.0" # default
     sql_connection_string: ""
 
   conf:

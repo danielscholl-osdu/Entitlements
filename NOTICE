@@ -146,6 +146,7 @@ The following software have components provided under the terms of this license:
 - IBM COS SDK for Java - Core (from https://github.com/ibm/ibm-cos-sdk-java)
 - Identity and Access Management (IAM) API v2beta-rev20220421-1.32.1 (from https://repo1.maven.org/maven2/com/google/apis/google-api-services-iam)
 - Identity and Access Management (IAM) API v2beta-rev20220713-1.32.1 (from https://repo1.maven.org/maven2/com/google/apis/google-api-services-iam)
+- Identity and Access Management (IAM) API v2beta-rev20220713-2.0.0 (from https://repo1.maven.org/maven2/com/google/apis/google-api-services-iam)
 - J2ObjC Annotations (from https://github.com/google/j2objc/)
 - JBoss Jakarta Annotations API (from https://github.com/jboss/jboss-jakarta-annotations-api_spec)
 - JBoss Logging 3 (from http://www.jboss.org)

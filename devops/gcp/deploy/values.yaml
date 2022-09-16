@@ -8,7 +8,7 @@ data:
   image: ""
   imagePullPolicy: "IfNotPresent"
   # gcp
-  cloudSqlProxyVersion: "1.20.0"
+  cloudSqlProxyVersion: "1.32.0"
   sqlConnectionString: ""
   # bootstrap common
   bootstrapImage: ""
