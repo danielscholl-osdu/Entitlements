@@ -24,6 +24,9 @@ spec:
             name: "{{ .Values.conf.configmap }}"
         - secretRef:
             name: "{{ .Values.conf.entitlementsPostgresSecretName }}"
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 0
       {{- if not .Values.conf.onPremEnabled }}
       - image: "gcr.io/cloudsql-docker/gce-proxy:{{ .Values.data.cloudSqlProxyVersion }}"
         imagePullPolicy: "{{ .Values.data.imagePullPolicy }}"
@@ -32,9 +35,6 @@ spec:
           - /cloud_sql_proxy
           - "-instances={{ .Values.data.sqlConnectionString }}=tcp:5432"
       {{- end }}
-        securityContext:
-          allowPrivilegeEscalation: false
-          runAsUser: 0
         ports:
         - containerPort: 8080
         resources:
