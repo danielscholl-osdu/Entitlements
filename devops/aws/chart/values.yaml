@@ -68,7 +68,7 @@ autoscaling:
   ServiceRequestDurationAverage: 500
 
 # Security Config
-serviceAccountRole: arn:aws:iam::{{ .Values.global.accountID }}:role/osdu-{{ .Values.global.resourcePrefix }}-{{ include "common.name" . }}
+serviceAccountRole: arn:aws:iam::{{ .Values.global.accountID }}:role/osdu-{{ .Values.global.resourcePrefix }}-{{ .Values.global.region }}-{{ include "common.name" . }}
 cors:
   maxAge: "60m"
   allowCredentials: true
