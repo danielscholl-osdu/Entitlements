@@ -1,3 +1,4 @@
+{{- if .Values.conf.istioEnabled }}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -21,3 +22,4 @@ spec:
             port:
               number: 80
             host: "{{ .Values.conf.appName }}.{{ .Release.Namespace }}.svc.cluster.local"
+{{- end }}

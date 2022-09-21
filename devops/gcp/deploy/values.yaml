@@ -20,6 +20,7 @@ conf:
   # bootstrap onprem
   bootstrapOpenidSecretName: "datafier-secret"
   onPremEnabled: false
+  istioEnabled: true
 auth:
   publicUrl: ""
   localUrl: "keycloak"
