@@ -104,7 +104,7 @@ public class RetrieveGroupRepoJdbc implements RetrieveGroupRepo {
 
     @Override
     public Boolean hasDirectChild(EntityNode groupNode, ChildrenReference childrenReference) {
-        GroupInfoEntity parent = groupRepository.findByName(groupNode.getName()).stream()
+        GroupInfoEntity parent = groupRepository.findByEmail(groupNode.getNodeId()).stream()
                 .findFirst()
                 .orElseThrow(() -> DatabaseAccessException.createNotFound(groupNode.getNodeId()));
 
