@@ -12,6 +12,7 @@ import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.GroupReposito
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.JdbcTemplateRunner;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.MemberRepository;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
+import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.ParentTreeDto;
@@ -31,6 +32,7 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.*;
+import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.getUsersGroupNode;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @SpringBootTest(classes = SpiJdbcTestConfig.class)
@@ -133,5 +135,17 @@ public class RetrieveGroupRepoJdbcTest {
         assertTrue(parentIds.contains(group2.getNodeId()));
         assertTrue(parentIds.contains(group3.getNodeId()));
 
+    }
+
+    @Test
+    public void shouldReturnFalseWhenNoDirectChildInTenant(){
+        EntityNode groupNode = getUsersGroupNode("x", "tenant-1");
+        ChildrenReference childrenReference = getUserChildrenReference("test@email.com", "tenant-2");
+        GroupInfoEntity savedGroup = GroupInfoEntity.fromEntityNode(groupNode);
+
+        when(groupRepository.findByEmail(groupNode.getNodeId())).thenReturn(Collections.singletonList(savedGroup));
+        when(memberRepository.findMemberByEmailInGroup(savedGroup.getId(), childrenReference.getId())).thenReturn(Collections.emptyList());
+
+        assertFalse(sut.hasDirectChild(groupNode,childrenReference));
     }
 }
