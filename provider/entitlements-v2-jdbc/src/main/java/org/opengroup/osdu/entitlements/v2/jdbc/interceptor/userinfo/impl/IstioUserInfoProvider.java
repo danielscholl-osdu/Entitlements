@@ -48,7 +48,7 @@ public class IstioUserInfoProvider implements IUserInfoProvider {
       JSONObject claims = jwt.getJWTClaimsSet().toJSONObject();
       return UserInfo.parse(claims.toJSONString());
     } catch (ParseException | com.nimbusds.oauth2.sdk.ParseException e) {
-      log.info("id_token parsing failed. Original exception: " + e.getMessage());
+      log.error("id_token parsing failed. Original exception: {}.", e.getMessage());
       throw new AppException(HttpStatus.UNAUTHORIZED.value(),
           USER_INFO_ISSUE_REASON,
           NOT_VALID_TOKEN_PROVIDED_MESSAGE, e);

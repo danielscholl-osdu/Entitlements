@@ -38,7 +38,7 @@ public class RequestHeaderInterceptor implements HandlerInterceptor {
         if (isSwaggerRequest(request) || isVersionInfo(request)) {
             return true;
         }
-        log.info("Intercepted the request. Now validating headers..");
+        log.debug("Intercepted the request. Now validating headers..");
         if (iAuthenticator.requestIsAuthenticated(request)) {
             return true;
         } else {
