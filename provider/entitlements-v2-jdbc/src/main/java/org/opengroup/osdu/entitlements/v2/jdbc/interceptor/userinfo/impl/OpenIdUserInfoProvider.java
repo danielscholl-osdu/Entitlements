@@ -56,7 +56,7 @@ public class OpenIdUserInfoProvider implements IUserInfoProvider {
         try {
             return getUserInfoFromIDToken(token);
         } catch (BadJOSEException | JOSEException | java.text.ParseException | ParseException e) {
-            log.error("id_token parsing failed. Original exception: " + e.getMessage(), e);
+            log.error("id_token parsing failed. Original exception: {}.", e.getMessage(), e);
             throw new AppException(HttpStatus.UNAUTHORIZED.value(),
                 USER_INFO_ISSUE_REASON,
                 NOT_VALID_TOKEN_PROVIDED_MESSAGE, e);

@@ -54,7 +54,7 @@ public class AddMemberRepoJdbc implements AddMemberRepo {
 	@Override
 	public Set<String> addMember(EntityNode groupEntityNode, AddMemberRepoDto addMemberRepoDto) {
 		try {
-			log.info(format("Adding member %s into the group %s and updating the data model in database", addMemberRepoDto.getMemberNode().getNodeId(), groupEntityNode.getNodeId()));
+			log.debug(format("Adding member %s into the group %s and updating the data model in database", addMemberRepoDto.getMemberNode().getNodeId(), groupEntityNode.getNodeId()));
 			executeAddMemberOperation(groupEntityNode, addMemberRepoDto);
 			auditLogger.addMember(AuditStatus.SUCCESS,
 					groupEntityNode.getNodeId(),
