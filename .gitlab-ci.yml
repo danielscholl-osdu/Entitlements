@@ -5,7 +5,9 @@ variables:
 
   AWS_BUILD_SUBDIR: provider/entitlements-v2-aws/build-aws
   AWS_TEST_SUBDIR: testing/entitlements-v2-test-aws
+  AWS_CHART_SUBDIR: devops/aws/chart
   AWS_SERVICE: entitlements-v2
+  AWS_SERVICE_GATEWAY: osdu-gateway
   AWS_ENVIRONMENT: dev
   AWS_DEPLOY_TARGET: EKS
   AWS_EKS_DEPLOYMENT_NAME: os-entitlements
