@@ -2,7 +2,7 @@ data:
   # Don't change or use the parameter unless necessary
   entitlementsDomain: "group"
   # common
-  logLevel: "INFO"
+  logLevel: "ERROR"
   openidProviderClientIds: ""
   partitionApi: "http://partition/api/partition/v1/"
   # common bootstrap

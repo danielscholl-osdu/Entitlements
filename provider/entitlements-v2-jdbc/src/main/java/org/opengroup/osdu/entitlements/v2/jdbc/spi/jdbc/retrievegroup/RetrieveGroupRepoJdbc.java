@@ -56,7 +56,7 @@ public class RetrieveGroupRepoJdbc implements RetrieveGroupRepo {
     public EntityNode groupExistenceValidation(String groupId, String partitionId) {
         Optional<EntityNode> groupNode = getEntityNode(groupId, partitionId);
         return groupNode.orElseThrow(() -> {
-            log.info(String.format("Can't find group %s", groupId));
+            log.debug(String.format("Can't find group %s", groupId));
             return new DatabaseAccessException(
                     HttpStatus.NOT_FOUND,
                     String.format("Group %s is not found", groupId));
@@ -104,7 +104,7 @@ public class RetrieveGroupRepoJdbc implements RetrieveGroupRepo {
 
     @Override
     public Boolean hasDirectChild(EntityNode groupNode, ChildrenReference childrenReference) {
-        GroupInfoEntity parent = groupRepository.findByName(groupNode.getName()).stream()
+        GroupInfoEntity parent = groupRepository.findByEmail(groupNode.getNodeId()).stream()
                 .findFirst()
                 .orElseThrow(() -> DatabaseAccessException.createNotFound(groupNode.getNodeId()));
 

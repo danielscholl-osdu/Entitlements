@@ -18,8 +18,10 @@
 package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util;
 import static java.lang.String.format;
 
+import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.NodeType;
+import org.opengroup.osdu.entitlements.v2.model.Role;
 
 public class JdbcTestDataProvider {
 	public static final String DATA_PARTITION_ID = "dp";
@@ -51,6 +53,15 @@ public class JdbcTestDataProvider {
 				.name(format("users.%s", modifier))
 				.dataPartitionId(DATA_PARTITION_ID)
 				.build();
+	}
+
+	public static EntityNode getUsersGroupNode(String modifier, String dataPartitionId){
+		return EntityNode.builder()
+			.nodeId(format("users.%s@%s.domain.com", modifier, dataPartitionId))
+			.type(NodeType.GROUP)
+			.name(format("users.%s", modifier))
+			.dataPartitionId(dataPartitionId)
+			.build();
 	}
 
 	public static EntityNode getDataGroupNode(String modifier){
@@ -88,6 +99,15 @@ public class JdbcTestDataProvider {
 				.type(NodeType.GROUP)
 				.dataPartitionId(DATA_PARTITION_ID)
 				.build();
+	}
+
+	public static ChildrenReference getUserChildrenReference(String childEmail, String dataPartitionId){
+		return ChildrenReference.builder()
+			.id(childEmail)
+			.dataPartitionId(dataPartitionId)
+			.type(NodeType.USER)
+			.role(Role.MEMBER)
+			.build();
 	}
 
 }

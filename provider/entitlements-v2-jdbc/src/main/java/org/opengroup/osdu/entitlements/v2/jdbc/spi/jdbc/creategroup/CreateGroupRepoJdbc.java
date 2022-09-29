@@ -53,7 +53,7 @@ public class CreateGroupRepoJdbc implements CreateGroupRepo {
 	@Override
 	public Set<String> createGroup(EntityNode groupNode, CreateGroupRepoDto createGroupRepoDto) {
 		try {
-			log.info(String.format("Creating group %s and updating data model in postgres",
+			log.debug(String.format("Creating group %s and updating data model in postgres",
 				groupNode.getName()));
 
 			executeCreateGroupOperation(groupNode, createGroupRepoDto);
