@@ -1,5 +1,8 @@
 package org.opengroup.osdu.entitlements.v2;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.opengroup.osdu.entitlements.v2.model.init.InitServiceDto;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
@@ -9,18 +12,17 @@ public abstract class AppProperties {
     public static final String ADMIN = "service.entitlements.admin";
     public static final String OPS = "users.datalake.ops";
 
+    @Getter
     @Value("${app.projectId}")
     private String projectId;
+
+    @Getter
     @Value("${app.domain}")
     private String domain;
 
-    public String getProjectId() {
-        return projectId;
-    }
-
-    public String getDomain() {
-        return domain;
-    }
+    @Getter
+    @Setter
+    protected InitServiceDto initServiceDto;
 
     /**
      * @return a list containing paths of configuration files
