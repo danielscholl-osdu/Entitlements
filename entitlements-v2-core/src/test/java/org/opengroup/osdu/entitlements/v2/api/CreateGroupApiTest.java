@@ -79,6 +79,14 @@ public class CreateGroupApiTest {
     }
 
     @Test
+    public void shouldValidateDescriptionInput() throws Exception {
+        CreateGroupDto dto = new CreateGroupDto("service.viewers", "<script>Bad Input</script>");
+
+        performCreateGroupRequest(dto).andExpect(status().isBadRequest())
+                                      .andReturn().getResponse().getContentAsString();
+    }
+
+    @Test
     public void shouldSerializeOutput() throws Exception {
         CreateGroupDto dto = new CreateGroupDto("service.viewers", "My viewers group");
         GroupDto expectedResult = new GroupDto("service.viewers", "service.viewers@common.contoso.com", "My viewers group");
