@@ -1,0 +1,31 @@
+data:
+  logLevel: "INFO"
+  javaAppJar: "/deployments/*-spring-boot.jar"
+  serverPort: 8080
+  beanDefOverriding: true
+  acceptHttp: true
+  logPrefix: entitlements
+  cacheExpiration: 9000
+  cahceMaxSize: 10000
+  healthCheckUri: "/api/entitlements/v2/_ah/liveness_check,/api/entitlements/v2/_ah/readiness_check,/api/entitlements/v2/info,/api/entitlements/v2/v2/api-docs"
+  loggingLevelSpring: debug
+  deployEnv: CLOUD
+  envPrefix: ibm-iks
+  envPrefixProject: ibm-ibm-build
+  #key cloak external loadbalacer IP or sub-domain 
+  pKCEndPointHost: 169.48.137.139
+  keycloakRealm: OSDU
+  pKCClientId: partition-service
+  pKCClientSecret: tbd
+  grantType: password
+  pKCPassword: changeit
+  pKCUser: partition-service-admin
+  tenantCacheExpiryInSec: 10000
+  redis-host: tbd-refer-template
+  redishost: tbd-refer-template
+  rediskey: tbd-refer-template
+  redisport: 6379
+  pKAcceptHttp: true
+  #make java options conditional in template
+conf:
+  configmap: "entitlements-config"

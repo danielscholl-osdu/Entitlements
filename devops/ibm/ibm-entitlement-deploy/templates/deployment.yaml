@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ibm-entitlement-deploy.fullname" . }}
+  labels:
+    {{- include "ibm-entitlement-deploy.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "ibm-entitlement-deploy.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "ibm-entitlement-deploy.selectorLabels" . | nindent 8 }}
+        sidecar.istio.io/inject: "{{ .Values.sidecarIstioInjected }}"
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "ibm-entitlement-deploy.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: {{ .Values.initimage.name }}
+          image: {{ .Values.initimage.initrepository }}:{{ .Values.initimage.tag }}
+          imagePullPolicy: {{ .Values.initimage.pullPolicy }}
+          command: ['sh', '-c', './health_probe.sh $(HEALTH_URI)/info && sleep 5']
+          env:
+            - name: HEALTH_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: entitlements-config
+                  key: PARTITION_API      
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: rediskey
+              valueFrom:
+                secretKeyRef:
+                  key: redis-password
+                  name: {{ .Release.Name }}-redis
+            - name: partition.keycloak.client_secert
+              valueFrom:
+                secretKeyRef:
+                  key: partition_service_secret_data
+                  name: props-secret-generated-password
+            - name: partition.keycloak.url
+              valueFrom:
+                configMapKeyRef:
+                  key: partition.keycloak.url
+                  name: partition-config             
+          envFrom:
+          - configMapRef:
+              name: "{{ .Values.conf.configmap }}"          
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

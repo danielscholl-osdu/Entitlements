@@ -9,11 +9,14 @@ variables:
   AWS_SERVICE: entitlements-v2
   AWS_SERVICE_GATEWAY: osdu-gateway
   AWS_ENVIRONMENT: dev
-  AWS_DEPLOY_TARGET: EKS
+  AWS_DEPLOY_TARGET: HELM
   AWS_EKS_DEPLOYMENT_NAME: os-entitlements
 
   IBM_BUILD_SUBDIR: provider/entitlements-v2-ibm
   IBM_INT_TEST_SUBDIR: testing/entitlements-v2-test-ibm
+  IBM_HELM_CONFIG_PATH: devops/ibm/ibm-entitlement-config
+  IBM_HELM_DEPLOY_PATH: devops/ibm/ibm-entitlement-deploy
+  IBM_HELM_BOOTSTRAP_PATH: devops/ibm/ibm-entitlement-registration
 
 include:
   - project: "osdu/platform/ci-cd-pipelines"

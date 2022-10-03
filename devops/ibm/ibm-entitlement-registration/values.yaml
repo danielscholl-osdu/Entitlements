@@ -1,0 +1,23 @@
+---
+keycloak:
+  name: keycloak-discovery-lb
+  namespace: 
+
+ingress:
+  name: istio-ingress
+  namespace: istio-ingress
+osdu:
+  propsSecret: props-secret-generated-password
+  entitlements:
+    service: entitlements
+
+image:
+  registry: quay.io
+  repository: openshift/okd-content
+  version:  sha256:184ac501d886c4e5a51a308a46259987e076662cb611cbd6d3d0dfc75096692d
+initimage:
+  name: dependency-check
+  initrepository: community.opengroup.org:5555/osdu/platform/deployment-and-operations/ibm-osdu-provisioning/k8s-healthprobe
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "v2.0"
