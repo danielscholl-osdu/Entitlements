@@ -1,0 +1,41 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ .Values.conf.appName }}-vs
+spec:
+  gateways:
+  - osdu-gateway
+  hosts:
+    {{- if .Values.conf.domain }}
+    - {{ printf "osdu.%s" .Values.conf.domain | quote }}
+    {{- else if .Values.conf.loadbalancerIP}}
+    - {{ (index (lookup "v1" "Service" "istio-ingress" "istio-ingress").status.loadBalancer.ingress 0).ip }}
+    {{- else if .Values.conf.loadbalancerHN}}
+    - {{ (index (lookup "v1" "Service" "istio-ingress" "istio-ingress").status.loadBalancer.ingress 0).hostname }}    
+    {{- else }}
+    - "*"
+    {{- end }}
+  http:
+  - corsPolicy:
+        allowCredentials: true
+        allowHeaders:
+          - Authorization
+          - Data-Partition-Id
+          - Correlation-Id
+          - Content-Type
+        allowMethods:
+          - POST
+          - GET
+          - PATCH
+          - DELETE
+        allowOrigins:
+          - prefix: '*'
+        maxAge: 60m
+    match:
+    - uri:
+        prefix: /api/entitlements/
+    route:
+    - destination:
+        host: {{ .Release.Name }}-ibm-entitlement-deploy
+        port:
+          number: 8080
