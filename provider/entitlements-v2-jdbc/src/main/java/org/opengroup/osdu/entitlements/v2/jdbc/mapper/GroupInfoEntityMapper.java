@@ -21,7 +21,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.opengroup.osdu.entitlements.v2.jdbc.model.GroupInfoEntity;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class GroupInfoEntityMapper implements RowMapper<GroupInfoEntity> {
 
 	@Override
