@@ -20,7 +20,6 @@ package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.retrievegroup;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.jdbc.JdbcAppProperties;
@@ -129,12 +128,9 @@ public class RetrieveGroupRepoJdbc implements RetrieveGroupRepo {
 
     @Override
     public ParentTreeDto loadAllParents(EntityNode memberNode) {
-        List<Long> parentIds = jdbcTemplateRunner.getRecursiveParentIds(memberNode);
-        List<GroupInfoEntity> parentGroupEntities = (List<GroupInfoEntity>) groupRepository.findAllById(parentIds);
+        List<GroupInfoEntity> groupInfoEntityList = jdbcTemplateRunner.getGroupInfoEntitiesRecursive(memberNode);
 
-        String partitionId = Optional.ofNullable(memberNode.getDataPartitionId()).orElse(StringUtils.EMPTY);
-        Set<ParentReference> parents = parentGroupEntities.stream()
-                .filter(parentGroup -> partitionId.equalsIgnoreCase(parentGroup.getPartitionId()))
+        Set<ParentReference> parents = groupInfoEntityList.stream()
                 .map(GroupInfoEntity::toParentReference)
                 .collect(Collectors.toSet());
 
