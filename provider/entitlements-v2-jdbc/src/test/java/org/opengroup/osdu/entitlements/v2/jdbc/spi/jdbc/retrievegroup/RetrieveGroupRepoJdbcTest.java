@@ -120,7 +120,7 @@ public class RetrieveGroupRepoJdbcTest {
         GroupInfoEntity savedGroup2 = GroupInfoEntity.fromEntityNode(group2);
         GroupInfoEntity savedGroup3 = GroupInfoEntity.fromEntityNode(group3);
 
-        when(groupRepository.findAllById(anyList())).thenReturn(Arrays.asList(savedGroup1, savedGroup2, savedGroup3));
+        when(jdbcTemplateRunner.getGroupInfoEntitiesRecursive(any())).thenReturn(Arrays.asList(savedGroup1, savedGroup2, savedGroup3));
 
         Set<String> parentIds = sut.loadAllParents(member).getParentReferences().stream()
                 .map(ParentReference::getId)
