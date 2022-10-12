@@ -8,4 +8,4 @@ COPY ./provider/entitlements-v2-jdbc/bootstrap/ /opt/
 
 RUN chmod +x bootstrap.sh validate-env.sh
 
-CMD ["/bin/bash", "-c", "./bootstrap.sh && sleep 365d"]
+CMD ["/bin/bash", "-c", "/opt/bootstrap.sh"]
