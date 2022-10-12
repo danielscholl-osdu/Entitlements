@@ -19,10 +19,14 @@ package org.opengroup.osdu.entitlements.v2.jdbc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import lombok.AllArgsConstructor;
 import org.opengroup.osdu.entitlements.v2.AppProperties;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 @Component
+@AllArgsConstructor
 public class JdbcAppProperties extends AppProperties {
 
 	@Override
@@ -43,6 +47,13 @@ public class JdbcAppProperties extends AppProperties {
 	public List<String> getGroupsOfInitialUsers() {
 		List<String> groupsOfInitialUsers = new ArrayList<>();
 		groupsOfInitialUsers.add(getGroupsOfServicePrincipal());
+
+		if (Objects.nonNull(initServiceDto) && !CollectionUtils.isEmpty(initServiceDto.getAliasMappings())) {
+			initServiceDto.getAliasMappings().forEach(
+					(e) -> groupsOfInitialUsers.add(String.format("/provisioning/accounts/groups_of_%s.json", e.getAliasId().toLowerCase()))
+			);
+		}
+
 		return groupsOfInitialUsers;
 	}
 
