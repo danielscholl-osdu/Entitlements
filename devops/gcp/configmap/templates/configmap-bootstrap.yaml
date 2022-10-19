@@ -17,3 +17,7 @@ data:
   REGISTER_PUBSUB_IDENTITY: "{{ .Values.data.registerPubsubIdentity }}"
   {{- end }}
   ONPREM_ENABLED: "{{ .Values.conf.onPremEnabled }}"
+  MULTI_PARTITON_ENABLED: "{{ .Values.conf.multiPartitionEnabled }}"
+  {{- if .Values.conf.multiPartitionEnabled }}
+  DATA_PARTITION_ID_LIST: {{ join "," .Values.data.dataPartitionIdList | quote }}
+  {{- end }}
