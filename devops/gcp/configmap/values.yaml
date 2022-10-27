@@ -24,4 +24,3 @@ conf:
   configmap: "entitlements-config"
   appName: "entitlements"
   onPremEnabled: false
-  multiPartitionEnabled: false

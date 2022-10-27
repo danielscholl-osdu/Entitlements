@@ -126,17 +126,17 @@ source ./validate-env.sh "ADMIN_USER_EMAIL"
 source ./validate-env.sh "DOMAIN"
 source ./validate-env.sh "AIRFLOW_COMPOSER_EMAIL"
 
-if [[ "${ONPREM_ENABLED}" == "true" && "${MULTI_PARTITON_ENABLED}" == "false" ]]; then
+if [[ "${ONPREM_ENABLED}" == "true" && "${DATA_PARTITION_ID_LIST}" == "" ]]; then
   source ./validate-env.sh "OPENID_PROVIDER_URL"
   source ./validate-env.sh "OPENID_PROVIDER_CLIENT_ID"
   source ./validate-env.sh "OPENID_PROVIDER_CLIENT_SECRET"
   bootstrap_entitlements_onprem "${DATA_PARTITION_ID}"
-elif [[ "${ONPREM_ENABLED}" == "false" && "${MULTI_PARTITON_ENABLED}" == "false" ]]; then
+elif [[ "${ONPREM_ENABLED}" == "false" && "${DATA_PARTITION_ID_LIST}" == "" ]]; then
   source ./validate-env.sh "PROJECT_ID"
   source ./validate-env.sh "REGISTER_PUBSUB_IDENTITY"
   source ./validate-env.sh "PUB_SUB_EMAIL"
   bootstrap_entitlements_gcp "${DATA_PARTITION_ID}"
-elif [[ "${ONPREM_ENABLED}" == "false" && "${MULTI_PARTITON_ENABLED}" == "true" ]]; then
+elif [[ "${ONPREM_ENABLED}" == "false" && "${DATA_PARTITION_ID_LIST}" != "" ]]; then
   source ./validate-env.sh "PROJECT_ID"
   source ./validate-env.sh "REGISTER_PUBSUB_IDENTITY"
   source ./validate-env.sh "PUB_SUB_EMAIL"
