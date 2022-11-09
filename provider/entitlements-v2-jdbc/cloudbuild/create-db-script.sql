@@ -93,5 +93,9 @@ NOT VALID
 
 TABLESPACE pg_default;
 
+CREATE INDEX idx_group_to_group ON embedded_group (parent_id, child_id);
+CREATE INDEX idx_member_to_group ON member_to_group (group_id, member_id);
+CREATE INDEX idx_group_partition ON "group" (partition_id);
+
 ALTER TABLE public.embedded_group
 OWNER to postgres;

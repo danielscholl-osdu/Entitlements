@@ -1,0 +1,19 @@
+{
+  "users": [
+    {
+      "email": "SERVICE_PRINCIPAL_PUBSUB",
+      "role": "MEMBER"
+    }
+  ],
+  "membersOf": [
+    {
+      "groupName": "users"
+    },
+    {
+      "groupName": "users.datalake.ops"
+    },
+    {
+      "groupName": "service.search.admin"
+    }
+  ]
+}

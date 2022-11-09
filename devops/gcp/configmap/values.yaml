@@ -5,16 +5,17 @@ data:
   logLevel: "ERROR"
   openidProviderClientIds: ""
   partitionApi: "http://partition/api/partition/v1/"
-  # common bootstrap
-  dataPartitionId: ""
-  entitlementsHost: "http://entitlements"
-  adminUserEmail: ""
-  airflowComposerEmail: ""
   # onprem
   partitionAuthEnabled: false
   # gcp
   googleAudiences: ""
   springProfilesActive: "gcp"
+  # common bootstrap
+  dataPartitionId: ""
+  dataPartitionIdList: []
+  entitlementsHost: "http://entitlements"
+  adminUserEmail: ""
+  airflowComposerEmail: ""
   # gcp bootstrap
   projectId: ""
   pubSubEmail: ""

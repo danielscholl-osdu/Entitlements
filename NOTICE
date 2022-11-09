@@ -25,6 +25,7 @@ The following software have components provided under the terms of this license:
 - Apache TinkerPop :: Gremlin Shaded (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-shaded)
 - Apache TinkerPop :: TinkerGraph Gremlin (from https://repo1.maven.org/maven2/org/apache/tinkerpop/tinkergraph-gremlin)
 - AspectJ Weaver (from http://www.aspectj.org, https://www.eclipse.org/aspectj/)
+- Microsoft Application Insights Java Agent (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Core (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Spring Boot starter (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Web Module (from https://github.com/Microsoft/ApplicationInsights-Java)
@@ -200,6 +201,7 @@ The following software have components provided under the terms of this license:
 - Lettuce (from http://github.com/lettuce-io/lettuce-core)
 - MapStruct Core (from http://mapstruct.org/mapstruct/, https://repo1.maven.org/maven2/org/mapstruct/mapstruct)
 - Metrics Core (from https://repo1.maven.org/maven2/io/dropwizard/metrics/metrics-core)
+- Microsoft Application Insights Java Agent (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Core (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Spring Boot starter (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Web Module (from https://github.com/Microsoft/ApplicationInsights-Java)
@@ -361,8 +363,8 @@ The following software have components provided under the terms of this license:
 - proto-google-cloud-iamcredentials-v1 (from https://github.com/googleapis/java-iamcredentials/proto-google-cloud-iamcredentials-v1, https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-iamcredentials-v1)
 - proto-google-cloud-logging-v2 (from https://github.com/googleapis/java-logging/proto-google-cloud-logging-v2, https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-logging-v2)
 - proto-google-cloud-monitoring-v3 (from https://github.com/googleapis/java-monitoring/proto-google-cloud-monitoring-v3, https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-monitoring-v3)
-- proto-google-cloud-redis-v1 (from https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-redis-v1)
-- proto-google-cloud-redis-v1beta1 (from https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-redis-v1beta1)
+- proto-google-cloud-redis-v1 (from https://github.com/googleapis/java-redis/proto-google-cloud-redis-v1, https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-redis-v1)
+- proto-google-cloud-redis-v1beta1 (from https://github.com/googleapis/java-redis/proto-google-cloud-redis-v1beta1, https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-redis-v1beta1)
 - proto-google-common-protos (from https://github.com/googleapis/api-client-staging, https://github.com/googleapis/googleapis, https://github.com/googleapis/java-iam/proto-google-common-protos)
 - proto-google-iam-v1 (from https://github.com/googleapis/googleapis, https://github.com/googleapis/java-iam/proto-google-iam-v1)
 - requests (from http://python-requests.org, https://requests.readthedocs.io)
@@ -387,7 +389,7 @@ The following software have components provided under the terms of this license:
 - swagger-annotations (from https://repo1.maven.org/maven2/io/swagger/core/v3/swagger-annotations, https://repo1.maven.org/maven2/io/swagger/swagger-annotations)
 - swagger-core (from https://repo1.maven.org/maven2/io/swagger/swagger-core)
 - swagger-jaxrs (from https://repo1.maven.org/maven2/io/swagger/swagger-jaxrs)
-- swagger-models (from https://repo1.maven.org/maven2/io/swagger/core/v3/swagger-models)
+- swagger-models (from https://repo1.maven.org/maven2/io/swagger/core/v3/swagger-models, https://repo1.maven.org/maven2/io/swagger/swagger-models)
 - tomcat-annotations-api (from http://tomcat.apache.org/, https://tomcat.apache.org/)
 - tomcat-embed-core (from http://tomcat.apache.org/)
 - tomcat-embed-websocket (from http://tomcat.apache.org/, https://tomcat.apache.org/)
@@ -443,6 +445,7 @@ The following software have components provided under the terms of this license:
 - Jakarta Annotations API (from https://projects.eclipse.org/projects/ee4j.ca)
 - Jakarta WebSocket - Server API (from https://projects.eclipse.org/projects/ee4j.websocket)
 - Jakarta XML Binding API (from https://repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api, https://repo1.maven.org/maven2/org/jboss/spec/javax/xml/bind/jboss-jaxb-api_2.3_spec)
+- Microsoft Application Insights Java Agent (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Core (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Spring Boot starter (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Web Module (from https://github.com/Microsoft/ApplicationInsights-Java)
@@ -465,6 +468,7 @@ Beerware
 ========================================================================
 The following software have components provided under the terms of this license:
 
+- Microsoft Application Insights Java Agent (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Core (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Spring Boot starter (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Web Module (from https://github.com/Microsoft/ApplicationInsights-Java)
@@ -483,6 +487,7 @@ CC-BY-4.0
 ========================================================================
 The following software have components provided under the terms of this license:
 
+- Microsoft Application Insights Java Agent (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Core (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Spring Boot starter (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Web Module (from https://github.com/Microsoft/ApplicationInsights-Java)
@@ -669,8 +674,6 @@ The following software have components provided under the terms of this license:
 ========================================================================
 JSON
 ========================================================================
-The following software have components provided under the terms of this license:
-
 - JSON in Java (from https://github.com/douglascrockford/JSON-java)
 
 ========================================================================
@@ -724,6 +727,7 @@ The following software have components provided under the terms of this license:
 - Jakarta XML Binding API (from https://repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api, https://repo1.maven.org/maven2/org/jboss/spec/javax/xml/bind/jboss-jaxb-api_2.3_spec)
 - Java Client Runtime for AutoRest (from https://github.com/Azure/autorest-clientruntime-for-java)
 - Java JWT (from http://www.jwt.io, https://github.com/auth0/java-jwt)
+- Microsoft Application Insights Java Agent (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Core (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Spring Boot starter (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Web Module (from https://github.com/Microsoft/ApplicationInsights-Java)
@@ -826,6 +830,7 @@ The following software have components provided under the terms of this license:
 
 - Guava: Google Core Libraries for Java (from http://code.google.com/p/guava-libraries, https://github.com/google/guava, https://repo1.maven.org/maven2/com/google/guava/guava)
 - HdrHistogram (from http://hdrhistogram.github.io/HdrHistogram/)
+- JSON in Java (from https://github.com/douglascrockford/JSON-java)
 - LatencyUtils (from http://latencyutils.github.io/LatencyUtils/)
 - PostgreSQL JDBC Driver
 - Project Lombok (from http://projectlombok.org, https://projectlombok.org)

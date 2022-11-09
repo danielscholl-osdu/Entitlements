@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.entitlements.v2.jdbc.mapper.GroupInfoEntityListMapper;
+import org.opengroup.osdu.entitlements.v2.jdbc.mapper.GroupInfoEntityMapper;
+import org.opengroup.osdu.entitlements.v2.jdbc.model.GroupInfoEntity;
 import org.opengroup.osdu.entitlements.v2.jdbc.model.GroupInfoEntityList;
 import org.opengroup.osdu.entitlements.v2.jdbc.model.MemberInfoEntity;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
@@ -39,6 +41,7 @@ import org.springframework.stereotype.Repository;
 public class JdbcTemplateRunner {
 
     private final GroupInfoEntityListMapper groupInfoEntityListMapper;
+	private final GroupInfoEntityMapper groupInfoEntityMapper;
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -60,12 +63,12 @@ public class JdbcTemplateRunner {
 
 
 
-	public List<Long> getRecursiveParentIds(EntityNode entityNode){
+	public List<GroupInfoEntity> getGroupInfoEntitiesRecursive(EntityNode entityNode){
 		String sqlRequest = entityNode.isGroup() ?
 				getRecursiveGroupsRequestForGroup():
 				getRecursiveGroupsRequestForMember();
 
-		return jdbcTemplate.queryForList(sqlRequest,Long.class, entityNode.getNodeId());
+		return jdbcTemplate.query(sqlRequest, groupInfoEntityMapper, entityNode.getNodeId(), entityNode.getDataPartitionId());
 	}
 
 	public GroupInfoEntityList getGroupsInPartition(String dataPartitionId, GroupType groupType, Integer offset, Integer limit) {
@@ -114,34 +117,31 @@ public class JdbcTemplateRunner {
 				+ "\tAS gr, search_children sgr\n"
 				+ "\tWHERE sgr.id = gr.child_id\n"
 				+ ")\n"
-				+ "SELECT id FROM search_children\n"
-				+ "ORDER BY id";
+				+ "SELECT \"group\".id, \"group\".name, \"group\".description, \"group\".email, \"group\".partition_id FROM search_children\n"
+				+ "JOIN \"group\" ON search_children.id = \"group\".id\n"
+				+ "WHERE \"group\".partition_id = ?";
 	}
 
-	private String getRecursiveGroupsRequestForMember(){
+	private String getRecursiveGroupsRequestForMember() {
 		return "WITH RECURSIVE search_children AS (\n"
-				+ "\tSELECT \n"
-				+ "\t\tmember_groups.id, member_groups.email, member_groups.name, member_groups.description, member_groups.partition_id, member_groups.member_id\nFROM (\n"
-				+ "\t\tSELECT \"group\".*, member_to_group.member_id, \"member\".email as \"member_email\"\n"
-				+ "\t\tFROM \"member\" \n"
-				+ "\t\tJOIN member_to_group ON \"member\".id = member_to_group.member_id\n"
-				+ "\t\tJOIN \"group\" ON member_to_group.group_id = \"group\".id\n"
-				+ "\t) as member_groups\n"
-				+ "\tWHERE member_groups.member_email = ?\n"
+				+ "\t\n"
+				+ "\t\tSELECT member_to_group.group_id as id\n"
+				+ "\t\tFROM \"member_to_group\"\n"
+				+ "\t\tJOIN member ON \"member\".id = member_to_group.member_id\n"
+				+ "\t\tWHERE member.email = ?\n"
 				+ "\t\n"
 				+ "\tUNION\n"
 				+ "\t\n"
-				+ "\tSELECT gr.id, gr.email, gr.name, gr.description, gr.partition_id, sgr.member_id FROM (\n"
-				+ "\t\tSELECT * \n"
-				+ "\t\tFROM \"group\" \n"
-				+ "\t\tJOIN embedded_group ON embedded_group.parent_id = \"group\".id\n"
-				+ "\t\tJOIN member_to_group ON embedded_group.child_id = member_to_group.group_id\n"
-				+ "\t)\n"
-				+ "\tAS gr, search_children sgr\n"
-				+ "\tWHERE (gr.child_id = sgr.id)\n"
+				+ "\t\tSELECT gr.id FROM (\n"
+				+ "\t\t\tSELECT \"embedded_group\".parent_id as id, embedded_group.child_id\n"
+				+ "\t\t\tFROM \"embedded_group\" \n"
+				+ "\t\t)\n"
+				+ "\t\tAS gr, search_children sgr\n"
+				+ "\t\tWHERE (gr.child_id = sgr.id)\n"
 				+ ")\n"
 				+ "\n"
-				+ "SELECT id FROM search_children\n"
-				+ "ORDER BY id";
+				+ "SELECT \"group\".id, \"group\".name, \"group\".description, \"group\".email, \"group\".partition_id FROM search_children\n"
+				+ "JOIN \"group\" ON search_children.id = \"group\".id\n"
+				+ "WHERE \"group\".partition_id = ?";
 	}
 }

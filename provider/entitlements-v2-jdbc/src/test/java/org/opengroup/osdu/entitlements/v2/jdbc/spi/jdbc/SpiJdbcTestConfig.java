@@ -17,7 +17,11 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc;
 
+import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
+import org.opengroup.osdu.core.common.model.http.RequestInfo;
+import org.opengroup.osdu.core.common.partition.IPartitionFactory;
 import org.opengroup.osdu.entitlements.v2.jdbc.JdbcAppProperties;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +32,13 @@ import org.springframework.context.annotation.Configuration;
     })
 @Configuration
 public class SpiJdbcTestConfig {
+
+    @MockBean
+    private RequestInfo requestInfo;
+    @MockBean
+    private JaxRsDpsLog logger;
+    @MockBean
+    private IPartitionFactory partitionFactory;
 
 
     @Bean
