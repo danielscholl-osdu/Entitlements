@@ -28,4 +28,5 @@ public class EntitlementsConfigurationProperties {
 
     private String gcpXUserIdentityHeaderName;
     private String gcpXApplicationIdentityHeaderName;
+    private Integer inMemoryCacheLifeSpan = 60 * 60;
 }

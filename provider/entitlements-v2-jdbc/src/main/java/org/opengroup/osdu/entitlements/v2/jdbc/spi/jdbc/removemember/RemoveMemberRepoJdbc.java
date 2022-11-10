@@ -17,6 +17,7 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.removemember;
 
+import com.google.common.collect.ImmutableSet;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +28,7 @@ import org.opengroup.osdu.entitlements.v2.jdbc.exception.DatabaseAccessException
 import org.opengroup.osdu.entitlements.v2.jdbc.model.GroupInfoEntity;
 import org.opengroup.osdu.entitlements.v2.jdbc.model.MemberInfoEntity;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.GroupRepository;
+import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.JdbcTemplateRunner;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.MemberRepository;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
@@ -46,23 +48,27 @@ public class RemoveMemberRepoJdbc implements RemoveMemberRepo {
     private final MemberRepository memberRepository;
     private final GroupRepository groupRepository;
 
+    private final JdbcTemplateRunner jdbcTemplateRunner;
+
     @Override
     public Set<String> removeMember(EntityNode groupNode, EntityNode memberNode, RemoveMemberServiceDto removeMemberServiceDto) {
         try {
-            executeRemoveMemberOperation(groupNode, memberNode);
+            Set<String> affectedMembers = executeRemoveMemberOperation(groupNode, memberNode);
             auditLogger.removeMember(AuditStatus.SUCCESS, groupNode.getNodeId(), memberNode.getNodeId(), removeMemberServiceDto.getRequesterId());
-            return Collections.emptySet();
+            return affectedMembers;
         } catch (Exception e) {
             auditLogger.removeMember(AuditStatus.FAILURE, groupNode.getNodeId(), memberNode.getNodeId(), removeMemberServiceDto.getRequesterId());
             throw e;
         }
     }
 
-    private void executeRemoveMemberOperation(EntityNode groupNode, EntityNode memberNode) {
+    private Set<String> executeRemoveMemberOperation(EntityNode groupNode, EntityNode memberNode) {
         if (memberNode.isGroup()){
             executeRemoveChildGroupOperation(groupNode, memberNode);
+            return jdbcTemplateRunner.getAffectedMembersForGroup(memberNode);
         } else {
             executeRemoveMemberFromGroupOperation(groupNode, memberNode);
+            return ImmutableSet.of(memberNode.getNodeId());
         }
     }
 

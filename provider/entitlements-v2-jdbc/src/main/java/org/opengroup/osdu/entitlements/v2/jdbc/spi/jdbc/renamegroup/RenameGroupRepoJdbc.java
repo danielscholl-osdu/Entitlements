@@ -24,6 +24,7 @@ import org.opengroup.osdu.core.common.logging.audit.AuditStatus;
 import org.opengroup.osdu.entitlements.v2.jdbc.exception.DatabaseAccessException;
 import org.opengroup.osdu.entitlements.v2.jdbc.model.GroupInfoEntity;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.GroupRepository;
+import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.JdbcTemplateRunner;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.spi.renamegroup.RenameGroupRepo;
@@ -37,12 +38,15 @@ public class RenameGroupRepoJdbc implements RenameGroupRepo {
 	private final AuditLogger auditLogger;
 	private final GroupRepository groupRepository;
 
+	private final JdbcTemplateRunner jdbcTemplateRunner;
+
 	@Override
 	public Set<String> run(EntityNode groupNode, String newGroupName) {
 		try {
+			Set<String> affectedMembersForGroup = jdbcTemplateRunner.getAffectedMembersForGroup(groupNode);
 			executeRenameGroupOperation(groupNode, newGroupName);
 			auditLogger.updateGroup(AuditStatus.SUCCESS, groupNode.getNodeId());
-			return Collections.emptySet();
+			return affectedMembersForGroup;
 		} catch (Exception e) {
 			auditLogger.updateGroup(AuditStatus.FAILURE, groupNode.getNodeId());
 			throw e;
