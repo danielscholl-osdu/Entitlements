@@ -17,53 +17,61 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.service;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.entitlements.v2.jdbc.JdbcAppProperties;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsConfigurationProperties;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.service.GroupCacheService;
-import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class GroupCacheServiceJdbc implements GroupCacheService {
-    private static final String CACHE_KEY_FORMAT = "%s-%s";
 
-    private final RetrieveGroupRepo retrieveGroupRepo;
-    private final VmGroupCache vmGroupCache;
     private final JdbcAppProperties config;
+
+    private final EntitlementsConfigurationProperties configurationProperties;
+
+    private final CacheLoader<EntityNode, Set<ParentReference>> cacheLoader;
+
+    private LoadingCache<EntityNode, Set<ParentReference>> cache;
+
+    @PostConstruct
+    public void setUp() {
+        cache = CacheBuilder.newBuilder()
+            .expireAfterWrite(configurationProperties.getInMemoryCacheLifeSpan(), TimeUnit.SECONDS)
+            .build(cacheLoader);
+    }
 
     @Override
     public Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId) {
-        String key = String.format(CACHE_KEY_FORMAT, requesterId, partitionId);
-        Set<ParentReference> result = vmGroupCache.getGroupCache(key);
-        if (result == null) {
-            EntityNode entityNode = getNodeByNodeType(requesterId, partitionId);
-            result = retrieveGroupRepo.loadAllParents(entityNode).getParentReferences();
-            vmGroupCache.addGroupCache(key, result);
-        }
-        return result;
+        EntityNode node = getNodeByNodeType(requesterId, partitionId);
+        return cache.getUnchecked(node);
     }
+
     @Override
     public void refreshListGroupCache(Set<String> userIds, String partitionId) {
-        for (String userId: userIds) {
-            String key = String.format(CACHE_KEY_FORMAT, userId, partitionId);
-            EntityNode entityNode = EntityNode.createMemberNodeForNewUser(userId, partitionId);
-            vmGroupCache.addGroupCache(key, retrieveGroupRepo.loadAllParents(entityNode).getParentReferences());
+        for (String userId : userIds) {
+            flushListGroupCacheForUser(userId, partitionId);
         }
     }
 
     @Override
     public void flushListGroupCacheForUser(String userId, String partitionId) {
-        String key = String.format(CACHE_KEY_FORMAT, userId, partitionId);
-        vmGroupCache.deleteGroupCache(key);
+        EntityNode node = getNodeByNodeType(userId, partitionId);
+        cache.invalidate(node);
     }
 
     private EntityNode getNodeByNodeType(String memberId, String partitionId) {
         return memberId.endsWith(String.format("@%s.%s", partitionId, config.getDomain()))
-                ? EntityNode.createNodeFromGroupEmail(memberId)
-                : EntityNode.createMemberNodeForNewUser(memberId, partitionId);
+            ? EntityNode.createNodeFromGroupEmail(memberId)
+            : EntityNode.createMemberNodeForNewUser(memberId, partitionId);
     }
 }
