@@ -18,7 +18,7 @@ public class CreateGroupDto {
     // TODO: These should be moved to org.opengroup.osdu.core.common.model.storage.validation - ValidationDoc
     //       constants once we decide on our validation regexes at the forum level (and made public).
     private static final String NAME_REGEX = "^[A-Za-z0-9{}_.-]{3,128}$";
-    private static final String FREE_TEXT_REGEX = "^[A-Za-z0-9 _.-/,;:\'\"!@&+%#$]{0,255}$";
+    private static final String FREE_TEXT_REGEX = "^[-A-Za-z0-9 _./,;:\'\"!@&+%#$]{0,255}$";
 
     @Pattern(regexp = NAME_REGEX)
     @NotNull
