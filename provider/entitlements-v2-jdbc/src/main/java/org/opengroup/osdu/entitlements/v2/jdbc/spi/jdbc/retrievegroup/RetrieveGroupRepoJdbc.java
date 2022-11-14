@@ -130,7 +130,7 @@ public class RetrieveGroupRepoJdbc implements RetrieveGroupRepo {
     public ParentTreeDto loadAllParents(EntityNode memberNode) {
         List<GroupInfoEntity> groupInfoEntityList = jdbcTemplateRunner.getGroupInfoEntitiesRecursive(memberNode);
 
-        Set<ParentReference> parents = groupInfoEntityList.stream()
+        Set<ParentReference> parents = groupInfoEntityList.parallelStream()
                 .map(GroupInfoEntity::toParentReference)
                 .collect(Collectors.toSet());
 
@@ -196,7 +196,7 @@ public class RetrieveGroupRepoJdbc implements RetrieveGroupRepo {
             try {
                 offsetValue = Integer.parseInt(cursor);
             } catch (NumberFormatException e) {
-                throw new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_GATEWAY.getReasonPhrase(), "Malformed cursor, must be integer value");
+                throw new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Malformed cursor, must be integer value");
             }
         }
         GroupInfoEntityList groupsByPartition = jdbcTemplateRunner.getGroupsInPartition(dataPartitionId, groupType, offsetValue, limit);

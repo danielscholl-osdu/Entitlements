@@ -17,6 +17,7 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.creategroup;
 
+import com.google.common.collect.ImmutableSet;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.Optional;
@@ -59,7 +60,7 @@ public class CreateGroupRepoJdbc implements CreateGroupRepo {
 			executeCreateGroupOperation(groupNode, createGroupRepoDto);
 
 			auditLogger.createGroup(AuditStatus.SUCCESS, groupNode.getNodeId());
-			return Collections.emptySet();
+			return ImmutableSet.of(createGroupRepoDto.getRequesterNode().getNodeId());
 
 		} catch (Exception e) {
 			auditLogger.createGroup(AuditStatus.FAILURE, groupNode.getNodeId());

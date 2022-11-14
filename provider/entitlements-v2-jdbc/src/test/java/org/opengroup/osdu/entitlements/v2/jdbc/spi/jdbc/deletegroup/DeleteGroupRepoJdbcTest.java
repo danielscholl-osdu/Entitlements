@@ -9,6 +9,7 @@ import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.entitlements.v2.jdbc.model.GroupInfoEntity;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.SpiJdbcTestConfig;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.GroupRepository;
+import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.JdbcTemplateRunner;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.MemberRepository;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
@@ -41,6 +42,8 @@ public class DeleteGroupRepoJdbcTest {
     private GroupRepository groupRepository;
     @MockBean
     private MemberRepository memberRepository;
+    @MockBean
+    private JdbcTemplateRunner jdbcTemplateRunner;
 
     @Test
     public void shouldDeleteGroupAndPreserveParents() {
