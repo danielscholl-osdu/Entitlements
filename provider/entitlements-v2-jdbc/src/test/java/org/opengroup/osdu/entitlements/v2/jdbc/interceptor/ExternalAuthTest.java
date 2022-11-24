@@ -11,6 +11,7 @@ import static org.opengroup.osdu.entitlements.v2.jdbc.interceptor.AuthTestConfig
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -34,6 +35,8 @@ import org.springframework.test.context.junit4.SpringRunner;
     },
     classes = AuthTestConfig.class)
 @RunWith(SpringRunner.class)
+//TODO https://jiraeu.epam.com/browse/GONRG-6040
+@Ignore
 public class ExternalAuthTest {
 
     @Mock
