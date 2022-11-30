@@ -23,6 +23,9 @@
     },
     {
       "groupName": "service.schema-service.viewers"
+    },
+    {
+      "groupName": "service.legal.user"
     }
   ]
 }
