@@ -1,3 +1,20 @@
+/*
+ *  Copyright 2020-2022 Google LLC
+ *  Copyright 2020-2022 EPAM Systems, Inc
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 package org.opengroup.osdu.entitlements.v2.jdbc.interceptor;
 
 import com.nimbusds.jose.JWSAlgorithm;
@@ -5,22 +22,19 @@ import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.openid.connect.sdk.validators.IDTokenValidator;
-import java.util.Collections;
-import java.util.Map;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
-import org.opengroup.osdu.entitlements.v2.jdbc.config.IDTokenValidatorConfig;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.EntOpenIDProviderConfig;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.IDTokenValidatorConfig;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsOpenIdProviderConfigurationProperties;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.security.ExternalAuthConfiguration;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.security.InternalAuthConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.*;
+
+import java.util.Collections;
+import java.util.Map;
 
 @EnableConfigurationProperties
 @ComponentScan(
@@ -40,9 +54,6 @@ import org.springframework.context.annotation.Primary;
     })
 @Configuration
 public class AuthTestConfig {
-
-  public static final String CORRECT_TOKEN =
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ0ZXN0SXNzdWVySWQiLCJpYXQiOjE2MzY5NzI0NTAsImV4cCI6MTY2ODUwODQ1MCwiYXVkIjoidGVzdENsaWVudElkIiwic3ViIjoidGVzdFVzZXJOYW1lQGV4YW1wbGUuY29tIiwiRmlyc3ROYW1lIjoidGVzdFVzZXJGaXJzdE5hbWUiLCJTdXJuYW1lIjoidGVzdFVzZXJTZWNvbmROYW1lIiwiZW1haWwiOiJ0ZXN0VXNlck5hbWVAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.KM7ewU34QH55UMCoF-cZjmlEdr8MphTp2np8XKIKiGQ";
   public static final String TOKEN_WITH_NOT_CORRECT_SECRET =
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ0ZXN0SXNzdWVySWQiLCJpYXQiOjE2Mzg5NzExNDksImV4cCI6MTY3MDUwNzE0OSwiYXVkIjoidGVzdENsaWVudElkIiwic3ViIjoidGVzdFVzZXJOYW1lQGV4YW1wbGUuY29tIn0.pvVPfim8r5TNyWX8gyzu46CvqLNsuuPP5Ltkt_RgNRc";
   public static final String IAP_EMAIL_PREFIX = "accounts.google.com:";
@@ -66,7 +77,8 @@ public class AuthTestConfig {
   @Primary
   @ConditionalOnExpression(value = "'${gcp-authentication-mode}' != 'INTERNAL'")
   public Map<String, IDTokenValidator> getOpenIdValidatorsMap(
-      EntOpenIDProviderConfig entOpenIDProviderConfig, EntitlementsOpenIdProviderConfigurationProperties properties) {
+      EntOpenIDProviderConfig entOpenIDProviderConfig,
+      EntitlementsOpenIdProviderConfigurationProperties properties) {
     return Collections.singletonMap(
         "testClientId",
         new IDTokenValidator(
