@@ -56,6 +56,7 @@ while true; do
   RESPONSE=$(curl -k -s -w '%{http_code}' -o /dev/null --location --request POST ${ENTITLEMENT_URL}/tenant-provisioning \
   --header 'data-partition-id: opendes' \
   --header "Authorization: Bearer ${ACCESS_TOKEN}" \
+  --header "Content-Type: application/json" \
   --data-raw "")
   echo "Resp1==>" ${RESPONSE}
   if [[ $RESPONSE -eq 200 ]] || [[ $RESPONSE -eq 409 ]]; then
@@ -70,6 +71,7 @@ while true; do
   RESPONSE=$(curl -k -s -w '%{http_code}' -o /dev/null --location --request POST ${ENTITLEMENT_URL}/tenant-provisioning \
   --header 'data-partition-id: common' \
   --header "Authorization: Bearer ${ACCESS_TOKEN}" \
+  --header "Content-Type: application/json" \
   --data-raw "")
   if [[ $RESPONSE -eq 200 ]] || [[ $RESPONSE -eq 409 ]]; then
     break
