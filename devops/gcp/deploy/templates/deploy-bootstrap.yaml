@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "{{ .Values.conf.appName }}-bootstrap"
-  namespace: "{{ .Release.Namespace }}"
+  name: {{ printf "%s-bootstrap" .Values.conf.appName | quote }}
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "{{ .Values.conf.appName }}-bootstrap"
+      app: {{ printf "%s-bootstrap" .Values.conf.appName | quote }}
   template:
     metadata:
       labels:
-        app: "{{ .Values.conf.appName }}-bootstrap"
+        app: {{ printf "%s-bootstrap" .Values.conf.appName | quote }}
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
     spec:
       containers:
-      - image: "{{ .Values.data.bootstrapImage }}"
-        imagePullPolicy: "{{ .Values.data.imagePullPolicy }}"
-        name: "{{ .Values.conf.appName }}-bootstrap"
+      - image: {{ .Values.data.bootstrapImage | quote}}
+        imagePullPolicy: {{ .Values.data.imagePullPolicy | quote }}
+        name: {{ printf "%s-bootstrap" .Values.conf.appName | quote }}
         readinessProbe:
           exec:
             command:
@@ -26,10 +26,10 @@ spec:
             - /tmp/bootstrap_ready
         envFrom:
         - configMapRef:
-            name: "{{ .Values.conf.configmap }}-bootstrap"
+            name: {{ printf "%s-bootstrap" .Values.conf.configmap | quote }}
         {{- if .Values.conf.onPremEnabled }}
         - secretRef:
-            name: "{{ .Values.conf.bootstrapOpenidSecretName }}"
+            name: {{ .Values.conf.bootstrapOpenidSecretName | quote }}
         {{- end }}
       restartPolicy: Always
-      serviceAccountName: "{{ .Values.data.bootstrapServiceAccountName }}"
+      serviceAccountName: {{ .Values.data.bootstrapServiceAccountName | quote }}
