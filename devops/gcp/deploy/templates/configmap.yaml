@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: {{ .Values.conf.appName | quote }}
+  name: {{ .Values.conf.configmap | quote }}
+  namespace: {{ .Release.Namespace | quote }}
+data:
+  DOMAIN: {{ .Values.data.entitlementsDomain | quote }}
+  LOG_LEVEL: {{ .Values.data.logLevel | quote }}
+  PARTITION_API: {{ .Values.data.partitionApi | quote }}
+  SPRING_PROFILES_ACTIVE: {{ .Values.data.springProfilesActive | quote }}
+  {{- if .Values.conf.onPremEnabled }}
+  PARTITION_AUTH_ENABLED: {{ .Values.data.partitionAuthEnabled | quote }}
+  {{- else }}
+  GOOGLE_AUDIENCES: {{ .Values.data.googleAudiences | quote }}
+  OPENID_PROVIDER_CLIENT_IDS: {{ .Values.data.openidProviderClientIds | quote }}
+  {{- end }}

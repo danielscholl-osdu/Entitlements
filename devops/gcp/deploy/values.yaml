@@ -1,5 +1,24 @@
 data:
-  # common
+  # Configmaps
+  dataPartitionId: ""
+  dataPartitionIdList: []
+  entitlementsHost: "http://entitlements"
+  adminUserEmail: ""
+  airflowComposerEmail: ""
+  logLevel: "ERROR"
+  openidProviderClientIds: ""
+  partitionApi: "http://partition/api/partition/v1/"
+  googleAudiences: ""
+  springProfilesActive: "gcp"
+  projectId: ""
+  pubSubEmail: ""
+  registerPubsubIdentity: ""
+  partitionAuthEnabled: false
+  # Don't change or use the parameter unless necessary
+  entitlementsDomain: "group"
+  # Deployments 
+  bootstrapImage: ""
+  bootstrapServiceAccountName: ""
   requestsCpu: "0.1"
   requestsMemory: "640M"
   limitsCpu: "1"
@@ -7,17 +26,12 @@ data:
   serviceAccountName: "entitlements"
   image: ""
   imagePullPolicy: "IfNotPresent"
-  # gcp
   cloudSqlProxyVersion: "1.32.0"
   sqlConnectionString: ""
-  # bootstrap common
-  bootstrapImage: ""
-  bootstrapServiceAccountName: ""
 conf:
   configmap: "entitlements-config"
   appName: "entitlements"
   entitlementsPostgresSecretName: "entitlements-postgres-secret"
-  # bootstrap onprem
   bootstrapOpenidSecretName: "datafier-secret"
   onPremEnabled: false
   istioEnabled: true

@@ -1,35 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "{{ .Values.conf.appName }}"
-  namespace: "{{ .Release.Namespace }}"
+  name: {{ .Values.conf.appName | quote }}
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "{{ .Values.conf.appName }}"
+      app: {{ .Values.conf.appName | quote }}
   template:
     metadata:
       labels:
-        app: "{{ .Values.conf.appName }}"
+        app: {{ .Values.conf.appName | quote }}
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
     spec:
       containers:
-      - image: "{{ .Values.data.image }}"
-        imagePullPolicy: "{{ .Values.data.imagePullPolicy }}"
-        name: "{{ .Values.conf.appName }}"
+      - image: {{ .Values.data.image | quote }}
+        imagePullPolicy: {{ .Values.data.imagePullPolicy | quote }}
+        name: {{ .Values.conf.appName | quote }}
         envFrom:
         - configMapRef:
-            name: "{{ .Values.conf.configmap }}"
+            name: {{ .Values.conf.configmap | quote }}
         - secretRef:
-            name: "{{ .Values.conf.entitlementsPostgresSecretName }}"
+            name: {{ .Values.conf.entitlementsPostgresSecretName | quote }}
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 0
       {{- if not .Values.conf.onPremEnabled }}
       - image: "gcr.io/cloudsql-docker/gce-proxy:{{ .Values.data.cloudSqlProxyVersion }}"
-        imagePullPolicy: "{{ .Values.data.imagePullPolicy }}"
+        imagePullPolicy: {{ .Values.data.imagePullPolicy | quote }}
         name: cloud-sql-proxy
         command:
           - /cloud_sql_proxy
@@ -39,9 +39,9 @@ spec:
         - containerPort: 8080
         resources:
           requests:
-            cpu: "{{ .Values.data.requestsCpu }}"
-            memory: "{{ .Values.data.requestsMemory }}"
+            cpu: {{ .Values.data.requestsCpu | quote }}
+            memory: {{ .Values.data.requestsMemory | quote }}
           limits:
-            cpu: "{{ .Values.data.limitsCpu }}"
-            memory: "{{ .Values.data.limitsMemory }}"
-      serviceAccountName: "{{ .Values.data.serviceAccountName }}"
+            cpu: {{ .Values.data.limitsCpu | quote }}
+            memory: {{ .Values.data.limitsMemory | quote }}
+      serviceAccountName: {{ .Values.data.serviceAccountName | quote }}
