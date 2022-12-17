@@ -10,6 +10,8 @@ data:
   LOG_LEVEL: {{ .Values.data.logLevel | quote }}
   PARTITION_API: {{ .Values.data.partitionApi | quote }}
   SPRING_PROFILES_ACTIVE: {{ .Values.data.springProfilesActive | quote }}
+  REDIS_USER_INFO_HOST: {{ .Values.data.redisEntHost | quote }}
+  REDIS_USER_INFO_PORT: {{ .Values.data.redisEntPort | quote }}
   {{- if .Values.conf.onPremEnabled }}
   PARTITION_AUTH_ENABLED: {{ .Values.data.partitionAuthEnabled | quote }}
   {{- else }}
