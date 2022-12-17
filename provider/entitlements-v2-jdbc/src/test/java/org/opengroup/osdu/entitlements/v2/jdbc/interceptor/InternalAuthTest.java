@@ -18,10 +18,12 @@
 package org.opengroup.osdu.entitlements.v2.jdbc.interceptor;
 
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.opengroup.osdu.core.common.cache.IRedisCache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
@@ -56,6 +58,7 @@ public class InternalAuthTest {
   @Mock private HttpServletRequest request;
   @Mock private HttpServletResponse response;
   @MockBean private JaxRsDpsLog jaxRsDpsLog;
+  @MockBean private IRedisCache<String, UserInfo> cache;
   @Autowired private EntitlementsConfigurationProperties entitlementsConfigurationProperties;
   @Autowired public RequestHeaderInterceptor interceptor;
   @Autowired private ApplicationContext applicationContext;

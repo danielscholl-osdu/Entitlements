@@ -14,9 +14,12 @@ data:
   pubSubEmail: ""
   registerPubsubIdentity: ""
   partitionAuthEnabled: false
+  # redis connection
+  redisEntHost: "redis-cache-ent-master"
+  redisEntPort: 6379
   # Don't change or use the parameter unless necessary
   entitlementsDomain: "group"
-  # Deployments 
+  # Deployments
   bootstrapImage: ""
   bootstrapServiceAccountName: ""
   requestsCpu: "0.1"
