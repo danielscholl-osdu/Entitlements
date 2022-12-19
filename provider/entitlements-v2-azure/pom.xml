@@ -23,6 +23,7 @@
         <jackson.version>2.13.2</jackson.version>
         <jackson-databind.version>2.13.2.2</jackson-databind.version>
         <spring-webmvc.version>5.3.22</spring-webmvc.version>
+        <commons-text.version>1.10.0</commons-text.version>
     </properties>
 
     <dependencies>
@@ -104,6 +105,15 @@
             <groupId>org.apache.tinkerpop</groupId>
             <artifactId>gremlin-driver</artifactId>
             <version>${gremlin.version}</version>
+            <exclusions>
+                <!--
+                Excluding org.apache.commons:commons-text:jar:1.9 because it has security bugs
+                -->
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-text</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.tinkerpop</groupId>
@@ -118,6 +128,12 @@
                     <artifactId>ivy</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>${commons-text.version}</version>
         </dependency>
 
         <dependency>
