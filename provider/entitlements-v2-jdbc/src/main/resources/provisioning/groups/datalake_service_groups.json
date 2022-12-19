@@ -356,27 +356,6 @@
       ]
     },
     {
-      "name": "service.backup",
-      "description": "Backup access group",
-      "members": [
-        {
-          "name": "users.datalake.ops"
-        }
-      ]
-    },
-    {
-      "name": "service.backup.admin",
-      "description": "Backup admin group",
-      "members": [
-        {
-          "name": "users.datalake.admins"
-        },
-        {
-          "name": "users.datalake.ops"
-        }
-      ]
-    },
-    {
       "name": "service.content-extractor.user",
       "description": "Content extractor users group",
       "members": [
