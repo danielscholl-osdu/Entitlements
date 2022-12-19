@@ -27,6 +27,14 @@
     {
       "name": "users.wellbore-data.viewers",
       "description": "Wellbore data viewers"
+    },
+    {
+      "name": "users.datalake.delegation",
+      "description": "Users who can impersonate"
+    },
+    {
+      "name": "users.datalake.impersonation",
+      "description": "Users who can be impersonated"
     }
   ]
 }
