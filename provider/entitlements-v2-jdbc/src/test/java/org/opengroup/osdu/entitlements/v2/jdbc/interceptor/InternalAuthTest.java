@@ -69,6 +69,8 @@ public class InternalAuthTest {
   public void setUp() {
     when(request.getContextPath()).thenReturn("");
     when(request.getRequestURI()).thenReturn("");
+    when(request.getMethod()).thenReturn("GET");
+    when(request.getHeader(DpsHeaders.ON_BEHALF_OF)).thenReturn(null);
     try {
       correctToken = Utils.generateJWT();
     } catch (JOSEException e) {

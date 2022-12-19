@@ -41,7 +41,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.opengroup.osdu.config.util.DecodedContentExtractor;
 
-class GoogleServiceAccount {
+public class GoogleServiceAccount {
 
 	final ServiceAccountCredentials serviceAccount;
 

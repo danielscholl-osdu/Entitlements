@@ -17,18 +17,26 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.service;
 
+import com.google.common.base.Strings;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
+import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.entitlements.v2.jdbc.JdbcAppProperties;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsConfigurationProperties;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.service.GroupCacheService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -43,6 +51,14 @@ public class GroupCacheServiceJdbc implements GroupCacheService {
 
     private LoadingCache<EntityNode, Set<ParentReference>> cache;
 
+    private final RequestInfo requestInfo;
+
+    private final JaxRsDpsLog log;
+
+    private static final String CAN_IMPERSONATE = "users.datalake.delegation";
+
+    private static final String CAN_BE_IMPERSONATED = "users.datalake.impersonation";
+
     @PostConstruct
     public void setUp() {
         cache = CacheBuilder.newBuilder()
@@ -52,8 +68,30 @@ public class GroupCacheServiceJdbc implements GroupCacheService {
 
     @Override
     public Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId) {
-        EntityNode node = getNodeByNodeType(requesterId, partitionId);
-        return cache.getUnchecked(node);
+        EntityNode requesterNode = getNodeByNodeType(requesterId, partitionId);
+        Set<ParentReference> requesterGroups = cache.getUnchecked(requesterNode);
+        String beneficialId = requestInfo.getHeaders().getOnBehalfOf();
+        if (!Strings.isNullOrEmpty(beneficialId)) {
+            if (requesterGroups.stream().map(ParentReference::getName).collect(Collectors.toList()).contains(CAN_IMPERSONATE)) {
+                EntityNode beneficialNode = getNodeByNodeType(beneficialId, partitionId);
+                Set<ParentReference> beneficialGroups = cache.getUnchecked(beneficialNode);
+                Optional<ParentReference> group = beneficialGroups.stream().filter(item -> item.getName().equals(CAN_BE_IMPERSONATED)).findFirst();
+                if (!group.isPresent()) {
+                    log.warning("Impersonation group not found");
+                    throw new AppException(HttpStatus.BAD_REQUEST.value(),
+                            HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                            "Impersonation not allowed for " + beneficialId);
+                } else {
+                    return beneficialGroups;
+                }
+            } else {
+                log.warning("Delegation group not found");
+                throw new AppException(HttpStatus.BAD_REQUEST.value(),
+                        HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                        "Impersonation not allowed for " + requesterId);
+            }
+        }
+        return requesterGroups;
     }
 
     @Override
