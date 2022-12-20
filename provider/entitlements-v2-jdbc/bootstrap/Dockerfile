@@ -1,8 +1,8 @@
-FROM google/cloud-sdk:slim
+FROM google/cloud-sdk:alpine
 
 WORKDIR /opt
 
-RUN apt-get update && apt-get install -yq jq
+RUN apk update && apk add --no-cache jq
 
 COPY ./provider/entitlements-v2-jdbc/bootstrap/ /opt/
 
