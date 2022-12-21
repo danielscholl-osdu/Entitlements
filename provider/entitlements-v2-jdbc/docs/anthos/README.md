@@ -84,11 +84,13 @@ Defined in default application property file but possible to override:
 | `TENANT_NAME` | ex `opendes` | OSDU tenant used for testing | no | -- |
 | `TEST_OPENID_PROVIDER_CLIENT_ID` | `********` | Client Id for `$INTEGRATION_TESTER` | yes | -- |
 | `TEST_OPENID_PROVIDER_CLIENT_SECRET` | `********` |  | Client secret for `$INTEGRATION_TESTER` | -- |
+| `TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_ID` | `********` | Client Id for `$NO_ACCESS_INTEGRATION_TESTER` | yes | -- |
+| `TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_SECRET` | `********` |  | Client secret for `$NO_ACCESS_INTEGRATION_TESTER` | -- |
 | `INTEGRATION_TESTER_EMAIL` | `datafier@service.local` |  | Email of `$INTEGRATION_TESTER` | -- |
 | `TEST_OPENID_PROVIDER_URL` | `https://keycloak.com/auth/realms/osdu` | OpenID provider url | yes | -- |
 
 **Entitlements configuration for integration accounts**
 
-| INTEGRATION_TESTER  | 
-| --- |
-| users<br/>service.entitlements.user<br/>service.entitlements.admin |
+| INTEGRATION_TESTER                                                      | 
+|-------------------------------------------------------------------------|
+| users<br/>service.entitlements.user<br/>service.entitlements.admin<br/>users.datalake.delegation |
