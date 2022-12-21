@@ -28,9 +28,16 @@ public class EntitlementsConfigurationProperties {
 
     private String gcpXUserIdentityHeaderName;
     private String gcpXApplicationIdentityHeaderName;
-    private Integer inMemoryCacheLifeSpan = 60 * 60;
+
     private String redisUserInfoHost;
     private Integer redisUserInfoPort;
-    private String redisUserInfoUsername;
     private String redisUserInfoPassword;
+    private Integer redisUserInfoExpiration = 30;
+    private Boolean redisUserInfoWithSsl = false;
+
+    private String redisUserGroupsHost;
+    private Integer redisUserGroupsPort;
+    private String redisUserGroupsPassword;
+    private Integer redisUserGroupsExpiration = 30;
+    private Boolean redisUserGroupsWithSsl = false;
 }
