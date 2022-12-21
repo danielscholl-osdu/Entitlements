@@ -99,4 +99,4 @@ Defined in default application property file but possible to override:
 
 | INTEGRATION_TESTER  | 
 | --- |
-| users<br/>service.entitlements.user<br/>service.entitlements.admin |
+| users<br/>service.entitlements.user<br/>service.entitlements.admin<br/>users.datalake.delegation |
