@@ -42,3 +42,10 @@ auth:
   publicUrl: ""
   localUrl: "keycloak"
   realm: "osdu"
+istio:
+  proxyCPU: "50m"
+  proxyCPULimit: "500m"
+  proxyMemory: "64Mi"
+  proxyMemoryLimit: "512Mi"
+  bootstrapProxyCPU: "10m"
+  bootstrapProxyCPULimit: "100m"
