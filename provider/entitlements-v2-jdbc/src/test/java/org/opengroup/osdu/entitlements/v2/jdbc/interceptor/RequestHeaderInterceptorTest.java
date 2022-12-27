@@ -29,6 +29,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
+import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.entitlements.v2.jdbc.interceptor.authenticator.IAuthenticator;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -61,6 +63,7 @@ public class RequestHeaderInterceptorTest {
 
     @Test
     public void should_returnTrue_when_requestIsSwagger() throws IOException {
+        when(request.getMethod()).thenReturn("GET");
         when(request.getContextPath()).thenReturn("");
         when(request.getRequestURI()).thenReturn("/swagger");
 
@@ -71,11 +74,20 @@ public class RequestHeaderInterceptorTest {
 
     @Test
     public void should_returnTrue_when_requestIsVersionInfo() throws IOException {
+        when(request.getMethod()).thenReturn("GET");
         when(request.getContextPath()).thenReturn("");
         when(request.getRequestURI()).thenReturn("/info");
 
         boolean result = requestHeaderInterceptor.preHandle(request, response, handler);
 
         assertTrue(result);
+    }
+
+    @Test(expected = AppException.class)
+    public void should_fail_if_post_with_onBehalfOf() {
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getHeader(DpsHeaders.ON_BEHALF_OF)).thenReturn("dummy");
+
+        boolean result = requestHeaderInterceptor.preHandle(request, response, handler);
     }
 }

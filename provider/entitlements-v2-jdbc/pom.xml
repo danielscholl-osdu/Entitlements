@@ -46,7 +46,7 @@
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <version>2.13.2.2</version>
+        <version>2.14.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -67,7 +67,7 @@
     <dependency>
       <groupId>org.opengroup.osdu</groupId>
       <artifactId>core-lib-gcp</artifactId>
-      <version>0.16.0</version>
+      <version>0.19.0-rc2</version>
       <exclusions>
         <exclusion>
           <groupId>org.opengroup.osdu</groupId>
@@ -268,23 +268,6 @@
                   <configuration>
                       <classifier>spring-boot</classifier>
                       <mainClass>org.opengroup.osdu.entitlements.v2.jdbc.EntitlementsV2Application</mainClass>
-                      <profiles>
-                        <profile>
-                          <id>local</id>
-                          <activation>
-                            <activeByDefault>true</activeByDefault>
-                          </activation>
-                          <properties>
-                            <spring.profiles.active>local</spring.profiles.active>
-                          </properties>
-                        </profile>
-                        <profile>
-                          <id>dev</id>
-                          <properties>
-                            <spring.profiles.active>dev</spring.profiles.active>
-                          </properties>
-                        </profile>
-                      </profiles>
                   </configuration>
               </execution>
           </executions>

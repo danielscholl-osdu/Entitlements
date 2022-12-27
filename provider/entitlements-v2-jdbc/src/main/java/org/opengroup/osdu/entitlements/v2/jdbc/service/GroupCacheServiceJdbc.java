@@ -17,43 +17,51 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.service;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
+import com.google.common.base.Strings;
+import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import javax.annotation.PostConstruct;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.opengroup.osdu.core.common.cache.ICache;
+import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
+import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.entitlements.v2.jdbc.JdbcAppProperties;
-import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsConfigurationProperties;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
+import org.opengroup.osdu.entitlements.v2.model.ParentReferences;
 import org.opengroup.osdu.entitlements.v2.service.GroupCacheService;
+import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class GroupCacheServiceJdbc implements GroupCacheService {
 
+    private static final String CAN_IMPERSONATE = "users.datalake.delegation";
+
+    private static final String CAN_BE_IMPERSONATED = "users.datalake.impersonation";
+
     private final JdbcAppProperties config;
 
-    private final EntitlementsConfigurationProperties configurationProperties;
+    private final ICache<String, ParentReferences> entityGroupsCache;
 
-    private final CacheLoader<EntityNode, Set<ParentReference>> cacheLoader;
+    private final RetrieveGroupRepo retrieveGroupRepo;
 
-    private LoadingCache<EntityNode, Set<ParentReference>> cache;
+    private final RequestInfo requestInfo;
 
-    @PostConstruct
-    public void setUp() {
-        cache = CacheBuilder.newBuilder()
-            .expireAfterWrite(configurationProperties.getInMemoryCacheLifeSpan(), TimeUnit.SECONDS)
-            .build(cacheLoader);
-    }
+    private final JaxRsDpsLog log;
 
     @Override
     public Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId) {
-        EntityNode node = getNodeByNodeType(requesterId, partitionId);
-        return cache.getUnchecked(node);
+        EntityNode entityNode = getNodeByNodeType(requesterId, partitionId);
+        ParentReferences parentReferences = getFromCacheOrLoadParentReferences(entityNode);
+        String beneficialId = requestInfo.getHeaders().getOnBehalfOf();
+        if (!Strings.isNullOrEmpty(beneficialId)) {
+            return verifyAndGetBeneficialGroups(requesterId, partitionId, parentReferences, beneficialId).getParentReferencesOfUser();
+        }
+        return parentReferences.getParentReferencesOfUser();
     }
 
     @Override
@@ -66,12 +74,47 @@ public class GroupCacheServiceJdbc implements GroupCacheService {
     @Override
     public void flushListGroupCacheForUser(String userId, String partitionId) {
         EntityNode node = getNodeByNodeType(userId, partitionId);
-        cache.invalidate(node);
+        entityGroupsCache.delete(node.getUniqueIdentifier());
     }
 
     private EntityNode getNodeByNodeType(String memberId, String partitionId) {
         return memberId.endsWith(String.format("@%s.%s", partitionId, config.getDomain()))
             ? EntityNode.createNodeFromGroupEmail(memberId)
             : EntityNode.createMemberNodeForNewUser(memberId, partitionId);
+    }
+
+    private ParentReferences getFromCacheOrLoadParentReferences(EntityNode entityNode) {
+        ParentReferences parentReferences = this.entityGroupsCache.get(entityNode.getUniqueIdentifier());
+        if (parentReferences == null) {
+            Set<ParentReference> parentReferenceSet = retrieveGroupRepo.loadAllParents(entityNode).getParentReferences();
+            parentReferences = new ParentReferences();
+            parentReferences.setParentReferencesOfUser(parentReferenceSet);
+            entityGroupsCache.put(entityNode.getUniqueIdentifier(), parentReferences);
+        }
+        return parentReferences;
+    }
+
+    private ParentReferences verifyAndGetBeneficialGroups(String requesterId, String partitionId, ParentReferences requesterGroups,
+        String beneficialId) {
+        if (requesterGroups.getParentReferencesOfUser().stream().map(ParentReference::getName).collect(Collectors.toList()).contains(CAN_IMPERSONATE)) {
+            EntityNode beneficialNode = getNodeByNodeType(beneficialId, partitionId);
+            ParentReferences beneficialGroups = getFromCacheOrLoadParentReferences(beneficialNode);
+            Optional<ParentReference> group = beneficialGroups.getParentReferencesOfUser().stream()
+                .filter(item -> item.getName().equals(CAN_BE_IMPERSONATED))
+                .findFirst();
+            if (!group.isPresent()) {
+                log.warning("Impersonation group not found");
+                throw new AppException(HttpStatus.BAD_REQUEST.value(),
+                    HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                    "Impersonation not allowed for " + beneficialId);
+            } else {
+                return beneficialGroups;
+            }
+        } else {
+            log.warning("Delegation group not found");
+            throw new AppException(HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "Impersonation not allowed for " + requesterId);
+        }
     }
 }
