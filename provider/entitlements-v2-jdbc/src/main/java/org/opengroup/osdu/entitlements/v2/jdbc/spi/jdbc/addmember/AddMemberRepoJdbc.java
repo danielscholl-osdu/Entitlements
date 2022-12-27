@@ -19,6 +19,7 @@ package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.addmember;
 
 import static java.lang.String.format;
 
+import com.google.common.collect.ImmutableSet;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.Optional;
@@ -55,12 +56,12 @@ public class AddMemberRepoJdbc implements AddMemberRepo {
 	public Set<String> addMember(EntityNode groupEntityNode, AddMemberRepoDto addMemberRepoDto) {
 		try {
 			log.debug(format("Adding member %s into the group %s and updating the data model in database", addMemberRepoDto.getMemberNode().getNodeId(), groupEntityNode.getNodeId()));
-			executeAddMemberOperation(groupEntityNode, addMemberRepoDto);
+			Set<String> affectedMembers = executeAddMemberOperation(groupEntityNode, addMemberRepoDto);
 			auditLogger.addMember(AuditStatus.SUCCESS,
 					groupEntityNode.getNodeId(),
 					addMemberRepoDto.getMemberNode().getNodeId(),
 					addMemberRepoDto.getRole());
-			return Collections.emptySet();
+			return affectedMembers;
 		} catch (Exception e){
 			auditLogger.addMember(AuditStatus.FAILURE,
 					groupEntityNode.getNodeId(),
@@ -88,11 +89,13 @@ public class AddMemberRepoJdbc implements AddMemberRepo {
 		return Collections.emptySet();
 	}
 
-	private void executeAddMemberOperation(EntityNode groupEntityNode, AddMemberRepoDto addMemberRepoDto){
-		if (addMemberRepoDto.getMemberNode().isGroup()){
+	private Set<String> executeAddMemberOperation(EntityNode groupEntityNode, AddMemberRepoDto addMemberRepoDto) {
+		if (addMemberRepoDto.getMemberNode().isGroup()) {
 			addGroupAsChild(groupEntityNode, addMemberRepoDto);
+			return jdbcTemplateRunner.getAffectedMembersForGroup(addMemberRepoDto.getMemberNode());
 		} else {
 			addMemberInGroup(groupEntityNode, addMemberRepoDto);
+			return ImmutableSet.of(addMemberRepoDto.getMemberNode().getNodeId());
 		}
 	}
 

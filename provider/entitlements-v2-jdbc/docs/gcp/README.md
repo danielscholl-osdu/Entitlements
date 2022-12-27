@@ -31,6 +31,7 @@ Defined in default application property file but possible to override:
 | `OPENID_PROVIDER_URL` | `https://accounts.google.com` | OpenID provider | no | - |
 | `OPENID_PROVIDER_ALGORITHM` | `RS256` | OpenID token algorithm | no | - |
 | `OPENID_PROVIDER_USER_ID_CLAIM_NAME` | ex `email` | OpenID user id claim name | no | - |
+| `IN_MEMORY_CACHE_LIFE_SPAN` | `3600`                                                                                                                                                                                          | Groups cache life span in seconds                                 | no | - |
 
 ## Authentication modes
 

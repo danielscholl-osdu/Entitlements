@@ -19,8 +19,10 @@ package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.entitlements.v2.jdbc.mapper.GroupInfoEntityListMapper;
 import org.opengroup.osdu.entitlements.v2.jdbc.mapper.GroupInfoEntityMapper;
@@ -41,44 +43,49 @@ import org.springframework.stereotype.Repository;
 public class JdbcTemplateRunner {
 
     private final GroupInfoEntityListMapper groupInfoEntityListMapper;
-	private final GroupInfoEntityMapper groupInfoEntityMapper;
+    private final GroupInfoEntityMapper groupInfoEntityMapper;
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	public Long saveMemberInfoEntity(MemberInfoEntity memberInfoEntity){
-		KeyHolder keyHolder = new GeneratedKeyHolder();
+    public Long saveMemberInfoEntity(MemberInfoEntity memberInfoEntity) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-		jdbcTemplate.update(con -> {
-			PreparedStatement ps = con.prepareStatement(
-					"INSERT INTO member(email, partition_id) VALUES (?, ?) RETURNING id",
-					Statement.RETURN_GENERATED_KEYS);
-			ps.setString(1, memberInfoEntity.getEmail());
-			ps.setString(2, memberInfoEntity.getPartitionId());
-			return ps;
-		}, keyHolder);
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(
+                "INSERT INTO member(email, partition_id) VALUES (?, ?) RETURNING id",
+                Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, memberInfoEntity.getEmail());
+            ps.setString(2, memberInfoEntity.getPartitionId());
+            return ps;
+        }, keyHolder);
 
-
-		return (long) keyHolder.getKey();
-	}
-
+        return (long) keyHolder.getKey();
+    }
 
 
-	public List<GroupInfoEntity> getGroupInfoEntitiesRecursive(EntityNode entityNode){
-		String sqlRequest = entityNode.isGroup() ?
-				getRecursiveGroupsRequestForGroup():
-				getRecursiveGroupsRequestForMember();
+    public List<GroupInfoEntity> getGroupInfoEntitiesRecursive(EntityNode entityNode) {
+        String sqlRequest = entityNode.isGroup() ?
+            getRecursiveGroupsRequestForGroup() :
+            getRecursiveGroupsRequestForMember();
 
-		return jdbcTemplate.query(sqlRequest, groupInfoEntityMapper, entityNode.getNodeId(), entityNode.getDataPartitionId());
-	}
+        return jdbcTemplate.query(sqlRequest, groupInfoEntityMapper, entityNode.getNodeId(), entityNode.getDataPartitionId());
+    }
 
-	public GroupInfoEntityList getGroupsInPartition(String dataPartitionId, GroupType groupType, Integer offset, Integer limit) {
-		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-		mapSqlParameterSource.addValue("partition", dataPartitionId);
-		mapSqlParameterSource.addValue("name_prefix", groupType.toString().toLowerCase() + "%");
-		mapSqlParameterSource.addValue("limit", limit);
-		mapSqlParameterSource.addValue("from_row", offset);
-		return namedParameterJdbcTemplate.queryForObject(getAllGroupsInPartitionRequest(groupType), mapSqlParameterSource, groupInfoEntityListMapper);
-	}
+    public GroupInfoEntityList getGroupsInPartition(String dataPartitionId, GroupType groupType, Integer offset, Integer limit) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("partition", dataPartitionId);
+        mapSqlParameterSource.addValue("name_prefix", groupType.toString().toLowerCase() + "%");
+        mapSqlParameterSource.addValue("limit", limit);
+        mapSqlParameterSource.addValue("from_row", offset);
+        return namedParameterJdbcTemplate.queryForObject(getAllGroupsInPartitionRequest(groupType), mapSqlParameterSource, groupInfoEntityListMapper);
+    }
+
+    public Set<String> getAffectedMembersForGroup(EntityNode entityNode) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+        mapSqlParameterSource.addValue("partition", entityNode.getDataPartitionId());
+        mapSqlParameterSource.addValue("group_email", entityNode.getNodeId());
+        return new HashSet<>(namedParameterJdbcTemplate.queryForList(getAffectedMembersForGroupRecursiveRequest(), mapSqlParameterSource, String.class));
+    }
 
     private String getAllGroupsInPartitionRequest(GroupType groupType) {
         String groupNameFilter = !Objects.equals(groupType, GroupType.NONE) ? "AND name LIKE :name_prefix " : "";
@@ -92,7 +99,7 @@ public class JdbcTemplateRunner {
             + groupNameFilter
             + "ORDER BY id ASC "
             + "LIMIT :limit "
-			+ "OFFSET :from_row) "
+            + "OFFSET :from_row) "
             + "AS t) "
             + "AS groupInfoEntities";
     }
@@ -144,4 +151,28 @@ public class JdbcTemplateRunner {
 				+ "JOIN \"group\" ON search_children.id = \"group\".id\n"
 				+ "WHERE \"group\".partition_id = ?";
 	}
+
+    private String getAffectedMembersForGroupRecursiveRequest() {
+        return "SELECT \"member\".email "
+                + "FROM \"member\" "
+                + "JOIN \"member_to_group\" ON \"member\".id = \"member_to_group\".member_id "
+                + "INNER JOIN "
+                + "(WITH RECURSIVE search_children AS "
+                + "(SELECT embedded_group.child_id AS ID "
+                + "FROM embedded_group "
+                + "JOIN \"group\" ON \"group\".ID = embedded_group.parent_id"
+                + " WHERE \"group\".EMAIL = :group_email "
+                + "UNION SELECT gr.ID "
+                + "FROM "
+                + "(SELECT embedded_group.child_id AS ID, embedded_group.parent_id "
+                + "FROM embedded_group) AS gr, "
+                + "search_children Sgr "
+                + "WHERE (gr.parent_id = Sgr.ID)) "
+                + "SELECT  search_children.ID "
+                + "FROM  search_children "
+                + "JOIN \"group\" ON search_children.ID = \"group\".ID  "
+                + "WHERE \"group\".PARTITION_ID = :partition "
+                + "UNION SELECT \"group\".id FROM \"group\" "
+                + "WHERE \"group\".EMAIL = :group_email) as ref_group ON ref_group.ID = \"member_to_group\".group_id";
+    }
 }

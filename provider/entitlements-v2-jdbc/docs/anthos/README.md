@@ -17,14 +17,15 @@ Must have:
 
 Defined in default application property file but possible to override:
 
-| name | value | description | sensitive? | source |
-| --- | --- | --- | --- | --- |
-| `LOG_PREFIX` | `entitlements-v2` | Logging prefix | no | - |
-| `SERVER_SERVLET_CONTEXPATH` | `/api/entitlements/v2` | Register context path | no | - |
-| `LOG_LEVEL` | `INFO` | Logging level | no | - |
-| `GCP_AUTHENTICATION_MODE` | `ISTIO` is used by default for Anthos implementation, but there are other modes - `IAP`, `EXTERNAL` and `INTERNAL`. More information about each mode you can find [here](#authentication-modes) |  | no | - |
-| `OPENID_PROVIDER_CLIENT_IDS` | `workload-identity-storage, workload-identity-file, workload-identity-partition, etc.`| List of client ids that can be authorized by Entitlements service | no | - |
-| `OPENID_PROVIDER_USER_ID_CLAIM_NAME` | `email` | OpenID user id claim name | no | - |
+| name                                           | value                                                                                                                                                                                           | description                                                       | sensitive? | source |
+|------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------| --- | --- |
+| `LOG_PREFIX`                                   | `entitlements-v2`                                                                                                                                                                               | Logging prefix                                                    | no | - |
+| `SERVER_SERVLET_CONTEXPATH`                    | `/api/entitlements/v2`                                                                                                                                                                          | Register context path                                             | no | - |
+| `LOG_LEVEL`                                    | `INFO`                                                                                                                                                                                          | Logging level                                                     | no | - |
+| `GCP_AUTHENTICATION_MODE`                      | `ISTIO` is used by default for Anthos implementation, but there are other modes - `IAP`, `EXTERNAL` and `INTERNAL`. More information about each mode you can find [here](#authentication-modes) |                                                                   | no | - |
+| `OPENID_PROVIDER_CLIENT_IDS`                   | `workload-identity-storage, workload-identity-file, workload-identity-partition, etc.`                                                                                                          | List of client ids that can be authorized by Entitlements service | no | - |
+| `OPENID_PROVIDER_USER_ID_CLAIM_NAME`           | `email`                                                                                                                                                                                         | OpenID user id claim name                                         | no | - |
+| `IN_MEMORY_CACHE_LIFE_SPAN` | `3600`                                                                                                                                                                                          | Groups cache life span in seconds                                 | no | - |
 
 ## Authentication modes
 
