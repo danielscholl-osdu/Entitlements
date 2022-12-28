@@ -15,7 +15,7 @@ data:
   registerPubsubIdentity: ""
   partitionAuthEnabled: false
   # redis connection
-  redisEntHost: "redis-cache-ent-master"
+  redisEntHost: "redis-ent-master"
   redisEntPort: 6379
   # Don't change or use the parameter unless necessary
   entitlementsDomain: "group"
