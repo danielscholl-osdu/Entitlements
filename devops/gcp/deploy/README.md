@@ -45,7 +45,7 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 **registerPubsubIdentity** | service account for communication Register-PubSub-Notification | string | - | yes
 **partitionAuthEnabled** | Disable or enable auth token provisioning for requests to Partition service | boolean | false | yes
 **entitlementsDomain** | The name of the domain groups are created for | string | `group` | yes
-**redisEntHost** | The host for redis instance | string | `redis-cache-ent-master` | yes
+**redisEntHost** | The host for redis instance | string | `redis-ent-master` | yes
 **redisEntPort** | The port for redis instance | digit | 6379 | yes
 
 ### Deployment variables
