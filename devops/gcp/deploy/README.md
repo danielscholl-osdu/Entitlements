@@ -33,12 +33,10 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 **logLevel** | logging level | string | `ERROR` | yes
 **springProfilesActive** | Spring profile that activate default configuration for GCP environment | string | `gcp` | yes
 **entitlementsHost** | Entitlements service host | string | `http://entitlements` | yes
-**googleAudiences** | Client ID for getting access to cloud resources and Partition service | string | - | yes
 **dataPartitionId** | partition ID | string | - | yes
 **dataPartitionIdList** | list of partition IDs | array | - | yes
 **adminUserEmail** | admin user email | string | - | yes
 **airflowComposerEmail** | airflow composer email  | string | - | yes
-**openidProviderClientIds** | List of client ids that can be authorized by Entitlements service | string | - | yes
 **partitionApi** | Partition service endpoint | string | `http://partition/api/partition/v1/` | yes
 **projectId** | project ID | string | - | yes
 **pubSubEmail** | Pub/Sub email | string | - | yes

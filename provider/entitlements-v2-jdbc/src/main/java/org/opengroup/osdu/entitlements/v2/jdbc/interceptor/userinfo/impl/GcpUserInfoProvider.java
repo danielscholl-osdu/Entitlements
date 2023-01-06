@@ -17,6 +17,7 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.interceptor.userinfo.impl;
 
+import com.google.common.cache.Cache;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
@@ -29,6 +30,7 @@ import net.minidev.json.JSONObject;
 import org.opengroup.osdu.core.common.cache.IRedisCache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.IDTokenValidatorFactory;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.EntOpenIDProviderConfig;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.http.HttpStatus;
@@ -37,7 +39,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
 
 import static com.nimbusds.openid.connect.sdk.claims.ClaimsSet.AUD_CLAIM_NAME;
 
@@ -55,11 +56,11 @@ public class GcpUserInfoProvider extends OpenIdUserInfoProvider {
 
     public GcpUserInfoProvider(
         JaxRsDpsLog log,
-        Map<String, IDTokenValidator> openIdValidators,
+        IDTokenValidatorFactory idTokenValidatorFactory,
         EntOpenIDProviderConfig provider,
         IRedisCache<String, UserInfo> cache
     ) {
-        super(log, openIdValidators);
+        super(log, idTokenValidatorFactory);
         this.provider = provider;
         this.cache = cache;
     }

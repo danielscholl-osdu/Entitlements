@@ -17,7 +17,6 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.config.properties;
 
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -27,8 +26,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "openid.provider")
 @Getter
 @Setter
-public class EntitlementsOpenIdProviderConfigurationProperties {
-	private List<String> clientIds;
+public class OpenIdProviderProperties {
 	private String url;
 	private String algorithm;
 	private String userIdClaimName = "email";

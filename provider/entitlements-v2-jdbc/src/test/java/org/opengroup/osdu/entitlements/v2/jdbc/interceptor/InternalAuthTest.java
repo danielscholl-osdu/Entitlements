@@ -18,7 +18,12 @@
 package org.opengroup.osdu.entitlements.v2.jdbc.interceptor;
 
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.oauth2.sdk.auth.Secret;
+import com.nimbusds.oauth2.sdk.id.ClientID;
+import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
+import com.nimbusds.openid.connect.sdk.validators.IDTokenValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +33,7 @@ import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.entitlements.v2.jdbc.Utils;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.IDTokenValidatorFactory;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsConfigurationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,6 +46,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.opengroup.osdu.entitlements.v2.jdbc.interceptor.AuthTestConfig.MATCHING_USER_EMAIL;
 import static org.opengroup.osdu.entitlements.v2.jdbc.interceptor.AuthTestConfig.NOT_MATCHING_USER_EMAIL;
@@ -59,6 +66,7 @@ public class InternalAuthTest {
   @Mock private HttpServletResponse response;
   @MockBean private JaxRsDpsLog jaxRsDpsLog;
   @MockBean private IRedisCache<String, UserInfo> cache;
+  @MockBean private IDTokenValidatorFactory tokenValidatorFactory;
   @Autowired private EntitlementsConfigurationProperties entitlementsConfigurationProperties;
   @Autowired public RequestHeaderInterceptor interceptor;
   @Autowired private ApplicationContext applicationContext;
@@ -71,6 +79,11 @@ public class InternalAuthTest {
     when(request.getRequestURI()).thenReturn("");
     when(request.getMethod()).thenReturn("GET");
     when(request.getHeader(DpsHeaders.ON_BEHALF_OF)).thenReturn(null);
+    when(tokenValidatorFactory.createTokenValidator(anyString())).thenReturn(new IDTokenValidator(
+            new Issuer("testIssuerId"),
+            new ClientID("testClientId"),
+            JWSAlgorithm.HS256,
+            new Secret("qwertyuiopasdfghjklzxcvbnm123456")));
     try {
       correctToken = Utils.generateJWT();
     } catch (JOSEException e) {
