@@ -33,7 +33,6 @@ public class IapConfigurationProperties {
     private String jwtHeader;
     private String userIdHeader;
     private String issuerUrl;
-    private String aud;
     private String jwkUrl;
     private String algorithm;
 

@@ -21,34 +21,42 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.openid.connect.sdk.validators.IDTokenValidator;
+import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsConfigurationProperties;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.IapConfigurationProperties;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.OpenIdProviderProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.Collections;
-import java.util.Map;
-import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
-import org.opengroup.osdu.core.common.model.http.AppException;
-import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.IapConfigurationProperties;
-import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsOpenIdProviderConfigurationProperties;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 
-@Configuration
-@RequiredArgsConstructor
-public class IDTokenValidatorConfig {
+@Component
+public class IDTokenValidatorFactory {
 
   private final EntOpenIDProviderConfig entOpenIDProviderConfig;
-  private final EntitlementsOpenIdProviderConfigurationProperties openIdConfigurationProperties;
+  private final OpenIdProviderProperties openIdConfigurationProperties;
+  private final EntitlementsConfigurationProperties entitlementsConfigurationProperties;
+  @Autowired(required = false)
+  private IapConfigurationProperties iapConfigurationProperties;
 
-  @Bean
-  @ConditionalOnExpression(value = "'${gcp-authentication-mode}' == 'INTERNAL' || '${gcp-authentication-mode}' == 'EXTERNAL'")
-  public Map<String, IDTokenValidator> getOpenIdValidatorsMap() {
-    return openIdConfigurationProperties.getClientIds().stream()
-        .collect(Collectors.toMap(clientId -> clientId, this::createIdTokenValidator));
+  @Autowired
+  public IDTokenValidatorFactory(EntOpenIDProviderConfig entOpenIDProviderConfig,
+                                 OpenIdProviderProperties openIdConfigurationProperties,
+                                 EntitlementsConfigurationProperties entitlementsConfigurationProperties) {
+    this.entOpenIDProviderConfig = entOpenIDProviderConfig;
+    this.openIdConfigurationProperties = openIdConfigurationProperties;
+    this.entitlementsConfigurationProperties = entitlementsConfigurationProperties;
+  }
+
+  public IDTokenValidator createTokenValidator(String clientId) {
+    if (entitlementsConfigurationProperties.getGcpAuthenticationMode().equals("IAP")) {
+      return createIapTokenValidator(clientId);
+    } else {
+      return createIdTokenValidator(clientId);
+    }
   }
 
   private IDTokenValidator createIdTokenValidator(String clientId) {
@@ -59,17 +67,12 @@ public class IDTokenValidatorConfig {
     return new IDTokenValidator(iss, clientID, jwsAlg, jwkSetURL);
   }
 
-  @Bean
-  @ConditionalOnProperty(value = "gcp-authentication-mode", havingValue = "IAP")
-  public Map<String, IDTokenValidator> getIapValidatorsMap(IapConfigurationProperties properties) {
-    Issuer iss = new Issuer(properties.getIssuerUrl());
-    URL jwkSetURL = getJwkSetURL(URI.create(properties.getJwkUrl()));
-    String clientId = properties.getAud();
-    JWSAlgorithm jwsAlgorithm = JWSAlgorithm.parse(properties.getAlgorithm());
+  private IDTokenValidator createIapTokenValidator(String clientId) {
+    Issuer iss = new Issuer(iapConfigurationProperties.getIssuerUrl());
+    URL jwkSetURL = getJwkSetURL(URI.create(iapConfigurationProperties.getJwkUrl()));
+    JWSAlgorithm jwsAlgorithm = JWSAlgorithm.parse(iapConfigurationProperties.getAlgorithm());
     ClientID clientID = new ClientID(clientId);
-    IDTokenValidator idTokenValidator =
-        new IDTokenValidator(iss, clientID, jwsAlgorithm, jwkSetURL);
-    return Collections.singletonMap(clientId, idTokenValidator);
+    return new IDTokenValidator(iss, clientID, jwsAlgorithm, jwkSetURL);
   }
 
   private URL getJwkSetURL(URI jwkSetURI) {

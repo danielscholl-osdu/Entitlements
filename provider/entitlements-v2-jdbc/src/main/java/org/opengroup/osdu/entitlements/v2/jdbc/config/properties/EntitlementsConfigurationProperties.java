@@ -26,6 +26,7 @@ import org.springframework.context.annotation.Configuration;
 @Data
 public class EntitlementsConfigurationProperties {
 
+    private String gcpAuthenticationMode;
     private String gcpXUserIdentityHeaderName;
     private String gcpXApplicationIdentityHeaderName;
 
