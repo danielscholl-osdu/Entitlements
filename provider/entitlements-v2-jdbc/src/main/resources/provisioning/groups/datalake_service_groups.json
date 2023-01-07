@@ -900,6 +900,24 @@
           "name": "users.datalake.admins"
         }
       ]
+    },
+    {
+      "name": "service.secret.admin",
+      "description": "Admin group for secret service",
+      "members": [
+      ]
+    },
+    {
+      "name": "service.secret.editor",
+      "description": "Editor group for secret service",
+      "members": [
+      ]
+    },
+    {
+      "name": "service.secret.viewer",
+      "description": "Viewer group for secret service",
+      "members": [
+      ]
     }
   ]
 }
