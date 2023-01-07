@@ -35,6 +35,9 @@
     },
     {
       "groupName": "service.schema-service.editors"
+    },
+    {
+      "groupName": "service.secret.viewer"
     }
   ]
 }
