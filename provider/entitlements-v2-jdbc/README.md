@@ -1,14 +1,12 @@
 # entitlements-v2-jdbc
 
 entitlements-v2-jdbc is a [Spring Boot](https://spring.io/projects/spring-boot) service which hosts CRUD APIs that enable management of user entitlements.
-Data kept in GCP instance of Postgres database.
-
+Data kept in Google Cloud instance of Postgres database.
 
 ### Database structure
 
 The database used in this implementation is PostgreSQL 13.0. The database structure and additional
 info can be found [here][JDBC documentation].
-
 
 ### Requirements
 
@@ -23,20 +21,25 @@ In order to run this service from a local machine to Cloud Run, you need the fol
 
 **Environment Variable Management**
 The following tools make environment variable configuration simpler
- - [direnv](https://direnv.net/) - for a shell/terminal environment
- - [EnvFile](https://plugins.jetbrains.com/plugin/7861-envfile) - for [Intellij IDEA](https://www.jetbrains.com/idea/)
+
+- [direnv](https://direnv.net/) - for a shell/terminal environment
+- [EnvFile](https://plugins.jetbrains.com/plugin/7861-envfile) - for [Intellij IDEA](https://www.jetbrains.com/idea/)
 
 **Lombok**
 This project uses [Lombok](https://projectlombok.org/) for code generation. You may need to configure your IDE to take advantage of this tool.
- - [Intellij configuration](https://projectlombok.org/setup/intellij)
- - [VSCode configuration](https://projectlombok.org/setup/vscode)
+
+- [Intellij configuration](https://projectlombok.org/setup/intellij)
+- [VSCode configuration](https://projectlombok.org/setup/vscode)
 
 ## Service Configuration
 
-### Anthos Service Configuration:
-[Anthos service configuration ](docs/anthos/README.md)
-### GCP Service Configuration:
-[Gcp service configuration ](docs/gcp/README.md)
+### Anthos Service Configuration
+
+[Anthos service configuration](docs/anthos/README.md)
+
+##***REMOVED*** Service Configuration
+
+[Google Cloud service configuration](docs/gc/README.md)
 
 ### Build and run the application
 
@@ -56,26 +59,26 @@ $ java -jar $(find provider/entitlements-v2-jdbc/target/ -name '*-spring-boot.ja
 $ ./mvnw spring-boot:run -pl provider/entitlements-v2-jdbc
 ```
 
-
 ### Test the application
-
 
 ### Integration Tests
 
 In order to run integration tests, you need to have the following environment variables defined:
 
-### Anthos Service Configuration:
-[Anthos service configuration ](docs/anthos/README.md)
-### GCP Service Configuration:
-[Gcp service configuration ](docs/gcp/README.md)
+### Anthos Service Configuration
 
+[Anthos service configuration](docs/anthos/README.md)
+
+##***REMOVED*** Service Configuration
+
+[Google Cloud service configuration](docs/gc/README.md)
 
 #### Using Cloud Infrastructure
 
 1. Run Entitlements V2 service from JDBC provider (assumed that all the required environment variables specified for using Cloud Infrastructure).
 
 2. Define environment variables for integration tests (e.g. maven options).
-   
+
 3. Run integration tests:
 
 ```bash
@@ -85,11 +88,13 @@ $ ./mvnw compile -f testing/entitlements-v2-test-core
 # build + run JDBC integration tests.
 $ ./mvnw test -f testing/entitlements-v2-test-jdbc
 ```
+
 ## Debugging
 
 Jet Brains - the authors of Intellij IDEA, have written an [excellent guide](https://www.jetbrains.com/help/idea/debugging-your-first-java-application.html) on how to debug java programs.
 
 ## License
+
 Copyright © EPAM Systems
 
 Licensed under the Apache License, Version 2.0 (the "License");

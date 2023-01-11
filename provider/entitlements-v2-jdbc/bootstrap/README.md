@@ -1,6 +1,6 @@
 # Bootstrap
 
-Below you can find required variables to bootstrap Entitlements Service on GCP and on-prem. They should be passed as environment variables.
+Below you can find required variables to bootstrap Entitlements Service on Google Cloud and on-prem. They should be passed as environment variables.
 
 ## Common environment variables
 
@@ -11,7 +11,8 @@ Below you can find required variables to bootstrap Entitlements Service on GCP a
   PROJECT_ID
   AIRFLOW_COMPOSER_EMAIL
 ```
-## GCP specific variables
+
+#***REMOVED*** specific variables
 
 ```bash
   PROJECT_ID

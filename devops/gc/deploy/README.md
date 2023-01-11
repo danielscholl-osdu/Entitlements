@@ -31,7 +31,7 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
 **logLevel** | logging level | string | `ERROR` | yes
-**springProfilesActive** | Spring profile that activate default configuration for GCP environment | string | `gcp` | yes
+**springProfilesActive** | Spring profile that activate default configuration for Google Cloud environment | string | `gcp` | yes
 **entitlementsHost** | Entitlements service host | string | `http://entitlements` | yes
 **dataPartitionId** | partition ID | string | - | yes
 **dataPartitionIdList** | list of partition IDs | array | - | yes

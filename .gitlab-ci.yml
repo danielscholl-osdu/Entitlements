@@ -18,9 +18,6 @@ variables:
   IBM_HELM_DEPLOY_PATH: devops/ibm/ibm-entitlement-deploy
   IBM_HELM_BOOTSTRAP_PATH: devops/ibm/ibm-entitlement-registration
 
-  # FIXME remove when all services are migrated to a single helm
-  OSDU_GCP_ENABLE_HELM_CONFIG: "false"
-
 include:
   - project: "osdu/platform/ci-cd-pipelines"
     file: "standard-setup.yml"
@@ -50,6 +47,6 @@ include:
     file: "cloud-providers/ibm.yml"
 
   - project: "osdu/platform/ci-cd-pipelines"
-    file: "cloud-providers/osdu-gcp-global.yml"
+    file: "cloud-providers/gc-global.yml"
 
-  - local: "devops/gcp/pipeline/override-stages.yml"
+  - local: "devops/gc/pipeline/override-stages.yml"
