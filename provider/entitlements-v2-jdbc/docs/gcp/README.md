@@ -88,7 +88,6 @@ Defined in default application property file but possible to override:
 | `TENANT_NAME`                    | ex `opendes`                                    | OSDU tenant used for testing                                                                       | no         | --     |
 | `INTEGRATION_TESTER`             | `********`                                      | System identity to assume for API calls. Note: This user must have entitlements already configured | yes        | --     |
 | `NO_DATA_ACCESS_TESTER`          | `********`                                      | Service account base64 encoded string without data access                                          | yes        | --     |
-| `INTEGRATION_TEST_AUDIENCE`      | `********`                                      | Client Id for `$INTEGRATION_TESTER`                                                                | yes        | --     |
 | `GOOGLE_APPLICATION_CREDENTIALS` | `********`                                      | System identity to provide access for cleaning up groups created during test                       | yes        | --     |
 | `AUTH_MODE`                      | `IAP`                                           | Should be configured only if IAP enabled                                                           | no         | --     |
 | `IAP_URL`                        | `https://dev.osdu.club`                         | Should be configured only if IAP enabled                                                           | no         | --     |

@@ -57,16 +57,11 @@ public class JdbcTokenService implements TokenService {
         if (Strings.isNullOrEmpty(token)) {
             String serviceAccountFile = System
                 .getProperty("INTEGRATION_TESTER", System.getenv("INTEGRATION_TESTER"));
-            String audience = System.getProperty("INTEGRATION_TEST_AUDIENCE",
-                System.getenv("INTEGRATION_TEST_AUDIENCE"));
-            if (Strings.isNullOrEmpty(audience)) {
-                audience = "245464679631-ktfdfpl147m1mjpbutl00b3cmffissgq.apps.googleusercontent.com";
-            }
             try {
                 GoogleServiceAccount testerAccount = new GoogleServiceAccount(serviceAccountFile);
 
                 testerToken = Token.builder()
-                    .value(testerAccount.getAuthToken(audience))
+                    .value(testerAccount.getAuthToken())
                     .userId(testerAccount.getEmail())
                     .build();
             } catch (IOException e) {
