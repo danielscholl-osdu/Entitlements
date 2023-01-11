@@ -1,0 +1,15 @@
+variables:
+  BUILD_BOOTSTRAP_PATH: "provider/entitlements-v2-jdbc/bootstrap/Dockerfile"
+  BUILD_PATH: "provider/entitlements-v2-jdbc/cloudbuild/Dockerfile.cloudbuild"
+  GC_ENABLE_BOOTSTRAP: "true"
+  GC_SERVICE: entitlements
+  GC_TEST_SUBDIR: "testing/$GC_SERVICE-v2-test-$GC_VENDOR"
+  GC_TEST_PROJECT: "$GC_SERVICE-v2-test-core,$GC_SERVICE-v2-test-$GC_VENDOR"
+  GC_VENDOR: jdbc
+  GC_HELM_TIMEOUT: "--timeout 10m"
+  # FIXME remove when all services are migrated to a single helm
+  GC_ENABLE_HELM_CONFIG: "false"
+
+gc-anthos-test:
+  variables:
+    GC_VENDOR: anthos
