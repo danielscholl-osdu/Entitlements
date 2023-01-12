@@ -17,6 +17,8 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.interceptor.userinfo.impl;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.proc.BadJOSEException;
 import com.nimbusds.jwt.JWT;
@@ -25,11 +27,10 @@ import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import com.nimbusds.openid.connect.sdk.validators.IDTokenValidator;
-import java.util.List;
-import java.util.Map;
 import lombok.Getter;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.IDTokenValidatorFactory;
 import org.opengroup.osdu.entitlements.v2.jdbc.interceptor.userinfo.IUserInfoProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.http.HttpStatus;
@@ -44,11 +45,12 @@ public class OpenIdUserInfoProvider implements IUserInfoProvider {
     public static final String NOT_VALID_TOKEN_PROVIDED_MESSAGE = "Not valid token provided";
 
     private final JaxRsDpsLog log;
-    private final Map<String, IDTokenValidator> openIdValidators;
+    private final Cache<String, IDTokenValidator> openIdValidators = CacheBuilder.newBuilder().build();
+    private final IDTokenValidatorFactory idTokenValidatorFactory;
 
-  public OpenIdUserInfoProvider(JaxRsDpsLog log, Map<String, IDTokenValidator> openIdValidators) {
+    public OpenIdUserInfoProvider(JaxRsDpsLog log, IDTokenValidatorFactory idTokenValidatorFactory) {
         this.log = log;
-        this.openIdValidators = openIdValidators;
+        this.idTokenValidatorFactory = idTokenValidatorFactory;
     }
 
     @Override
@@ -67,18 +69,12 @@ public class OpenIdUserInfoProvider implements IUserInfoProvider {
       throws java.text.ParseException, BadJOSEException, JOSEException, ParseException {
     String aptToken = token.replace("Bearer ", "");
     JWT jwt = JWTParser.parse(aptToken);
-    List<String> audiences = jwt.getJWTClaimsSet().getAudience();
-    String validatorName =
-        audiences.stream()
-            .filter(openIdValidators::containsKey)
-            .findFirst()
-            .orElseThrow(
-                () ->
-                    new AppException(
-                        HttpStatus.UNAUTHORIZED.value(),
-                        USER_INFO_ISSUE_REASON,
-                        NOT_VALID_TOKEN_PROVIDED_MESSAGE));
-    IDTokenValidator openIdValidator = openIdValidators.get(validatorName);
+    String audience = jwt.getJWTClaimsSet().getAudience().get(0);
+    IDTokenValidator openIdValidator = openIdValidators.getIfPresent(audience);
+    if (openIdValidator == null) {
+        openIdValidator = idTokenValidatorFactory.createTokenValidator(audience);
+        openIdValidators.put(audience, openIdValidator);
+    }
     IDTokenClaimsSet claims = openIdValidator.validate(jwt, null);
     return UserInfo.parse(claims.toJSONString());
   }

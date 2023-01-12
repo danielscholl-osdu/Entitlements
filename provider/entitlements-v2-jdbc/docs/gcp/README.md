@@ -14,7 +14,6 @@ Must have:
 | `SPRING_DATASOURCE_PASSWORD` | ex `********`                                      | The password of database user                                                                            | yes        | -                                                 |
 | `DOMAIN`                     | `group`                                            | The name of the domain groups are created for. The default (and recommended for `jdbc`) value is `group` | no         | -                                                 |
 | `PARTITION_API`              | ex `http://localhost:8080/api/partition/v1`        | Partition service endpoint                                                                               | no         | -                                                 |
-| `GOOGLE_AUDIENCES`           | ex `*****.apps.googleusercontent.com`              | Client ID for getting access to cloud resources and Partition service                                    | yes        | https://console.cloud.google.com/apis/credentials |
 
 Defined in default application property file but possible to override:
 
@@ -24,7 +23,6 @@ Defined in default application property file but possible to override:
 | `SERVER_SERVLET_CONTEXPATH`          | `/api/entitlements/v2`                                                                                                                                                                       | Register context path                                                                                                     | no         | -      |
 | `LOG_LEVEL`                          | `INFO`                                                                                                                                                                                       | Logging level                                                                                                             | no         | -      |
 | `server_port`                        | `8080`                                                                                                                                                                                       | Port of the server                                                                                                        | no         | -      |
-| `OPENID_PROVIDER_CLIENT_IDS`         | `workload-identity-storage, workload-identity-file, workload-identity-partition, etc.`                                                                                                       | List of client ids that can be authorized by Entitlements service                                                         | no         | -      |
 | `GCP_AUTHENTICATION_MODE`            | `INTERNAL` is used by default for GCP implementation, but there are other modes - `IAP`, `EXTERNAL` and `ISTIO`. More information about each mode you can find [here](#authentication-modes) | no                                                                                                                        | -          |
 | `PARTITION_AUTH_ENABLED`             | `true`                                                                                                                                                                                       | Disable or enable auth token provisioning for requests to Partition service                                               | no         | -      |
 | `SERVICE_TOKEN_PROVIDER`             | `GCP`                                                                                                                                                                                        | Service account token provider, `GCP` means use Google service account `OPEIND` means use OpenId provider like `Keycloak` | no         | -      |
@@ -47,7 +45,6 @@ Defined in default application property file but possible to override:
 | name                              | value                               | description                                                                  | sensitive? | source |
 |-----------------------------------|-------------------------------------|------------------------------------------------------------------------------|------------|--------|
 | `OPENID_PROVIDER_URL`             | ex `https://accounts.google.com`    | OpenID provider                                                              | no         | -      |
-| `OPENID_PROVIDER_CLIENT_ID`       | ex `123.apps.googleusercontent.com` | OpenID client id                                                             | no         | -      |
 | `OPENID_PROVIDER_ALGORITHM`       | ex `RS256`                          | OpenID token algorithm                                                       | no         | -      |
 | `GCP_X_USER_IDENTITY_HEADER_NAME` | ex `x-user-id`                      | The name of the header in which the "id of the authenticated user" is passed | no         | -      |
 
@@ -64,7 +61,6 @@ Defined in default application property file but possible to override:
 | `IAP_PROVIDER_JWK_URL`               | ex `https://www.gstatic.com/iap/verify/public_key-jwk`                                                  | IAP jwk url                                      | no         | -      |
 | `IAP_PROVIDER_ALGORITHM`             | ex `ES256`                                                                                              | IAP token algorithm                              | no         | -      |
 | `OPENID_PROVIDER_URL`                | ex `https://accounts.google.com`                                                                        | OpenID provider                                  | no         | -      |
-| `OPENID_PROVIDER_CLIENT_ID`          | ex `123.apps.googleusercontent.com`                                                                     | OpenID client id                                 | no         | -      |
 | `OPENID_PROVIDER_ALGORITHM`          | ex `RS256`                                                                                              | OpenID token algorithm                           | no         | -      |
 | `OPENID_PROVIDER_USER_ID_CLAIM_NAME` | ex `email`                                                                                              | OpenID user id claim name                        | no         | -      |
 
@@ -73,7 +69,6 @@ Defined in default application property file but possible to override:
 | name                                 | value                               | description                                                                  | sensitive? | source |
 |--------------------------------------|-------------------------------------|------------------------------------------------------------------------------|------------|--------|
 | `OPENID_PROVIDER_URL`                | ex `https://accounts.google.com`    | OpenID provider                                                              | no         | -      |
-| `OPENID_PROVIDER_CLIENT_ID`          | ex `123.apps.googleusercontent.com` | OpenID client id                                                             | no         | -      |
 | `OPENID_PROVIDER_ALGORITHM`          | ex `RS256`                          | OpenID token algorithm                                                       | no         | -      |
 | `GCP_X_USER_IDENTITY_HEADER_NAME`    | ex `x-user-id`                      | The name of the header in which the "id of the authenticated user" is passed | no         | -      |
 | `OPENID_PROVIDER_USER_ID_CLAIM_NAME` | ex `preferred_username`             | OpenID user id claim name                                                    | no         | -      |

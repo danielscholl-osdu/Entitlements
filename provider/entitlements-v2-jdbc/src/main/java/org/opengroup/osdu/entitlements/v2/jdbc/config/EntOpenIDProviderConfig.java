@@ -25,7 +25,7 @@ import com.nimbusds.openid.connect.sdk.op.OIDCProviderConfigurationRequest;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import java.io.IOException;
 import javax.annotation.PostConstruct;
-import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsOpenIdProviderConfigurationProperties;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.OpenIdProviderProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 public class EntOpenIDProviderConfig {
 
 	@Autowired
-	private EntitlementsOpenIdProviderConfigurationProperties properties;
+	private OpenIdProviderProperties properties;
 
 	private OIDCProviderMetadata providerMetadata;
 

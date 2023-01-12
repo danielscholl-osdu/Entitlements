@@ -17,6 +17,5 @@ data:
   {{- if .Values.conf.onPremEnabled }}
   PARTITION_AUTH_ENABLED: {{ .Values.data.partitionAuthEnabled | quote }}
   {{- else }}
-  GOOGLE_AUDIENCES: {{ .Values.data.googleAudiences | quote }}
-  OPENID_PROVIDER_CLIENT_IDS: {{ .Values.data.openidProviderClientIds | quote }}
+  OPENID_PROVIDER_CLIENT_IDS: {{ .Values.data.openidProviderClientIds | quote }} # TODO: remove
   {{- end }}

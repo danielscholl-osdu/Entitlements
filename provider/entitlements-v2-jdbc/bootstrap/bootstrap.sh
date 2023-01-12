@@ -60,7 +60,7 @@ EOF
 
 }
 
-bootstrap_entitlements_gcp() {
+bootstrap_entitlements_gc() {
 
   DATA_PARTITION_ID=$1
 
@@ -135,7 +135,7 @@ elif [[ "${ONPREM_ENABLED}" == "false" && "${DATA_PARTITION_ID_LIST}" == "" ]]; 
   source ./validate-env.sh "PROJECT_ID"
   source ./validate-env.sh "REGISTER_PUBSUB_IDENTITY"
   source ./validate-env.sh "PUB_SUB_EMAIL"
-  bootstrap_entitlements_gcp "${DATA_PARTITION_ID}"
+  bootstrap_entitlements_gc "${DATA_PARTITION_ID}"
 elif [[ "${ONPREM_ENABLED}" == "false" && "${DATA_PARTITION_ID_LIST}" != "" ]]; then
   source ./validate-env.sh "PROJECT_ID"
   source ./validate-env.sh "REGISTER_PUBSUB_IDENTITY"
@@ -148,7 +148,7 @@ elif [[ "${ONPREM_ENABLED}" == "false" && "${DATA_PARTITION_ID_LIST}" != "" ]]; 
   # Bootstrapping entitlements for each partition
   for PARTITION in "${PARTITIONS[@]}"; do
     echo "Bootstrapping entitlements for data_partition: ${PARTITION}"
-    bootstrap_entitlements_gcp "${PARTITION}"
+    bootstrap_entitlements_gc "${PARTITION}"
     echo "Finished entitlements bootstrap for data_partition: ${PARTITION}"
   done
 fi
