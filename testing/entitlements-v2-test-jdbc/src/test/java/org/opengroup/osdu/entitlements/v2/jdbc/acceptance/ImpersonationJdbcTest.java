@@ -213,13 +213,11 @@ public class ImpersonationJdbcTest {
         Token testerToken = null;
         String serviceAccountFile = System
                 .getProperty("NO_DATA_ACCESS_TESTER", System.getenv("NO_DATA_ACCESS_TESTER"));
-        String audience = System.getProperty("INTEGRATION_TEST_AUDIENCE",
-                System.getenv("INTEGRATION_TEST_AUDIENCE"));
         try {
             GoogleServiceAccount testerAccount = new GoogleServiceAccount(serviceAccountFile);
 
             testerToken = Token.builder()
-                    .value(testerAccount.getAuthToken(audience))
+                    .value(testerAccount.getAuthToken())
                     .userId(testerAccount.getEmail())
                     .build();
         } catch (IOException e) {
