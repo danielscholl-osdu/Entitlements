@@ -49,7 +49,7 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-**data.requestsCpu** | amount of requested CPU | string | `0.1` | yes
+**data.requestsCpu** | amount of requested CPU | string | `75m` | yes
 **data.requestsMemory** | amount of requested memory| string | `640M` | yes
 **data.limitsCpu** | CPU limit | string | `1` | yes
 **data.limitsMemory** | memory limit | string | `1G` | yes
@@ -78,12 +78,12 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 
 | Name | Description | Type | Default |Required |
 |------|-------------|------|---------|---------|
-**istio.proxyCPU** | CPU request for Envoy sidecars | string | 50m | yes
-**istio.proxyCPULimit** | CPU limit for Envoy sidecars | string | 500m | yes
-**istio.proxyMemory** | memory request for Envoy sidecars | string | 64Mi | yes
-**istio.proxyMemoryLimit** | memory limit for Envoy sidecars | string | 512Mi | yes
-**istio.bootstrapProxyCPU** | CPU request for Envoy sidecars | string | 10m | yes
-**istio.bootstrapProxyCPULimit** | CPU limit for Envoy sidecars | string | 100m | yes
+**istio.proxyCPU** | CPU request for Envoy sidecars | string | `25m` | yes
+**istio.proxyCPULimit** | CPU limit for Envoy sidecars | string | `200m` | yes
+**istio.proxyMemory** | memory request for Envoy sidecars | string | `64Mi` | yes
+**istio.proxyMemoryLimit** | memory limit for Envoy sidecars | string | `512Mi` | yes
+**istio.bootstrapProxyCPU** | CPU request for Envoy sidecars | string | `10m` | yes
+**istio.bootstrapProxyCPULimit** | CPU limit for Envoy sidecars | string | `100m` | yes
 
 ## Install the Helm chart
 
