@@ -353,6 +353,7 @@ The following software have components provided under the terms of this license:
 - requests (from http://python-requests.org, https://requests.readthedocs.io)
 - resilience4j (from https://github.com/resilience4j/resilience4j, https://resilience4j.readme.io, ttps://resilience4j.readme.io)
 - spring-boot-starter-undertow (from https://spring.io/projects/spring-boot)
+- spring-security-crypto (from http://spring.io/spring-security, https://spring.io/projects/spring-security, https://spring.io/spring-security)
 - spring-security-oauth2-client (from http://spring.io/spring-security, https://spring.io/projects/spring-security, https://spring.io/spring-security)
 - spring-security-oauth2-core (from http://spring.io/spring-security, https://spring.io/projects/spring-security, https://spring.io/spring-security)
 - spring-security-oauth2-jose (from http://spring.io/spring-security, https://spring.io/projects/spring-security, https://spring.io/spring-security)
@@ -375,6 +376,7 @@ The following software have components provided under the terms of this license:
 - swagger-models (from https://repo1.maven.org/maven2/io/swagger/core/v3/swagger-models, https://repo1.maven.org/maven2/io/swagger/swagger-models)
 - tomcat-annotations-api (from http://tomcat.apache.org/, https://tomcat.apache.org/)
 - tomcat-embed-core (from http://tomcat.apache.org/)
+- tomcat-embed-el (from http://tomcat.apache.org/, https://tomcat.apache.org/)
 - tomcat-embed-websocket (from http://tomcat.apache.org/, https://tomcat.apache.org/)
 - wildfly-common (from https://repo1.maven.org/maven2/org/wildfly/common/wildfly-common)
 
@@ -477,6 +479,7 @@ The following software have components provided under the terms of this license:
 - Caffeine cache (from https://github.com/ben-manes/caffeine)
 - Guava: Google Core Libraries for Java (from http://code.google.com/p/guava-libraries, https://github.com/google/guava, https://repo1.maven.org/maven2/com/google/guava/guava)
 - HdrHistogram (from http://hdrhistogram.github.io/HdrHistogram/)
+- Hibernate Validator (from https://repo1.maven.org/maven2/org/hibernate/hibernate-validator, https://repo1.maven.org/maven2/org/hibernate/validator/hibernate-validator)
 - LatencyUtils (from http://latencyutils.github.io/LatencyUtils/)
 - MongoDB Java Driver (from http://mongodb.org/, http://www.mongodb.org, https://www.mongodb.com/)
 - Netty/Common (from https://repo1.maven.org/maven2/io/netty/netty-common)
@@ -518,6 +521,12 @@ The following software have components provided under the terms of this license:
 
 - AspectJ Weaver (from http://www.aspectj.org, https://www.eclipse.org/aspectj/)
 - Expression Language 3.0 (from http://el-spec.java.net, http://uel.java.net, https://projects.eclipse.org/projects/ee4j.el)
+- JUnit Jupiter (Aggregator) (from https://junit.org/junit5/)
+- JUnit Jupiter API (from http://junit.org/junit5/, https://junit.org/junit5/)
+- JUnit Jupiter Engine (from http://junit.org/junit5/, https://junit.org/junit5/)
+- JUnit Jupiter Params (from http://junit.org/junit5/, https://junit.org/junit5/)
+- JUnit Platform Commons (from http://junit.org/junit5/, https://junit.org/junit5/)
+- JUnit Platform Engine API (from http://junit.org/junit5/, https://junit.org/junit5/)
 - Jakarta Activation API (from https://github.com/eclipse-ee4j/jaf, https://github.com/jakartaee/jaf-api, https://repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api)
 - Jakarta Annotations API (from https://projects.eclipse.org/projects/ee4j.ca)
 - Jakarta Bean Validation API (from https://beanvalidation.org)
@@ -617,6 +626,7 @@ The following software have components provided under the terms of this license:
 - Jodd Core (from http://jodd.org)
 - Spring Security - Core (from http://spring.io/spring-security, https://repo1.maven.org/maven2/org/springframework/security/spring-security-core, https://spring.io/projects/spring-security, https://spring.io/spring-security)
 - jBCrypt (from https://github.com/djmdjm/jBCrypt)
+- spring-security-crypto (from http://spring.io/spring-security, https://spring.io/projects/spring-security, https://spring.io/spring-security)
 
 ========================================================================
 ImageMagick
@@ -773,6 +783,7 @@ public-domain
 The following software have components provided under the terms of this license:
 
 - HdrHistogram (from http://hdrhistogram.github.io/HdrHistogram/)
+- JBoss Logging 3 (from http://www.jboss.org)
 - JSON in Java (from https://github.com/douglascrockford/JSON-java)
 - LatencyUtils (from http://latencyutils.github.io/LatencyUtils/)
 - PostgreSQL JDBC Driver

@@ -11,10 +11,10 @@ data:
   projectId: ""
   pubSubEmail: ""
   registerPubsubIdentity: ""
-  partitionAuthEnabled: false
-  # redis connection
-  redisEntHost: "redis-ent-master"
+  # redis connection. Change it if you want to use external redis
+  redisEntHost: ""
   redisEntPort: 6379
+  redisImage: "redis:7"
   # Don't change or use the parameter unless necessary
   entitlementsDomain: "group"
   # Deployments
@@ -36,6 +36,7 @@ conf:
   bootstrapOpenidSecretName: "datafier-secret"
   onPremEnabled: false
   istioEnabled: true
+  entitlementsRedisSecretName: "entitlements-redis-secret"
 auth:
   publicUrl: ""
   localUrl: "keycloak"

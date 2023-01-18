@@ -21,6 +21,7 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import java.text.ParseException;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import net.minidev.json.JSONObject;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
@@ -45,8 +46,8 @@ public class IstioUserInfoProvider implements IUserInfoProvider {
     try {
       String aptToken = token.replace("Bearer ", "");
       JWT jwt = JWTParser.parse(aptToken);
-      JSONObject claims = jwt.getJWTClaimsSet().toJSONObject();
-      return UserInfo.parse(claims.toJSONString());
+      Map<String, Object> jwtClaimsMap = jwt.getJWTClaimsSet().toJSONObject();
+      return UserInfo.parse(JSONObject.toJSONString(jwtClaimsMap));
     } catch (ParseException | com.nimbusds.oauth2.sdk.ParseException e) {
       log.error("id_token parsing failed. Original exception: {}.", e.getMessage());
       throw new AppException(HttpStatus.UNAUTHORIZED.value(),
