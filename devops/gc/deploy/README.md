@@ -30,48 +30,60 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-**logLevel** | logging level | string | `ERROR` | yes
-**springProfilesActive** | Spring profile that activate default configuration for Google Cloud environment | string | `gcp` | yes
-**entitlementsHost** | Entitlements service host | string | `http://entitlements` | yes
-**dataPartitionId** | partition ID | string | - | yes
-**dataPartitionIdList** | list of partition IDs | array | - | yes
-**adminUserEmail** | admin user email | string | - | yes
-**airflowComposerEmail** | airflow composer email  | string | - | yes
-**partitionApi** | Partition service endpoint | string | `http://partition/api/partition/v1/` | yes
-**projectId** | project ID | string | - | yes
-**pubSubEmail** | Pub/Sub email | string | - | yes
-**registerPubsubIdentity** | service account for communication Register-PubSub-Notification | string | - | yes
-**partitionAuthEnabled** | Disable or enable auth token provisioning for requests to Partition service | boolean | false | yes
-**entitlementsDomain** | The name of the domain groups are created for | string | `group` | yes
-**redisEntHost** | The host for redis instance | string | `redis-ent-master` | yes
-**redisEntPort** | The port for redis instance | digit | 6379 | yes
+**data.logLevel** | logging level | string | `ERROR` | yes
+**data.springProfilesActive** | Spring profile that activate default configuration for Google Cloud environment | string | `gcp` | yes
+**data.entitlementsHost** | Entitlements service host | string | `http://entitlements` | yes
+**data.dataPartitionId** | partition ID | string | - | yes
+**data.dataPartitionIdList** | list of partition IDs | array | - | yes
+**data.adminUserEmail** | admin user email | string | - | yes
+**data.airflowComposerEmail** | airflow composer email  | string | - | yes
+**data.partitionApi** | Partition service endpoint | string | `http://partition/api/partition/v1/` | yes
+**data.projectId** | project ID | string | - | yes
+**data.pubSubEmail** | Pub/Sub email | string | - | yes
+**data.registerPubsubIdentity** | service account for communication Register-PubSub-Notification | string | - | yes
+**data.entitlementsDomain** | The name of the domain groups are created for | string | `group` | yes
+**data.redisEntHost** | The host for redis instance. If empty, helm installs an internal redis instance | string | `redis-ent-master` | yes
+**data.redisEntPort** | The port for redis instance | digit | 6379 | yes
 
 ### Deployment variables
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-**requestsCpu** | amount of requested CPU | string | `0.1` | yes
-**requestsMemory** | amount of requested memory| string | `640M` | yes
-**limitsCpu** | CPU limit | string | `1` | yes
-**limitsMemory** | memory limit | string | `1G` | yes
-**serviceAccountName** | name of your service account | string | `entitlements` | yes
-**imagePullPolicy** | when to pull image | string | `IfNotPresent` | yes
-**image** | service image | string | - | yes
-**bootstrapImage** | bootstrap image | string | - | yes
-**bootstrapServiceAccountName** | bootstrap service account | string | - | yes
-**cloudSqlProxyVersion** | version of Cloud SQL Proxy | string | `1.32.0` | yes
-**sqlConnectionString** | string for SQL connection | string | - | yes
+**data.requestsCpu** | amount of requested CPU | string | `0.1` | yes
+**data.requestsMemory** | amount of requested memory| string | `640M` | yes
+**data.limitsCpu** | CPU limit | string | `1` | yes
+**data.limitsMemory** | memory limit | string | `1G` | yes
+**data.serviceAccountName** | name of your service account | string | `entitlements` | yes
+**data.imagePullPolicy** | when to pull image | string | `IfNotPresent` | yes
+**data.image** | service image | string | - | yes
+**data.redisImage** | service image | string | `redis:7` | yes
+**data.bootstrapImage** | bootstrap image | string | - | yes
+**data.bootstrapServiceAccountName** | bootstrap service account | string | - | yes
+**data.cloudSqlProxyVersion** | version of Cloud SQL Proxy | string | `1.32.0` | yes
+**data.sqlConnectionString** | string for SQL connection | string | - | yes
 
 ### Configuration variables
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-**appName** | Service name | string | `entitlements` | yes
-**configmap** | configmap to be used | string | `entitlements-config` | yes
-**onPremEnabled** | whether on-prem is enabled | boolean | false | yes
-**entitlementsPostgresSecretName** | entitlements Postgres secret | string | `entitlements-postgres-secret` | yes
-**bootstrapOpenidSecretName** | bootstrap OpenID secret | string | `datafier-secret` | yes
-**istioEnabled** | whether Istio is enabled | boolean | true | yes
+**conf.appName** | Service name | string | `entitlements` | yes
+**conf.configmap** | configmap to be used | string | `entitlements-config` | yes
+**conf.onPremEnabled** | whether on-prem is enabled | boolean | false | yes
+**conf.entitlementsPostgresSecretName** | entitlements Postgres secret | string | `entitlements-postgres-secret` | yes
+**conf.entitlementsRedisSecretName** | entitlements Redis secret | string | `entitlements-redis-secret` | yes
+**conf.bootstrapOpenidSecretName** | bootstrap OpenID secret | string | `datafier-secret` | yes
+**conf.istioEnabled** | whether Istio is enabled | boolean | true | yes
+
+### Istio variables
+
+| Name | Description | Type | Default |Required |
+|------|-------------|------|---------|---------|
+**istio.proxyCPU** | CPU request for Envoy sidecars | string | 50m | yes
+**istio.proxyCPULimit** | CPU limit for Envoy sidecars | string | 500m | yes
+**istio.proxyMemory** | memory request for Envoy sidecars | string | 64Mi | yes
+**istio.proxyMemoryLimit** | memory limit for Envoy sidecars | string | 512Mi | yes
+**istio.bootstrapProxyCPU** | CPU request for Envoy sidecars | string | 10m | yes
+**istio.bootstrapProxyCPULimit** | CPU limit for Envoy sidecars | string | 100m | yes
 
 ## Install the Helm chart
 
