@@ -1,16 +1,11 @@
 package org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tinkerpop.gremlin.driver.Client;
-import org.apache.tinkerpop.gremlin.driver.Cluster;
 import org.apache.tinkerpop.gremlin.driver.Result;
 import org.apache.tinkerpop.gremlin.driver.ResultSet;
 import org.apache.tinkerpop.gremlin.driver.exception.ResponseException;
 import org.apache.tinkerpop.gremlin.driver.message.ResponseStatusCode;
-import org.apache.tinkerpop.gremlin.driver.remote.DriverRemoteConnection;
-import org.apache.tinkerpop.gremlin.driver.ser.Serializers;
-import org.apache.tinkerpop.gremlin.process.traversal.AnonymousTraversalSource;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.process.traversal.translator.GroovyTranslator;
@@ -18,14 +13,13 @@ import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
-import org.opengroup.osdu.entitlements.v2.azure.AzureAppProperties;
 import org.opengroup.osdu.entitlements.v2.azure.model.NodeEdge;
 import org.opengroup.osdu.entitlements.v2.azure.model.NodeVertex;
 import org.opengroup.osdu.entitlements.v2.azure.service.VertexUtilService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,46 +27,29 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 @Component
-@RequiredArgsConstructor
 public class ClusterGremlinConnector implements GremlinConnector {
-    private static final int MAX_CONTENT_LENGTH = 65536;
-    private static final long KEEP_ALIVE_TIME = 30000;
-    private static final int MAX_IN_PROCESS = 16;
     private static final String NOT_FOUND_EXCEPTION_TYPE = "NotFoundException";
     private static final String TRAVERSAL_SUBMIT_ERROR_MESSAGE = "Error submitting traversal";
     private static final String RETRIEVING_RESULT_SET_ERROR_MESSAGE = "Error retrieving ResultSet object";
     private static final String COSMOS_DB_RATE_LIMIT_ERROR_MESSAGE = "Request rate to Cosmos DB is too large";
     private static final String RESOURCE_NOT_FOUND_ERROR_MESSAGE = "Resource Not Found";
-    private static final String HTTPS_SCHEME = "https://";
-    private static final String ENDPOINT_PORT = ":443/";
-    /**
-     * .NET SDK URI comes in form https://xxx.documents.azure.com:443/
-     */
-    private static final String NET_HOST_POSTFIX = "documents.azure.com";
-    /**
-     * Gremlin Endpoint comes in form wss://xxx.gremlin.cosmos.azure.com:443/
-     */
-    private static final String GREMLIN_HOST_POSTFIX = "gremlin.cosmos.azure.com";
     private static final String G = "g";
-    private final AzureAppProperties config;
-    private final VertexUtilService vertexUtilService;
-    private Client client;
-    private GraphTraversalSource graphTraversalSource;
-    private final JaxRsDpsLog log;
 
-    @PostConstruct
-    protected void init() {
-        /* TODO: Need to improve connection pool as it currently only creates connection & open connection pool
-            during init. This method does not support large concurrent calls. US #618673
-        */
-        Cluster cluster = buildCluster();
-        client = cluster.connect().alias(G);
-        graphTraversalSource = AnonymousTraversalSource.traversal().withRemote(DriverRemoteConnection.using(cluster));
-    }
+    @Autowired
+    private VertexUtilService vertexUtilService;
+
+    @Autowired
+    private Client client;
+
+    @Autowired
+    private GraphTraversalSource graphTraversalSource;
+
+    @Autowired
+    private JaxRsDpsLog log;
 
     @Override
     public GraphTraversalSource getGraphTraversalSource() {
-         return graphTraversalSource;
+        return this.graphTraversalSource;
     }
 
     @Override
@@ -123,36 +100,6 @@ public class ClusterGremlinConnector implements GremlinConnector {
     private List<Result> submitTraversalAsQueryString(Traversal<?, ?> traversal) {
         String query = GroovyTranslator.of(G).translate(traversal.asAdmin().getBytecode()).getScript();
         return getResultList(client.submit(query));
-    }
-
-    private Cluster buildCluster() {
-        try {
-            return Cluster.build(getHost(config.getGraphDbEndpoint()))
-                    .port(config.getGraphDbPort())
-                    .credentials(config.getGraphDbUsername(), config.getGraphDbPassword())
-                    .enableSsl(config.isGraphDbSslEnabled())
-                    .maxSimultaneousUsagePerConnection(MAX_IN_PROCESS)
-                    .maxInProcessPerConnection(MAX_IN_PROCESS)
-                    .maxContentLength(MAX_CONTENT_LENGTH)
-                    .serializer(Serializers.GRAPHSON_V2D0.toString())
-                    .keepAliveInterval(KEEP_ALIVE_TIME)
-                    .create();
-        } catch (IllegalArgumentException e) {
-            throw new AppException(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                    HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                    "Invalid configuration of Gremlin cluster", e);
-        }
-    }
-
-    /**
-     *  Extracts host from endpoint,
-     *  Note: keyvault has value: https://host:443/
-     */
-    private String getHost(String graphDbEndpoint) {
-        return graphDbEndpoint.replace(HTTPS_SCHEME, "")
-                .replace(ENDPOINT_PORT, "")
-                .replace(NET_HOST_POSTFIX, GREMLIN_HOST_POSTFIX);
     }
 
     private List<Result> getResultList(ResultSet resultSet) {
