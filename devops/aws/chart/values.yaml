@@ -113,8 +113,9 @@ allowedPrincipals:
   - cluster.local/ns/osdu-airflow/sa/airflow-dag-upload
   - cluster.local/ns/osdu-airflow/sa/airflow-webserver
   - cluster.local/ns/osdu-airflow/sa/airflow-worker
-  - cluster.local/ns/osdu-ingest/sa/os-data-workflow
   - cluster.local/ns/osdu-ingest/sa/os-ingestion-workflow
+  - cluster.local/ns/osdu-ingest/sa/os-secret
+  - cluster.local/ns/osdu-ingest/sa/os-eds-dms
   - cluster.local/ns/osdu-seismic-ddms/sa/os-seismic-store
   - cluster.local/ns/osdu-well-delivery/sa/os-welldelivery
   - cluster.local/ns/osdu-wellbore-ddms/sa/os-wellbore-ddms

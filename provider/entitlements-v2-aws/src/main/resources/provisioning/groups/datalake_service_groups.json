@@ -734,6 +734,33 @@
           "name": "users.datalake.viewers"
         }
       ]
+    },
+    {
+      "name": "service.secret.editor",
+      "description": "Editor group for Secret service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.secret.admin",
+      "description": "Admin group for Secret service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.secret.viewer",
+      "description": "Viewer group for Secret service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
     }
   ]
 }
