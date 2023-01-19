@@ -28,6 +28,17 @@ spec:
             name: {{ .Values.conf.configmap | quote }}
         - secretRef:
             name: {{ .Values.conf.entitlementsPostgresSecretName | quote }}
+        env:
+        - name: REDIS_USER_GROUPS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.conf.entitlementsRedisSecretName | quote }}
+              key: REDIS_PASSWORD
+        - name: REDIS_USER_INFO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.conf.entitlementsRedisSecretName | quote }}
+              key: REDIS_PASSWORD
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 0
