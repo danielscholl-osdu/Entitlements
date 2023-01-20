@@ -62,7 +62,6 @@ public class GlobalErrorController implements ErrorController {
                 statusCode, HttpStatus.resolve(statusCode).getReasonPhrase(), err);
     }
 
-    @Override
     public String getErrorPath() {
         return "/error";
     }
