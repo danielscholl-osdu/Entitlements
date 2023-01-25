@@ -13,6 +13,7 @@ import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
@@ -36,7 +37,7 @@ import static org.opengroup.osdu.entitlements.v2.aws.Util.UserDocGenerator.gener
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
 @EnableAutoConfiguration
-@SpringJUnitConfig(classes = {EntitlementsTestConfig.class})
+@SpringJUnitConfig(classes = {EntitlementsTestConfig.class, MockServletContext.class})
 public class UserHelperTest extends ParentUtil {
 
     @Autowired
