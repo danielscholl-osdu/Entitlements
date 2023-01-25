@@ -13,6 +13,7 @@ import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.intern
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -27,7 +28,7 @@ import static org.opengroup.osdu.entitlements.v2.aws.Util.NodeGenerator.generate
 
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = EntitlementsTestConfig.class)
+@ContextConfiguration(classes = {EntitlementsTestConfig.class, MockServletContext.class})
 public class DeleteGroupRepoMongoDBTest extends ParentUtil {
 
     @Autowired
