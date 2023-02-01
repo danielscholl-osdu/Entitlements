@@ -89,15 +89,15 @@ bootstrap_entitlements_gc() {
 },
 {
 "aliasId": "SERVICE_PRINCIPAL_INDEXER",
-"userId": "workload-indexer-gcp@${PROJECT_ID}.iam.gserviceaccount.com"
+"userId": "wi-indexer-gc@${PROJECT_ID}.iam.gserviceaccount.com"
 },
 {
 "aliasId": "SERVICE_PRINCIPAL_NOTIFICATION",
-"userId": "workload-notification-gcp@${PROJECT_ID}.iam.gserviceaccount.com"
+"userId": "wi-notification-gc@${PROJECT_ID}.iam.gserviceaccount.com"
 },
 {
 "aliasId": "SERVICE_PRINCIPAL_STORAGE",
-"userId": "workload-storage-gcp@${PROJECT_ID}.iam.gserviceaccount.com"
+"userId": "wi-storage-gc@${PROJECT_ID}.iam.gserviceaccount.com"
 }
 ]
 }
