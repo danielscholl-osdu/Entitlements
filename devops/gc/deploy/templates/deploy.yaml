@@ -12,6 +12,7 @@ spec:
     metadata:
       labels:
         app: {{ .Values.conf.appName | quote }}
+        sidecar.istio.io/inject: {{ .Values.istio.sidecarInject | quote }}
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
         sidecar.istio.io/proxyCPU: {{ .Values.istio.proxyCPU | quote }}

@@ -48,3 +48,4 @@ istio:
   proxyMemoryLimit: "512Mi"
   bootstrapProxyCPU: "10m"
   bootstrapProxyCPULimit: "100m"
+  sidecarInject: true
