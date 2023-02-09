@@ -48,8 +48,6 @@ environmentVariables:
     value: "false"
   - name: SERVICE_DOMAIN_NAME
     value: "{{ .Values.global.domainName }}"
-podAnnotations: 
-  seccomp.security.alpha.kubernetes.io/pod: "runtime/default"
 
 # Resource Config
 maxConnections: 200
@@ -91,8 +89,12 @@ securityContext:
   capabilities:
     drop:
     - ALL
+podSecurityContext: 
+  fsGroup: 1337
+  seccompProfile:
+    type: RuntimeDefault
 allowedPrincipals:
-  - cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account
+  - cluster.local/ns/istio-system/sa/istio-ingressgateway
   - cluster.local/ns/{{ .Release.Namespace }}/sa/os-crs-catalog
   - cluster.local/ns/{{ .Release.Namespace }}/sa/os-crs-conversion
   - cluster.local/ns/{{ .Release.Namespace }}/sa/os-dataset
