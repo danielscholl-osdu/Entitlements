@@ -1,6 +1,6 @@
 /*
- *  Copyright 2020-2022 Google LLC
- *  Copyright 2020-2022 EPAM Systems, Inc
+ *  Copyright 2020-2023 Google LLC
+ *  Copyright 2020-2023 EPAM Systems, Inc
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -129,6 +129,8 @@ public class ImpersonationJdbcTest {
         String getGroupsResponseBody = response.getEntity(String.class);
         ListGroupResponse listGroupResponse = gson.fromJson(getGroupsResponseBody, ListGroupResponse.class);
         Optional<String> delegationGroup = listGroupResponse.getGroups().stream().map(GroupItem::getName).filter(groupName::equalsIgnoreCase).findFirst();
+        Assert.assertEquals(memberEmail, listGroupResponse.getMemberEmail());
+        Assert.assertEquals(memberEmail, listGroupResponse.getDesId());
         Assert.assertTrue(delegationGroup.isPresent());
         Assert.assertEquals(groupName, delegationGroup.get());
 
