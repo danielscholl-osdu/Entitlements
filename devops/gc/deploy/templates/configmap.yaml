@@ -8,7 +8,7 @@ metadata:
 data:
   DOMAIN: {{ .Values.data.entitlementsDomain | quote }}
   LOG_LEVEL: {{ .Values.data.logLevel | quote }}
-  PARTITION_API: {{ .Values.data.partitionApi | quote }}
+  PARTITION_HOST: {{ .Values.data.partitionHost | quote }}
   SPRING_PROFILES_ACTIVE: {{ .Values.data.springProfilesActive | quote }}
   {{- if .Values.data.redisEntHost }}
   REDIS_USER_INFO_HOST: {{ .Values.data.redisEntHost | quote }}

@@ -13,7 +13,7 @@ Must have:
 | `SPRING_DATASOURCE_USERNAME` | ex `postgres`                                      | The username of database user                                                                            | yes        | -                                 |
 | `SPRING_DATASOURCE_PASSWORD` | ex `********`                                      | The password of database user                                                                            | yes        | -                                 |
 | `DOMAIN`                     | `group`                                            | The name of the domain groups are created for. The default (and recommended for `jdbc`) value is `group` | no         | -                                 |
-| `PARTITION_API`              | ex `http://localhost:8080/api/partition/v1`        | Partition service endpoint                                                                               | no         | -                                 |
+| `PARTITION_HOST`             | ex `http://partition`                              | Partition service host address                                                                         | no         | -                                 |
 
 Defined in default application property file but possible to override:
 

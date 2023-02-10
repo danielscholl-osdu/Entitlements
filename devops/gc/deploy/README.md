@@ -37,7 +37,7 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 **data.dataPartitionIdList** | list of partition IDs | array | - | yes
 **data.adminUserEmail** | admin user email | string | - | yes
 **data.airflowComposerEmail** | airflow composer email  | string | - | yes
-**data.partitionApi** | Partition service endpoint | string | `http://partition/api/partition/v1/` | yes
+**data.partitionHost** | Partition service host | string | `http://partition` | yes
 **data.projectId** | project ID | string | - | yes
 **data.pubSubEmail** | Pub/Sub email | string | - | yes
 **data.registerPubsubIdentity** | service account for communication Register-PubSub-Notification | string | - | yes

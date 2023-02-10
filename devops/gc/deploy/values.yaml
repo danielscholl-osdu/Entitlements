@@ -6,7 +6,7 @@ data:
   adminUserEmail: ""
   airflowComposerEmail: ""
   logLevel: "ERROR"
-  partitionApi: "http://partition/api/partition/v1/"
+  partitionHost: "http://partition"
   springProfilesActive: "gcp"
   projectId: ""
   pubSubEmail: ""
