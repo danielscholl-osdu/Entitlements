@@ -7,8 +7,6 @@ variables:
   GC_TEST_PROJECT: "$GC_SERVICE-v2-test-core,$GC_SERVICE-v2-test-$GC_VENDOR"
   GC_VENDOR: jdbc
   GC_HELM_TIMEOUT: "--timeout 10m"
-  # FIXME remove when all services are migrated to a single helm
-  GC_ENABLE_HELM_CONFIG: "false"
 
 gc-anthos-test:
   variables:
