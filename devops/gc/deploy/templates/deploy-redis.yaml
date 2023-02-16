@@ -14,7 +14,8 @@ spec:
       labels:
         app: {{ printf "redis-%s" .Values.conf.appName | quote }}
       annotations:
-        sidecar.istio.io/proxyCPU: 30m
+        sidecar.istio.io/proxyCPU: 20m
+        sidecar.istio.io/proxyMemory: 100Mi
     spec:
       containers:
       - args:
@@ -31,5 +32,6 @@ spec:
           protocol: TCP
         resources:
           requests:
-            memory: 100Mi
+            cpu: 10m
+            memory: 50Mi
 {{ end }}
