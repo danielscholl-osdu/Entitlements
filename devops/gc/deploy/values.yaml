@@ -20,8 +20,8 @@ data:
   # Deployments
   bootstrapImage: ""
   bootstrapServiceAccountName: ""
-  requestsCpu: "75m"
-  requestsMemory: "640M"
+  requestsCpu: "110m"
+  requestsMemory: "650Mi"
   limitsCpu: "1"
   limitsMemory: "1G"
   serviceAccountName: "entitlements"
@@ -42,9 +42,9 @@ auth:
   localUrl: "keycloak"
   realm: "osdu"
 istio:
-  proxyCPU: "25m"
+  proxyCPU: "60m"
   proxyCPULimit: "200m"
-  proxyMemory: "64Mi"
+  proxyMemory: "150Mi"
   proxyMemoryLimit: "512Mi"
   bootstrapProxyCPU: "10m"
   bootstrapProxyCPULimit: "100m"
