@@ -74,6 +74,14 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 **conf.bootstrapOpenidSecretName** | bootstrap OpenID secret | string | `datafier-secret` | yes
 **conf.istioEnabled** | whether Istio is enabled | boolean | true | yes
 
+### Auth variables
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|----------|
+**auth.publicUrl** | top level domain name, which tells us where to go | string | - | yes
+**auth.localUrl** | authentication local URL | string | `keycloak` | yes
+**auth.realm** | Keycloak realm | string | `osdu` | yes
+
 ### Istio variables
 
 | Name | Description | Type | Default |Required |
