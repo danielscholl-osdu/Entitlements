@@ -13,7 +13,6 @@ data:
   AIRFLOW_COMPOSER_EMAIL: {{ .Values.data.airflowComposerEmail | quote }}
   {{- if not .Values.conf.onPremEnabled }}
   PROJECT_ID: {{ .Values.data.projectId | quote }}
-  PUB_SUB_EMAIL: {{ .Values.data.pubSubEmail | quote }}
   REGISTER_PUBSUB_IDENTITY: {{ .Values.data.registerPubsubIdentity | quote }}
   {{- end }}
   ONPREM_ENABLED: {{ .Values.conf.onPremEnabled | quote }}
