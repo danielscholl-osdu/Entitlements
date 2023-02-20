@@ -80,10 +80,6 @@ bootstrap_entitlements_gc() {
 "userId": "$AIRFLOW_COMPOSER_EMAIL"
 },
 {
-"aliasId": "SERVICE_PRINCIPAL_PUBSUB",
-"userId": "$PUB_SUB_EMAIL"
-},
-{
 "aliasId": "SERVICE_PRINCIPAL_REGISTER",
 "userId": "$REGISTER_PUBSUB_IDENTITY"
 },
@@ -134,12 +130,10 @@ if [[ "${ONPREM_ENABLED}" == "true" && "${DATA_PARTITION_ID_LIST}" == "" ]]; the
 elif [[ "${ONPREM_ENABLED}" == "false" && "${DATA_PARTITION_ID_LIST}" == "" ]]; then
   source ./validate-env.sh "PROJECT_ID"
   source ./validate-env.sh "REGISTER_PUBSUB_IDENTITY"
-  source ./validate-env.sh "PUB_SUB_EMAIL"
   bootstrap_entitlements_gc "${DATA_PARTITION_ID}"
 elif [[ "${ONPREM_ENABLED}" == "false" && "${DATA_PARTITION_ID_LIST}" != "" ]]; then
   source ./validate-env.sh "PROJECT_ID"
   source ./validate-env.sh "REGISTER_PUBSUB_IDENTITY"
-  source ./validate-env.sh "PUB_SUB_EMAIL"
 
   # Creating list of partitions 
   IFS=',' read -ra PARTITIONS <<<"${DATA_PARTITION_ID_LIST}"

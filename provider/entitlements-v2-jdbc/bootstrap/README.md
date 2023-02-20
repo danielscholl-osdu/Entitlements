@@ -17,7 +17,6 @@ Below you can find required variables to bootstrap Entitlements Service on Googl
 ```bash
   PROJECT_ID
   REGISTER_PUBSUB_IDENTITY
-  PUB_SUB_EMAIL
 ```
 
 ## On-prem specific variables

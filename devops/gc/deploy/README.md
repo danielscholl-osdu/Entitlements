@@ -39,7 +39,6 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 **data.airflowComposerEmail** | airflow composer email  | string | - | yes
 **data.partitionHost** | Partition service host | string | `http://partition` | yes
 **data.projectId** | project ID | string | - | yes
-**data.pubSubEmail** | Pub/Sub email | string | - | yes
 **data.registerPubsubIdentity** | service account for communication Register-PubSub-Notification | string | - | yes
 **data.entitlementsDomain** | The name of the domain groups are created for | string | `group` | yes
 **data.redisEntHost** | The host for redis instance. If empty, helm installs an internal redis instance | string | `redis-ent-master` | yes

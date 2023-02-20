@@ -9,7 +9,6 @@ data:
   partitionHost: "http://partition"
   springProfilesActive: "gcp"
   projectId: ""
-  pubSubEmail: ""
   registerPubsubIdentity: ""
   # redis connection. Change it if you want to use external redis
   redisEntHost: ""
