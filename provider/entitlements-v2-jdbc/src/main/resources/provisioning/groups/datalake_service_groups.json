@@ -918,6 +918,24 @@
       "description": "Viewer group for secret service",
       "members": [
       ]
+    },
+    {
+      "name": "service.edsdms.user",
+      "description": "EDS-DMS service editors",
+      "members": [
+        {
+          "name": "users.datalake.viewers"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
     }
   ]
 }
