@@ -1,6 +1,6 @@
 /*
- *  Copyright 2020-2022 Google LLC
- *  Copyright 2020-2022 EPAM Systems, Inc
+ *  Copyright 2020-2023 Google LLC
+ *  Copyright 2020-2023 EPAM Systems, Inc
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ package org.opengroup.osdu.entitlements.v2.jdbc.cache;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import org.opengroup.osdu.core.common.cache.ICache;
 import org.opengroup.osdu.core.common.cache.IRedisCache;
+import org.opengroup.osdu.core.common.cache.VmCache;
+import org.opengroup.osdu.core.common.partition.PartitionInfo;
 import org.opengroup.osdu.core.gcp.cache.RedisCacheBuilder;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsConfigurationProperties;
 import org.opengroup.osdu.entitlements.v2.model.ParentReferences;
@@ -55,5 +57,10 @@ public class CacheConfig {
             String.class,
             ParentReferences.class
         );
+    }
+
+    @Bean
+    public ICache<String, PartitionInfo> partitionInfoCache(EntitlementsConfigurationProperties properties){
+        return new VmCache<>(properties.getPartitionInfoVmCacheExpTime(), properties.getPartitionInfoVmCacheSize());
     }
 }
