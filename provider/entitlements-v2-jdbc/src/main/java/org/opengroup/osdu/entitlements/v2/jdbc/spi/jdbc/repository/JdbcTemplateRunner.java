@@ -90,8 +90,11 @@ public class JdbcTemplateRunner {
     private String getAllGroupsInPartitionRequest(GroupType groupType) {
         String groupNameFilter = !Objects.equals(groupType, GroupType.NONE) ? "AND name LIKE :name_prefix " : "";
         return "SELECT "
-            + "(SELECT COUNT(*) FROM \"group\" "
-            + "WHERE partition_id = :partition) "
+            + "("
+						+ "SELECT COUNT(*) FROM \"group\" "
+            + "WHERE partition_id = :partition "
+						+ groupNameFilter
+						+ ") "
             + "as totalCount, "
             + "(SELECT json_agg(t.*) FROM "
             + "(SELECT * FROM \"group\" "
