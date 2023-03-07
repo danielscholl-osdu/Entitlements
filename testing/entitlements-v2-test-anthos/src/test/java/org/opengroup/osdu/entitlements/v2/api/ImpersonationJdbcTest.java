@@ -162,7 +162,7 @@ public class ImpersonationJdbcTest {
 
         ClientResponse response = sendWithOnBehalfOfHeader("GET", memberEmail, token);
 
-        Assert.assertEquals(400, response.getStatus());
+        Assert.assertEquals(403, response.getStatus());
     }
 
     @Test
@@ -171,7 +171,7 @@ public class ImpersonationJdbcTest {
 
         ClientResponse response = sendWithOnBehalfOfHeader("GET", "no.matter@user.id", noDataAccessToken);
 
-        Assert.assertEquals(400, response.getStatus());
+        Assert.assertEquals(403, response.getStatus());
     }
 
     @Test

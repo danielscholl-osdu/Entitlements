@@ -33,6 +33,56 @@ This project uses [Lombok](https://projectlombok.org/) for code generation. You 
 
 ## Service Configuration
 
+## Authorisation flow for impersonated users
+### What problem we tried to solve
+
+```
+Currently Ingestion Jobs in OSDU like CSV Parser, Manifest Ingestion etc. 
+uses Service Account Token while calling any OSDU Service APIs like Storage/Dataset, 
+which means any Authorization checks happening for API Access or Data Level Access 
+(ACL checks in Storage service) is based on permission level of Service Account 
+rather than based on the User who initiated the Ingestion in the first place.
+
+Therefore, the Users indirectly gets highest level of permissions in OSDU 
+which can be used to modify data of other users in the system 
+(a scenario from CSV Parser will be discussed later to understand the issue better). 
+This problem is not just specific to Ingestion but can be true for any service 
+which performs long running jobs and is relying on Service Account Token. 
+For rest of this ADR we will discuss Ingestion Scenario and related flows 
+to highlight the problem and solution, but as said it can be applicable to OSDU in general.
+```
+Example:
+
+![Screenshot](./pics/security_problem.PNG)
+
+### And suggested solution was:
+```
+- (service side changes) A new header x-on-behalf-of will be introduced 
+which will store the user identity (context)
+- (change in SPI Layer (Service Mesh)) If the request contains 
+Internal Service Account Token and x-on-behalf-of header is not empty or null, 
+then the x-user-id header will be set to x-on-behalf-of header:
+Else set the x-user-id header by existing logic
+```
+### Current implementation:
+
+User impersonation the responsibility of the Entitlements service.
+Added header '**on-behalf-of**'.
+
+And users of Entitlements service should have groups listed below:
+* **users.datalake.delegation** || Users who can impersonate
+* **users.datalake.impersonation** || Users who can be impersonated
+
+Using these groups Entitlements service can check if
+impersonation allowed for current **requesterId**.
+And if not it throws **403 Forbidden** Exception.
+
+```
+Impersonation won't be allowed if 
+- impersonation group not found
+- delegation group not found
+```
+
 ### Anthos Service Configuration
 
 [Anthos service configuration](docs/anthos/README.md)
