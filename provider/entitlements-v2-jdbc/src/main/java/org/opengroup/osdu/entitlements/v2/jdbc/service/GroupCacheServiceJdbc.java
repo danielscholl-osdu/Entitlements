@@ -162,17 +162,17 @@ public class GroupCacheServiceJdbc implements GroupCacheService {
                 .filter(item -> item.getName().equals(CAN_BE_IMPERSONATED))
                 .findFirst();
             if (!group.isPresent()) {
-                log.warning("Impersonation group not found");
-                throw new AppException(HttpStatus.BAD_REQUEST.value(),
-                    HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                log.error("Impersonation group not found");
+                throw new AppException(HttpStatus.FORBIDDEN.value(),
+                    HttpStatus.FORBIDDEN.getReasonPhrase(),
                     "Impersonation not allowed for " + beneficialId);
             } else {
                 return beneficialGroups;
             }
         } else {
-            log.warning("Delegation group not found");
-            throw new AppException(HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+            log.error("Delegation group not found");
+            throw new AppException(HttpStatus.FORBIDDEN.value(),
+                HttpStatus.FORBIDDEN.getReasonPhrase(),
                 "Impersonation not allowed for " + requesterId);
         }
     }
