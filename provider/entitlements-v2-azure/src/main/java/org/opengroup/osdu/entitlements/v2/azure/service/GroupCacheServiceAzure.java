@@ -3,7 +3,6 @@ package org.opengroup.osdu.entitlements.v2.azure.service;
 import io.github.resilience4j.retry.Retry;
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.azure.cache.RedisAzureCache;
-import org.opengroup.osdu.core.common.cache.RedisCache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.azure.service.metrics.hitsnmisses.HitsNMissesMetricService;
@@ -13,7 +12,6 @@ import org.opengroup.osdu.entitlements.v2.model.ParentReferences;
 import org.opengroup.osdu.entitlements.v2.service.GroupCacheService;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -28,15 +26,24 @@ public class GroupCacheServiceAzure implements GroupCacheService {
     private final JaxRsDpsLog log;
     private final RetrieveGroupRepo retrieveGroupRepo;
     private final RedisAzureCache<String, ParentReferences> redisGroupCache;
-    private final PartitionCacheTtlService partitionCacheTtlService;
     private final HitsNMissesMetricService metricService;
     private final Retry retry;
     private static final String REDIS_KEY_FORMAT = "%s-%s";
 
     @Value("${redisson.lock.acquisition.timeout}")
     private int redissonLockAcquisitionTimeOut;
+
     @Value("${redisson.lock.expiration}")
     private int redissonLockExpiration;
+
+    @Value("${app.redis.ttl.seconds}")
+    private int cacheTtl;
+
+    @Value("${cache.flush.ttl.base}")
+    private long cacheFlushTtlBase;
+
+    @Value("${cache.flush.ttl.jitter}")
+    private long cacheFlushTtlJitter;
 
     @Override
     public Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId) {
@@ -58,27 +65,32 @@ public class GroupCacheServiceAzure implements GroupCacheService {
     }
 
     /**
-     Flush the list group cache for user by setting the ttl for that user's cache entry to a small random value between a lower and upper bound range.
+     * Flush the list group cache for user by setting the ttl for that user's cache
+     * entry to a small random value between a lower and upper bound range.
      */
     @Override
     public void flushListGroupCacheForUser(String userId, String partitionId) {
         String key = String.format(REDIS_KEY_FORMAT, userId, partitionId);
-        long baseTtl = partitionCacheTtlService.getCacheFlushTtlBaseOfPartition(partitionId);
-        long jitter = partitionCacheTtlService.getCacheFlushTtlJitterOfPartition(partitionId);
-        if (redisGroupCache.getTtl(key) > baseTtl + jitter) {
+        if (redisGroupCache.getTtl(key) > cacheFlushTtlBase + cacheFlushTtlJitter) {
             SecureRandom random = new SecureRandom();
-            long ttlOfKey = baseTtl + (long)(random.nextDouble() * jitter);
+            long ttlOfKey = cacheFlushTtlBase + (long) (random.nextDouble() * cacheFlushTtlJitter);
             redisGroupCache.updateTtl(key, ttlOfKey);
         }
     }
 
     /**
-     The unblock function may throw exception when cache update takes longer than the lock expiration time,
-     so when the time it tries to unlock the lock has already expired or re-acquired by another thread. In this case, since the lock is already released, we just
-     log the error message without doing anything further. The log is for the tracking purpose to understand the possibility so we can adjust parameters accordingly.
-     Refer to: https://github.com/redisson/redisson/issues/581
+     * The unblock function may throw exception when cache update takes longer than
+     * the lock expiration time,
+     * so when the time it tries to unlock the lock has already expired or
+     * re-acquired by another thread. In this case, since the lock is already
+     * released, we just
+     * log the error message without doing anything further. The log is for the
+     * tracking purpose to understand the possibility so we can adjust parameters
+     * accordingly.
+     * Refer to: https://github.com/redisson/redisson/issues/581
      */
-    private Set<ParentReference> lockCacheEntryAndRebuild(RLock cacheEntryLock, String key, String requesterId, String partitionId) {
+    private Set<ParentReference> lockCacheEntryAndRebuild(RLock cacheEntryLock, String key, String requesterId,
+            String partitionId) {
         boolean locked = false;
         if (cacheEntryLock == null) {
             log.info("Redis secrets are not available yet");
@@ -86,15 +98,17 @@ public class GroupCacheServiceAzure implements GroupCacheService {
             return parentReferences.getParentReferencesOfUser();
         } else {
             try {
-                locked = cacheEntryLock.tryLock(redissonLockAcquisitionTimeOut, redissonLockExpiration, TimeUnit.MILLISECONDS);
+                locked = cacheEntryLock.tryLock(redissonLockAcquisitionTimeOut, redissonLockExpiration,
+                        TimeUnit.MILLISECONDS);
                 if (locked) {
                     metricService.sendMissesMetric();
                     ParentReferences parentReferences = rebuildCache(requesterId, partitionId);
-                    long ttlOfKey = partitionCacheTtlService.getCacheTtlOfPartition(partitionId);
+                    long ttlOfKey = 1000L * cacheTtl;
                     redisGroupCache.put(key, ttlOfKey, parentReferences);
                     return parentReferences.getParentReferencesOfUser();
                 } else {
-                    ParentReferences parentReferences = Retry.decorateSupplier(retry, () -> redisGroupCache.get(key)).get();
+                    ParentReferences parentReferences = Retry.decorateSupplier(retry, () -> redisGroupCache.get(key))
+                            .get();
                     if (parentReferences == null) {
                         metricService.sendMissesMetric();
                     } else {
