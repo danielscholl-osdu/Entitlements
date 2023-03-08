@@ -12,7 +12,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.opengroup.osdu.azure.cache.RedisAzureCache;
-import org.opengroup.osdu.core.common.cache.RedisCache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.model.tenant.TenantInfo;
@@ -23,7 +22,6 @@ import org.opengroup.osdu.entitlements.v2.api.DeleteMemberApi;
 import org.opengroup.osdu.entitlements.v2.auth.AuthorizationService;
 import org.opengroup.osdu.entitlements.v2.azure.AzureAppProperties;
 import org.opengroup.osdu.entitlements.v2.azure.config.CacheConfig;
-import org.opengroup.osdu.entitlements.v2.azure.service.PartitionCacheTtlService;
 import org.opengroup.osdu.entitlements.v2.azure.service.metrics.hitsnmisses.HitsNMissesMetricService;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.GroupType;
@@ -37,7 +35,6 @@ import org.opengroup.osdu.entitlements.v2.model.listmember.ListMemberResponseDto
 import org.opengroup.osdu.entitlements.v2.model.listmember.MemberDto;
 import org.opengroup.osdu.entitlements.v2.model.updategroup.UpdateGroupOperation;
 import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -104,8 +101,6 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     private Retry retry;
     @MockBean
     private HitsNMissesMetricService metricService;
-    @MockBean
-    private PartitionCacheTtlService partitionCacheTtlService;
 
     @Before
     public void before() throws InterruptedException {
@@ -122,7 +117,6 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         when(authService.isAuthorized(any(), any())).thenReturn(true);
         when(redisGroupCache.getLock(any())).thenReturn(cacheLock);
         when(cacheLock.tryLock(anyLong(), anyLong(), any())).thenReturn(true);
-        when(partitionCacheTtlService.getCacheTtlOfPartition("common")).thenReturn(0L);
     }
 
     @Test

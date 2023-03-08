@@ -1,6 +1,5 @@
 package org.opengroup.osdu.entitlements.v2.azure.service;
 
-import io.github.resilience4j.retry.Retry;
 import org.awaitility.Duration;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -11,9 +10,7 @@ import org.mockito.AdditionalAnswers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
-import org.opengroup.osdu.azure.cache.IRedisClientFactory;
 import org.opengroup.osdu.azure.cache.RedisAzureCache;
-import org.opengroup.osdu.core.common.cache.RedisCache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.azure.config.CacheConfig;
@@ -100,15 +97,11 @@ public class GroupCacheServiceAzureTest {
     private JaxRsDpsLog log;
     @MockBean
     private CacheConfig cacheConfig;
-    @MockBean
-    private PartitionCacheTtlService partitionCacheTtlService;
     @Mock
     private ParentTreeDto parentTreeDto;
 
     @Autowired
     private RedissonClient redissonClient;
-    @Autowired
-    private Retry retry;
     @Autowired
     private GroupCacheServiceAzure sut;
 
@@ -145,9 +138,6 @@ public class GroupCacheServiceAzureTest {
 
         requester1 = EntityNode.createMemberNodeForNewUser("requesterId1", "dp");
         requester2 = EntityNode.createMemberNodeForNewUser("requesterId2", "dp");
-        when(partitionCacheTtlService.getCacheTtlOfPartition("dp")).thenReturn(2000L);
-        when(partitionCacheTtlService.getCacheFlushTtlBaseOfPartition("dp")).thenReturn(500L);
-        when(partitionCacheTtlService.getCacheFlushTtlJitterOfPartition("dp")).thenReturn(1000L);
         when(redisGroupCache.getLock(any())).thenReturn(redissonClient.getLock("cache-key"));
     }
 
@@ -160,7 +150,7 @@ public class GroupCacheServiceAzureTest {
         Set<ParentReference> result = this.sut.getFromPartitionCache("requesterId1", "dp");
         assertEquals(this.parents, result);
         verify(this.retrieveGroupRepo).loadAllParents(this.requester1);
-        verify(this.redisGroupCache).put("requesterId1-dp", 2000L, this.parentReferences);
+        verify(this.redisGroupCache).put("requesterId1-dp", 1000000L, this.parentReferences);
         verify(this.metricService).sendMissesMetric();
     }
 
