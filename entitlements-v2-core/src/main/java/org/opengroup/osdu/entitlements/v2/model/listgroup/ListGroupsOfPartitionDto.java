@@ -18,6 +18,8 @@
 package org.opengroup.osdu.entitlements.v2.model.listgroup;
 
 import java.util.List;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Generated;
@@ -26,9 +28,15 @@ import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 @Data
 @Generated
 @Builder
+@Schema(description = "Represents a List Group of Partition model.")
 public class ListGroupsOfPartitionDto {
 
+    @Schema(description = "Represents a List of Groups")
     private List<ParentReference> groups;
+
+    @Schema(description = "cursor")
     private String cursor;
+
+    @Schema(description = "Total Count")
     private Long totalCount;
 }

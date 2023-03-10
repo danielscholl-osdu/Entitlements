@@ -19,12 +19,14 @@ package org.opengroup.osdu.entitlements.v2.jdbc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EnableAsync
 @EnableJdbcRepositories
+@PropertySource("classpath:swagger.properties")
 public class EntitlementsV2Application {
 
     public static void main(String[] args) {

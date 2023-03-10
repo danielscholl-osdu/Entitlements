@@ -1,5 +1,6 @@
 package org.opengroup.osdu.entitlements.v2.model.addmember;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,9 +15,14 @@ import javax.validation.constraints.NotNull;
 @Generated
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "Represents a model to add a member")
 public class AddMemberDto {
+
+    @Schema(description = "Email Id of the member")
     @NotNull
     private String email;
+
+    @Schema(description = "Role of the member")
     @NotNull
     private Role role;
 }
