@@ -1,8 +1,15 @@
 package org.opengroup.osdu.entitlements.v2.api;
 
-import io.swagger.annotations.ApiParam;
-import javax.validation.constraints.Min;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.opengroup.osdu.core.common.model.http.AppError;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.entitlements.v2.AppProperties;
@@ -21,9 +28,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.Min;
+
 @Validated
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "list-group-on-behalf-of-api", description = "List Group On Behalf Of API")
 public class ListGroupOnBehalfOfApi {
 
     private static final String INVALID_FILTER_ERROR_MESSAGE = "Invalid filter";
@@ -31,12 +41,23 @@ public class ListGroupOnBehalfOfApi {
     private final ListGroupOnBehalfOfService listGroupOnBehalfOfService;
     private final PartitionHeaderValidationService partitionHeaderValidationService;
 
+    @Operation(summary = "${listGroupOnBehalfOfApi.listGroupsOnBehalfOf.summary}", description = "${listGroupOnBehalfOfApi.listGroupsOnBehalfOf.description}",
+            security = {@SecurityRequirement(name = "Authorization")}, tags = { "list-group-on-behalf-of-api" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = { @Content(schema = @Schema(implementation = ListGroupResponseDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "Bad Request",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "401", description = "Unauthorized",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "403", description = "User not authorized to perform the action.",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "404", description = "Not Found",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "502", description = "Bad Gateway",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "503", description = "Service Unavailable",  content = {@Content(schema = @Schema(implementation = AppError.class ))})
+    })
     @GetMapping("/members/{member_email}/groups")
     @PreAuthorize("@authorizationFilter.hasAnyPermission('" + AppProperties.OPS + "', '" + AppProperties.ADMIN + "')")
-    public ResponseEntity<ListGroupResponseDto> listGroupsOnBehalfOf(@PathVariable("member_email") String memberId,
-        @ApiParam(name = "type", allowableValues = "NONE,DATA,USER,SERVICE", defaultValue = "NONE")
-        @RequestParam(name = "type") String type,
-        @RequestParam(name = "appid", required = false) String appId) {
+    public ResponseEntity<ListGroupResponseDto> listGroupsOnBehalfOf(@Parameter(description = "Member Email") @PathVariable("member_email") String memberId,
+        @Parameter(description = "Type of the Group. Allowable Values = \"NONE,DATA,USER,SERVICE\"", example = "NONE") @RequestParam(name = "type") String type,
+        @Parameter(description = "App Id")  @RequestParam(name = "appid", required = false) String appId) {
 
         memberId = memberId.toLowerCase();
         String partitionId = requestInfo.getHeaders().getPartitionId();
@@ -53,13 +74,25 @@ public class ListGroupOnBehalfOfApi {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @Operation(summary = "${listGroupOnBehalfOfApi.listAllPartitionGroups.summary}", description = "${listGroupOnBehalfOfApi.listAllPartitionGroups.description}",
+            security = {@SecurityRequirement(name = "Authorization")}, tags = { "list-group-on-behalf-of-api" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = { @Content(schema = @Schema(implementation = ListGroupsOfPartitionDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "Bad Request",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "401", description = "Unauthorized",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "403", description = "User not authorized to perform the action.",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "404", description = "Not Found",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "502", description = "Bad Gateway",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "503", description = "Service Unavailable",  content = {@Content(schema = @Schema(implementation = AppError.class ))})
+    })
     @GetMapping("/groups/all")
     @PreAuthorize("@authorizationFilter.hasAnyPermission('" + AppProperties.OPS + "', '" + AppProperties.ADMIN + "')")
     public ResponseEntity<ListGroupsOfPartitionDto> listAllPartitionGroups(
-        @ApiParam(name = "type", allowableValues = "NONE,DATA,USER,SERVICE", defaultValue = "NONE")
+        @Parameter(description = "Type of the Group. Allowable Values = \"NONE,DATA,USER,SERVICE\"", example = "NONE")
         @RequestParam(name = "type") String type,
-        @RequestParam(name = "cursor", required = false) String cursor,
-        @ApiParam(name = "limit", defaultValue = "100")
+        @Parameter(description = "cursor") @RequestParam(name = "cursor", required = false) String cursor,
+        @Parameter(description = "limit", example = "100")
         @RequestParam(name = "limit", required = false, defaultValue = "100") @Min(1) Integer limit
     ) {
         String partitionId = requestInfo.getHeaders().getPartitionId();

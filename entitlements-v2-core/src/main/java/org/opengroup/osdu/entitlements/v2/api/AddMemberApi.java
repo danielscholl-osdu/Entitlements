@@ -1,6 +1,15 @@
 package org.opengroup.osdu.entitlements.v2.api;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.opengroup.osdu.core.common.model.http.AppError;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.entitlements.v2.AppProperties;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberDto;
@@ -21,15 +30,29 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "add-member-api", description = "Add Member API")
 public class AddMemberApi {
     private final AddMemberService addMemberService;
     private final RequestInfo requestInfo;
     private final RequestInfoUtilService requestInfoUtilService;
     private final PartitionHeaderValidationService partitionHeaderValidationService;
 
+    @Operation(summary = "${addMemberApi.addMember.summary}", description = "${addMemberApi.addMember.description}",
+            security = {@SecurityRequirement(name = "Authorization")}, tags = { "add-member-api" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = { @Content(schema = @Schema(implementation = AddMemberDto.class)) }),
+            @ApiResponse(responseCode = "400", description = "Bad Request",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "401", description = "Unauthorized",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "403", description = "User not authorized to perform the action.",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "404", description = "Not Found",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "502", description = "Bad Gateway",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+            @ApiResponse(responseCode = "503", description = "Service Unavailable",  content = {@Content(schema = @Schema(implementation = AppError.class ))})
+    })
     @PostMapping("/groups/{group_email}/members")
     @PreAuthorize("@authorizationFilter.hasAnyPermission('" + AppProperties.OPS + "','" + AppProperties.ADMIN + "','" + AppProperties.USERS + "')")
     public ResponseEntity<AddMemberDto> addMember(@Valid @RequestBody AddMemberDto addMemberDto,
+                                                  @Parameter(description = "Group Email")
                                                   @PathVariable("group_email") String groupEmail) {
         addMemberDto.setEmail(addMemberDto.getEmail().toLowerCase());
         String partitionId = requestInfo.getHeaders().getPartitionId();

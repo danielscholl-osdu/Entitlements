@@ -1,5 +1,6 @@
 package org.opengroup.osdu.entitlements.v2.model.listmember;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,10 @@ import java.util.stream.Collectors;
 @Generated
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "Represents a model for List Member Response")
 public class ListMemberResponseDto {
+
+    @Schema(description = "List of Members")
     List<MemberDto> members;
 
     public static ListMemberResponseDto create(List<ChildrenReference> members, ListMemberRequestArgs args) {
