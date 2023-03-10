@@ -48,8 +48,8 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-**data.requestsCpu** | amount of requested CPU | string | `110m` | yes
-**data.requestsMemory** | amount of requested memory| string | `650Mi` | yes
+**data.requestsCpu** | amount of requested CPU | string | `10m` | yes
+**data.requestsMemory** | amount of requested memory| string | `450Mi` | yes
 **data.limitsCpu** | CPU limit | string | `1` | yes
 **data.limitsMemory** | memory limit | string | `1G` | yes
 **data.serviceAccountName** | name of your service account | string | `entitlements` | yes
@@ -85,10 +85,10 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 
 | Name | Description | Type | Default |Required |
 |------|-------------|------|---------|---------|
-**istio.proxyCPU** | CPU request for Envoy sidecars | string | `60m` | yes
+**istio.proxyCPU** | CPU request for Envoy sidecars | string | `10m` | yes
 **istio.proxyCPULimit** | CPU limit for Envoy sidecars | string | `200m` | yes
-**istio.proxyMemory** | memory request for Envoy sidecars | string | `150Mi` | yes
-**istio.proxyMemoryLimit** | memory limit for Envoy sidecars | string | `512Mi` | yes
+**istio.proxyMemory** | memory request for Envoy sidecars | string | `64Mi` | yes
+**istio.proxyMemoryLimit** | memory limit for Envoy sidecars | string | `256Mi` | yes
 **istio.bootstrapProxyCPU** | CPU request for Envoy sidecars | string | `10m` | yes
 **istio.bootstrapProxyCPULimit** | CPU limit for Envoy sidecars | string | `100m` | yes
 **istio.sidecarInject** | whether Istio sidecar will be injected. Be careful: setting to "false" strongly reduces security, because disables any authentication. | boolean | true | yes

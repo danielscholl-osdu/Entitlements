@@ -31,10 +31,12 @@ import org.opengroup.osdu.entitlements.v2.jdbc.model.MemberInfoEntity;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.GroupRepository;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.JdbcTemplateRunner;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.MemberRepository;
+import org.opengroup.osdu.entitlements.v2.jdbc.util.PartitionIndexerServiceAccUtil;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.creategroup.CreateGroupRepoDto;
+import org.opengroup.osdu.entitlements.v2.service.GroupCacheService;
 import org.opengroup.osdu.entitlements.v2.spi.Operation;
 import org.opengroup.osdu.entitlements.v2.spi.creategroup.CreateGroupRepo;
 import org.springframework.dao.DuplicateKeyException;
@@ -50,6 +52,8 @@ public class CreateGroupRepoJdbc implements CreateGroupRepo {
 	private final GroupRepository groupRepository;
 	private final MemberRepository memberRepository;
 	private final JdbcTemplateRunner jdbcTemplateRunner;
+	private final PartitionIndexerServiceAccUtil indexerServiceAccUtil;
+	private final GroupCacheService groupCacheService;
 
 	@Override
 	public Set<String> createGroup(EntityNode groupNode, CreateGroupRepoDto createGroupRepoDto) {
@@ -58,6 +62,7 @@ public class CreateGroupRepoJdbc implements CreateGroupRepo {
 				groupNode.getName()));
 
 			executeCreateGroupOperation(groupNode, createGroupRepoDto);
+			flushIndexerCacheIfDataGroup(groupNode);
 
 			auditLogger.createGroup(AuditStatus.SUCCESS, groupNode.getNodeId());
 			return ImmutableSet.of(createGroupRepoDto.getRequesterNode().getNodeId());
@@ -68,6 +73,19 @@ public class CreateGroupRepoJdbc implements CreateGroupRepo {
 				throw new DatabaseAccessException(HttpStatus.CONFLICT, "This group already exists");
 			}
 			throw e;
+		}
+	}
+
+	private void flushIndexerCacheIfDataGroup(EntityNode groupNode) {
+		//Indexer service account should have access to ALL data groups we will flush his cache if a data group has been created
+		if (groupNode.isDataGroup()) {
+			String indexerServiceAccount = indexerServiceAccUtil.getTenantIndexerServiceAccount();
+			if (indexerServiceAccount != null) {
+				String indexerDataGroupsKey = indexerServiceAccUtil.getTenantIndexerServiceAccCacheKey(
+						indexerServiceAccount, groupNode.getDataPartitionId());
+				groupCacheService.flushListGroupCacheForUser(indexerDataGroupsKey,
+						groupNode.getDataPartitionId());
+			}
 		}
 	}
 

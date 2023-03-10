@@ -11,10 +11,12 @@ import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.SpiJdbcTestConfig;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.GroupRepository;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.JdbcTemplateRunner;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.MemberRepository;
+import org.opengroup.osdu.entitlements.v2.jdbc.util.PartitionIndexerServiceAccUtil;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.creategroup.CreateGroupRepoDto;
+import org.opengroup.osdu.entitlements.v2.service.GroupCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -45,6 +47,10 @@ public class CreateGroupJdbcTest {
     private GroupRepository groupRepository;
     @MockBean
     private JdbcTemplateRunner jdbcTemplateRunner;
+    @MockBean
+    private PartitionIndexerServiceAccUtil partitionIndexerServiceAccUtil;
+    @MockBean
+    private GroupCacheService groupCacheService;
 
     @Test
     public void should_updateReference_whenCreateGroup_andNotAddDataRootGroup() {
