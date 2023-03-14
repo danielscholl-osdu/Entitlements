@@ -21,6 +21,7 @@ import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import org.opengroup.osdu.core.common.cache.ICache;
 import org.opengroup.osdu.core.common.cache.IRedisCache;
 import org.opengroup.osdu.core.common.cache.VmCache;
+import org.opengroup.osdu.core.common.cache.enums.CachingStrategy;
 import org.opengroup.osdu.core.common.partition.PartitionInfo;
 import org.opengroup.osdu.core.gcp.cache.RedisCacheBuilder;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsConfigurationProperties;
@@ -61,6 +62,7 @@ public class CacheConfig {
 
     @Bean
     public ICache<String, PartitionInfo> partitionInfoCache(EntitlementsConfigurationProperties properties){
-        return new VmCache<>(properties.getPartitionInfoVmCacheExpTime(), properties.getPartitionInfoVmCacheSize());
+        return new VmCache<>(properties.getPartitionInfoVmCacheExpTime(),
+                properties.getPartitionInfoVmCacheSize(), CachingStrategy.EXPIRE_AFTER_WRITE);
     }
 }
