@@ -6,8 +6,8 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
 spec:
   hosts:
-    {{- if .Values.auth.publicUrl }}
-    - {{ printf "osdu.%s" .Values.auth.publicUrl | quote }}
+    {{- if .Values.global.domain }}
+    - {{ printf "osdu.%s" .Values.global.domain | quote }}
     {{- else }}
     - "*"
     {{- end }}
