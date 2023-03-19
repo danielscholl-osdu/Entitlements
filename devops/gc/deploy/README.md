@@ -26,6 +26,13 @@ Packages are only needed for installation from a local computer.
 
 You need to set variables in **values.yaml** file using any code editor. Some of the values are prefilled, but you need to specify some values as well. You can find more information about them below.
 
+### Global variables
+
+| Name | Description | Type | Default |Required |
+|------|-------------|------|---------|---------|
+**global.domain** | your domain for the external endpoint, ex `example.com` | string | - | yes
+**global.onPremEnabled** | whether on-prem is enabled | boolean | false | yes
+
 ### Configmap variables
 
 | Name | Description | Type | Default | Required |
@@ -67,7 +74,6 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 |------|-------------|------|---------|----------|
 **conf.appName** | Service name | string | `entitlements` | yes
 **conf.configmap** | configmap to be used | string | `entitlements-config` | yes
-**conf.onPremEnabled** | whether on-prem is enabled | boolean | false | yes
 **conf.entitlementsPostgresSecretName** | entitlements Postgres secret | string | `entitlements-postgres-secret` | yes
 **conf.entitlementsRedisSecretName** | entitlements Redis secret | string | `entitlements-redis-secret` | yes
 **conf.bootstrapOpenidSecretName** | bootstrap OpenID secret | string | `datafier-secret` | yes
@@ -77,7 +83,7 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-**auth.publicUrl** | top level domain name, which tells us where to go | string | - | yes
+**auth.keycloakUrl** | endpoint of Keycloak when using an external one, ex `keycloak.com`. For local instance it uses `domain` | string | - | no
 **auth.localUrl** | authentication local URL | string | `keycloak` | yes
 **auth.realm** | Keycloak realm | string | `osdu` | yes
 

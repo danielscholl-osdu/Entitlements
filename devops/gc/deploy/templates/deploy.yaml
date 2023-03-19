@@ -43,7 +43,7 @@ spec:
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 0
-      {{- if not .Values.conf.onPremEnabled }}
+      {{- if not .Values.global.onPremEnabled }}
       - image: "gcr.io/cloudsql-docker/gce-proxy:{{ .Values.data.cloudSqlProxyVersion }}"
         imagePullPolicy: {{ .Values.data.imagePullPolicy | quote }}
         name: cloud-sql-proxy

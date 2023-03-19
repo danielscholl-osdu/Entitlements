@@ -1,3 +1,7 @@
+global:
+  domain: ""
+  onPremEnabled: false
+
 data:
   # Configmaps
   dataPartitionId: ""
@@ -28,18 +32,20 @@ data:
   imagePullPolicy: "IfNotPresent"
   cloudSqlProxyVersion: "1.32.0"
   sqlConnectionString: ""
+
 conf:
   configmap: "entitlements-config"
   appName: "entitlements"
   entitlementsPostgresSecretName: "entitlements-postgres-secret"
   bootstrapOpenidSecretName: "datafier-secret"
-  onPremEnabled: false
   istioEnabled: true
   entitlementsRedisSecretName: "entitlements-redis-secret"
+
 auth:
-  publicUrl: ""
+  keycloakUrl: ""
   localUrl: "keycloak"
   realm: "osdu"
+
 istio:
   proxyCPU: "10m"
   proxyCPULimit: "200m"
