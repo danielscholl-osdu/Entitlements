@@ -43,6 +43,13 @@ spec:
         securityContext:
           allowPrivilegeEscalation: false
           runAsUser: 0
+        resources:
+          requests:
+            cpu: {{ .Values.data.requestsCpu | quote }}
+            memory: {{ .Values.data.requestsMemory | quote }}
+          limits:
+            cpu: {{ .Values.data.limitsCpu | quote }}
+            memory: {{ .Values.data.limitsMemory | quote }}
       {{- if not .Values.global.onPremEnabled }}
       - image: "gcr.io/cloudsql-docker/gce-proxy:{{ .Values.data.cloudSqlProxyVersion }}"
         imagePullPolicy: {{ .Values.data.imagePullPolicy | quote }}
@@ -53,11 +60,4 @@ spec:
       {{- end }}
         ports:
         - containerPort: 8080
-        resources:
-          requests:
-            cpu: {{ .Values.data.requestsCpu | quote }}
-            memory: {{ .Values.data.requestsMemory | quote }}
-          limits:
-            cpu: {{ .Values.data.limitsCpu | quote }}
-            memory: {{ .Values.data.limitsMemory | quote }}
       serviceAccountName: {{ .Values.data.serviceAccountName | quote }}
