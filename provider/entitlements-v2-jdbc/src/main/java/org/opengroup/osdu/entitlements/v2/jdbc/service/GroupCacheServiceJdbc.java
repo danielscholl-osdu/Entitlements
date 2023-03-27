@@ -30,6 +30,7 @@ import org.opengroup.osdu.core.common.cache.ICache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
+import org.opengroup.osdu.core.common.model.tenant.TenantInfo;
 import org.opengroup.osdu.entitlements.v2.jdbc.JdbcAppProperties;
 import org.opengroup.osdu.entitlements.v2.jdbc.util.PartitionIndexerServiceAccUtil;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
@@ -61,6 +62,8 @@ public class GroupCacheServiceJdbc implements GroupCacheService {
     private final JaxRsDpsLog log;
 
     private final PartitionIndexerServiceAccUtil indexerServiceAccProvider;
+
+    private final TenantInfo tenantInfo;
 
     @Override
     public Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId) {
@@ -167,6 +170,12 @@ public class GroupCacheServiceJdbc implements GroupCacheService {
                     HttpStatus.FORBIDDEN.getReasonPhrase(),
                     "Impersonation not allowed for " + beneficialId);
             } else {
+                if (tenantInfo.getServiceAccount().equalsIgnoreCase(beneficialId)) {
+                    log.error("Impersonation attempt for tenant service account");
+                    throw new AppException(HttpStatus.FORBIDDEN.value(),
+                        HttpStatus.FORBIDDEN.getReasonPhrase(),
+                        "Impersonation not allowed for tenant service account");
+              }
                 return beneficialGroups;
             }
         } else {

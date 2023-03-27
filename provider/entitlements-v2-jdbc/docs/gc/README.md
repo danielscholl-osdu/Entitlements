@@ -91,6 +91,7 @@ Defined in default application property file but possible to override:
 | `GOOGLE_APPLICATION_CREDENTIALS` | `********`                                      | System identity to provide access for cleaning up groups created during test                       | yes        | --     |
 | `AUTH_MODE`                      | `IAP`                                           | Should be configured only if IAP enabled                                                           | no         | --     |
 | `IAP_URL`                        | `https://dev.osdu.club`                         | Should be configured only if IAP enabled                                                           | no         | --     |
+| `PARTITION_API`                  | ex `http://localhost:8080/api/partition/v1 `    | Partition service host                                                                             | no         | --     |
 
 **Entitlements configuration for integration accounts**
 
