@@ -86,6 +86,7 @@ Defined in default application property file but possible to override:
 | `TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_SECRET` | `********`                                      |                                                     | Client secret for `$NO_ACCESS_INTEGRATION_TESTER` | --     |
 | `INTEGRATION_TESTER_EMAIL`                     | `datafier@service.local`                        |                                                     | Email of `$INTEGRATION_TESTER`                    | --     |
 | `TEST_OPENID_PROVIDER_URL`                     | `https://keycloak.com/auth/realms/osdu`         | OpenID provider url                                 | yes                                               | --     |
+| `PARTITION_API`                                | ex `http://localhost:8080/api/partition/v1 `    | Partition service host                              | no                                                | --     |
 
 **Entitlements configuration for integration accounts**
 

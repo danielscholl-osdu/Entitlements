@@ -18,6 +18,7 @@
 package org.opengroup.osdu.entitlements.v2.api;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.nimbusds.oauth2.sdk.*;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
 import com.nimbusds.oauth2.sdk.auth.ClientSecretBasic;
@@ -35,6 +36,7 @@ import com.sun.jersey.api.client.WebResource;
 import net.minidev.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
+import org.opengroup.osdu.core.common.partition.Property;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupItem;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.MemberItem;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.Token;
@@ -53,11 +55,13 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -182,6 +186,15 @@ public class ImpersonationJdbcTest {
         Assert.assertEquals(400, response.getStatus());
     }
 
+    @Test
+    public void shouldFailIfTryToImpersonateTenantServiceAccount() throws Exception{
+        String token = tokenService.getToken().getValue();
+        String tenantServiceAccount = getPartitionProperty("serviceAccount");
+        ClientResponse response = sendWithOnBehalfOfHeader("GET", tenantServiceAccount, token);
+
+        Assert.assertEquals(403, response.getStatus());
+    }
+
     private ClientResponse sendWithOnBehalfOfHeader(String method, String onBehalfOf, String token) throws Exception {
         String resourceUrl = new URL(baseUrl + "groups").toString();
         WebResource webResource = client.resource(resourceUrl);
@@ -198,6 +211,25 @@ public class ImpersonationJdbcTest {
             return builder.method(method, ClientResponse.class, "{}"); //fixes 411 error of empty-body POST
         }
         return builder.method(method, ClientResponse.class);
+    }
+
+    private String getPartitionProperty(String property) throws Exception{
+        String partitionApi = System.getProperty("PARTITION_BASE_URL", System.getenv("PARTITION_BASE_URL"));
+        String resourceUrl = new URL(partitionApi + "api/partition/v1/partitions/" + configurationService.getTenantId()).toString();
+        WebResource webResource = client.resource(resourceUrl);
+
+        WebResource.Builder builder = webResource.getRequestBuilder();
+
+        builder.accept(MediaType.APPLICATION_JSON)
+            .type(MediaType.APPLICATION_JSON);
+
+        String response = builder.method("GET", String.class);
+
+        Type parametrizedType = TypeToken.getParameterized(Map.class, new Class[]{String.class, Property.class}).getType();
+        Map<String, Property> properties = (Map)gson.fromJson(response, parametrizedType);
+
+        Assert.assertNotNull(properties.get(property));
+        return properties.get(property).getValue().toString();
     }
 
     private Client getClient() {
