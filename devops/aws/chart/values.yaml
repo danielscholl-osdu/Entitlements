@@ -48,6 +48,8 @@ environmentVariables:
     value: "false"
   - name: SERVICE_DOMAIN_NAME
     value: "{{ .Values.global.domainName }}"
+  - name: TMP_VOLUME_PATH
+    value: "/tmp"
 
 # Resource Config
 maxConnections: 200
@@ -84,7 +86,7 @@ cors:
 securityContext: 
   runAsUser: 10001
   runAsNonRoot: true
-  readOnlyRootFilesystem: false
+  readOnlyRootFilesystem: true
   allowPrivilegeEscalation: false
   capabilities:
     drop:
