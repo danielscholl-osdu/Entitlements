@@ -98,6 +98,12 @@
     },
     {
       "groupName": "service.edsdms.user"
+    },
+    {
+      "groupName": "service.reservoir-dms.viewers"
+    },
+    {
+      "groupName": "service.reservoir-dms.owners"
     }
   ]
 }

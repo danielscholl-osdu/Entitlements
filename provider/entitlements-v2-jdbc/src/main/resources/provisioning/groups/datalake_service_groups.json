@@ -936,6 +936,36 @@
           "name": "users.datalake.ops"
         }
       ]
+    },
+    {
+      "name": "service.reservoir-dms.viewers",
+      "description": "Viewers group for Reservoir DMS",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.viewers"
+        }
+      ]
+    },
+    {
+      "name": "service.reservoir-dms.owners",
+      "description": "Owners group for Reservoir DMS",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        }
+      ]
     }
   ]
 }
