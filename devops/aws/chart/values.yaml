@@ -50,6 +50,8 @@ environmentVariables:
     value: "{{ .Values.global.domainName }}"
   - name: TMP_VOLUME_PATH
     value: "/tmp"
+  - name: PARTITION_BASE_URL
+    value: http://os-partition:8080
 
 # Resource Config
 maxConnections: 200
