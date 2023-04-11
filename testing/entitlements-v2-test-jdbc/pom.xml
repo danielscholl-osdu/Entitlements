@@ -36,7 +36,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.main.basedir>${project.basedir}</project.main.basedir>
         <jackson.version>2.13.2.2</jackson.version>
-        <core-lib-azure.version>0.6.2</core-lib-azure.version>
+        <core-lib-azure.version>0.20.0</core-lib-azure.version>
         <junit.version>4.12</junit.version>
         <netty-all.version>4.1.50.Final</netty-all.version>
     </properties>
@@ -98,7 +98,7 @@
         <dependency>
             <groupId>org.opengroup.osdu</groupId>
             <artifactId>os-core-common</artifactId>
-            <version>0.19.0</version>
+            <version>0.20.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
