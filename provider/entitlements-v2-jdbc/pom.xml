@@ -28,7 +28,7 @@
     <org.springframework.boot.version>2.7.7</org.springframework.boot.version>
     <io.undertow.version>2.2.0.Final</io.undertow.version>
     <commons-codec.version>1.15</commons-codec.version>
-    <os-core-common.version>0.19.0</os-core-common.version>
+    <os-core-common.version>0.20.1</os-core-common.version>
   </properties>
 
   <parent>
@@ -65,8 +65,8 @@
     </dependency>
     <dependency>
       <groupId>org.opengroup.osdu</groupId>
-      <artifactId>core-lib-gcp</artifactId>
-      <version>0.19.0</version>
+      <artifactId>core-lib-gc</artifactId>
+      <version>0.20.0</version>
       <exclusions>
         <exclusion>
           <groupId>org.opengroup.osdu</groupId>
