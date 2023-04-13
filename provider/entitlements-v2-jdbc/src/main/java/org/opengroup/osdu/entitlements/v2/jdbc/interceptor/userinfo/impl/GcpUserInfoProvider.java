@@ -1,6 +1,6 @@
 /*
- *  Copyright 2020-2022 Google LLC
- *  Copyright 2020-2022 EPAM Systems, Inc
+ *  Copyright 2020-2023 Google LLC
+ *  Copyright 2020-2023 EPAM Systems, Inc
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,21 +17,19 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.interceptor.userinfo.impl;
 
-import com.google.common.cache.Cache;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import com.nimbusds.openid.connect.sdk.UserInfoRequest;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
-import com.nimbusds.openid.connect.sdk.validators.IDTokenValidator;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
 import org.opengroup.osdu.core.common.cache.IRedisCache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
-import org.opengroup.osdu.entitlements.v2.jdbc.config.IDTokenValidatorFactory;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.EntOpenIDProviderConfig;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.IDTokenValidatorFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -70,6 +68,7 @@ public class GcpUserInfoProvider extends OpenIdUserInfoProvider {
         try {
             return super.getUserInfoFromToken(token);
         } catch (AppException e) {
+            log.warn("id_token parsing failed. Original exception: {}.", e.getMessage(), e);
             return getUserInfoFromAccessToken(token);
         }
     }
@@ -78,8 +77,8 @@ public class GcpUserInfoProvider extends OpenIdUserInfoProvider {
         try {
             BearerAccessToken token = BearerAccessToken.parse(accessToken);
             return sendUserInfoRequest(token);
-        } catch (ParseException | URISyntaxException | IOException e) {
-            log.warn("Could not authorize user, token {}, exception {}", accessToken, e);
+        } catch (ParseException | URISyntaxException | IOException | AppException e) {
+            log.warn("Could not authorize user. Original exception {}", e.getMessage(), e);
             throw new AppException(HttpStatus.UNAUTHORIZED.value(),
                 USER_INFO_ISSUE_REASON,
                 NOT_VALID_TOKEN_PROVIDED_MESSAGE, e);
