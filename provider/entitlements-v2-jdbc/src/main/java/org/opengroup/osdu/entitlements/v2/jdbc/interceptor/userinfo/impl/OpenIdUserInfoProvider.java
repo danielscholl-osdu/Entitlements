@@ -1,6 +1,6 @@
 /*
- *  Copyright 2020-2021 Google LLC
- *  Copyright 2020-2021 EPAM Systems, Inc
+ *  Copyright 2020-2023 Google LLC
+ *  Copyright 2020-2023 EPAM Systems, Inc
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -58,7 +58,6 @@ public class OpenIdUserInfoProvider implements IUserInfoProvider {
         try {
             return getUserInfoFromIDToken(token);
         } catch (BadJOSEException | JOSEException | java.text.ParseException | ParseException e) {
-            log.error("id_token parsing failed. Original exception: {}.", e.getMessage(), e);
             throw new AppException(HttpStatus.UNAUTHORIZED.value(),
                 USER_INFO_ISSUE_REASON,
                 NOT_VALID_TOKEN_PROVIDED_MESSAGE, e);
