@@ -77,7 +77,6 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 **conf.entitlementsPostgresSecretName** | entitlements Postgres secret | string | `entitlements-postgres-secret` | yes
 **conf.entitlementsRedisSecretName** | entitlements Redis secret | string | `entitlements-redis-secret` | yes
 **conf.bootstrapOpenidSecretName** | bootstrap OpenID secret | string | `datafier-secret` | yes
-**conf.istioEnabled** | whether Istio is enabled | boolean | true | yes
 
 ### Auth variables
 
