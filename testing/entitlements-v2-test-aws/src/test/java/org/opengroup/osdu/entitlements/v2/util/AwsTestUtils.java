@@ -36,7 +36,8 @@ public class AwsTestUtils  {
     String client_credentials_clientid;
     ServicePrincipal sp;
     private String awsOauthCustomScope;
-    private final static String ENVIRONMENT = "RESOURCE_PREFIX";
+
+    private final static String COGNITO_NAME = "COGNITO_NAME";
     private final static String REGION = "AWS_REGION";
 
 
@@ -50,15 +51,15 @@ public class AwsTestUtils  {
     public synchronized String getAccessToken() {
         if(sptoken==null) {
             SecretsManager sm = new SecretsManager();
-            String environment = System.getProperty(ENVIRONMENT, System.getenv(ENVIRONMENT));
+            String cognitoName = System.getProperty(COGNITO_NAME, System.getenv(COGNITO_NAME));
             String amazonRegion = System.getProperty(REGION, System.getenv(REGION));
 
-            String oauth_token_url = "/osdu/" + environment + "/oauth-token-uri";
-            String oauth_custom_scope = "/osdu/" + environment + "/oauth-custom-scope";
+            String oauth_token_url = "/osdu/cognito/" + cognitoName + "/oauth/token-uri";
+            String oauth_custom_scope = "/osdu/cognito/" + cognitoName + "/oauth/custom-scope";
 
-            String client_credentials_client_id = "/osdu/" + environment + "/client-credentials-client-id";
+            String client_credentials_client_id = "/osdu/cognito/" + cognitoName + "/client/client-credentials/id";
             String client_secret_key = "client_credentials_client_secret";
-            String client_secret_secretName = "/osdu/" + environment + "/client_credentials_secret";
+            String client_secret_secretName = "/osdu/cognito/" + cognitoName + "/client-credentials-secret";
 
             amazonAWSCredentials = IAMConfig.amazonAWSCredentials();
             ssmManager = AWSSimpleSystemsManagementClientBuilder.standard()
@@ -74,7 +75,7 @@ public class AwsTestUtils  {
 
             awsOauthCustomScope = getSsmParameter(oauth_custom_scope);
 
-            sp = new ServicePrincipal(amazonRegion, environment, tokenUrl, awsOauthCustomScope);
+            sp = new ServicePrincipal(amazonRegion, tokenUrl, awsOauthCustomScope);
             sptoken = sp.getServicePrincipalAccessToken(client_credentials_clientid, client_credentials_secret);
         }
 
