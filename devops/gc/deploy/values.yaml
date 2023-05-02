@@ -23,8 +23,8 @@ data:
   # Deployments
   bootstrapImage: ""
   bootstrapServiceAccountName: ""
-  requestsCpu: "10m"
-  requestsMemory: "450Mi"
+  requestsCpu: "5m"
+  requestsMemory: "350Mi"
   limitsCpu: "1"
   limitsMemory: "1G"
   serviceAccountName: "entitlements"
@@ -38,7 +38,6 @@ conf:
   appName: "entitlements"
   entitlementsPostgresSecretName: "entitlements-postgres-secret"
   bootstrapOpenidSecretName: "datafier-secret"
-  istioEnabled: true
   entitlementsRedisSecretName: "entitlements-redis-secret"
 
 auth:
@@ -47,10 +46,10 @@ auth:
   realm: "osdu"
 
 istio:
-  proxyCPU: "10m"
+  proxyCPU: "5m"
   proxyCPULimit: "200m"
   proxyMemory: "64Mi"
   proxyMemoryLimit: "256Mi"
-  bootstrapProxyCPU: "10m"
+  bootstrapProxyCPU: "5m"
   bootstrapProxyCPULimit: "100m"
   sidecarInject: true
