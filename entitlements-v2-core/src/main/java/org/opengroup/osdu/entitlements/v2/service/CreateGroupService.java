@@ -29,7 +29,7 @@ public class CreateGroupService {
     private final GroupCacheService groupCacheService;
     private final JaxRsDpsLog log;
     private final DefaultGroupsService defaultGroupsService;
-    private final PartitionFeatureFlagService partitionFeatureFlagService;
+//    private final PartitionFeatureFlagService partitionFeatureFlagService;
 
     public EntityNode run(EntityNode groupNode, CreateGroupServiceDto createGroupServiceDto) {
         log.info(String.format("requested by %s", createGroupServiceDto.getRequesterId()));
@@ -67,8 +67,7 @@ public class CreateGroupService {
     }
 
     private boolean shouldAddDataRootGroupInTheHierarchy(String dataPartitionId, EntityNode groupNode) {
-        return !this.partitionFeatureFlagService.getFeature(FeatureFlag.DISABLE_DATA_ROOT_GROUP_HIERARCHY.label, dataPartitionId)
-                && groupNode.isDataGroup() && defaultGroupsService.isNotDefaultGroupName(groupNode.getName());
+        return groupNode.isDataGroup() && defaultGroupsService.isNotDefaultGroupName(groupNode.getName());
     }
 
     private void createGroup(EntityNode groupNode, CreateGroupRepoDto createGroupRepoDto) {
