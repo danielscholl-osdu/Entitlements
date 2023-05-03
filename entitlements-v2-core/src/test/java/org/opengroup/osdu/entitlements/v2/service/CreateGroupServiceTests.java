@@ -159,37 +159,37 @@ public class CreateGroupServiceTests {
         verify(groupCacheService).refreshListGroupCache(impactedUsers, "dp");
     }
 
-//    @Test
-//    public void shouldCallRepoAddNotDataRootGroupIfDataGroupButDisableFeatureFlagIsEnabled() {
-//        EntityNode groupNode = EntityNode.builder()
-//                .nodeId("data.x@dp.domain.com")
-//                .type(NodeType.GROUP)
-//                .name("data.x")
-//                .dataPartitionId("dp")
-//                .build();
-//        Set<ParentReference> parents = mock(HashSet.class);
-//        EntityNode dataRootGroupNode = EntityNode.builder()
-//                .nodeId("users.data.root@dp.domain.com")
-//                .type(NodeType.GROUP)
-//                .name("users.data.root")
-//                .dataPartitionId("dp")
-//                .build();
-//        CreateGroupServiceDto createGroupServiceDto = CreateGroupServiceDto.builder()
-//                .requesterId("callerdesid")
-//                .partitionDomain("dp.domain.com")
-//                .partitionId("dp").build();
-//        EntityNode requesterNode = EntityNode.createMemberNodeForRequester("callerdesid", "dp");
-//        when(groupCacheService.getFromPartitionCache(requesterNode.getNodeId(), "dp")).thenReturn(Collections.emptySet());
-//        ArgumentCaptor<CreateGroupRepoDto> captor = ArgumentCaptor.forClass(CreateGroupRepoDto.class);
-//        Set<String> impactedUsers = new HashSet<>(Arrays.asList("callerdesid"));
-//        when(createGroupRepo.createGroup(any(), any())).thenReturn(impactedUsers);
-//        when(partitionFeatureFlagService.getFeature(FeatureFlag.DISABLE_DATA_ROOT_GROUP_HIERARCHY.label, "dp")).thenReturn(true);
-//        createGroupService.run(groupNode, createGroupServiceDto);
-//        verify(createGroupRepo, times(1)).createGroup(eq(groupNode), captor.capture());
-//        assertThat(captor.getValue().getDataRootGroupNode()).isNull();
-//        assertThat(captor.getValue().isAddDataRootGroup()).isFalse();
-//        verify(groupCacheService).refreshListGroupCache(impactedUsers, "dp");
-//    }
+    @Test
+    public void shouldCallRepoAddNotDataRootGroupIfDataGroupButDisableFeatureFlagIsEnabled() {
+        EntityNode groupNode = EntityNode.builder()
+                .nodeId("data.x@dp.domain.com")
+                .type(NodeType.GROUP)
+                .name("data.x")
+                .dataPartitionId("dp")
+                .build();
+        Set<ParentReference> parents = mock(HashSet.class);
+        EntityNode dataRootGroupNode = EntityNode.builder()
+                .nodeId("users.data.root@dp.domain.com")
+                .type(NodeType.GROUP)
+                .name("users.data.root")
+                .dataPartitionId("dp")
+                .build();
+        CreateGroupServiceDto createGroupServiceDto = CreateGroupServiceDto.builder()
+                .requesterId("callerdesid")
+                .partitionDomain("dp.domain.com")
+                .partitionId("dp").build();
+        EntityNode requesterNode = EntityNode.createMemberNodeForRequester("callerdesid", "dp");
+        when(groupCacheService.getFromPartitionCache(requesterNode.getNodeId(), "dp")).thenReturn(Collections.emptySet());
+        ArgumentCaptor<CreateGroupRepoDto> captor = ArgumentCaptor.forClass(CreateGroupRepoDto.class);
+        Set<String> impactedUsers = new HashSet<>(Arrays.asList("callerdesid"));
+        when(createGroupRepo.createGroup(any(), any())).thenReturn(impactedUsers);
+        when(partitionFeatureFlagService.getFeature(FeatureFlag.DISABLE_DATA_ROOT_GROUP_HIERARCHY.label, "dp")).thenReturn(true);
+        createGroupService.run(groupNode, createGroupServiceDto);
+        verify(createGroupRepo, times(1)).createGroup(eq(groupNode), captor.capture());
+        assertThat(captor.getValue().getDataRootGroupNode()).isNull();
+        assertThat(captor.getValue().isAddDataRootGroup()).isFalse();
+        verify(groupCacheService).refreshListGroupCache(impactedUsers, "dp");
+    }
 
     @Test
     public void shouldCallRepoAndNotAddDataRootGroupIfNotDataGroup() {
