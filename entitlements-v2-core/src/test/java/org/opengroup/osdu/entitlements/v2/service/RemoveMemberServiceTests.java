@@ -3,12 +3,18 @@ package org.opengroup.osdu.entitlements.v2.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.core.common.model.tenant.TenantInfo;
 import org.opengroup.osdu.entitlements.v2.AppProperties;
-import org.opengroup.osdu.entitlements.v2.configuration.AppPropertiesTestConfiguration;
+import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeAction;
+import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeEvent;
+import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeType;
+import org.opengroup.osdu.entitlements.v2.provider.interfaces.IMessageBus;
 import org.opengroup.osdu.entitlements.v2.validation.BootstrapGroupsConfigurationService;
 import org.opengroup.osdu.entitlements.v2.validation.ServiceAccountsConfigurationService;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
@@ -19,11 +25,9 @@ import org.opengroup.osdu.entitlements.v2.model.removemember.RemoveMemberService
 import org.opengroup.osdu.entitlements.v2.spi.removemember.RemoveMemberRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.opengroup.osdu.entitlements.v2.util.RequestInfoUtilService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -33,46 +37,53 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
-@Import(AppPropertiesTestConfiguration.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({RemoveMemberService.class, System.class})
 public class RemoveMemberServiceTests {
-    @MockBean
+    @Mock
     private RetrieveGroupRepo retrieveGroupRepo;
-    @MockBean
+    @Mock
     private GroupCacheService groupCacheService;
-    @MockBean
+    @Mock
     private RemoveMemberRepo removeMemberRepo;
-    @MockBean
+    @Mock
     private RequestInfo requestInfo;
-    @MockBean
+    @Mock
     private JaxRsDpsLog logger;
-    @MockBean
+    @Mock
     private ServiceAccountsConfigurationService serviceAccountsConfigurationService;
-    @MockBean
+    @Mock
     private BootstrapGroupsConfigurationService bootstrapGroupsConfigurationService;
-    @MockBean
+    @Mock
     private RequestInfoUtilService requestInfoUtilService;
-    @MockBean
+    @Mock
     private AppProperties appProperties;
-    @MockBean
+    @Mock
     private PermissionService permissionService;
-    @Autowired
+    @Mock
+    private IMessageBus messageBus;
+    @Mock
+    private DpsHeaders headers;
+    @InjectMocks
     private RemoveMemberService removeMemberService;
 
     @Before
     public void setup() {
+        PowerMockito.mockStatic(System.class);
         TenantInfo tenantInfo = new TenantInfo();
         tenantInfo.setServiceAccount("datafier@evd-ddl-us-common.iam.gserviceaccount.com");
         when(requestInfo.getTenantInfo()).thenReturn(tenantInfo);
         when(appProperties.getDomain()).thenReturn("contoso.com");
+        when(requestInfo.getHeaders()).thenReturn(headers);
+        PowerMockito.when(System.currentTimeMillis()).thenReturn(1291371330000L);
     }
 
     @Test
-    public void shouldSuccessfullyRemoveMemberWhenMemberExists() {
+    public void shouldSuccessfullyRemoveMemberAndPublishRemoveMemberEntitlementsChangeEventWhenMemberExists() {
         EntityNode memberNode = EntityNode.builder()
                 .type(NodeType.USER)
                 .nodeId("member@xxx.com")
@@ -116,14 +127,23 @@ public class RemoveMemberServiceTests {
                 .build();
         when(removeMemberRepo.removeMember(any(), any(), any())).thenReturn(Collections.emptySet());
 
+        EntitlementsChangeEvent event = EntitlementsChangeEvent.builder()
+                .kind(EntitlementsChangeType.groupChanged)
+                .group("data.x@common.contoso.com")
+                .user("member@xxx.com")
+                .action(EntitlementsChangeAction.remove)
+                .modifiedBy("requesterid")
+                .modifiedOn(1291371330000L).build();
+
         removeMemberService.removeMember(removeMemberServiceDto);
 
         verify(removeMemberRepo).removeMember(groupNode, memberNode, removeMemberServiceDto);
         verify(groupCacheService).refreshListGroupCache(Collections.emptySet(), "common");
+        verify(messageBus).publishMessage(headers, event);
     }
 
     @Test
-    public void shouldSuccessfullyRemoveMemberWhenMemberExistsWhenDatafierIsExecutingTheRequest() {
+    public void shouldSuccessfullyRemoveMemberWhenMemberExistsAndPublishRemoveMemberEntitlementsChangeEventWhenDatafierIsExecutingTheRequest() {
         EntityNode memberNode = EntityNode.builder()
                 .type(NodeType.USER)
                 .nodeId("member@xxx.com")
@@ -158,10 +178,19 @@ public class RemoveMemberServiceTests {
                 .build();
         when(removeMemberRepo.removeMember(any(), any(), any())).thenReturn(Collections.emptySet());
 
+        EntitlementsChangeEvent event = EntitlementsChangeEvent.builder()
+                .kind(EntitlementsChangeType.groupChanged)
+                .group("data.x@common.contoso.com")
+                .user("member@xxx.com")
+                .action(EntitlementsChangeAction.remove)
+                .modifiedBy("datafier@evd-ddl-us-common.iam.gserviceaccount.com")
+                .modifiedOn(1291371330000L).build();
+
         removeMemberService.removeMember(removeMemberServiceDto);
 
         verify(groupCacheService).refreshListGroupCache(Collections.emptySet(), "common");
         verify(removeMemberRepo).removeMember(groupNode, memberNode, removeMemberServiceDto);
+        verify(messageBus).publishMessage(headers, event);
     }
 
     @Test
@@ -208,6 +237,7 @@ public class RemoveMemberServiceTests {
         } catch (AppException ex) {
             verify(removeMemberRepo, never()).removeMember(any(), any(), any());
             assertThat(ex.getError().getCode()).isEqualTo(404);
+            verify(messageBus, times(0)).publishMessage(any(), any());
         } catch (Exception ex) {
             fail(String.format("should now throw exception: %s", ex.getMessage()));
         }
@@ -260,6 +290,7 @@ public class RemoveMemberServiceTests {
         } catch (AppException ex) {
             verify(removeMemberRepo, never()).removeMember(any(), any(), any());
             assertThat(ex.getError().getCode()).isEqualTo(404);
+            verify(messageBus, times(0)).publishMessage(any(), any());
         } catch (Exception ex) {
             fail(String.format("should now throw exception: %s", ex.getMessage()));
         }
@@ -317,6 +348,7 @@ public class RemoveMemberServiceTests {
             verify(removeMemberRepo, never()).removeMember(any(), any(), any());
             assertThat(ex.getError().getCode()).isEqualTo(400);
             assertEquals("Bootstrap group hierarchy is enforced, member users cannot be removed from group data.default.owners", ex.getError().getMessage());
+            verify(messageBus, times(0)).publishMessage(any(), any());
         } catch (Exception ex) {
             fail(String.format("should now throw exception: %s", ex.getMessage()));
         }
@@ -376,6 +408,7 @@ public class RemoveMemberServiceTests {
         } catch (AppException ex) {
             verify(removeMemberRepo, never()).removeMember(any(), any(), any());
             assertThat(ex.getError().getCode()).isEqualTo(400);
+            verify(messageBus, times(0)).publishMessage(any(), any());
         } catch (Exception ex) {
             fail(String.format("should now throw exception: %s", ex.getMessage()));
         }
@@ -437,6 +470,7 @@ public class RemoveMemberServiceTests {
             verify(removeMemberRepo, never()).removeMember(any(), any(), any());
             assertThat(ex.getError().getCode()).isEqualTo(400);
             assertEquals("Users data root group hierarchy is enforced, member users.data.root cannot be removed", ex.getError().getMessage());
+            verify(messageBus, times(0)).publishMessage(any(), any());
         } catch (Exception ex) {
             fail(String.format("should now throw exception: %s", ex.getMessage()));
         }

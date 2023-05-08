@@ -9,5 +9,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EntitlementsEvent {
+public class EntitlementsChangeEvent {
+    private EntitlementsChangeType kind;
+    private String group;
+    @Builder.Default
+    private String user = "";
+    private EntitlementsChangeAction action;
+    private String modifiedBy;
+    private long modifiedOn;
 }

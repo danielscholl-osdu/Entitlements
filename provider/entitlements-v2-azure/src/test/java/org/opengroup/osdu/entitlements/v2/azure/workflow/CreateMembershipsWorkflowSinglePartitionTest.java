@@ -34,6 +34,7 @@ import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupResponseDto;
 import org.opengroup.osdu.entitlements.v2.model.listmember.ListMemberResponseDto;
 import org.opengroup.osdu.entitlements.v2.model.listmember.MemberDto;
 import org.opengroup.osdu.entitlements.v2.model.updategroup.UpdateGroupOperation;
+import org.opengroup.osdu.entitlements.v2.provider.interfaces.IMessageBus;
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -101,6 +102,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     private Retry retry;
     @MockBean
     private HitsNMissesMetricService metricService;
+    @MockBean
+    private IMessageBus messagePublisher;
 
     @Before
     public void before() throws InterruptedException {

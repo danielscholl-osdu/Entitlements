@@ -3,6 +3,8 @@ package org.opengroup.osdu.entitlements.v2.service;
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.core.common.model.http.DpsHeaders;
+import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.entitlements.v2.AppProperties;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberDto;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
@@ -10,6 +12,10 @@ import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberServiceDto;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.Role;
+import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeAction;
+import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeEvent;
+import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeType;
+import org.opengroup.osdu.entitlements.v2.provider.interfaces.IMessageBus;
 import org.opengroup.osdu.entitlements.v2.spi.addmember.AddMemberRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.http.HttpStatus;
@@ -28,6 +34,8 @@ public class AddMemberService {
     private final JaxRsDpsLog log;
     private final PermissionService permissionService;
     private final GroupCacheService groupCacheService;
+    private final IMessageBus messageBus;
+    private final RequestInfo requestInfo;
 
     /**
      * Add Member only allows to create a member node for a new user (first time add a user to a data partition), but not for a group.
@@ -65,6 +73,7 @@ public class AddMemberService {
                 partitionId(addMemberServiceDto.getPartitionId()).existingParents(allExistingParents).build();
         Set<String> impactedUsers = addMemberRepo.addMember(existingGroupEntityNode, addMemberRepoDto);
         groupCacheService.refreshListGroupCache(impactedUsers, addMemberServiceDto.getPartitionId());
+        publishAddMemberEntitlementsChangeEvent(addMemberDto, addMemberServiceDto);
     }
 
     private EntityNode createNewMemberNode(String memberPrimaryId, String memberDesId, String partitionId) {
@@ -73,5 +82,17 @@ public class AddMemberService {
         } else {
             throw new AppException(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), String.format("Member group %s not found", memberPrimaryId));
         }
+    }
+
+    private void publishAddMemberEntitlementsChangeEvent(AddMemberDto addMemberDto, AddMemberServiceDto addMemberServiceDto) {
+        DpsHeaders headers = requestInfo.getHeaders();
+        EntitlementsChangeEvent event = EntitlementsChangeEvent.builder()
+                .kind(EntitlementsChangeType.groupChanged)
+                .group(addMemberServiceDto.getGroupEmail())
+                .user(addMemberDto.getEmail())
+                .action(EntitlementsChangeAction.add)
+                .modifiedBy(addMemberServiceDto.getRequesterId())
+                .modifiedOn(System.currentTimeMillis()).build();
+        messageBus.publishMessage(headers, event);
     }
 }

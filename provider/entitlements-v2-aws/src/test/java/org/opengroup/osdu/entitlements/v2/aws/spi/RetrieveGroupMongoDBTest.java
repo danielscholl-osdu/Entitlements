@@ -16,8 +16,10 @@ import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.ParentTreeDto;
 import org.opengroup.osdu.entitlements.v2.model.Role;
+import org.opengroup.osdu.entitlements.v2.provider.interfaces.IMessageBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -40,6 +42,9 @@ import static org.opengroup.osdu.entitlements.v2.aws.Util.NodeGenerator.generate
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {EntitlementsTestConfig.class, MockServletContext.class})
 class RetrieveGroupMongoDBTest extends ParentUtil {
+
+    @MockBean
+    private IMessageBus messageBus;
 
     @Autowired
     RetrieveGroupMongoDB retrieveGroupMongoDB;

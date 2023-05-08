@@ -38,6 +38,7 @@ import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupResponseDto;
 import org.opengroup.osdu.entitlements.v2.model.listmember.ListMemberResponseDto;
 import org.opengroup.osdu.entitlements.v2.model.listmember.MemberDto;
 import org.opengroup.osdu.entitlements.v2.model.updategroup.UpdateGroupOperation;
+import org.opengroup.osdu.entitlements.v2.provider.interfaces.IMessageBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -102,6 +103,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     private ITenantFactory tenantFactory;
     @MockBean
     private AuthorizationService authService;
+    @MockBean
+    private IMessageBus messagePublisher;
 
     @BeforeClass
     public static void setupClass() throws IOException {

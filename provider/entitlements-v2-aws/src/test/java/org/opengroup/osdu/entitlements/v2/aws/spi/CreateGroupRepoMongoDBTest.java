@@ -12,8 +12,10 @@ import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.GroupD
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.UserDoc;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.creategroup.CreateGroupRepoDto;
+import org.opengroup.osdu.entitlements.v2.provider.interfaces.IMessageBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -28,6 +30,9 @@ import static org.opengroup.osdu.entitlements.v2.aws.Util.NodeGenerator.generate
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {EntitlementsTestConfig.class, MockServletContext.class})
 class CreateGroupRepoMongoDBTest extends ParentUtil {
+
+    @MockBean
+    private IMessageBus messageBus;
 
     @Autowired
     private CreateGroupRepoMongoDB createGroupRepoMongoDB;

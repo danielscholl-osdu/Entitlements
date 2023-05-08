@@ -4,8 +4,11 @@ import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.core.common.model.tenant.TenantInfo;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
@@ -13,13 +16,15 @@ import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.deletegroup.DeleteGroupServiceDto;
+import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeEvent;
+import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeType;
+import org.opengroup.osdu.entitlements.v2.provider.interfaces.IMessageBus;
 import org.opengroup.osdu.entitlements.v2.spi.deletegroup.DeleteGroupRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.opengroup.osdu.entitlements.v2.util.RequestInfoUtilService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,39 +35,47 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({DeleteGroupService.class, System.class})
 public class DeleteGroupServiceTests {
 
-    @MockBean
+    @Mock
     private DeleteGroupRepo deleteGroupRepo;
-    @MockBean
+    @Mock
     private RetrieveGroupRepo retrieveGroupRepo;
-    @MockBean
+    @Mock
     private GroupCacheService groupCacheService;
-    @MockBean
+    @Mock
     private JaxRsDpsLog logger;
-    @MockBean
+    @Mock
     private DefaultGroupsService defaultGroupsService;
-    @MockBean
+    @Mock
     private RequestInfo requestInfo;
-    @MockBean
+    @Mock
     private PermissionService permissionService;
-    @Autowired
+    @InjectMocks
     private DeleteGroupService service;
-    @MockBean
+    @Mock
     private RequestInfoUtilService requestInfoUtilService;
+    @Mock
+    private IMessageBus messageBus;
+    @Mock
+    private DpsHeaders headers;
 
     @Before
     public void setup() {
+        PowerMockito.mockStatic(System.class);
         when(requestInfo.getTenantInfo()).thenReturn(new TenantInfo());
+        when(requestInfo.getHeaders()).thenReturn(headers);
+        PowerMockito.when(System.currentTimeMillis()).thenReturn(1291371330000L);
     }
 
     @Test
-    public void shouldSuccessfullyDeleteGroupEmail() {
+    public void shouldSuccessfullyDeleteGroupEmailAndPublishDeleteGroupEntitlementsChangeEvent() {
         EntityNode groupNode = EntityNode.builder().nodeId("data.x.viewers@common.contoso.com").name("data.x.viewers")
                 .type(NodeType.GROUP).dataPartitionId("common").build();
         when(retrieveGroupRepo.getEntityNode("data.x.viewers@common.contoso.com", "common")).thenReturn(Optional.of(groupNode));
@@ -77,10 +90,17 @@ public class DeleteGroupServiceTests {
         Set<String> impactedUsers = new HashSet<>(Collections.singletonList("callerdesid"));
         when(deleteGroupRepo.deleteGroup(any())).thenReturn(impactedUsers);
 
+        EntitlementsChangeEvent event = EntitlementsChangeEvent.builder()
+                .kind(EntitlementsChangeType.groupDeleted)
+                .group("data.x.viewers@common.contoso.com")
+                .modifiedBy("callerdesid")
+                .modifiedOn(1291371330000L).build();
+
         this.service.run(groupNode, deleteGroupServiceDto);
 
         verify(deleteGroupRepo).deleteGroup(groupNode);
         verify(groupCacheService).refreshListGroupCache(impactedUsers, "common");
+        verify(messageBus).publishMessage(headers, event);
     }
 
     @Test
@@ -95,10 +115,11 @@ public class DeleteGroupServiceTests {
         this.service.run(groupNode, deleteGroupServiceDto);
 
         verify(deleteGroupRepo, never()).deleteGroup(any(EntityNode.class));
+        verify(messageBus, times(0)).publishMessage(any(), any());
     }
 
     @Test
-    public void shouldReturnIfCallerDoesNotBelongToTheGroupAndDatafierCaller() {
+    public void shouldReturnIfCallerDoesNotBelongToTheGroupAndDatafierCallerAndPublishDeleteGroupEntitlementsChangeEvent() {
         String caller = "datafier@evd-ddl-us-common.iam.gserviceaccount.com";
         String partition = "common";
 
@@ -115,12 +136,20 @@ public class DeleteGroupServiceTests {
                 .requesterId(caller)
                 .partitionId(partition).build();
         when(defaultGroupsService.isDefaultGroupName("users")).thenReturn(false);
+
+        EntitlementsChangeEvent event = EntitlementsChangeEvent.builder()
+                .kind(EntitlementsChangeType.groupDeleted)
+                .group("data.x.viewers@common.contoso.com")
+                .modifiedBy("datafier@evd-ddl-us-common.iam.gserviceaccount.com")
+                .modifiedOn(1291371330000L).build();
+
         try {
             this.service.run(groupNode, deleteGroupServiceDto);
         } catch (Exception e) {
             e.printStackTrace();
             fail(String.format("should not throw exception: %s", e));
         }
+        verify(messageBus).publishMessage(headers, event);
     }
 
     @Test
@@ -144,6 +173,7 @@ public class DeleteGroupServiceTests {
             assertEquals(HttpStatus.SC_BAD_REQUEST, e.getError().getCode());
             assertEquals("Bad Request", e.getError().getReason());
             assertEquals("Invalid group, bootstrap groups are not allowed to be deleted", e.getError().getMessage());
+            verify(messageBus, times(0)).publishMessage(any(), any());
         } catch (Exception e) {
             fail(String.format("should not throw exception: %s", e));
         }
