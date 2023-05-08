@@ -6,7 +6,7 @@ metadata:
   name: {{ .Values.conf.configmap | quote }}
   namespace: {{ .Release.Namespace | quote }}
 data:
-  DOMAIN: {{ .Values.data.entitlementsDomain | quote }}
+  GROUP_ID: {{ .Values.data.entitlementsDomain | quote }}
   LOG_LEVEL: {{ .Values.data.logLevel | quote }}
   PARTITION_HOST: {{ .Values.data.partitionHost | quote }}
   SPRING_PROFILES_ACTIVE: {{ .Values.data.springProfilesActive | quote }}

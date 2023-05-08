@@ -6,14 +6,14 @@ Define the following environment variables.
 
 Must have:
 
-| name                         | value                                              | description                                                                                              | sensitive? | source                                            |
-|------------------------------|----------------------------------------------------|----------------------------------------------------------------------------------------------------------|------------|---------------------------------------------------|
-| `SPRING_PROFILES_ACTIVE`     | ex `gcp`                                           | Spring profile that activate default configuration for Google Cloud environment                                   | false      | -                                                 |
-| `SPRING_DATASOURCE_URL`      | ex `jdbc:postgresql://localhost:5432/entitlements` | The JDBC-valid connection string for database                                                            | yes        | https://console.cloud.google.com/                 |
-| `SPRING_DATASOURCE_USERNAME` | ex `postgres`                                      | The username of database user                                                                            | yes        | -                                                 | 
-| `SPRING_DATASOURCE_PASSWORD` | ex `********`                                      | The password of database user                                                                            | yes        | -                                                 |
-| `DOMAIN`                     | `group`                                            | The name of the domain groups are created for. The default (and recommended for `jdbc`) value is `group` | no         | -                                                 |
-| `PARTITION_HOST`             | ex `http://partition`                              | Partition service host address                                                                         | no         | -                                                 |
+| name                         | value                                              | description                                                                                          | sensitive? | source                                            |
+|------------------------------|----------------------------------------------------|------------------------------------------------------------------------------------------------------|------------|---------------------------------------------------|
+| `SPRING_PROFILES_ACTIVE`     | ex `gcp`                                           | Spring profile that activate default configuration for Google Cloud environment                               | false      | -                                                 |
+| `SPRING_DATASOURCE_URL`      | ex `jdbc:postgresql://localhost:5432/entitlements` | The JDBC-valid connection string for database                                                        | yes        | https://console.cloud.google.com/                 |
+| `SPRING_DATASOURCE_USERNAME` | ex `postgres`                                      | The username of database user                                                                        | yes        | -                                                 | 
+| `SPRING_DATASOURCE_PASSWORD` | ex `********`                                      | The password of database user                                                                        | yes        | -                                                 |
+| `GROUP_ID`                   | `group`                                            | The id of the groups is created. The default (and recommended for `jdbc`) value is `group` | no         | -                                                 |
+| `PARTITION_HOST`             | ex `http://partition`                              | Partition service host address                                                                     | no         | -                                                 |
 
 Defined in default application property file but possible to override:
 
@@ -84,7 +84,7 @@ Defined in default application property file but possible to override:
 | Name                             | Value                                           | Description                                                                                        | Sensitive? | Source |
 |----------------------------------|-------------------------------------------------|----------------------------------------------------------------------------------------------------|------------|--------|
 | `ENTITLEMENT_V2_URL`             | ex `http://localhost:8080/api/entitlements/v2/` | The host where the service is running                                                              | no         | --     |
-| `DOMAIN`                         | ex `contoso.com`                                | Must match the value of `service_domain_name` above                                                | no         | --     |
+| `GROUP_ID`                       | ex `contoso.com`                                | Must match the value of `service_group_id` above                                                   | no         | --     |
 | `TENANT_NAME`                    | ex `opendes`                                    | OSDU tenant used for testing                                                                       | no         | --     |
 | `INTEGRATION_TESTER`             | `********`                                      | System identity to assume for API calls. Note: This user must have entitlements already configured | yes        | --     |
 | `NO_DATA_ACCESS_TESTER`          | `********`                                      | Service account base64 encoded string without data access                                          | yes        | --     |

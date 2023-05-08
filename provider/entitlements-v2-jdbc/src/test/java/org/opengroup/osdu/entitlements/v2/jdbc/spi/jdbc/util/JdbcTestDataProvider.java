@@ -39,7 +39,7 @@ public class JdbcTestDataProvider {
 
 	public static EntityNode getCommonGroup(String name){
 		return EntityNode.builder()
-				.nodeId(format("%s@%s.domain.com", name, DATA_PARTITION_ID))
+				.nodeId(format("%s@%s.group.com", name, DATA_PARTITION_ID))
 				.type(NodeType.GROUP)
 				.name(name)
 				.dataPartitionId(DATA_PARTITION_ID)
@@ -48,7 +48,7 @@ public class JdbcTestDataProvider {
 
 	public static EntityNode getUsersGroupNode(String modifier){
 		return EntityNode.builder()
-				.nodeId(format("users.%s@%s.domain.com", modifier, DATA_PARTITION_ID))
+				.nodeId(format("users.%s@%s.group.com", modifier, DATA_PARTITION_ID))
 				.type(NodeType.GROUP)
 				.name(format("users.%s", modifier))
 				.dataPartitionId(DATA_PARTITION_ID)
@@ -57,7 +57,7 @@ public class JdbcTestDataProvider {
 
 	public static EntityNode getUsersGroupNode(String modifier, String dataPartitionId){
 		return EntityNode.builder()
-			.nodeId(format("users.%s@%s.domain.com", modifier, dataPartitionId))
+			.nodeId(format("users.%s@%s.group.com", modifier, dataPartitionId))
 			.type(NodeType.GROUP)
 			.name(format("users.%s", modifier))
 			.dataPartitionId(dataPartitionId)
@@ -66,7 +66,7 @@ public class JdbcTestDataProvider {
 
 	public static EntityNode getDataGroupNode(String modifier){
 		return EntityNode.builder()
-				.nodeId(format("data.%s@%s.domain.com", modifier, DATA_PARTITION_ID))
+				.nodeId(format("data.%s@%s.group.com", modifier, DATA_PARTITION_ID))
 				.name(format("data.%s", modifier))
 				.type(NodeType.GROUP)
 				.dataPartitionId(DATA_PARTITION_ID)
@@ -75,7 +75,7 @@ public class JdbcTestDataProvider {
 
 	public static EntityNode getDataRootGroupNode(){
 		return EntityNode.builder()
-				.nodeId(format("users.data.root@%s.domain.com", DATA_PARTITION_ID))
+				.nodeId(format("users.data.root@%s.group.com", DATA_PARTITION_ID))
 				.name("users.data.root")
 				.type(NodeType.GROUP)
 				.name("users.data.root")
@@ -94,7 +94,7 @@ public class JdbcTestDataProvider {
 
 	public static EntityNode getDataViewersGroupNode(String modifier){
 		return EntityNode.builder()
-				.nodeId(format("data.%s.viewers@%s.domain.com", modifier, DATA_PARTITION_ID))
+				.nodeId(format("data.%s.viewers@%s.group.com", modifier, DATA_PARTITION_ID))
 				.name(format("data.%s.viewers", modifier))
 				.type(NodeType.GROUP)
 				.dataPartitionId(DATA_PARTITION_ID)

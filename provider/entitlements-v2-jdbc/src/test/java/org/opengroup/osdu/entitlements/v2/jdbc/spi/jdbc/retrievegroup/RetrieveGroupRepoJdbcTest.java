@@ -54,7 +54,7 @@ public class RetrieveGroupRepoJdbcTest {
     @Test
     public void shouldThrow404IfGroupDoesNotExist() {
         try {
-            sut.groupExistenceValidation("users.test@domain.com", "dp");
+            sut.groupExistenceValidation("users.test@group.com", "dp");
             fail("Should throw exception");
         } catch (AppException ex) {
             assertEquals(404, ex.getError().getCode());

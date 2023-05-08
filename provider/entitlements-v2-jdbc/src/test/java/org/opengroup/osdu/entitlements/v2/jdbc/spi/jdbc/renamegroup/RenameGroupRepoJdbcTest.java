@@ -46,7 +46,7 @@ public class RenameGroupRepoJdbcTest {
     @Test
     public void shouldRenameGroupSuccessfully() {
         final String newGroupName = "users.y";
-        final String newGroupId = "users.y@dp.domain.com";
+        final String newGroupId = "users.y@dp.group.com";
 
         EntityNode initialGroupNode = getUsersGroupNode("x");
         GroupInfoEntity savedInitialGroup = GroupInfoEntity.fromEntityNode(initialGroupNode);
