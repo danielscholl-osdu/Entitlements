@@ -47,11 +47,11 @@ public class JdbcConfigurationService implements ConfigurationService {
 
     @Override
     public String getDomain() {
-        String domain = System.getProperty("DOMAIN", System.getenv("DOMAIN"));
-        if (Strings.isNullOrEmpty(domain)) {
-            domain = "group";
+        String groupId = System.getProperty("GROUP_ID", System.getenv("GROUP_ID"));
+        if (Strings.isNullOrEmpty(groupId)) {
+            groupId = "group";
         }
-        return domain;
+        return groupId;
     }
 
     @Override

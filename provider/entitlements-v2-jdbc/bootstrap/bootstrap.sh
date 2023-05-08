@@ -119,7 +119,7 @@ EOF
 source ./validate-env.sh "DATA_PARTITION_ID"
 source ./validate-env.sh "ENTITLEMENTS_HOST"
 source ./validate-env.sh "ADMIN_USER_EMAIL"
-source ./validate-env.sh "DOMAIN"
+source ./validate-env.sh "GROUP_ID"
 source ./validate-env.sh "AIRFLOW_COMPOSER_EMAIL"
 
 if [[ "${ONPREM_ENABLED}" == "true" && "${DATA_PARTITION_ID_LIST}" == "" ]]; then

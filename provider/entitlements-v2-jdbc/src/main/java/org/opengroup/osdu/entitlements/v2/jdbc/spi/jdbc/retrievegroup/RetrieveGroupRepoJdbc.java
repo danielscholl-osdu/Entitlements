@@ -97,7 +97,7 @@ public class RetrieveGroupRepoJdbc implements RetrieveGroupRepo {
 
     //Left without implementation as not necessary for provider
     @Override
-    public Set<EntityNode> getAllGroupNodes(String partitionId, String partitionDomain) {
+    public Set<EntityNode> getAllGroupNodes(String partitionId, String partitionGroupId) {
         return Collections.emptySet();
     }
 

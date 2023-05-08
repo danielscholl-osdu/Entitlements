@@ -6,14 +6,14 @@ Define the following environment variables.
 
 Must have:
 
-| name                         | value                                              | description                                                                                              | sensitive? | source                            |
-|------------------------------|----------------------------------------------------|----------------------------------------------------------------------------------------------------------|------------|-----------------------------------|
-| `SPRING_PROFILES_ACTIVE`     | ex `anthos`                                        | Spring profile that activate default configuration for Google Cloud environment                                   | false      | -                                 |
-| `SPRING_DATASOURCE_URL`      | ex `jdbc:postgresql://localhost:5432/entitlements` | The JDBC-valid connection string for database                                                            | yes        | <https://console.cloud.google.com/> |
-| `SPRING_DATASOURCE_USERNAME` | ex `postgres`                                      | The username of database user                                                                            | yes        | -                                 |
-| `SPRING_DATASOURCE_PASSWORD` | ex `********`                                      | The password of database user                                                                            | yes        | -                                 |
-| `DOMAIN`                     | `group`                                            | The name of the domain groups are created for. The default (and recommended for `jdbc`) value is `group` | no         | -                                 |
-| `PARTITION_HOST`             | ex `http://partition`                              | Partition service host address                                                                         | no         | -                                 |
+| name                         | value                                              | description                                                                                | sensitive? | source                            |
+|------------------------------|----------------------------------------------------|--------------------------------------------------------------------------------------------|------------|-----------------------------------|
+| `SPRING_PROFILES_ACTIVE`     | ex `anthos`                                        | Spring profile that activate default configuration for Google Cloud environment            | false      | -                                 |
+| `SPRING_DATASOURCE_URL`      | ex `jdbc:postgresql://localhost:5432/entitlements` | The JDBC-valid connection string for database                                              | yes        | <https://console.cloud.google.com/> |
+| `SPRING_DATASOURCE_USERNAME` | ex `postgres`                                      | The username of database user                                                              | yes        | -                                 |
+| `SPRING_DATASOURCE_PASSWORD` | ex `********`                                      | The password of database user                                                              | yes        | -                                 |
+| `GROUP_ID`                   | `group`                                            | The id of the groups is created. The default (and recommended for `jdbc`) value is `group` | no         | -                                 |
+| `PARTITION_HOST`             | ex `http://partition`                              | Partition service host address                                                             | no         | -                                 |
 
 Defined in default application property file but possible to override:
 
@@ -75,18 +75,18 @@ Defined in default application property file but possible to override:
 
 **Required to run integration tests**
 
-| Name                                           | Value                                           | Description                                         | Sensitive?                                        | Source |
-|------------------------------------------------|-------------------------------------------------|-----------------------------------------------------|---------------------------------------------------|--------|
-| `ENTITLEMENT_V2_URL`                           | ex `http://localhost:8080/api/entitlements/v2/` | The host where the service is running               | no                                                | --     |
-| `DOMAIN`                                       | ex `contoso.com`                                | Must match the value of `service_domain_name` above | no                                                | --     |
-| `TENANT_NAME`                                  | ex `opendes`                                    | OSDU tenant used for testing                        | no                                                | --     |
-| `TEST_OPENID_PROVIDER_CLIENT_ID`               | `********`                                      | Client Id for `$INTEGRATION_TESTER`                 | yes                                               | --     |
-| `TEST_OPENID_PROVIDER_CLIENT_SECRET`           | `********`                                      |                                                     | Client secret for `$INTEGRATION_TESTER`           | --     |
-| `TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_ID`     | `********`                                      | Client Id for `$NO_ACCESS_INTEGRATION_TESTER`       | yes                                               | --     |
-| `TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_SECRET` | `********`                                      |                                                     | Client secret for `$NO_ACCESS_INTEGRATION_TESTER` | --     |
-| `INTEGRATION_TESTER_EMAIL`                     | `datafier@service.local`                        |                                                     | Email of `$INTEGRATION_TESTER`                    | --     |
-| `TEST_OPENID_PROVIDER_URL`                     | `https://keycloak.com/auth/realms/osdu`         | OpenID provider url                                 | yes                                               | --     |
-| `PARTITION_API`                                | ex `http://localhost:8080/api/partition/v1 `    | Partition service host                              | no                                                | --     |
+| Name                                           | Value                                           | Description                                      | Sensitive?                                        | Source |
+|------------------------------------------------|-------------------------------------------------|--------------------------------------------------|---------------------------------------------------|--------|
+| `ENTITLEMENT_V2_URL`                           | ex `http://localhost:8080/api/entitlements/v2/` | The host where the service is running            | no                                                | --     |
+| `GROUP_ID`                                     | ex `contoso.com`                                | Must match the value of `service_group_id` above | no                                                | --     |
+| `TENANT_NAME`                                  | ex `opendes`                                    | OSDU tenant used for testing                     | no                                                | --     |
+| `TEST_OPENID_PROVIDER_CLIENT_ID`               | `********`                                      | Client Id for `$INTEGRATION_TESTER`              | yes                                               | --     |
+| `TEST_OPENID_PROVIDER_CLIENT_SECRET`           | `********`                                      |                                                  | Client secret for `$INTEGRATION_TESTER`           | --     |
+| `TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_ID`     | `********`                                      | Client Id for `$NO_ACCESS_INTEGRATION_TESTER`    | yes                                               | --     |
+| `TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_SECRET` | `********`                                      |                                                  | Client secret for `$NO_ACCESS_INTEGRATION_TESTER` | --     |
+| `INTEGRATION_TESTER_EMAIL`                     | `datafier@service.local`                        |                                                  | Email of `$INTEGRATION_TESTER`                    | --     |
+| `TEST_OPENID_PROVIDER_URL`                     | `https://keycloak.com/auth/realms/osdu`         | OpenID provider url                              | yes                                               | --     |
+| `PARTITION_API`                                | ex `http://localhost:8080/api/partition/v1 `    | Partition service host                           | no                                                | --     |
 
 **Entitlements configuration for integration accounts**
 

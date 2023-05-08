@@ -58,8 +58,8 @@ public class RenameGroupRepoJdbc implements RenameGroupRepo {
 				.findFirst()
 				.orElseThrow(() -> DatabaseAccessException.createNotFound(groupNode.getNodeId()));
 
-		String partitionDomain = groupNode.getNodeId().split("@")[1];
-		String newNodeId = GroupCreationUtil.createGroupEmail(newGroupName, partitionDomain);
+		String partitionGroupId = groupNode.getNodeId().split("@")[1];
+		String newNodeId = GroupCreationUtil.createGroupEmail(newGroupName, partitionGroupId);
 
 		groupRepository.update(groupInfoEntity.getId(), newGroupName.toLowerCase(), newNodeId);
 	}

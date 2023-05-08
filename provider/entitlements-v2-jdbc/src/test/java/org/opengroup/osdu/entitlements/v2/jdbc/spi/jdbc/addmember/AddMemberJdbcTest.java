@@ -91,13 +91,13 @@ public class AddMemberJdbcTest{
 				.dataPartitionId(DATA_PARTITION_ID)
 				.build();
 		EntityNode firstGroupNode = EntityNode.builder()
-				.nodeId("data.x.viewers@dp.domain.com")
+				.nodeId("data.x.viewers@dp.group.com")
 				.name("data.x.viewers")
 				.type(NodeType.GROUP)
 				.dataPartitionId(DATA_PARTITION_ID)
 				.build();
 		EntityNode secondGroupNode = EntityNode.builder()
-				.nodeId("data.y.viewers@dp.domain.com")
+				.nodeId("data.y.viewers@dp.group.com")
 				.name("data.y.viewers")
 				.type(NodeType.GROUP)
 				.dataPartitionId(DATA_PARTITION_ID)
@@ -138,13 +138,13 @@ public class AddMemberJdbcTest{
 	@Test
 	public void should_updateReferences_whenInsertAGroupToAnotherGroup() {
 		EntityNode firstGroupNode = EntityNode.builder()
-				.nodeId("data.x.viewers@dp.domain.com")
+				.nodeId("data.x.viewers@dp.group.com")
 				.name("data.x.viewers")
 				.type(NodeType.GROUP)
 				.dataPartitionId(DATA_PARTITION_ID)
 				.build();
 		EntityNode secondGroupNode = EntityNode.builder()
-				.nodeId("data.y.viewers@dp.domain.com")
+				.nodeId("data.y.viewers@dp.group.com")
 				.name("data.y.viewers")
 				.type(NodeType.GROUP)
 				.dataPartitionId(DATA_PARTITION_ID)
