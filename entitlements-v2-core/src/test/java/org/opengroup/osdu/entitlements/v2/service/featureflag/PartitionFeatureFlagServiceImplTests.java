@@ -2,13 +2,14 @@ package org.opengroup.osdu.entitlements.v2.service.featureflag;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.partition.*;
 import org.opengroup.osdu.core.common.util.IServiceAccountJwtClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,24 +18,25 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
-public class PartitionFeatureFlagServiceTests {
-    @Mock
+@SpringBootTest
+@RunWith(SpringRunner.class)
+public class PartitionFeatureFlagServiceImplTests {
+    @MockBean
     private IPartitionFactory factory;
-    @Mock
+    @MockBean
     private IServiceAccountJwtClient tokenService;
-    @Mock
+    @MockBean
     private JaxRsDpsLog log;
-    @Mock
+    @MockBean
     private FeatureFlagCache featureFlagCache;
-    @Mock
+    @MockBean
     private DpsHeaders headers;
-    @Mock
+    @MockBean
     private IPartitionProvider partitionProvider;
-    @Mock
+    @MockBean
     private PartitionInfo partitionInfo;
 
-    @InjectMocks
+    @Autowired
     private PartitionFeatureFlagService partitionFeatureFlagService;
 
     @Test
