@@ -2,9 +2,17 @@ package org.opengroup.osdu.entitlements.v2.service;
 
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.core.common.model.http.DpsHeaders;
+import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
+import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberDto;
+import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberServiceDto;
+import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeAction;
+import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeEvent;
+import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeType;
 import org.opengroup.osdu.entitlements.v2.model.updategroup.UpdateGroupResponseDto;
 import org.opengroup.osdu.entitlements.v2.model.updategroup.UpdateGroupServiceDto;
+import org.opengroup.osdu.entitlements.v2.provider.interfaces.IMessageBus;
 import org.opengroup.osdu.entitlements.v2.spi.renamegroup.RenameGroupRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.opengroup.osdu.entitlements.v2.spi.updateappids.UpdateAppIdsRepo;
@@ -27,6 +35,8 @@ public class UpdateGroupService {
     private final UpdateAppIdsRepo updateAppIdsRepo;
     private final DefaultGroupsService defaultGroupsService;
     private final PermissionService permissionService;
+    private final RequestInfo requestInfo;
+    private final IMessageBus messageBus;
 
     public UpdateGroupResponseDto updateGroup(UpdateGroupServiceDto updateGroupServiceDto) {
         String existingGroupEmail = updateGroupServiceDto.getExistingGroupEmail();
@@ -62,6 +72,7 @@ public class UpdateGroupService {
             result.setAppIds(allowedAppIdsList);
         }
         groupCacheService.refreshListGroupCache(new HashSet<>(impactedUsers), updateGroupServiceDto.getPartitionId());
+        publishRenameGroupEntitlementsChangeEvent(updateGroupServiceDto);
         return result;
     }
 
@@ -88,5 +99,22 @@ public class UpdateGroupService {
     private void validateGroupOwnerPermission(String requesterId, String partitionId, EntityNode existingGroupEntityNode) {
         EntityNode requesterNode = EntityNode.createMemberNodeForRequester(requesterId, partitionId);
         permissionService.verifyCanManageMembers(requesterNode, existingGroupEntityNode);
+    }
+
+    private void publishRenameGroupEntitlementsChangeEvent(UpdateGroupServiceDto updateGroupServiceDto) {
+        if (updateGroupServiceDto.getRenameOperation() != null) {
+            DpsHeaders headers = requestInfo.getHeaders();
+            String newGroupName = updateGroupServiceDto.getRenameOperation().getValue().get(0).toLowerCase();
+            String newGroupEmail = GroupCreationUtil.createGroupEmail(newGroupName, updateGroupServiceDto.getPartitionDomain());
+
+            EntitlementsChangeEvent event = EntitlementsChangeEvent.builder()
+                    .kind(EntitlementsChangeType.groupChanged)
+                    .group(updateGroupServiceDto.getExistingGroupEmail())
+                    .updatedGroupEmail(newGroupEmail)
+                    .action(EntitlementsChangeAction.replace)
+                    .modifiedBy(updateGroupServiceDto.getRequesterId())
+                    .modifiedOn(System.currentTimeMillis()).build();
+            messageBus.publishMessage(headers, event);
+        }
     }
 }

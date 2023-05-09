@@ -14,6 +14,8 @@ public class EntitlementsChangeEvent {
     private String group;
     @Builder.Default
     private String user = "";
+    @Builder.Default
+    private String updatedGroupEmail = "";
     private EntitlementsChangeAction action;
     private String modifiedBy;
     private long modifiedOn;
