@@ -9,7 +9,7 @@ variables:
   AWS_SERVICE: entitlements-v2
   AWS_SERVICE_GATEWAY: osdu-gateway
   AWS_ENVIRONMENT: dev
-  AWS_DEPLOY_TARGET: HELM
+  AWS_DEPLOY_TARGET: TF
   AWS_EKS_DEPLOYMENT_NAME: os-entitlements
 
   IBM_BUILD_SUBDIR: provider/entitlements-v2-ibm
