@@ -1,7 +1,5 @@
 # THIS ASAP manual BUILD jar ent v2
-# Use the official AdoptOpenJDK for a base image.
-# https://hub.docker.com/_/openjdk
-FROM openjdk:8-slim
+FROM azul/zulu-openjdk-alpine:8-latest
 WORKDIR /app
 ARG PROVIDER_NAME
 ENV PROVIDER_NAME $PROVIDER_NAME
