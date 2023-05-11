@@ -104,6 +104,15 @@
     },
     {
       "groupName": "service.reservoir-dms.owners"
+    },
+    {
+      "groupName": "service.secret.admin"
+    },
+    {
+      "groupName": "service.secret.editor"
+    },
+    {
+      "groupName": "service.secret.viewer"
     }
   ]
 }
