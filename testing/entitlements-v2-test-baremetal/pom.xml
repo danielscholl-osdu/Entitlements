@@ -26,7 +26,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>entitlements-v2-test-anthos</artifactId>
+    <artifactId>entitlements-v2-test-baremetal</artifactId>
     <version>0.21.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 

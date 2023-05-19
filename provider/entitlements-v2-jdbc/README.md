@@ -83,9 +83,9 @@ Impersonation won't be allowed if
 - delegation group not found
 ```
 
-### Anthos Service Configuration
+### Baremetal Service Configuration
 
-[Anthos service configuration](docs/anthos/README.md)
+[Baremetal service configuration](docs/baremetal/README.md)
 
 ##***REMOVED*** Service Configuration
 
@@ -115,9 +115,9 @@ $ ./mvnw spring-boot:run -pl provider/entitlements-v2-jdbc
 
 In order to run integration tests, you need to have the following environment variables defined:
 
-### Anthos Service Configuration
+### Baremetal Service Configuration
 
-[Anthos service configuration](docs/anthos/README.md)
+[Baremetal service configuration](docs/baremetal/README.md)
 
 ##***REMOVED*** Service Configuration
 
