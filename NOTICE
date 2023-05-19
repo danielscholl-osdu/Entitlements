@@ -17,7 +17,6 @@ The following software have components provided under the terms of this license:
 
 - Apache Commons Pool (from https://commons.apache.org/proper/commons-pool/)
 - Apache Geronimo JMS Spec 2.0 (from http://geronimo.apache.org/maven/${siteId}/${version})
-- Apache Log4j Core (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core)
 - Apache Log4j JUL Adapter (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul)
 - Apache TinkerPop :: Gremlin Core (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-core)
 - Apache TinkerPop :: Gremlin Driver (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-driver)
@@ -55,7 +54,7 @@ The following software have components provided under the terms of this license:
 - AWS SDK for Java - BOM (from https://aws.amazon.com/sdkforjava)
 - AWS SDK for Java - Core (from https://aws.amazon.com/sdkforjava)
 - Adapter: RxJava (from https://github.com/square/retrofit)
-- Admin SDK API directory_v1-rev20230425-2.0.0 (from https://repo1.maven.org/maven2/com/google/apis/google-api-services-admin-directory)
+- Admin SDK API directory_v1-rev20230516-2.0.0 (from https://repo1.maven.org/maven2/com/google/apis/google-api-services-admin-directory)
 - Animal Sniffer Annotations (from https://repo1.maven.org/maven2/org/codehaus/mojo/animal-sniffer-annotations)
 - Apache Commons BeanUtils (from http://commons.apache.org/proper/commons-beanutils/, https://commons.apache.org/proper/commons-beanutils/, https://repo1.maven.org/maven2/commons-beanutils/commons-beanutils)
 - Apache Commons Codec (from http://commons.apache.org/proper/commons-codec/, https://commons.apache.org/proper/commons-codec/)
@@ -307,6 +306,7 @@ The following software have components provided under the terms of this license:
 - Zipkin Reporter: Core (from https://repo1.maven.org/maven2/io/zipkin/reporter2/zipkin-reporter)
 - Zipkin v2 (from https://repo1.maven.org/maven2/io/zipkin/zipkin2/zipkin)
 - aalto-xml (from https://github.com/FasterXML/aalto-xml, https://repo1.maven.org/maven2/com/fasterxml/aalto-xml)
+- argparse (from https://github.com/ThomasWaldmann/argparse/)
 - boto3 (from https://github.com/boto/boto3)
 - botocore (from https://github.com/boto/botocore)
 - datastore-v1-proto-client (from https://repo1.maven.org/maven2/com/google/cloud/datastore/datastore-v1-proto-client)
@@ -374,6 +374,7 @@ BSD-2-Clause
 The following software have components provided under the terms of this license:
 
 - API Common (from https://github.com/googleapis, https://github.com/googleapis/api-common-java, https://repo1.maven.org/maven2/com/google/api/api-common)
+- Apache Log4j Core (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core)
 - DSL Platform JSON (Java 8 API) (from https://github.com/ngs-doo/dsl-json)
 - DSL Platform JSON (core) (from https://github.com/ngs-doo/dsl-json)
 - GAX (Google Api eXtensions) for Java (Core) (from https://github.com/googleapis, https://github.com/googleapis/gax-java, https://repo1.maven.org/maven2/com/google/api/gax)
@@ -562,8 +563,6 @@ The following software have components provided under the terms of this license:
 - JBoss Jakarta Annotations API (from <https://github.com/jboss/jboss-jakarta-annotations-api_spec>, https://github.com/jboss/jboss-jakarta-annotations-api_spec)
 - Jakarta Annotations API (from https://projects.eclipse.org/projects/ee4j.ca)
 - Jakarta WebSocket - Server API (from https://projects.eclipse.org/projects/ee4j.websocket, https://repo1.maven.org/maven2/org/jboss/spec/javax/websocket/jboss-websocket-api_1.1_spec)
-- Java Architecture for XML Binding (from http://jaxb.java.net/, https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api)
-- JavaBeans Activation Framework (from <http://java.sun.com/javase/technologies/desktop/javabeans/jaf/index.jsp>, http://java.sun.com/javase/technologies/desktop/javabeans/jaf/index.jsp, https://repo1.maven.org/maven2/com/sun/activation/javax.activation)
 - tomcat-embed-core (from http://tomcat.apache.org/)
 
 ========================================================================
@@ -592,7 +591,6 @@ The following software have components provided under the terms of this license:
 
 - Jakarta Annotations API (from https://projects.eclipse.org/projects/ee4j.ca)
 - Jakarta Servlet (from https://projects.eclipse.org/projects/ee4j.servlet)
-- Java Architecture for XML Binding (from http://jaxb.java.net/, https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api)
 - Java Servlet 4.0 API
 
 ========================================================================
@@ -711,7 +709,6 @@ The following software have components provided under the terms of this license:
 - msal4j (from https://github.com/AzureAD/microsoft-authentication-library-for-java)
 - msal4j-persistence-extension (from https://github.com/AzureAD/microsoft-authentication-extensions-for-java)
 - qpid-proton-j-extensions (from https://github.com/Azure/qpid-proton-j-extensions)
-- requests (from http://python-requests.org, https://requests.readthedocs.io)
 - webjars-locator-core (from <http://webjars.org>, http://webjars.org)
 
 ========================================================================
