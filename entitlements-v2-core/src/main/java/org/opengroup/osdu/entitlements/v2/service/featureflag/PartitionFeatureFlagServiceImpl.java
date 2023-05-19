@@ -39,7 +39,7 @@ public class PartitionFeatureFlagServiceImpl implements PartitionFeatureFlagServ
     private PartitionInfo getPartitionInfo(String dataPartitionId) {
         try {
             DpsHeaders partitionHeaders = DpsHeaders.createFromMap(headers.getHeaders());
-            partitionHeaders.put(DpsHeaders.AUTHORIZATION, this.tokenService.getIdToken(dataPartitionId));
+            partitionHeaders.put(DpsHeaders.AUTHORIZATION, "Bearer " + this.tokenService.getIdToken(dataPartitionId));
 
             IPartitionProvider partitionProvider = this.factory.create(partitionHeaders);
             PartitionInfo partitionInfo = partitionProvider.get(dataPartitionId);
