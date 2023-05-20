@@ -22,12 +22,12 @@
     <parent>
         <groupId>org.opengroup.osdu.entitlements.v2</groupId>
         <artifactId>os-entitlements-v2-testing</artifactId>
-        <version>0.21.0-SNAPSHOT</version>
+        <version>0.22.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>entitlements-v2-test-baremetal</artifactId>
-    <version>0.21.0-SNAPSHOT</version>
+    <version>0.22.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>org.opengroup.osdu.entitlements.v2</groupId>
             <artifactId>entitlements-v2-test-core</artifactId>
-            <version>0.21.0-SNAPSHOT</version>
+            <version>0.22.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.nimbusds</groupId>

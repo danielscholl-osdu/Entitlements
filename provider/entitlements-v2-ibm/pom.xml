@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.opengroup.osdu.entitlements.v2</groupId>
         <artifactId>entitlements-v2-service</artifactId>
-        <version>0.21.0-SNAPSHOT</version>
+        <version>0.22.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
