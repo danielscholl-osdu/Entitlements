@@ -17,12 +17,12 @@
 
 package org.opengroup.osdu.entitlements.v2.api;
 
-import org.opengroup.osdu.entitlements.v2.acceptance.api.InfoApiTest;
+import org.opengroup.osdu.entitlements.v2.acceptance.api.SwaggerApiTest;
 import org.opengroup.osdu.entitlements.v2.util.AnthosConfigurationService;
 import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
 
-public class InfoApiJdbcTest extends InfoApiTest {
-  public InfoApiJdbcTest() {
+public class SwaggerApiGcTest extends SwaggerApiTest {
+  public SwaggerApiGcTest() {
     super(new AnthosConfigurationService(), new OpenIDTokenProvider());
   }
 }
