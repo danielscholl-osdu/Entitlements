@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-package org.opengroup.osdu.entitlements.v2.api;
+package org.opengroup.osdu.entitlements.v2.jdbc.acceptance.api;
 
-import org.opengroup.osdu.entitlements.v2.acceptance.api.InfoApiTest;
-import org.opengroup.osdu.entitlements.v2.util.AnthosConfigurationService;
-import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
+import org.opengroup.osdu.entitlements.v2.acceptance.api.SwaggerApiTest;
+import org.opengroup.osdu.entitlements.v2.util.JdbcConfigurationService;
+import org.opengroup.osdu.entitlements.v2.util.JdbcTokenService;
 
-public class InfoApiJdbcTest extends InfoApiTest {
-  public InfoApiJdbcTest() {
-    super(new AnthosConfigurationService(), new OpenIDTokenProvider());
+public class SwaggerApiGcTest extends SwaggerApiTest {
+  public SwaggerApiGcTest() {
+    super(new JdbcConfigurationService(), new JdbcTokenService());
   }
 }
