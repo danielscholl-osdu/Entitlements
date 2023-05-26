@@ -75,18 +75,19 @@ Defined in default application property file but possible to override:
 
 **Required to run integration tests**
 
-| Name                                           | Value                                           | Description                                      | Sensitive?                                        | Source |
-|------------------------------------------------|-------------------------------------------------|--------------------------------------------------|---------------------------------------------------|--------|
-| `ENTITLEMENT_V2_URL`                           | ex `http://localhost:8080/api/entitlements/v2/` | The host where the service is running            | no                                                | --     |
-| `GROUP_ID`                                     | ex `contoso.com`                                | Must match the value of `service_group_id` above | no                                                | --     |
-| `TENANT_NAME`                                  | ex `opendes`                                    | OSDU tenant used for testing                     | no                                                | --     |
-| `TEST_OPENID_PROVIDER_CLIENT_ID`               | `********`                                      | Client Id for `$INTEGRATION_TESTER`              | yes                                               | --     |
-| `TEST_OPENID_PROVIDER_CLIENT_SECRET`           | `********`                                      |                                                  | Client secret for `$INTEGRATION_TESTER`           | --     |
-| `TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_ID`     | `********`                                      | Client Id for `$NO_ACCESS_INTEGRATION_TESTER`    | yes                                               | --     |
-| `TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_SECRET` | `********`                                      |                                                  | Client secret for `$NO_ACCESS_INTEGRATION_TESTER` | --     |
-| `INTEGRATION_TESTER_EMAIL`                     | `datafier@service.local`                        |                                                  | Email of `$INTEGRATION_TESTER`                    | --     |
-| `TEST_OPENID_PROVIDER_URL`                     | `https://keycloak.com/auth/realms/osdu`         | OpenID provider url                              | yes                                               | --     |
-| `PARTITION_API`                                | ex `http://localhost:8080/api/partition/v1 `    | Partition service host                           | no                                                | --     |
+| Name                                           | Value                                             | Description                                                           | Sensitive?                                        | Source |
+|------------------------------------------------|---------------------------------------------------|-----------------------------------------------------------------------|---------------------------------------------------|--------|
+| `ENTITLEMENT_V2_URL`                           | ex `http://localhost:8080/api/entitlements/v2/`   | The host where the service is running                                 | no                                                | --     |
+| `GROUP_ID`                                     | ex `contoso.com`                                  | Must match the value of `service_group_id` above                      | no                                                | --     |
+| `TENANT_NAME`                                  | ex `opendes`                                      | OSDU tenant used for testing                                          | no                                                | --     |
+| `TEST_OPENID_PROVIDER_CLIENT_ID`               | `********`                                        | Client Id for `$INTEGRATION_TESTER`                                   | yes                                               | --     |
+| `TEST_OPENID_PROVIDER_CLIENT_SECRET`           | `********`                                        |                                                                       | Client secret for `$INTEGRATION_TESTER`           | --     |
+| `TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_ID`     | `********`                                        | Client Id for `$NO_ACCESS_INTEGRATION_TESTER`                         | yes                                               | --     |
+| `TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_SECRET` | `********`                                        |                                                                       | Client secret for `$NO_ACCESS_INTEGRATION_TESTER` | --     |
+| `INTEGRATION_TESTER_EMAIL`                     | `datafier@service.local`                          |                                                                       | Email of `$INTEGRATION_TESTER`                    | --     |
+| `TEST_OPENID_PROVIDER_URL`                     | `https://keycloak.com/auth/realms/osdu`           | OpenID provider url                                                   | yes                                               | --     |
+| `PARTITION_API`                                | ex `http://localhost:8080/api/partition/v1 `      | Partition service host                                                | no                                                | --     |
+| `INDEXER_SERVICE_ACCOUNT_EMAIL`                | ex `workload-indexer@osdu.iam.gseviceaccount.com` | Indexer service account email with special privileges for data groups | no                                                | --     |
 
 **Entitlements configuration for integration accounts**
 
