@@ -33,7 +33,6 @@ public abstract class SwaggerApiTest extends AcceptanceBaseTest {
                     .build();
 
     ClientResponse response = httpClientService.send(request);
-    log.info("Request sent: {}. Received response: {}", request, response);
 
     assertEquals(HttpStatus.SC_OK, response.getStatus());
   }
@@ -49,7 +48,6 @@ public abstract class SwaggerApiTest extends AcceptanceBaseTest {
                     .build();
 
     ClientResponse response = httpClientService.send(request);
-    log.info("Request sent: {}. Received response: {}", request, response);
     
     assertEquals(HttpStatus.SC_OK, response.getStatus());
   }
