@@ -23,7 +23,7 @@
     <java.version>8</java.version>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.source>${java.version}</maven.compiler.source>
-    <os-core-common.version>0.20.1</os-core-common.version>
+    <os-core-common.version>0.21.0</os-core-common.version>
   </properties>
 
   <parent>
@@ -126,6 +126,7 @@
     <dependency>
       <groupId>org.opengroup.osdu</groupId>
       <artifactId>os-core-common</artifactId>
+      <version>${os-core-common.version}</version>
     </dependency>
 
     <dependency>
