@@ -1,6 +1,6 @@
 /*
- *  Copyright 2020-2022 Google LLC
- *  Copyright 2020-2022 EPAM Systems, Inc
+ *  Copyright 2020-2023 Google LLC
+ *  Copyright 2020-2023 EPAM Systems, Inc
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.entitlements.v2.jdbc.Utils;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.DatabaseCheck;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.IDTokenValidatorFactory;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsConfigurationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,8 @@ public class InternalAuthTest {
   @Autowired private EntitlementsConfigurationProperties entitlementsConfigurationProperties;
   @Autowired public RequestHeaderInterceptor interceptor;
   @Autowired private ApplicationContext applicationContext;
+
+  @MockBean private DatabaseCheck databaseCheck;
 
   private String correctToken;
 
