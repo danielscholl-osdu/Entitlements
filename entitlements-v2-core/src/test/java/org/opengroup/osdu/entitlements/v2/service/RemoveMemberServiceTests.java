@@ -81,6 +81,7 @@ public class RemoveMemberServiceTests {
         when(requestInfo.getHeaders()).thenReturn(headers);
         when(headers.getHeaders()).thenReturn(headersMap);
         PowerMockito.when(System.currentTimeMillis()).thenReturn(1291371330000L);
+        ReflectionTestUtil.setFieldValueForClass(removeMemberService, "eventPublisher", publisher);
         ReflectionTestUtil.setFieldValueForClass(removeMemberService, "eventPublishingEnabled", true);
     }
 

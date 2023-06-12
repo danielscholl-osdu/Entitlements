@@ -72,6 +72,7 @@ public class AddMemberServiceTests {
         when(headers.getHeaders()).thenReturn(headersMap);
         PowerMockito.when(System.currentTimeMillis()).thenReturn(1291371330000L);
         ReflectionTestUtil.setFieldValueForClass(addMemberService, "eventPublishingEnabled", true);
+        ReflectionTestUtil.setFieldValueForClass(addMemberService, "eventPublisher", publisher);
     }
 
     @Test

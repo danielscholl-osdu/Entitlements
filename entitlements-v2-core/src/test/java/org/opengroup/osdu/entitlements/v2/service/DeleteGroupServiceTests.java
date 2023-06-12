@@ -69,6 +69,7 @@ public class DeleteGroupServiceTests {
         when(requestInfo.getHeaders()).thenReturn(headers);
         when(headers.getHeaders()).thenReturn(headersMap);
         PowerMockito.when(System.currentTimeMillis()).thenReturn(1291371330000L);
+        ReflectionTestUtil.setFieldValueForClass(service, "eventPublisher", publisher);
         ReflectionTestUtil.setFieldValueForClass(service, "eventPublishingEnabled", true);
     }
 

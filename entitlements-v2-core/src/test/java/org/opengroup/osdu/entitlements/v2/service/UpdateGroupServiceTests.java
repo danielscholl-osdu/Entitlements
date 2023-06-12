@@ -79,6 +79,7 @@ public class UpdateGroupServiceTests {
         PowerMockito.when(System.currentTimeMillis()).thenReturn(1291371330000L);
         when(headers.getHeaders()).thenReturn(headersMap);
         ReflectionTestUtil.setFieldValueForClass(updateGroupService, "eventPublishingEnabled", true);
+        ReflectionTestUtil.setFieldValueForClass(updateGroupService, "eventPublisher", publisher);
     }
 
     @Test
