@@ -1,16 +1,22 @@
 package org.opengroup.osdu.entitlements.v2.service.featureflag;
 
 import lombok.RequiredArgsConstructor;
-import org.opengroup.osdu.core.common.feature.IFeatureFlag;
+import org.apache.http.HttpStatus;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
+import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.core.common.model.http.DpsHeaders;
+import org.opengroup.osdu.core.common.partition.*;
+import org.opengroup.osdu.core.common.util.IServiceAccountJwtClient;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class PartitionFeatureFlagServiceImpl implements PartitionFeatureFlagService {
-    private final IFeatureFlag featureFlag;
+    private final IPartitionFactory factory;
+    private final IServiceAccountJwtClient tokenService;
     private final JaxRsDpsLog log;
     private final FeatureFlagCache featureFlagCache;
+    private final DpsHeaders headers;
 
     @Override
     public boolean getFeature(String ffName, String dataPartitionId) {
@@ -21,11 +27,36 @@ public class PartitionFeatureFlagServiceImpl implements PartitionFeatureFlagServ
         }
         boolean ffValue = false;
         try {
-            ffValue = this.featureFlag.isFeatureEnabled(ffName);
+            PartitionInfo partitionInfo = this.getPartitionInfo(dataPartitionId);
+            ffValue = this.getFeatureFlagFromPartitionService(partitionInfo, ffName);
         } catch (Exception e) {
             this.log.error(String.format("PartitionService: Error getting %s for dataPartition with Id: %s", ffName, dataPartitionId), e);
         }
         this.featureFlagCache.setFeatureFlag(ffName, cacheKey, ffValue);
         return ffValue;
+    }
+
+    private PartitionInfo getPartitionInfo(String dataPartitionId) {
+        try {
+            DpsHeaders partitionHeaders = DpsHeaders.createFromMap(headers.getHeaders());
+            partitionHeaders.put(DpsHeaders.AUTHORIZATION, "Bearer " + this.tokenService.getIdToken(dataPartitionId));
+
+            IPartitionProvider partitionProvider = this.factory.create(partitionHeaders);
+            PartitionInfo partitionInfo = partitionProvider.get(dataPartitionId);
+            return partitionInfo;
+        } catch (PartitionException e) {
+            throw new AppException(HttpStatus.SC_FORBIDDEN, "Service unavailable", String.format("Error getting partition info for data-partition: %s", dataPartitionId), e);
+        }
+    }
+
+    private boolean getFeatureFlagFromPartitionService(PartitionInfo partitionInfo, String ffName) {
+        if(partitionInfo == null || partitionInfo.getProperties() == null)
+            return false;
+
+        if(partitionInfo.getProperties().containsKey(ffName)) {
+            Property property = partitionInfo.getProperties().get(ffName);
+            return Boolean.parseBoolean((String)property.getValue());
+        }
+        return false;
     }
 }
