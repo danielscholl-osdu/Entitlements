@@ -19,6 +19,7 @@ import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeEvent;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeType;
 import org.opengroup.osdu.entitlements.v2.spi.addmember.AddMemberRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -37,8 +38,9 @@ public class AddMemberService {
     private final JaxRsDpsLog log;
     private final PermissionService permissionService;
     private final GroupCacheService groupCacheService;
-    private final IEventPublisher eventPublisher;
     private final RequestInfo requestInfo;
+    @Autowired
+    private IEventPublisher eventPublisher;
     @Value("${event-publishing.enabled:false}")
     private Boolean eventPublishingEnabled;
 

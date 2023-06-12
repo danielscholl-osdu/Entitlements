@@ -14,6 +14,7 @@ import org.opengroup.osdu.entitlements.v2.spi.renamegroup.RenameGroupRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.opengroup.osdu.entitlements.v2.spi.updateappids.UpdateAppIdsRepo;
 import org.opengroup.osdu.entitlements.v2.util.GroupCreationUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -34,8 +35,8 @@ public class UpdateGroupService {
     private final DefaultGroupsService defaultGroupsService;
     private final PermissionService permissionService;
     private final RequestInfo requestInfo;
-    private final IEventPublisher eventPublisher;
-
+    @Autowired
+    private IEventPublisher eventPublisher;
     @Value("${event-publishing.enabled:false}")
     private Boolean eventPublishingEnabled;
 

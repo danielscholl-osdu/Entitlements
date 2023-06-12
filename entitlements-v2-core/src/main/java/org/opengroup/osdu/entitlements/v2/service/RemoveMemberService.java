@@ -14,6 +14,7 @@ import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.removemember.RemoveMemberServiceDto;
 import org.opengroup.osdu.entitlements.v2.spi.removemember.RemoveMemberRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,8 @@ public class RemoveMemberService {
     private final BootstrapGroupsConfigurationService bootstrapGroupsConfigurationService;
     private final PermissionService permissionService;
     private final RequestInfo requestInfo;
-    private final IEventPublisher eventPublisher;
+    @Autowired
+    private IEventPublisher eventPublisher;
     @Value("${event-publishing.enabled:false}")
     private Boolean eventPublishingEnabled;
 
