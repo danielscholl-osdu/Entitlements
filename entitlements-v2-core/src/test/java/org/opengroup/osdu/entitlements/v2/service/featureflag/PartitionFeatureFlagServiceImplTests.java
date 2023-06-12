@@ -56,6 +56,7 @@ public class PartitionFeatureFlagServiceImplTests {
         property.setSensitive(false);
         property.setValue("true");
         partitionProperties.put(FeatureFlag.DISABLE_DATA_ROOT_GROUP_HIERARCHY.label, property);
+        when(tokenService.getIdToken("dp")).thenReturn("token");
         when(partitionInfo.getProperties()).thenReturn(partitionProperties);
         assertThat(partitionFeatureFlagService.getFeature(FeatureFlag.DISABLE_DATA_ROOT_GROUP_HIERARCHY.label, "dp")).isTrue();
     }
