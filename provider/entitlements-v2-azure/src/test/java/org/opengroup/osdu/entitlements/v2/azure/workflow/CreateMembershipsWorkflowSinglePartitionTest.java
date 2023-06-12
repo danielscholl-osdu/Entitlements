@@ -16,6 +16,7 @@ import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.model.tenant.TenantInfo;
 import org.opengroup.osdu.core.common.provider.interfaces.ITenantFactory;
+import org.opengroup.osdu.core.common.status.IEventPublisher;
 import org.opengroup.osdu.entitlements.v2.api.CreateGroupApi;
 import org.opengroup.osdu.entitlements.v2.api.DeleteGroupApi;
 import org.opengroup.osdu.entitlements.v2.api.DeleteMemberApi;
@@ -34,7 +35,6 @@ import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupResponseDto;
 import org.opengroup.osdu.entitlements.v2.model.listmember.ListMemberResponseDto;
 import org.opengroup.osdu.entitlements.v2.model.listmember.MemberDto;
 import org.opengroup.osdu.entitlements.v2.model.updategroup.UpdateGroupOperation;
-import org.opengroup.osdu.entitlements.v2.provider.interfaces.IMessageBus;
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -103,7 +103,7 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     @MockBean
     private HitsNMissesMetricService metricService;
     @MockBean
-    private IMessageBus messagePublisher;
+    private IEventPublisher eventPublisher;
 
     @Before
     public void before() throws InterruptedException {

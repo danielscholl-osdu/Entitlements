@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.opengroup.osdu.core.common.status.IEventPublisher;
 import org.opengroup.osdu.entitlements.v2.aws.Util.ParentUtil;
 import org.opengroup.osdu.entitlements.v2.aws.config.EntitlementsTestConfig;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.GroupDoc;
@@ -12,7 +13,6 @@ import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.UserDo
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
-import org.opengroup.osdu.entitlements.v2.provider.interfaces.IMessageBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -32,7 +32,7 @@ import static org.opengroup.osdu.entitlements.v2.aws.Util.NodeGenerator.generate
 public class AddMemberRepoMongoDBTest extends ParentUtil {
 
     @MockBean
-    private IMessageBus messageBus;
+    private IEventPublisher messageBus;
 
     @Autowired
     private AddMemberRepoMongoDB addMemberRepo;

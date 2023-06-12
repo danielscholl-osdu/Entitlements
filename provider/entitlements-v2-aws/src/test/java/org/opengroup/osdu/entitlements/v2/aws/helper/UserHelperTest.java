@@ -3,6 +3,7 @@ package org.opengroup.osdu.entitlements.v2.aws.helper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.opengroup.osdu.core.common.status.IEventPublisher;
 import org.opengroup.osdu.entitlements.v2.aws.Util.ParentUtil;
 import org.opengroup.osdu.entitlements.v2.aws.config.EntitlementsTestConfig;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.UserDoc;
@@ -10,7 +11,6 @@ import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.intern
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.internal.NodeRelationDoc;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.helper.UserHelper;
 import org.opengroup.osdu.entitlements.v2.model.Role;
-import org.opengroup.osdu.entitlements.v2.provider.interfaces.IMessageBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -43,7 +43,7 @@ import static org.opengroup.osdu.entitlements.v2.aws.Util.UserDocGenerator.gener
 public class UserHelperTest extends ParentUtil {
 
     @MockBean
-    private IMessageBus messageBus;
+    private IEventPublisher messageBus;
 
     @Autowired
     UserHelper userHelper;

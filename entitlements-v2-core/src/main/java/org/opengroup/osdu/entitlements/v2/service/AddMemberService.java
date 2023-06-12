@@ -5,6 +5,8 @@ import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
+import org.opengroup.osdu.core.common.model.status.Message;
+import org.opengroup.osdu.core.common.status.IEventPublisher;
 import org.opengroup.osdu.entitlements.v2.AppProperties;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberDto;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
@@ -15,12 +17,13 @@ import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeAction;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeEvent;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeType;
-import org.opengroup.osdu.entitlements.v2.provider.interfaces.IMessageBus;
 import org.opengroup.osdu.entitlements.v2.spi.addmember.AddMemberRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,8 +37,10 @@ public class AddMemberService {
     private final JaxRsDpsLog log;
     private final PermissionService permissionService;
     private final GroupCacheService groupCacheService;
-    private final IMessageBus messageBus;
+    private final IEventPublisher eventPublisher;
     private final RequestInfo requestInfo;
+    @Value("${event-publishing.enabled:false}")
+    private Boolean eventPublishingEnabled;
 
     /**
      * Add Member only allows to create a member node for a new user (first time add a user to a data partition), but not for a group.
@@ -85,14 +90,18 @@ public class AddMemberService {
     }
 
     private void publishAddMemberEntitlementsChangeEvent(AddMemberDto addMemberDto, AddMemberServiceDto addMemberServiceDto) {
-        DpsHeaders headers = requestInfo.getHeaders();
-        EntitlementsChangeEvent event = EntitlementsChangeEvent.builder()
-                .kind(EntitlementsChangeType.groupChanged)
-                .group(addMemberServiceDto.getGroupEmail())
-                .user(addMemberDto.getEmail())
-                .action(EntitlementsChangeAction.add)
-                .modifiedBy(addMemberServiceDto.getRequesterId())
-                .modifiedOn(System.currentTimeMillis()).build();
-        messageBus.publishMessage(headers, event);
+        if(eventPublishingEnabled) {
+            EntitlementsChangeEvent[] event = {
+                    EntitlementsChangeEvent.builder()
+                    .kind(EntitlementsChangeType.groupChanged)
+                    .group(addMemberServiceDto.getGroupEmail())
+                    .user(addMemberDto.getEmail())
+                    .action(EntitlementsChangeAction.add)
+                    .modifiedBy(addMemberServiceDto.getRequesterId())
+                    .modifiedOn(System.currentTimeMillis()).build()
+            };
+
+            eventPublisher.publish(event, requestInfo.getHeaders().getHeaders());
+        }
     }
 }

@@ -10,6 +10,7 @@ import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
+import org.opengroup.osdu.core.common.status.IEventPublisher;
 import org.opengroup.osdu.entitlements.v2.AppProperties;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
@@ -23,28 +24,18 @@ import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberServiceDto;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeAction;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeEvent;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeType;
-import org.opengroup.osdu.entitlements.v2.provider.interfaces.IMessageBus;
+import org.opengroup.osdu.entitlements.v2.service.util.ReflectionTestUtil;
 import org.opengroup.osdu.entitlements.v2.spi.addmember.AddMemberRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({AddMemberService.class, System.class})
@@ -67,16 +58,20 @@ public class AddMemberServiceTests {
     @Mock
     private DpsHeaders headers;
     @Mock
-    private IMessageBus messageBus;
+    private IEventPublisher publisher;
     @InjectMocks
     private AddMemberService addMemberService;
+
+    private static final Map<String, String> headersMap = Collections.singletonMap("testKey", "testValue");
 
     @Before
     public void setup() {
         PowerMockito.mockStatic(System.class);
         when(config.getDomain()).thenReturn("contoso.com");
         when(requestInfo.getHeaders()).thenReturn(headers);
+        when(headers.getHeaders()).thenReturn(headersMap);
         PowerMockito.when(System.currentTimeMillis()).thenReturn(1291371330000L);
+        ReflectionTestUtil.setFieldValueForClass(addMemberService, "eventPublishingEnabled", true);
     }
 
     @Test
@@ -106,13 +101,15 @@ public class AddMemberServiceTests {
         Set<String> allImpactUsers = new HashSet<>(Arrays.asList("member@xxx.com"));
         when(addMemberRepo.addMember(any(), any())).thenReturn(allImpactUsers);
 
-        EntitlementsChangeEvent event = EntitlementsChangeEvent.builder()
+        EntitlementsChangeEvent [] event = {
+                EntitlementsChangeEvent.builder()
                 .kind(EntitlementsChangeType.groupChanged)
                 .group("data.x@common.contoso.com")
                 .user("member@contoso.com")
                 .action(EntitlementsChangeAction.add)
                 .modifiedBy("requesterid")
-                .modifiedOn(1291371330000L).build();
+                .modifiedOn(1291371330000L).build()
+        };
 
         addMemberService.run(addMemberDto, addMemberServiceDto);
 
@@ -121,7 +118,7 @@ public class AddMemberServiceTests {
         assertThat(captor.getValue().getRole()).isEqualTo(Role.MEMBER);
         assertThat(captor.getValue().getPartitionId()).isEqualTo("common");
         verify(groupCacheService).refreshListGroupCache(allImpactUsers, "common");
-        verify(messageBus).publishMessage(headers, event);
+        verify(publisher).publish(event, headersMap);
     }
 
     @Test
@@ -150,13 +147,15 @@ public class AddMemberServiceTests {
         Set<String> allImpactUsers = new HashSet<>(Arrays.asList("member@xxx.com"));
         when(addMemberRepo.addMember(any(), any())).thenReturn(allImpactUsers);
 
-        EntitlementsChangeEvent event = EntitlementsChangeEvent.builder()
+        EntitlementsChangeEvent[] event = {
+                EntitlementsChangeEvent.builder()
                 .kind(EntitlementsChangeType.groupChanged)
                 .group("data.x@common.contoso.com")
                 .user("member@xxx.com")
                 .action(EntitlementsChangeAction.add)
                 .modifiedBy("datafier@test.com")
-                .modifiedOn(1291371330000L).build();
+                .modifiedOn(1291371330000L).build()
+        };
 
         addMemberService.run(addMemberDto, addMemberServiceDto);
 
@@ -165,7 +164,7 @@ public class AddMemberServiceTests {
         assertThat(captor.getValue().getRole()).isEqualTo(Role.MEMBER);
         assertThat(captor.getValue().getPartitionId()).isEqualTo("common");
         verify(groupCacheService).refreshListGroupCache(allImpactUsers, "common");
-        verify(messageBus).publishMessage(headers, event);
+        verify(publisher).publish(event, headersMap);
     }
 
     @Test
@@ -192,7 +191,7 @@ public class AddMemberServiceTests {
         } catch (AppException ex) {
             verify(addMemberRepo, never()).addMember(any(), any());
             assertThat(ex.getError().getCode()).isEqualTo(404);
-            verify(messageBus, times(0)).publishMessage(any(), any());
+            verify(publisher, times(0)).publish(any(), any());
         } catch (Exception ex) {
             fail(String.format("should not throw exception: %s", ex.getMessage()));
         }
@@ -224,13 +223,15 @@ public class AddMemberServiceTests {
         Set<String> allImpactUsers = new HashSet<>(Arrays.asList("member@xxx.com"));
         when(addMemberRepo.addMember(any(), any())).thenReturn(allImpactUsers);
 
-        EntitlementsChangeEvent event = EntitlementsChangeEvent.builder()
-                .kind(EntitlementsChangeType.groupChanged)
-                .group("data.x@common.contoso.com")
-                .user("member@xxx.com")
-                .action(EntitlementsChangeAction.add)
-                .modifiedBy("requesterid")
-                .modifiedOn(1291371330000L).build();
+        EntitlementsChangeEvent[] event =  {
+                EntitlementsChangeEvent.builder()
+                        .kind(EntitlementsChangeType.groupChanged)
+                        .group("data.x@common.contoso.com")
+                        .user("member@xxx.com")
+                        .action(EntitlementsChangeAction.add)
+                        .modifiedBy("requesterid")
+                        .modifiedOn(1291371330000L).build()
+        };
 
         addMemberService.run(addMemberDto, addMemberServiceDto);
 
@@ -240,7 +241,7 @@ public class AddMemberServiceTests {
         assertThat(captor.getValue().getRole()).isEqualTo(Role.MEMBER);
         assertThat(captor.getValue().getPartitionId()).isEqualTo("common");
         verify(groupCacheService).refreshListGroupCache(allImpactUsers, "common");
-        verify(messageBus).publishMessage(headers, event);
+        verify(publisher).publish(event, headersMap);
     }
 
     @Test
@@ -270,7 +271,7 @@ public class AddMemberServiceTests {
         } catch (AppException ex) {
             verify(addMemberRepo, never()).addMember(any(), any());
             assertThat(ex.getError().getCode()).isEqualTo(409);
-            verify(messageBus, times(0)).publishMessage(any(), any());
+            verify(publisher, times(0)).publish(any(), any());
         } catch (Exception ex) {
             fail(String.format("should not throw exception: %s", ex.getMessage()));
         }
@@ -305,7 +306,7 @@ public class AddMemberServiceTests {
         } catch (AppException ex) {
             verify(addMemberRepo, never()).addMember(any(), any());
             assertThat(ex.getError().getCode()).isEqualTo(400);
-            verify(messageBus, times(0)).publishMessage(any(), any());
+            verify(publisher, times(0)).publish(any(), any());
         } catch (Exception ex) {
             fail(String.format("should not throw exception: %s", ex.getMessage()));
         }
@@ -342,7 +343,7 @@ public class AddMemberServiceTests {
         } catch (AppException ex) {
             verify(addMemberRepo, never()).addMember(any(), any());
             assertThat(ex.getError().getCode()).isEqualTo(412);
-            verify(messageBus, times(0)).publishMessage(any(), any());
+            verify(publisher, times(0)).publish(any(), any());
         } catch (Exception ex) {
             fail(String.format("should not throw exception: %s", ex.getMessage()));
         }
@@ -380,7 +381,7 @@ public class AddMemberServiceTests {
         } catch (AppException ex) {
             verify(addMemberRepo, never()).addMember(any(), any());
             assertThat(ex.getError().getCode()).isEqualTo(412);
-            verify(messageBus, times(0)).publishMessage(any(), any());
+            verify(publisher, times(0)).publish(any(), any());
         } catch (Exception ex) {
             fail(String.format("should not throw exception: %s", ex.getMessage()));
         }
@@ -411,7 +412,7 @@ public class AddMemberServiceTests {
         } catch (AppException ex) {
             verify(addMemberRepo, never()).addMember(any(), any());
             assertThat(ex.getError().getCode()).isEqualTo(400);
-            verify(messageBus, times(0)).publishMessage(any(), any());
+            verify(publisher, times(0)).publish(any(), any());
         } catch (Exception ex) {
             fail(String.format("should not throw exception: %s", ex.getMessage()));
         }
@@ -449,9 +450,47 @@ public class AddMemberServiceTests {
         } catch (AppException ex) {
             verify(addMemberRepo, never()).addMember(any(), any());
             assertThat(ex.getError().getCode()).isEqualTo(400);
-            verify(messageBus, times(0)).publishMessage(any(), any());
+            verify(publisher, times(0)).publish(any(), any());
         } catch (Exception ex) {
             fail(String.format("should not throw exception: %s", ex.getMessage()));
         }
+    }
+
+    @Test
+    public void should_createUserMemberNode_andNotPublishEvent_whenPublishingDisabled() {
+        ReflectionTestUtil.setFieldValueForClass(addMemberService, "eventPublishingEnabled", false);
+        EntityNode groupNode = EntityNode.builder().nodeId("data.x@common.contoso.com").name("data.x")
+                .type(NodeType.GROUP).dataPartitionId("common").build();
+        EntityNode requesterNode = EntityNode.builder().nodeId("requesterid").name("requesterid").type(NodeType.USER).dataPartitionId("common").build();
+        when(retrieveGroupRepo.getEntityNode("member@contoso.com", "common")).thenReturn(Optional.empty());
+        when(retrieveGroupRepo.groupExistenceValidation("data.x@common.contoso.com", "common")).thenReturn(groupNode);
+        when(retrieveGroupRepo.getEntityNode("requesterid", "common")).thenReturn(Optional.of(requesterNode));
+        EntityNode rootDataGroupNode = EntityNode.builder().nodeId("users.data.root@common.contoso.com").name("users.data.root")
+                .type(NodeType.GROUP).dataPartitionId("common").build();
+        when(retrieveGroupRepo.groupExistenceValidation("users.data.root@common.contoso.com", "common")).thenReturn(rootDataGroupNode);
+        when(retrieveGroupRepo.hasDirectChild(rootDataGroupNode, ChildrenReference.createChildrenReference(requesterNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
+        EntityNode memberNode = EntityNode.builder().nodeId("member@contoso.com").name("member@contoso.com").type(NodeType.USER)
+                .dataPartitionId("common").description("member@contoso.com").appIds(Collections.emptySet()).build();
+        ParentTreeDto parentTreeDto = ParentTreeDto.builder().parentReferences(Collections.emptySet()).maxDepth(2).build();
+        when(retrieveGroupRepo.loadAllParents(memberNode)).thenReturn(parentTreeDto);
+        when(retrieveGroupRepo.loadAllParents(groupNode)).thenReturn(parentTreeDto);
+
+        AddMemberDto addMemberDto = new AddMemberDto("member@contoso.com", Role.MEMBER);
+        AddMemberServiceDto addMemberServiceDto = AddMemberServiceDto.builder()
+                .groupEmail("data.x@common.contoso.com")
+                .requesterId("requesterid")
+                .partitionId("common")
+                .build();
+        Set<String> allImpactUsers = new HashSet<>(Arrays.asList("member@xxx.com"));
+        when(addMemberRepo.addMember(any(), any())).thenReturn(allImpactUsers);
+
+        addMemberService.run(addMemberDto, addMemberServiceDto);
+
+        ArgumentCaptor<AddMemberRepoDto> captor = ArgumentCaptor.forClass(AddMemberRepoDto.class);
+        verify(addMemberRepo).addMember(eq(groupNode), captor.capture());
+        assertThat(captor.getValue().getRole()).isEqualTo(Role.MEMBER);
+        assertThat(captor.getValue().getPartitionId()).isEqualTo("common");
+        verify(groupCacheService).refreshListGroupCache(allImpactUsers, "common");
+        verifyNoInteractions(publisher);
     }
 }

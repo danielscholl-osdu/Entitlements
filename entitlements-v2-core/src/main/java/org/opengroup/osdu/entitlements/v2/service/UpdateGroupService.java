@@ -2,21 +2,19 @@ package org.opengroup.osdu.entitlements.v2.service;
 
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.model.http.AppException;
-import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
+import org.opengroup.osdu.core.common.status.IEventPublisher;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
-import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberDto;
-import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberServiceDto;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeAction;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeEvent;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeType;
 import org.opengroup.osdu.entitlements.v2.model.updategroup.UpdateGroupResponseDto;
 import org.opengroup.osdu.entitlements.v2.model.updategroup.UpdateGroupServiceDto;
-import org.opengroup.osdu.entitlements.v2.provider.interfaces.IMessageBus;
 import org.opengroup.osdu.entitlements.v2.spi.renamegroup.RenameGroupRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.opengroup.osdu.entitlements.v2.spi.updateappids.UpdateAppIdsRepo;
 import org.opengroup.osdu.entitlements.v2.util.GroupCreationUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +34,10 @@ public class UpdateGroupService {
     private final DefaultGroupsService defaultGroupsService;
     private final PermissionService permissionService;
     private final RequestInfo requestInfo;
-    private final IMessageBus messageBus;
+    private final IEventPublisher eventPublisher;
+
+    @Value("${event-publishing.enabled:false}")
+    private Boolean eventPublishingEnabled;
 
     public UpdateGroupResponseDto updateGroup(UpdateGroupServiceDto updateGroupServiceDto) {
         String existingGroupEmail = updateGroupServiceDto.getExistingGroupEmail();
@@ -102,19 +103,22 @@ public class UpdateGroupService {
     }
 
     private void publishRenameGroupEntitlementsChangeEvent(UpdateGroupServiceDto updateGroupServiceDto) {
-        if (updateGroupServiceDto.getRenameOperation() != null) {
-            DpsHeaders headers = requestInfo.getHeaders();
-            String newGroupName = updateGroupServiceDto.getRenameOperation().getValue().get(0).toLowerCase();
-            String newGroupEmail = GroupCreationUtil.createGroupEmail(newGroupName, updateGroupServiceDto.getPartitionDomain());
+        if(eventPublishingEnabled) {
+            if (updateGroupServiceDto.getRenameOperation() != null) {
+                String newGroupName = updateGroupServiceDto.getRenameOperation().getValue().get(0).toLowerCase();
+                String newGroupEmail = GroupCreationUtil.createGroupEmail(newGroupName, updateGroupServiceDto.getPartitionDomain());
 
-            EntitlementsChangeEvent event = EntitlementsChangeEvent.builder()
-                    .kind(EntitlementsChangeType.groupChanged)
-                    .group(updateGroupServiceDto.getExistingGroupEmail())
-                    .updatedGroupEmail(newGroupEmail)
-                    .action(EntitlementsChangeAction.replace)
-                    .modifiedBy(updateGroupServiceDto.getRequesterId())
-                    .modifiedOn(System.currentTimeMillis()).build();
-            messageBus.publishMessage(headers, event);
+                EntitlementsChangeEvent[] event = {
+                        EntitlementsChangeEvent.builder()
+                                .kind(EntitlementsChangeType.groupChanged)
+                                .group(updateGroupServiceDto.getExistingGroupEmail())
+                                .updatedGroupEmail(newGroupEmail)
+                                .action(EntitlementsChangeAction.replace)
+                                .modifiedBy(updateGroupServiceDto.getRequesterId())
+                                .modifiedOn(System.currentTimeMillis()).build()
+                };
+                eventPublisher.publish(event, requestInfo.getHeaders().getHeaders());
+            }
         }
     }
 }
