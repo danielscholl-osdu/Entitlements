@@ -35,7 +35,7 @@ public class UpdateGroupService {
     private final DefaultGroupsService defaultGroupsService;
     private final PermissionService permissionService;
     private final RequestInfo requestInfo;
-    @Autowired
+    @Autowired(required = false)
     private IEventPublisher eventPublisher;
     @Value("${event-publishing.enabled:false}")
     private Boolean eventPublishingEnabled;
