@@ -38,6 +38,9 @@
     },
     {
       "groupName": "service.secret.viewer"
+    },
+    {
+      "groupName": "service.policy.user"
     }
   ]
 }
