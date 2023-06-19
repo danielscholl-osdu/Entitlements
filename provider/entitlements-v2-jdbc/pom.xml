@@ -76,6 +76,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.opengroup.osdu</groupId>
+      <artifactId>oqm</artifactId>
+      <version>0.22.0-rc1</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <version>42.6.0</version>

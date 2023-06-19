@@ -3,12 +3,19 @@ package org.opengroup.osdu.entitlements.v2.service;
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.core.common.model.http.RequestInfo;
+import org.opengroup.osdu.core.common.status.IEventPublisher;
+import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeAction;
+import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeEvent;
+import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeType;
 import org.opengroup.osdu.entitlements.v2.validation.BootstrapGroupsConfigurationService;
 import org.opengroup.osdu.entitlements.v2.validation.ServiceAccountsConfigurationService;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.removemember.RemoveMemberServiceDto;
 import org.opengroup.osdu.entitlements.v2.spi.removemember.RemoveMemberRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +31,11 @@ public class RemoveMemberService {
     private final ServiceAccountsConfigurationService serviceAccountsConfigurationService;
     private final BootstrapGroupsConfigurationService bootstrapGroupsConfigurationService;
     private final PermissionService permissionService;
+    private final RequestInfo requestInfo;
+    @Autowired(required = false)
+    private IEventPublisher eventPublisher;
+    @Value("${event-publishing.enabled:false}")
+    private Boolean eventPublishingEnabled;
 
     /**
      * @return a set of ids of impacted users
@@ -62,6 +74,20 @@ public class RemoveMemberService {
 
         Set<String> impactedUsers = removeMemberRepo.removeMember(existingGroupEntityNode, memberNode, removeMemberServiceDto);
         groupCacheService.refreshListGroupCache(impactedUsers, removeMemberServiceDto.getPartitionId());
+        publishRemoveMemberEntitlementsChangeEvent(removeMemberServiceDto);
         return impactedUsers;
+    }
+
+    private void publishRemoveMemberEntitlementsChangeEvent(RemoveMemberServiceDto removeMemberServiceDto) {
+        if (eventPublishingEnabled) {
+            EntitlementsChangeEvent[] event = {EntitlementsChangeEvent.builder()
+                    .kind(EntitlementsChangeType.groupChanged)
+                    .group(removeMemberServiceDto.getGroupEmail())
+                    .user(removeMemberServiceDto.getMemberEmail())
+                    .action(EntitlementsChangeAction.remove)
+                    .modifiedBy(removeMemberServiceDto.getRequesterId())
+                    .modifiedOn(System.currentTimeMillis()).build()};
+            eventPublisher.publish(event, requestInfo.getHeaders().getHeaders());
+        }
     }
 }

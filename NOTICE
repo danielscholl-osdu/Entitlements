@@ -122,6 +122,7 @@ The following software have components provided under the terms of this license:
 - Google Cloud Datastore (from https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-datastore, https://github.com/googleapis/java-datastore)
 - Google Cloud Logging (from https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-logging, https://github.com/googleapis/java-logging)
 - Google Cloud Monitoring (from https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-monitoring, https://github.com/googleapis/google-cloud-java, https://github.com/googleapis/java-monitoring)
+- Google Cloud Pub/Sub (from https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-pubsub, https://github.com/googleapis/java-pubsub)
 - Google Cloud Redis (from https://github.com/googleapis/java-redis)
 - Google Cloud Storage (from https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-storage, https://github.com/googleapis/java-storage)
 - Google HTTP Client Library for Java (from https://repo1.maven.org/maven2/com/google/http-client/google-http-client)
@@ -135,6 +136,7 @@ The following software have components provided under the terms of this license:
 - Hibernate Validator (from https://repo1.maven.org/maven2/org/hibernate/hibernate-validator, https://repo1.maven.org/maven2/org/hibernate/validator/hibernate-validator)
 - High Performance Primitive Collections (from https://github.com/carrotsearch/hppc)
 - HikariCP (from https://github.com/brettwooldridge/HikariCP)
+- Hop (from https://github.com/rabbitmq/hop, https://www.rabbitmq.com)
 - IBM COS Java SDK for Amazon S3 (from https://github.com/ibm/ibm-cos-sdk-java)
 - IBM COS Java SDK for COS KMS (from https://github.com/ibm/ibm-cos-sdk-java)
 - IBM COS SDK For Java (from https://github.com/ibm/ibm-cos-sdk-java)
@@ -252,6 +254,7 @@ The following software have components provided under the terms of this license:
 - Proton-J (from https://repo1.maven.org/maven2/org/apache/qpid/proton-j)
 - QUIC functionality for the Reactor Netty library (from https://github.com/reactor/reactor-netty)
 - QpidJMS Client (from https://repo1.maven.org/maven2/org/apache/qpid/qpid-jms-client)
+- RabbitMQ Java Client (from http://www.rabbitmq.com, https://www.rabbitmq.com)
 - Reactive Streams Netty driver (from https://github.com/reactor/reactor-netty)
 - Redisson (from http://redisson.org)
 - Retrofit (from https://github.com/square/retrofit, https://repo1.maven.org/maven2/com/squareup/retrofit2/retrofit)
@@ -352,6 +355,7 @@ The following software have components provided under the terms of this license:
 - proto-google-cloud-datastore-v1 (from https://github.com/googleapis/googleapis, https://github.com/googleapis/java-datastore/proto-google-cloud-datastore-v1)
 - proto-google-cloud-logging-v2 (from https://github.com/googleapis/java-logging/proto-google-cloud-logging-v2, https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-logging-v2)
 - proto-google-cloud-monitoring-v3 (from https://github.com/googleapis/google-cloud-java, https://github.com/googleapis/java-monitoring/proto-google-cloud-monitoring-v3, https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-monitoring-v3)
+- proto-google-cloud-pubsub-v1 (from https://github.com/googleapis/googleapis, https://github.com/googleapis/java-pubsub/proto-google-cloud-pubsub-v1)
 - proto-google-cloud-redis-v1 (from https://github.com/googleapis/java-redis/proto-google-cloud-redis-v1, https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-redis-v1)
 - proto-google-cloud-redis-v1beta1 (from https://github.com/googleapis/java-redis/proto-google-cloud-redis-v1beta1, https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-redis-v1beta1)
 - proto-google-common-protos (from https://github.com/googleapis/api-client-staging, https://github.com/googleapis/googleapis, https://github.com/googleapis/java-iam/proto-google-common-protos, https://github.com/googleapis/sdk-platform-java)
@@ -484,6 +488,7 @@ The following software have components provided under the terms of this license:
 - LatencyUtils (from http://latencyutils.github.io/LatencyUtils/)
 - MongoDB Java Driver (from http://mongodb.org/, http://www.mongodb.org, https://www.mongodb.com/)
 - Netty/Common (from https://repo1.maven.org/maven2/io/netty/netty-common)
+- RabbitMQ Java Client (from http://www.rabbitmq.com, https://www.rabbitmq.com)
 - Undertow Core (from <https://repo1.maven.org/maven2/io/undertow/undertow-core>, https://repo1.maven.org/maven2/io/undertow/undertow-core)
 - reactive-streams (from http://www.reactive-streams.org/)
 
@@ -572,6 +577,7 @@ The following software have components provided under the terms of this license:
 - JBoss Jakarta Annotations API (from <https://github.com/jboss/jboss-jakarta-annotations-api_spec>, https://github.com/jboss/jboss-jakarta-annotations-api_spec)
 - Jakarta Annotations API (from https://projects.eclipse.org/projects/ee4j.ca)
 - Jakarta WebSocket - Server API (from https://projects.eclipse.org/projects/ee4j.websocket, https://repo1.maven.org/maven2/org/jboss/spec/javax/websocket/jboss-websocket-api_1.1_spec)
+- RabbitMQ Java Client (from http://www.rabbitmq.com, https://www.rabbitmq.com)
 - tomcat-embed-core (from http://tomcat.apache.org/)
 
 ========================================================================
@@ -726,6 +732,14 @@ MPL-1.1
 The following software have components provided under the terms of this license:
 
 - Javassist (from http://www.javassist.org/)
+- RabbitMQ Java Client (from http://www.rabbitmq.com, https://www.rabbitmq.com)
+
+========================================================================
+MPL-2.0
+========================================================================
+The following software have components provided under the terms of this license:
+
+- RabbitMQ Java Client (from http://www.rabbitmq.com, https://www.rabbitmq.com)
 
 ========================================================================
 Python-2.0
@@ -776,6 +790,7 @@ public-domain
 ========================================================================
 The following software have components provided under the terms of this license:
 
+- Apache Groovy (from http://groovy-lang.org, http://groovy.codehaus.org/, https://groovy-lang.org)
 - HdrHistogram (from http://hdrhistogram.github.io/HdrHistogram/)
 - JBoss Logging 3 (from http://www.jboss.org)
 - JSON in Java (from https://github.com/douglascrockford/JSON-java)

@@ -17,6 +17,7 @@ import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.model.tenant.TenantInfo;
 import org.opengroup.osdu.core.common.provider.interfaces.ITenantFactory;
+import org.opengroup.osdu.core.common.status.IEventPublisher;
 import org.opengroup.osdu.entitlements.v2.api.AddMemberApi;
 import org.opengroup.osdu.entitlements.v2.api.CreateGroupApi;
 import org.opengroup.osdu.entitlements.v2.api.DeleteGroupApi;
@@ -102,6 +103,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     private ITenantFactory tenantFactory;
     @MockBean
     private AuthorizationService authService;
+    @MockBean
+    private IEventPublisher messagePublisher;
 
     @BeforeClass
     public static void setupClass() throws IOException {
