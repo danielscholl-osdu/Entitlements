@@ -35,6 +35,7 @@
 
   <artifactId>entitlements-v2-jdbc</artifactId>
   <name>entitlements-v2-jdbc</name>
+  <version>0.22.0-SNAPSHOT</version>
 
   <dependencyManagement>
     <dependencies>
@@ -59,7 +60,7 @@
     <dependency>
       <groupId>org.opengroup.osdu.entitlements.v2</groupId>
       <artifactId>entitlements-v2-core</artifactId>
-      <version>${project.version}</version>
+      <version>0.22.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
