@@ -20,7 +20,6 @@
     <modules>
         <module>entitlements-v2-core</module>
         <module>provider/entitlements-v2-azure</module>
-        <module>provider/entitlements-v2-gcp</module>
         <module>provider/entitlements-v2-aws</module>
 		<module>provider/entitlements-v2-ibm</module>
         <module>provider/entitlements-v2-jdbc</module>

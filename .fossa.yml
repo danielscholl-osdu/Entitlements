@@ -20,10 +20,6 @@ analyze:
     type: mvn
     target: provider/entitlements-v2-azure/pom.xml
     path: .
-  - name: entitlements-v2-gcp
-    type: mvn
-    target: provider/entitlements-v2-gcp/pom.xml
-    path: .
   - name: entitlements-v2-aws
     type: mvn
     target: provider/entitlements-v2-aws/pom.xml
