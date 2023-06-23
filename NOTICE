@@ -55,7 +55,6 @@ The following software have components provided under the terms of this license:
 - AWS SDK for Java - BOM (from https://aws.amazon.com/sdkforjava)
 - AWS SDK for Java - Core (from https://aws.amazon.com/sdkforjava)
 - Adapter: RxJava (from https://github.com/square/retrofit)
-- Admin SDK API directory_v1-rev20230516-2.0.0 (from https://repo1.maven.org/maven2/com/google/apis/google-api-services-admin-directory)
 - Animal Sniffer Annotations (from https://repo1.maven.org/maven2/org/codehaus/mojo/animal-sniffer-annotations)
 - Apache Commons BeanUtils (from http://commons.apache.org/proper/commons-beanutils/, https://commons.apache.org/proper/commons-beanutils/, https://repo1.maven.org/maven2/commons-beanutils/commons-beanutils)
 - Apache Commons Codec (from http://commons.apache.org/proper/commons-codec/, https://commons.apache.org/proper/commons-codec/)
@@ -101,7 +100,6 @@ The following software have components provided under the terms of this license:
 - Caffeine cache (from https://github.com/ben-manes/caffeine)
 - ClassMate (from http://github.com/cowtowncoder/java-classmate)
 - Cloud Key Management Service (KMS) API v1-rev20230407-2.0.0 (from https://repo1.maven.org/maven2/com/google/apis/google-api-services-cloudkms)
-- Cloud Storage JSON API v1-rev20230301-2.0.0 (from https://repo1.maven.org/maven2/com/google/apis/google-api-services-storage)
 - Collections (from https://repo1.maven.org/maven2/commons-collections/commons-collections)
 - Commons Digester (from http://commons.apache.org/digester/)
 - Converter: Jackson (from https://github.com/square/retrofit, https://repo1.maven.org/maven2/com/squareup/retrofit2/converter-jackson)
@@ -115,18 +113,11 @@ The following software have components provided under the terms of this license:
 - GAX (Google Api eXtensions) for Java (gRPC) (from <https://repo1.maven.org/maven2/com/google/api/gax-grpc>, https://repo1.maven.org/maven2/com/google/api/gax-grpc)
 - GSON extensions to the Google HTTP Client Library for Java. (from https://repo1.maven.org/maven2/com/google/http-client/google-http-client-gson)
 - Google APIs Client Library for Java (from https://repo1.maven.org/maven2/com/google/api-client/google-api-client)
-- Google App Engine extensions to the Google HTTP Client Library for Java. (from https://repo1.maven.org/maven2/com/google/http-client/google-http-client-appengine)
 - Google Cloud Core (from https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-core, https://github.com/googleapis/java-core, https://repo1.maven.org/maven2/com/google/cloud/google-cloud-core)
-- Google Cloud Core HTTP (from https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-core-http, https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-core-http, https://github.com/googleapis/java-core, https://repo1.maven.org/maven2/com/google/cloud/google-cloud-core-http)
 - Google Cloud Core gRPC (from https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-core-grpc, https://github.com/googleapis/java-core, https://repo1.maven.org/maven2/com/google/cloud/google-cloud-core-grpc)
-- Google Cloud Datastore (from https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-datastore, https://github.com/googleapis/java-datastore)
 - Google Cloud Logging (from https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-logging, https://github.com/googleapis/java-logging)
-- Google Cloud Monitoring (from https://github.com/GoogleCloudPlatform/google-cloud-java/tree/master/google-cloud-monitoring, https://github.com/googleapis/google-cloud-java, https://github.com/googleapis/java-monitoring)
 - Google Cloud Pub/Sub (from https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-pubsub, https://github.com/googleapis/java-pubsub)
-- Google Cloud Redis (from https://github.com/googleapis/java-redis)
-- Google Cloud Storage (from https://github.com/googleapis/google-cloud-java/tree/master/google-cloud-clients/google-cloud-storage, https://github.com/googleapis/java-storage)
 - Google HTTP Client Library for Java (from https://repo1.maven.org/maven2/com/google/http-client/google-http-client)
-- Google Identity and Access Management (IAM) API (from https://repo1.maven.org/maven2/com/google/apis/google-api-services-iam)
 - Google OAuth Client Library for Java (from https://repo1.maven.org/maven2/com/google/oauth-client/google-oauth-client)
 - Gson (from http://code.google.com/p/google-gson/, https://repo1.maven.org/maven2/com/google/code/gson/gson)
 - Guava InternalFutureFailureAccess and InternalFutures (from https://repo1.maven.org/maven2/com/google/guava/failureaccess)
@@ -142,11 +133,9 @@ The following software have components provided under the terms of this license:
 - IBM COS SDK For Java (from https://github.com/ibm/ibm-cos-sdk-java)
 - IBM COS SDK for Java - Core (from https://github.com/ibm/ibm-cos-sdk-java)
 - J2ObjC Annotations (from https://github.com/google/j2objc/)
-- JBoss Jakarta Annotations API (from <https://github.com/jboss/jboss-jakarta-annotations-api_spec>, https://github.com/jboss/jboss-jakarta-annotations-api_spec)
 - JBoss Logging 3 (from http://www.jboss.org)
 - JBoss Marshalling API (from https://repo1.maven.org/maven2/org/jboss/marshalling/jboss-marshalling)
 - JBoss Marshalling River (from https://repo1.maven.org/maven2/org/jboss/marshalling/jboss-marshalling-river)
-- JBoss Threads (from <https://repo1.maven.org/maven2/org/jboss/threads/jboss-threads>, https://repo1.maven.org/maven2/org/jboss/threads/jboss-threads)
 - JCIP Annotations under Apache License (from http://stephenc.github.com/jcip-annotations)
 - JCL 1.2 implemented over SLF4J (from http://www.slf4j.org)
 - JLine (from https://repo1.maven.org/maven2/jline/jline)
@@ -157,14 +146,11 @@ The following software have components provided under the terms of this license:
 - JSONassert (from http://github.com/skyscreamer/yoga, https://github.com/skyscreamer/JSONassert)
 - JSR107 API and SPI (from https://github.com/jsr107/jsr107spec)
 - JSpecify annotations (from http://jspecify.org/)
-- Jackson (from http://jackson.codehaus.org)
 - Jackson 2 extensions to the Google APIs Client Library for Java (from https://repo1.maven.org/maven2/com/google/api-client/google-api-client-jackson2)
-- Jackson 2 extensions to the Google HTTP Client Library for Java. (from https://repo1.maven.org/maven2/com/google/http-client/google-http-client-jackson2)
 - Jackson dataformat: CBOR (from http://github.com/FasterXML/jackson-dataformats-binary)
 - Jackson datatype: JSR310 (from http://wiki.fasterxml.com/JacksonModuleJSR310, https://repo1.maven.org/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jsr310)
 - Jackson datatype: Joda (from http://wiki.fasterxml.com/JacksonModuleJoda, https://github.com/FasterXML/jackson-datatype-joda)
 - Jackson datatype: jdk8 (from https://repo1.maven.org/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jdk8)
-- Jackson extensions to the Google HTTP Client Library for Java. (from https://repo1.maven.org/maven2/com/google/http-client/google-http-client-jackson)
 - Jackson module: Afterburner (from http://wiki.fasterxml.com/JacksonHome, https://github.com/FasterXML/jackson-modules-base)
 - Jackson-annotations (from http://github.com/FasterXML/jackson, http://wiki.fasterxml.com/JacksonHome, https://github.com/FasterXML/jackson)
 - Jackson-core (from http://wiki.fasterxml.com/JacksonHome, https://github.com/FasterXML/jackson-core)
@@ -172,12 +158,10 @@ The following software have components provided under the terms of this license:
 - Jackson-dataformat-YAML (from https://github.com/FasterXML/jackson, https://github.com/FasterXML/jackson-dataformats-text)
 - Jackson-module-parameter-names (from https://repo1.maven.org/maven2/com/fasterxml/jackson/module/jackson-module-parameter-names)
 - Jakarta Bean Validation API (from https://beanvalidation.org)
-- Jakarta Servlet (from https://projects.eclipse.org/projects/ee4j.servlet)
 - Jakarta XML Binding API (from https://repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api, https://repo1.maven.org/maven2/org/jboss/spec/javax/xml/bind/jboss-jaxb-api_2.3_spec)
 - Java Architecture for XML Binding (from http://jaxb.java.net/, https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api)
 - Java Native Access (from https://github.com/java-native-access/jna, https://github.com/twall/jna)
 - Java Native Access Platform (from https://github.com/java-native-access/jna)
-- Java Servlet 4.0 API
 - Java UUID Generator (from http://wiki.fasterxml.com/JugHome)
 - JavaBeans Activation Framework (from <http://java.sun.com/javase/technologies/desktop/javabeans/jaf/index.jsp>, http://java.sun.com/javase/technologies/desktop/javabeans/jaf/index.jsp, https://repo1.maven.org/maven2/com/sun/activation/javax.activation)
 - JavaPoet (from http://github.com/square/javapoet/)
@@ -250,7 +234,6 @@ The following software have components provided under the terms of this license:
 - PWDB :: Database (from https://repo1.maven.org/maven2/org/linguafranca/pwdb/database)
 - PostgreSQL JDBC Driver
 - PowerMock (from http://www.powermock.org, https://repo1.maven.org/maven2/org/powermock/powermock-api-mockito)
-- Protocol Buffer extensions to the Google HTTP Client Library for Java. (from https://repo1.maven.org/maven2/com/google/http-client/google-http-client-protobuf)
 - Proton-J (from https://repo1.maven.org/maven2/org/apache/qpid/proton-j)
 - QUIC functionality for the Reactor Netty library (from https://github.com/reactor/reactor-netty)
 - QpidJMS Client (from https://repo1.maven.org/maven2/org/apache/qpid/qpid-jms-client)
@@ -301,15 +284,9 @@ The following software have components provided under the terms of this license:
 - Spring Web (from http://www.springframework.org, https://github.com/spring-projects/spring-framework, https://repo1.maven.org/maven2/org/springframework/spring-web)
 - Spring Web MVC (from https://github.com/spring-projects/spring-framework, https://repo1.maven.org/maven2/org/springframework/spring-webmvc)
 - Swagger UI (from <http://webjars.org>, http://webjars.org)
-- Undertow Core (from <https://repo1.maven.org/maven2/io/undertow/undertow-core>, https://repo1.maven.org/maven2/io/undertow/undertow-core)
-- Undertow Servlet (from <https://repo1.maven.org/maven2/io/undertow/undertow-servlet>, https://repo1.maven.org/maven2/io/undertow/undertow-servlet)
-- Undertow WebSockets JSR356 implementations (from <https://repo1.maven.org/maven2/io/undertow/undertow-websockets-jsr>, https://repo1.maven.org/maven2/io/undertow/undertow-websockets-jsr)
 - Vavr (from http://vavr.io, https://www.vavr.io)
 - Vavr Match (from http://vavr.io)
-- WildFly Client Configuration (from <https://repo1.maven.org/maven2/org/wildfly/client/wildfly-client-config>, https://repo1.maven.org/maven2/org/wildfly/client/wildfly-client-config)
 - Woodstox (from https://github.com/FasterXML/woodstox)
-- XNIO API (from <http://www.jboss.org/xnio>, http://www.jboss.org/xnio)
-- XNIO NIO Implementation (from <https://repo1.maven.org/maven2/org/jboss/xnio/xnio-nio>, https://repo1.maven.org/maven2/org/jboss/xnio/xnio-nio)
 - Zipkin Reporter Brave (from https://repo1.maven.org/maven2/io/zipkin/reporter2/zipkin-reporter-brave)
 - Zipkin Reporter: Core (from https://repo1.maven.org/maven2/io/zipkin/reporter2/zipkin-reporter)
 - Zipkin v2 (from https://repo1.maven.org/maven2/io/zipkin/zipkin2/zipkin)
@@ -317,7 +294,6 @@ The following software have components provided under the terms of this license:
 - argparse (from https://github.com/ThomasWaldmann/argparse/)
 - boto3 (from https://github.com/boto/boto3)
 - botocore (from https://github.com/boto/botocore)
-- datastore-v1-proto-client (from https://repo1.maven.org/maven2/com/google/cloud/datastore/datastore-v1-proto-client)
 - documentdb-bulkexecutor (from http://azure.microsoft.com/en-us/services/documentdb/)
 - embedded-redis (from https://github.com/ozimov/embedded-redis)
 - error-prone annotations (from https://repo1.maven.org/maven2/com/google/errorprone/error_prone_annotations)
@@ -352,17 +328,12 @@ The following software have components provided under the terms of this license:
 - org.xmlunit:xmlunit-core (from http://www.xmlunit.org/, https://www.xmlunit.org/)
 - perfmark:perfmark-api (from https://github.com/perfmark/perfmark)
 - picocli (from https://picocli.info)
-- proto-google-cloud-datastore-v1 (from https://github.com/googleapis/googleapis, https://github.com/googleapis/java-datastore/proto-google-cloud-datastore-v1)
 - proto-google-cloud-logging-v2 (from https://github.com/googleapis/java-logging/proto-google-cloud-logging-v2, https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-logging-v2)
-- proto-google-cloud-monitoring-v3 (from https://github.com/googleapis/google-cloud-java, https://github.com/googleapis/java-monitoring/proto-google-cloud-monitoring-v3, https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-monitoring-v3)
 - proto-google-cloud-pubsub-v1 (from https://github.com/googleapis/googleapis, https://github.com/googleapis/java-pubsub/proto-google-cloud-pubsub-v1)
-- proto-google-cloud-redis-v1 (from https://github.com/googleapis/java-redis/proto-google-cloud-redis-v1, https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-redis-v1)
-- proto-google-cloud-redis-v1beta1 (from https://github.com/googleapis/java-redis/proto-google-cloud-redis-v1beta1, https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-redis-v1beta1)
 - proto-google-common-protos (from https://github.com/googleapis/api-client-staging, https://github.com/googleapis/googleapis, https://github.com/googleapis/java-iam/proto-google-common-protos, https://github.com/googleapis/sdk-platform-java)
 - proto-google-iam-v1 (from https://github.com/googleapis/googleapis, https://github.com/googleapis/java-iam/proto-google-iam-v1, https://github.com/googleapis/sdk-platform-java)
 - requests (from http://python-requests.org, https://requests.readthedocs.io)
 - resilience4j (from https://github.com/resilience4j/resilience4j, https://resilience4j.readme.io, ttps://resilience4j.readme.io)
-- spring-boot-starter-undertow (from <https://spring.io/projects/spring-boot>, https://spring.io/projects/spring-boot)
 - spring-security-oauth2-client (from http://spring.io/spring-security, https://spring.io/projects/spring-security, https://spring.io/spring-security)
 - spring-security-oauth2-core (from http://spring.io/spring-security, https://spring.io/projects/spring-security, https://spring.io/spring-security)
 - spring-security-oauth2-jose (from http://spring.io/spring-security, https://spring.io/projects/spring-security, https://spring.io/spring-security)
@@ -377,20 +348,15 @@ The following software have components provided under the terms of this license:
 - tomcat-embed-core (from http://tomcat.apache.org/)
 - tomcat-embed-el (from http://tomcat.apache.org/, https://tomcat.apache.org/)
 - tomcat-embed-websocket (from http://tomcat.apache.org/, https://tomcat.apache.org/)
-- wildfly-common (from <https://repo1.maven.org/maven2/org/wildfly/common/wildfly-common>, https://repo1.maven.org/maven2/org/wildfly/common/wildfly-common)
 
 ========================================================================
 BSD-2-Clause
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- API Common (from https://github.com/googleapis, https://github.com/googleapis/api-common-java, https://repo1.maven.org/maven2/com/google/api/api-common)
 - Apache Log4j Core (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core)
 - DSL Platform JSON (Java 8 API) (from https://github.com/ngs-doo/dsl-json)
 - DSL Platform JSON (core) (from https://github.com/ngs-doo/dsl-json)
-- GAX (Google Api eXtensions) for Java (Core) (from https://github.com/googleapis, https://github.com/googleapis/gax-java, https://repo1.maven.org/maven2/com/google/api/gax)
-- GAX (Google Api eXtensions) for Java (HTTP JSON) (from <https://repo1.maven.org/maven2/com/google/api/gax-httpjson>, https://repo1.maven.org/maven2/com/google/api/gax-httpjson)
-- GAX (Google Api eXtensions) for Java (gRPC) (from <https://repo1.maven.org/maven2/com/google/api/gax-grpc>, https://repo1.maven.org/maven2/com/google/api/gax-grpc)
 - Hamcrest (from http://hamcrest.org/JavaHamcrest/)
 - Hamcrest Core (from http://hamcrest.org/, http://hamcrest.org/JavaHamcrest/, https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core)
 - HdrHistogram (from http://hdrhistogram.github.io/HdrHistogram/)
@@ -398,7 +364,6 @@ The following software have components provided under the terms of this license:
 - Jodd Core (from http://jodd.org)
 - PostgreSQL JDBC Driver
 - Stax2 API (from http://github.com/FasterXML/stax2-api)
-- ThreeTen backport (from https://github.com/ThreeTen/threetenbp, https://www.threeten.org/threetenbp)
 
 ========================================================================
 BSD-3-Clause
@@ -411,7 +376,6 @@ The following software have components provided under the terms of this license:
 - DSL Platform JSON (Java 8 API) (from https://github.com/ngs-doo/dsl-json)
 - DSL Platform JSON (core) (from https://github.com/ngs-doo/dsl-json)
 - GAX (Google Api eXtensions) for Java (Core) (from https://github.com/googleapis, https://github.com/googleapis/gax-java, https://repo1.maven.org/maven2/com/google/api/gax)
-- GAX (Google Api eXtensions) for Java (HTTP JSON) (from <https://repo1.maven.org/maven2/com/google/api/gax-httpjson>, https://repo1.maven.org/maven2/com/google/api/gax-httpjson)
 - GAX (Google Api eXtensions) for Java (gRPC) (from <https://repo1.maven.org/maven2/com/google/api/gax-grpc>, https://repo1.maven.org/maven2/com/google/api/gax-grpc)
 - Google APIs Client Library for Java (from https://repo1.maven.org/maven2/com/google/api-client/google-api-client)
 - Google Auth Library for Java - Credentials (from https://repo1.maven.org/maven2/com/google/auth/google-auth-library-credentials)
@@ -420,11 +384,9 @@ The following software have components provided under the terms of this license:
 - Hamcrest (from http://hamcrest.org/JavaHamcrest/)
 - Hamcrest Core (from http://hamcrest.org/, http://hamcrest.org/JavaHamcrest/, https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core)
 - Hamcrest Library (from http://hamcrest.org/JavaHamcrest/)
-- JBoss Jakarta Annotations API (from <https://github.com/jboss/jboss-jakarta-annotations-api_spec>, https://github.com/jboss/jboss-jakarta-annotations-api_spec)
 - JLine (from https://repo1.maven.org/maven2/jline/jline)
 - Jakarta Activation API (from https://github.com/eclipse-ee4j/jaf, https://github.com/jakartaee/jaf-api, https://repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api)
 - Jakarta Annotations API (from https://projects.eclipse.org/projects/ee4j.ca)
-- Jakarta WebSocket - Server API (from https://projects.eclipse.org/projects/ee4j.websocket, https://repo1.maven.org/maven2/org/jboss/spec/javax/websocket/jboss-websocket-api_1.1_spec)
 - Jakarta XML Binding API (from https://repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api, https://repo1.maven.org/maven2/org/jboss/spec/javax/xml/bind/jboss-jaxb-api_2.3_spec)
 - Microsoft Application Insights Java Agent (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Spring Boot starter (from https://github.com/Microsoft/ApplicationInsights-Java)
@@ -489,7 +451,6 @@ The following software have components provided under the terms of this license:
 - MongoDB Java Driver (from http://mongodb.org/, http://www.mongodb.org, https://www.mongodb.com/)
 - Netty/Common (from https://repo1.maven.org/maven2/io/netty/netty-common)
 - RabbitMQ Java Client (from http://www.rabbitmq.com, https://www.rabbitmq.com)
-- Undertow Core (from <https://repo1.maven.org/maven2/io/undertow/undertow-core>, https://repo1.maven.org/maven2/io/undertow/undertow-core)
 - reactive-streams (from http://www.reactive-streams.org/)
 
 ========================================================================
@@ -535,10 +496,7 @@ The following software have components provided under the terms of this license:
 - Jakarta Activation API (from https://github.com/eclipse-ee4j/jaf, https://github.com/jakartaee/jaf-api, https://repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api)
 - Jakarta Annotations API (from https://projects.eclipse.org/projects/ee4j.ca)
 - Jakarta Bean Validation API (from https://beanvalidation.org)
-- Jakarta Servlet (from https://projects.eclipse.org/projects/ee4j.servlet)
-- Jakarta WebSocket - Server API (from https://projects.eclipse.org/projects/ee4j.websocket, https://repo1.maven.org/maven2/org/jboss/spec/javax/websocket/jboss-websocket-api_1.1_spec)
 - Jakarta XML Binding API (from https://repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api, https://repo1.maven.org/maven2/org/jboss/spec/javax/xml/bind/jboss-jaxb-api_2.3_spec)
-- Java Servlet 4.0 API
 - Logback Contrib :: JSON :: Classic (from https://repo1.maven.org/maven2/ch/qos/logback/contrib/logback-json-classic)
 - Logback Contrib :: JSON :: Core (from https://repo1.maven.org/maven2/ch/qos/logback/contrib/logback-json-core)
 - Logback Contrib :: Jackson (from https://repo1.maven.org/maven2/ch/qos/logback/contrib/logback-jackson)
@@ -554,7 +512,6 @@ EPL-2.0
 The following software have components provided under the terms of this license:
 
 - AspectJ Weaver (from http://www.aspectj.org, https://www.eclipse.org/aspectj/)
-- JBoss Jakarta Annotations API (from <https://github.com/jboss/jboss-jakarta-annotations-api_spec>, https://github.com/jboss/jboss-jakarta-annotations-api_spec)
 - JUnit Jupiter (Aggregator) (from https://junit.org/junit5/)
 - JUnit Jupiter API (from http://junit.org/junit5/, https://junit.org/junit5/)
 - JUnit Jupiter Engine (from http://junit.org/junit5/, https://junit.org/junit5/)
@@ -564,19 +521,14 @@ The following software have components provided under the terms of this license:
 - Jakarta Activation API (from https://github.com/eclipse-ee4j/jaf, https://github.com/jakartaee/jaf-api, https://repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api)
 - Jakarta Annotations API (from https://projects.eclipse.org/projects/ee4j.ca)
 - Jakarta Bean Validation API (from https://beanvalidation.org)
-- Jakarta Servlet (from https://projects.eclipse.org/projects/ee4j.servlet)
-- Jakarta WebSocket - Server API (from https://projects.eclipse.org/projects/ee4j.websocket, https://repo1.maven.org/maven2/org/jboss/spec/javax/websocket/jboss-websocket-api_1.1_spec)
 - Jakarta XML Binding API (from https://repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api, https://repo1.maven.org/maven2/org/jboss/spec/javax/xml/bind/jboss-jaxb-api_2.3_spec)
-- Java Servlet 4.0 API
 
 ========================================================================
 GPL-2.0-only
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- JBoss Jakarta Annotations API (from <https://github.com/jboss/jboss-jakarta-annotations-api_spec>, https://github.com/jboss/jboss-jakarta-annotations-api_spec)
 - Jakarta Annotations API (from https://projects.eclipse.org/projects/ee4j.ca)
-- Jakarta WebSocket - Server API (from https://projects.eclipse.org/projects/ee4j.websocket, https://repo1.maven.org/maven2/org/jboss/spec/javax/websocket/jboss-websocket-api_1.1_spec)
 - RabbitMQ Java Client (from http://www.rabbitmq.com, https://www.rabbitmq.com)
 - tomcat-embed-core (from http://tomcat.apache.org/)
 
@@ -585,16 +537,11 @@ GPL-2.0-with-classpath-exception
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- Checker Qual (from https://checkerframework.org)
-- JBoss Jakarta Annotations API (from <https://github.com/jboss/jboss-jakarta-annotations-api_spec>, https://github.com/jboss/jboss-jakarta-annotations-api_spec)
 - Jakarta Activation API (from https://github.com/eclipse-ee4j/jaf, https://github.com/jakartaee/jaf-api, https://repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api)
 - Jakarta Annotations API (from https://projects.eclipse.org/projects/ee4j.ca)
 - Jakarta Bean Validation API (from https://beanvalidation.org)
-- Jakarta Servlet (from https://projects.eclipse.org/projects/ee4j.servlet)
-- Jakarta WebSocket - Server API (from https://projects.eclipse.org/projects/ee4j.websocket, https://repo1.maven.org/maven2/org/jboss/spec/javax/websocket/jboss-websocket-api_1.1_spec)
 - Jakarta XML Binding API (from https://repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api, https://repo1.maven.org/maven2/org/jboss/spec/javax/xml/bind/jboss-jaxb-api_2.3_spec)
 - Java Architecture for XML Binding (from http://jaxb.java.net/, https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api)
-- Java Servlet 4.0 API
 - JavaBeans Activation Framework (from <http://java.sun.com/javase/technologies/desktop/javabeans/jaf/index.jsp>, http://java.sun.com/javase/technologies/desktop/javabeans/jaf/index.jsp, https://repo1.maven.org/maven2/com/sun/activation/javax.activation)
 - javax.annotation-api (from http://jcp.org/en/jsr/detail?id=250)
 - tomcat-embed-core (from http://tomcat.apache.org/)
@@ -605,8 +552,6 @@ GPL-3.0-only
 The following software have components provided under the terms of this license:
 
 - Jakarta Annotations API (from https://projects.eclipse.org/projects/ee4j.ca)
-- Jakarta Servlet (from https://projects.eclipse.org/projects/ee4j.servlet)
-- Java Servlet 4.0 API
 
 ========================================================================
 ISC
@@ -615,7 +560,6 @@ The following software have components provided under the terms of this license:
 
 - Apache TinkerPop :: Gremlin Groovy (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-groovy)
 - Java Native Access Platform (from https://github.com/java-native-access/jna)
-- Jodd Core (from http://jodd.org)
 - Spring Security - Core (from http://spring.io/spring-security, https://repo1.maven.org/maven2/org/springframework/security/spring-security-core, https://spring.io/projects/spring-security, https://spring.io/spring-security)
 - jBCrypt (from https://github.com/djmdjm/jBCrypt)
 
@@ -655,7 +599,6 @@ LGPL-2.1-or-later
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- JBoss Threads (from <https://repo1.maven.org/maven2/org/jboss/threads/jboss-threads>, https://repo1.maven.org/maven2/org/jboss/threads/jboss-threads)
 - Java Native Access (from https://github.com/java-native-access/jna, https://github.com/twall/jna)
 - Java Native Access Platform (from https://github.com/java-native-access/jna)
 - Javassist (from http://www.javassist.org/)
