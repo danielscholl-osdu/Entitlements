@@ -905,18 +905,45 @@
       "name": "service.secret.admin",
       "description": "Admin group for secret service",
       "members": [
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.ops"
+        }
       ]
     },
     {
       "name": "service.secret.editor",
       "description": "Editor group for secret service",
       "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        }
       ]
     },
     {
       "name": "service.secret.viewer",
       "description": "Viewer group for secret service",
       "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.viewers"
+        }
       ]
     },
     {

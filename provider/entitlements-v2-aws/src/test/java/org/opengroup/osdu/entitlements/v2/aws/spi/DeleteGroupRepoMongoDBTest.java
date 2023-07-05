@@ -4,6 +4,7 @@ package org.opengroup.osdu.entitlements.v2.aws.spi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.opengroup.osdu.core.common.status.IEventPublisher;
 import org.opengroup.osdu.entitlements.v2.aws.Util.ParentUtil;
 import org.opengroup.osdu.entitlements.v2.aws.config.EntitlementsTestConfig;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.BaseDoc;
@@ -13,6 +14,7 @@ import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.intern
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -30,6 +32,9 @@ import static org.opengroup.osdu.entitlements.v2.aws.Util.NodeGenerator.generate
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {EntitlementsTestConfig.class, MockServletContext.class})
 public class DeleteGroupRepoMongoDBTest extends ParentUtil {
+
+    @MockBean
+    private IEventPublisher messageBus;
 
     @Autowired
     private DeleteGroupRepoMongoDB deleteGroupRepoMongoDB;

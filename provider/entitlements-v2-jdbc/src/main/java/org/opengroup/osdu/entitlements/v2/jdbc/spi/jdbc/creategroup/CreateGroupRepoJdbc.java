@@ -105,7 +105,7 @@ public class CreateGroupRepoJdbc implements CreateGroupRepo {
 	}
 
 	private void addRootGroupNodeAsMemberOfGroupNewGroup(GroupInfoEntity createdGroup, CreateGroupRepoDto createGroupRepoDto) {
-		GroupInfoEntity parentGroup = groupRepository
+		GroupInfoEntity dataRootGroup = groupRepository
 				.findByEmail(createGroupRepoDto.getDataRootGroupNode().getNodeId())
 				.stream()
 				.findFirst()
@@ -115,7 +115,7 @@ public class CreateGroupRepoJdbc implements CreateGroupRepo {
 								"Could not find the group with email: " +
 										createGroupRepoDto.getDataRootGroupNode().getNodeId()));
 
-		groupRepository.addChildGroupById(parentGroup.getId(), createdGroup.getId());
+		groupRepository.addChildGroupById(createdGroup.getId(), dataRootGroup.getId());
 	}
 
 	private void addRequesterAsOwnerMemberToGroup(GroupInfoEntity createdGroup, CreateGroupRepoDto createGroupRepoDto) {

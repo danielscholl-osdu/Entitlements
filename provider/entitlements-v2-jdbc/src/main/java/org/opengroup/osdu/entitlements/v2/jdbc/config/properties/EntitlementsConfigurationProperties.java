@@ -44,4 +44,6 @@ public class EntitlementsConfigurationProperties {
 
     private int partitionInfoVmCacheExpTime = 60;
     private int partitionInfoVmCacheSize = 100;
+
+    private String springDatastoreSchema;
 }

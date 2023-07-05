@@ -1,6 +1,7 @@
 global:
   domain: ""
   onPremEnabled: false
+  limitsEnabled: true
 
 data:
   # Configmaps
@@ -32,6 +33,7 @@ data:
   imagePullPolicy: "IfNotPresent"
   cloudSqlProxyVersion: "1.32.0"
   sqlConnectionString: ""
+  javaOptions: "-XX:MaxDirectMemorySize=512M"
 
 conf:
   configmap: "entitlements-config"

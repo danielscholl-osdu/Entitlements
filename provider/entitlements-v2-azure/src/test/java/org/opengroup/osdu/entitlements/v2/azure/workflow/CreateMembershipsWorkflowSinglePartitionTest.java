@@ -16,6 +16,7 @@ import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.model.tenant.TenantInfo;
 import org.opengroup.osdu.core.common.provider.interfaces.ITenantFactory;
+import org.opengroup.osdu.core.common.status.IEventPublisher;
 import org.opengroup.osdu.entitlements.v2.api.CreateGroupApi;
 import org.opengroup.osdu.entitlements.v2.api.DeleteGroupApi;
 import org.opengroup.osdu.entitlements.v2.api.DeleteMemberApi;
@@ -101,6 +102,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     private Retry retry;
     @MockBean
     private HitsNMissesMetricService metricService;
+    @MockBean
+    private IEventPublisher eventPublisher;
 
     @Before
     public void before() throws InterruptedException {

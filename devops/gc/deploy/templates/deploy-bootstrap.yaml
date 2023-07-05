@@ -35,5 +35,8 @@ spec:
         - secretRef:
             name: {{ .Values.conf.bootstrapOpenidSecretName | quote }}
         {{- end }}
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
       restartPolicy: Always
       serviceAccountName: {{ .Values.data.bootstrapServiceAccountName | quote }}

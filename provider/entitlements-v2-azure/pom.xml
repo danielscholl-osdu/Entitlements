@@ -6,11 +6,12 @@
     <parent>
         <artifactId>entitlements-v2-service</artifactId>
         <groupId>org.opengroup.osdu.entitlements.v2</groupId>
-        <version>0.21.0-SNAPSHOT</version>
+        <version>0.22.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>entitlements-v2-azure</artifactId>
+    <version>0.22.0-SNAPSHOT</version>
 
     <properties>
         <core-lib-azure.version>0.20.0</core-lib-azure.version>
@@ -29,7 +30,7 @@
         <dependency>
             <groupId>org.opengroup.osdu.entitlements.v2</groupId>
             <artifactId>entitlements-v2-core</artifactId>
-            <version>${project.version}</version>
+            <version>0.22.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -113,6 +114,12 @@
                     <artifactId>commons-text</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-configuration2</artifactId>
+            <version>2.8.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.tinkerpop</groupId>

@@ -42,14 +42,16 @@ spec:
               key: REDIS_PASSWORD
         securityContext:
           allowPrivilegeEscalation: false
-          runAsUser: 0
+          runAsNonRoot: true
         resources:
           requests:
             cpu: {{ .Values.data.requestsCpu | quote }}
             memory: {{ .Values.data.requestsMemory | quote }}
+          {{- if .Values.global.limitsEnabled }}
           limits:
             cpu: {{ .Values.data.limitsCpu | quote }}
             memory: {{ .Values.data.limitsMemory | quote }}
+          {{- end }}
       {{- if not .Values.global.onPremEnabled }}
       - image: "gcr.io/cloudsql-docker/gce-proxy:{{ .Values.data.cloudSqlProxyVersion }}"
         imagePullPolicy: {{ .Values.data.imagePullPolicy | quote }}

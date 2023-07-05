@@ -37,6 +37,7 @@ Defined in default application property file but possible to override:
 | `REDIS_USER_GROUPS_PORT`             | ex `6379`                                                                                                                                                                                    | Redis port                                                                                                                | no         | -      |
 | `REDIS_USER_GROUPS_PASSWORD`         | ex ``                                                                                                                                                                                        | Redis password                                                                                                            | yes        | -      |
 | `REDIS_USER_GROUPS_WITH_SSL`         | ex `true` or `false`                                                                                                                                                                         | Redis  host ssl config                                                                                                    | no         |        |
+| `SPRING_DATASTORE_SCHEMA`            | ex `entitlements_1`                                                                                                                                                                          | DB Schema                                                                                                                 | yes        |        |
 
 ## Authentication modes
 
@@ -81,17 +82,18 @@ Defined in default application property file but possible to override:
 
 **Required to run integration tests**
 
-| Name                             | Value                                           | Description                                                                                        | Sensitive? | Source |
-|----------------------------------|-------------------------------------------------|----------------------------------------------------------------------------------------------------|------------|--------|
-| `ENTITLEMENT_V2_URL`             | ex `http://localhost:8080/api/entitlements/v2/` | The host where the service is running                                                              | no         | --     |
-| `GROUP_ID`                       | ex `contoso.com`                                | Must match the value of `service_group_id` above                                                   | no         | --     |
-| `TENANT_NAME`                    | ex `opendes`                                    | OSDU tenant used for testing                                                                       | no         | --     |
-| `INTEGRATION_TESTER`             | `********`                                      | System identity to assume for API calls. Note: This user must have entitlements already configured | yes        | --     |
-| `NO_DATA_ACCESS_TESTER`          | `********`                                      | Service account base64 encoded string without data access                                          | yes        | --     |
-| `GOOGLE_APPLICATION_CREDENTIALS` | `********`                                      | System identity to provide access for cleaning up groups created during test                       | yes        | --     |
-| `AUTH_MODE`                      | `IAP`                                           | Should be configured only if IAP enabled                                                           | no         | --     |
-| `IAP_URL`                        | `https://dev.osdu.club`                         | Should be configured only if IAP enabled                                                           | no         | --     |
-| `PARTITION_API`                  | ex `http://localhost:8080/api/partition/v1 `    | Partition service host                                                                             | no         | --     |
+| Name                             | Value                                             | Description                                                                                        | Sensitive? | Source |
+|----------------------------------|---------------------------------------------------|----------------------------------------------------------------------------------------------------|------------|--------|
+| `ENTITLEMENT_V2_URL`             | ex `http://localhost:8080/api/entitlements/v2/`   | The host where the service is running                                                              | no         | --     |
+| `GROUP_ID`                       | ex `contoso.com`                                  | Must match the value of `service_group_id` above                                                   | no         | --     |
+| `TENANT_NAME`                    | ex `opendes`                                      | OSDU tenant used for testing                                                                       | no         | --     |
+| `INTEGRATION_TESTER`             | `********`                                        | System identity to assume for API calls. Note: This user must have entitlements already configured | yes        | --     |
+| `NO_DATA_ACCESS_TESTER`          | `********`                                        | Service account base64 encoded string without data access                                          | yes        | --     |
+| `GOOGLE_APPLICATION_CREDENTIALS` | `********`                                        | System identity to provide access for cleaning up groups created during test                       | yes        | --     |
+| `AUTH_MODE`                      | `IAP`                                             | Should be configured only if IAP enabled                                                           | no         | --     |
+| `IAP_URL`                        | `https://dev.osdu.club`                           | Should be configured only if IAP enabled                                                           | no         | --     |
+| `PARTITION_API`                  | ex `http://localhost:8080/api/partition/v1 `      | Partition service host                                                                             | no         | --     |
+| `INDEXER_SERVICE_ACCOUNT_EMAIL`  | ex `workload-indexer@osdu.iam.gseviceaccount.com` | Indexer service account email with special privileges for data groups                              | no         | --     |
 
 **Entitlements configuration for integration accounts**
 

@@ -38,7 +38,7 @@ public abstract class InfoApiTest extends AcceptanceBaseTest {
             .dataPartitionId(DATA_PARTITION_ID)
             .build();
     ClientResponse response = httpClientService.send(request);
-    log.info("Request sent: {}. Received response: {}", request, response);
+
     assertEquals(200, response.getStatus());
     VersionInfo responseObject = versionInfoUtils.getVersionInfoFromResponse(response);
 

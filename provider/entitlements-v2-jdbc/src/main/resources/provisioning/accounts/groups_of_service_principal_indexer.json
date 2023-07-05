@@ -26,6 +26,9 @@
     },
     {
       "groupName": "service.legal.user"
+    },
+    {
+      "groupName": "service.policy.user"
     }
   ]
 }
