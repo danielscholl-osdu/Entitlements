@@ -3,6 +3,7 @@ package org.opengroup.osdu.entitlements.v2.aws.config;
 import org.opengroup.osdu.core.aws.mongodb.helper.BasicMongoDBHelper;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.MongoConfig;
 import org.opengroup.osdu.core.aws.mongodb.config.MongoPropertiesReader;
+import org.opengroup.osdu.entitlements.v2.service.featureflag.PartitionFeatureFlagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -24,6 +25,8 @@ public class EntitlementsTestConfig {
     MongoPropertiesReader mongoProperties;
     @MockBean
     MongoConfig mongoConfig;
+    @MockBean
+    PartitionFeatureFlagService partitionFeatureFlagService;
 
     @Bean
     public ConversionService conversionService(ApplicationContext ctx) {

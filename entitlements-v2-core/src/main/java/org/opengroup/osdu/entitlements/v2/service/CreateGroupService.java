@@ -7,6 +7,8 @@ import org.opengroup.osdu.entitlements.v2.model.creategroup.CreateGroupRepoDto;
 import org.opengroup.osdu.entitlements.v2.model.creategroup.CreateGroupServiceDto;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
+import org.opengroup.osdu.entitlements.v2.service.featureflag.FeatureFlag;
+import org.opengroup.osdu.entitlements.v2.service.featureflag.PartitionFeatureFlagService;
 import org.opengroup.osdu.entitlements.v2.spi.creategroup.CreateGroupRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +29,7 @@ public class CreateGroupService {
     private final GroupCacheService groupCacheService;
     private final JaxRsDpsLog log;
     private final DefaultGroupsService defaultGroupsService;
+    private final PartitionFeatureFlagService partitionFeatureFlagService;
 
     public EntityNode run(EntityNode groupNode, CreateGroupServiceDto createGroupServiceDto) {
         log.info(String.format("requested by %s", createGroupServiceDto.getRequesterId()));
@@ -36,7 +39,7 @@ public class CreateGroupService {
             log.error(String.format("Identity %s already belong to %d groups", createGroupServiceDto.getRequesterId(), allExistingParents.size()));
             throw new AppException(HttpStatus.PRECONDITION_FAILED.value(), HttpStatus.PRECONDITION_FAILED.getReasonPhrase(), String.format("%s's group quota hit. Identity can't belong to more than %d groups", createGroupServiceDto.getRequesterId(), EntityNode.MAX_PARENTS));
         }
-        if (groupNode.isDataGroup() && defaultGroupsService.isNotDefaultGroupName(groupNode.getName())) {
+        if (this.shouldAddDataRootGroupInTheHierarchy(createGroupServiceDto.getPartitionId(), groupNode)) {
             EntityNode dataRootGroupNode = retrieveGroupRepo.groupExistenceValidation(String.format(EntityNode.ROOT_DATA_GROUP_EMAIL_FORMAT, createGroupServiceDto.getPartitionDomain()), createGroupServiceDto.getPartitionId());
             Set<ParentReference> allExistingParentsOfRootDataGroup = retrieveGroupRepo.loadAllParents(dataRootGroupNode).getParentReferences();
             if (allExistingParentsOfRootDataGroup.size() >= dataRootGroupQuota) {
@@ -61,6 +64,11 @@ public class CreateGroupService {
             createGroup(groupNode, createGroupRepoDto);
         }
         return groupNode;
+    }
+
+    private boolean shouldAddDataRootGroupInTheHierarchy(String dataPartitionId, EntityNode groupNode) {
+        return !this.partitionFeatureFlagService.getFeature(FeatureFlag.DISABLE_DATA_ROOT_GROUP_HIERARCHY.label, dataPartitionId)
+                && groupNode.isDataGroup() && defaultGroupsService.isNotDefaultGroupName(groupNode.getName());
     }
 
     private void createGroup(EntityNode groupNode, CreateGroupRepoDto createGroupRepoDto) {
