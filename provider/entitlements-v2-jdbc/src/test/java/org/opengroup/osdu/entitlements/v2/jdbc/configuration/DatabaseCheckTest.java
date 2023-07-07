@@ -24,36 +24,35 @@ import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.DatabaseCheck;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsConfigurationProperties;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.SpiJdbcTestConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = SpiJdbcTestConfig.class)
+@EnableConfigurationProperties(value = EntitlementsConfigurationProperties.class)
 @RunWith(SpringRunner.class)
 public class DatabaseCheckTest {
   @Mock private JdbcTemplate jdbcTemplate;
 
-  @Mock private EntitlementsConfigurationProperties entitlementsProperties;
+  @Autowired private EntitlementsConfigurationProperties entitlementsProperties;
 
   @Test
   public void check_databaseCheck_with_correct_schema() {
     DatabaseCheck databaseCheck = new DatabaseCheck(jdbcTemplate, entitlementsProperties);
-    List<String> schemaList = Arrays.asList(new String[] {"valid_schema_1", "valid_schema_2"});
-    List<Map<String, Object>> mockResult = new ArrayList<>();
+    List<String> schemaList = Arrays.asList(new String[] {"entitlements_2", "entitlements_1"});
     when(jdbcTemplate.queryForList(
             "SELECT schema_name\n" + "FROM information_schema.schemata;", String.class))
         .thenReturn(schemaList);
-    when(entitlementsProperties.getSpringDatastoreSchema()).thenReturn("valid_schema_2");
 
     databaseCheck.checkDatabaseConfiguration();
   }
@@ -61,12 +60,10 @@ public class DatabaseCheckTest {
   @Test
   public void check_databaseCheck_with_notCorrect_schema() {
     DatabaseCheck databaseCheck = new DatabaseCheck(jdbcTemplate, entitlementsProperties);
-    List<String> schemaList = Arrays.asList(new String[] {"valid_schema_1", "valid_schema_2"});
-    List<Map<String, Object>> mockResult = new ArrayList<>();
+    List<String> schemaList = Arrays.asList(new String[] {"entitlements_2", "entitlements_3"});
     when(jdbcTemplate.queryForList(
             "SELECT schema_name\n" + "FROM information_schema.schemata;", String.class))
         .thenReturn(schemaList);
-    when(entitlementsProperties.getSpringDatastoreSchema()).thenReturn("no_valid_schema");
 
     AppException appException =
         assertThrows(AppException.class, () -> databaseCheck.checkDatabaseConfiguration());
@@ -75,13 +72,11 @@ public class DatabaseCheckTest {
   }
 
   @Test
-  public void check_databaseCheck_with_null() {
+  public void check_databaseCheck_with_nullSchemaList() {
     DatabaseCheck databaseCheck = new DatabaseCheck(jdbcTemplate, entitlementsProperties);
-    List<Map<String, Object>> mockResult = new ArrayList<>();
     when(jdbcTemplate.queryForList(
             "SELECT schema_name\n" + "FROM information_schema.schemata;", String.class))
         .thenReturn(null);
-    when(entitlementsProperties.getSpringDatastoreSchema()).thenReturn("no_valid_schema");
 
     AppException appException =
         assertThrows(AppException.class, () -> databaseCheck.checkDatabaseConfiguration());
