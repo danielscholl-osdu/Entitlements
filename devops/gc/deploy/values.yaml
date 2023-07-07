@@ -34,6 +34,7 @@ data:
   cloudSqlProxyVersion: "1.32.0"
   sqlConnectionString: ""
   javaOptions: "-XX:MaxDirectMemorySize=512M"
+  datastoreSchemaName: entitlements
 
 conf:
   configmap: "entitlements-config"

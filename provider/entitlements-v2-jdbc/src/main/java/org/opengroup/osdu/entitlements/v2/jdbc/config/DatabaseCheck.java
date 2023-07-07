@@ -47,13 +47,13 @@ public class DatabaseCheck {
     String request = "SELECT schema_name\n" + "FROM information_schema.schemata;";
     List<String> data = jdbcTemplate.queryForList(request, String.class);
 
-    if (Objects.nonNull(data) && data.contains(entitlementsProperties.getSpringDatastoreSchema())) {
-      log.debug("Schema {} exists in DB.", entitlementsProperties.getSpringDatastoreSchema());
+    if (Objects.nonNull(data) && data.contains(entitlementsProperties.getDatastoreSchema())) {
+      log.debug("Schema {} exists in DB.", entitlementsProperties.getDatastoreSchema());
     } else {
       throw new AppException(
           HttpStatus.INTERNAL_SERVER_ERROR.value(),
           HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-          "Schema " + entitlementsProperties.getSpringDatastoreSchema() + " does not exist in DB.");
+          "Schema " + entitlementsProperties.getDatastoreSchema() + " does not exist in DB.");
     }
   }
 }
