@@ -15,6 +15,8 @@ import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.ParentTreeDto;
 import org.opengroup.osdu.entitlements.v2.model.creategroup.CreateGroupRepoDto;
 import org.opengroup.osdu.entitlements.v2.model.creategroup.CreateGroupServiceDto;
+import org.opengroup.osdu.entitlements.v2.service.featureflag.FeatureFlag;
+import org.opengroup.osdu.entitlements.v2.service.featureflag.PartitionFeatureFlagService;
 import org.opengroup.osdu.entitlements.v2.spi.creategroup.CreateGroupRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.powermock.reflect.Whitebox;
@@ -47,6 +49,8 @@ public class CreateGroupServiceTests {
     private JaxRsDpsLog logger;
     @Mock
     private DefaultGroupsService defaultGroupsService;
+    @Mock
+    private PartitionFeatureFlagService partitionFeatureFlagService;
 
     @InjectMocks
     private CreateGroupService createGroupService;
@@ -152,6 +156,38 @@ public class CreateGroupServiceTests {
         verify(createGroupRepo, times(1)).createGroup(eq(groupNode), captor.capture());
         assertThat(captor.getValue().getDataRootGroupNode()).isNotNull();
         assertThat(captor.getValue().isAddDataRootGroup()).isTrue();
+        verify(groupCacheService).refreshListGroupCache(impactedUsers, "dp");
+    }
+
+    @Test
+    public void shouldCallRepoAddNotDataRootGroupIfDataGroupButDisableFeatureFlagIsEnabled() {
+        EntityNode groupNode = EntityNode.builder()
+                .nodeId("data.x@dp.domain.com")
+                .type(NodeType.GROUP)
+                .name("data.x")
+                .dataPartitionId("dp")
+                .build();
+        Set<ParentReference> parents = mock(HashSet.class);
+        EntityNode dataRootGroupNode = EntityNode.builder()
+                .nodeId("users.data.root@dp.domain.com")
+                .type(NodeType.GROUP)
+                .name("users.data.root")
+                .dataPartitionId("dp")
+                .build();
+        CreateGroupServiceDto createGroupServiceDto = CreateGroupServiceDto.builder()
+                .requesterId("callerdesid")
+                .partitionDomain("dp.domain.com")
+                .partitionId("dp").build();
+        EntityNode requesterNode = EntityNode.createMemberNodeForRequester("callerdesid", "dp");
+        when(groupCacheService.getFromPartitionCache(requesterNode.getNodeId(), "dp")).thenReturn(Collections.emptySet());
+        ArgumentCaptor<CreateGroupRepoDto> captor = ArgumentCaptor.forClass(CreateGroupRepoDto.class);
+        Set<String> impactedUsers = new HashSet<>(Arrays.asList("callerdesid"));
+        when(createGroupRepo.createGroup(any(), any())).thenReturn(impactedUsers);
+        when(partitionFeatureFlagService.getFeature(FeatureFlag.DISABLE_DATA_ROOT_GROUP_HIERARCHY.label, "dp")).thenReturn(true);
+        createGroupService.run(groupNode, createGroupServiceDto);
+        verify(createGroupRepo, times(1)).createGroup(eq(groupNode), captor.capture());
+        assertThat(captor.getValue().getDataRootGroupNode()).isNull();
+        assertThat(captor.getValue().isAddDataRootGroup()).isFalse();
         verify(groupCacheService).refreshListGroupCache(impactedUsers, "dp");
     }
 

@@ -11,6 +11,7 @@ data:
   PARTITION_HOST: {{ .Values.data.partitionHost | quote }}
   SPRING_PROFILES_ACTIVE: {{ .Values.data.springProfilesActive | quote }}
   _JAVA_OPTIONS: {{ .Values.data.javaOptions | quote }}
+  DATASTORE_SCHEMA_NAME: {{ .Values.data.datastoreSchemaName | quote }}
   {{- if .Values.data.redisEntHost }}
   REDIS_USER_INFO_HOST: {{ .Values.data.redisEntHost | quote }}
   REDIS_USER_GROUPS_HOST: {{ .Values.data.redisEntHost | quote }}
