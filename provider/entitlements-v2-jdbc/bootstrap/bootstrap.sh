@@ -38,6 +38,10 @@ bootstrap_entitlements_onprem() {
 {
 "aliasId": "SERVICE_PRINCIPAL_STORAGE",
 "userId": "storage@service.local"
+},
+{
+"aliasId": "SERVICE_PRINCIPAL_SEISMIC",
+"userId": "seismic@service.local"
 }
 ]
 }
@@ -94,6 +98,10 @@ bootstrap_entitlements_gc() {
 {
 "aliasId": "SERVICE_PRINCIPAL_STORAGE",
 "userId": "wi-storage-gc@${PROJECT_ID}.iam.gserviceaccount.com"
+},
+{
+"aliasId": "SERVICE_PRINCIPAL_SEISMIC",
+"userId": "wi-seismic-gc@${PROJECT_ID}.iam.gserviceaccount.com"
 }
 ]
 }
