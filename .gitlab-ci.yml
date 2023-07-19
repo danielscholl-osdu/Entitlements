@@ -12,6 +12,15 @@ variables:
   AWS_DEPLOY_TARGET: TF
   AWS_EKS_DEPLOYMENT_NAME: os-entitlements
 
+  MONGODB_AWS_BUILD_SUBDIR: provider/entitlements-v2-aws/build-aws
+  MONGODB_AWS_TEST_SUBDIR: testing/entitlements-v2-test-aws
+  MONGODB_AWS_CHART_SUBDIR: devops/aws/chart
+  MONGODB_AWS_SERVICE: entitlements-v2
+  MONGODB_AWS_SERVICE_GATEWAY: osdu-gateway
+  MONGODB_AWS_ENVIRONMENT: dev
+  MONGODB_AWS_DEPLOY_TARGET: TF
+  MONGODB_AWS_EKS_DEPLOYMENT_NAME: os-entitlements
+
   IBM_BUILD_SUBDIR: provider/entitlements-v2-ibm
   IBM_INT_TEST_SUBDIR: testing/entitlements-v2-test-ibm
   IBM_HELM_CONFIG_PATH: devops/ibm/ibm-entitlement-config
@@ -39,6 +48,12 @@ include:
 
   - project: "osdu/platform/ci-cd-pipelines"
     file: "cloud-providers/aws-maven.yml"
+
+  - project: "osdu/platform/ci-cd-pipelines"
+    file: "cloud-providers/aws-mongodb-global.yml"
+
+  - project: "osdu/platform/ci-cd-pipelines"
+    file: "cloud-providers/aws-mongodb-maven.yml"
 
   - project: "osdu/platform/ci-cd-pipelines"
     file: "publishing/pages.yml"
