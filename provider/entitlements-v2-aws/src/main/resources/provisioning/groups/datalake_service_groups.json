@@ -469,6 +469,39 @@
       ]
     },
     {
+        "name": "service.reservoir-dms.viewers",
+        "description": "The viewer of the reservoir-dms service",
+        "members": [
+          {
+            "name": "users.datalake.viewers"
+          },
+          {
+            "name": "users.datalake.editors"
+          },
+          {
+            "name": "users.datalake.admins"
+          },
+          {
+            "name": "users.datalake.ops"
+          }
+        ]
+      },
+      {
+        "name": "service.reservoir-dms.owners",
+        "description": "Datalake reservoir-dms creators",
+        "members": [
+          {
+            "name": "users.datalake.ops"
+          },
+          {
+            "name": "users.datalake.admins"
+          },
+          {
+            "name": "users.datalake.editors"
+          }
+        ]
+      },
+      {
       "name": "service.binarydms.viewer",
       "description": "The viewer of the datalake binarydms service",
       "members": [

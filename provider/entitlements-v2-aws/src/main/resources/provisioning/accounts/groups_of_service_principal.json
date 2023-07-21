@@ -121,6 +121,12 @@
       "groupName": "service.seismic-store.creator"
     },
     {
+      "groupName": "service.reservoir-dms.viewers"
+    },
+    {
+      "groupName": "service.reservoir-dms.owners"
+    },
+    {
       "groupName": "service.binarydms.admin"
     },
     {
