@@ -18,10 +18,6 @@
 package org.opengroup.osdu.entitlements.v2.jdbc.service;
 
 import com.google.common.base.Strings;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,12 +28,9 @@ import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.core.common.model.tenant.TenantInfo;
 import org.opengroup.osdu.entitlements.v2.jdbc.JdbcAppProperties;
-import org.opengroup.osdu.entitlements.v2.jdbc.util.PartitionIndexerServiceAccUtil;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
-import org.opengroup.osdu.entitlements.v2.model.GroupType;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.ParentReferences;
-import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupsOfPartitionDto;
 import org.opengroup.osdu.entitlements.v2.service.GroupCacheService;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.http.HttpStatus;
@@ -61,8 +54,6 @@ public class GroupCacheServiceJdbc implements GroupCacheService {
 
     private final JaxRsDpsLog log;
 
-    private final PartitionIndexerServiceAccUtil indexerServiceAccProvider;
-
     private final TenantInfo tenantInfo;
 
     @Override
@@ -76,54 +67,7 @@ public class GroupCacheServiceJdbc implements GroupCacheService {
             beneficialId).getParentReferencesOfUser();
       }
 
-      Set<ParentReference> dataReferences = getDataGroupsIfTenantIndexerAcc(
-          requesterId,
-          partitionId);
-      if (!dataReferences.isEmpty()) {
-        parentReferences.getParentReferencesOfUser().addAll(dataReferences);
-      }
-
       return parentReferences.getParentReferencesOfUser();
-    }
-
-    private Set<ParentReference> getDataGroupsIfTenantIndexerAcc(String requesterId,
-        String partitionId) {
-      Set<ParentReference> parentReferences = Collections.emptySet();
-      String tenantIndexerServiceAccount = indexerServiceAccProvider.getTenantIndexerServiceAccount();
-      if (requesterId.equals(tenantIndexerServiceAccount)) {
-        String indexerDataGroupsKey = indexerServiceAccProvider.getTenantIndexerServiceAccCacheKey(
-            tenantIndexerServiceAccount, partitionId);
-        ParentReferences dataReferences = entityGroupsCache.get(indexerDataGroupsKey);
-        if (dataReferences == null) {
-          int cursor = 0;
-          int limit = 5000;
-          ArrayList<ParentReference> references = new ArrayList<>();
-          getTenantDataGroups(references, partitionId, String.valueOf(cursor), limit);
-          dataReferences = new ParentReferences();
-          dataReferences.setParentReferencesOfUser(new HashSet<>(references));
-          entityGroupsCache.put(indexerDataGroupsKey, dataReferences);
-        }
-        return dataReferences.getParentReferencesOfUser();
-      }
-      return parentReferences;
-    }
-
-    private void getTenantDataGroups(List<ParentReference> parentReferences, String partitionId, String cursor, int limit) {
-        ListGroupsOfPartitionDto groupsInPartition = retrieveGroupRepo.getGroupsInPartition(
-            partitionId,
-            GroupType.DATA,
-            String.valueOf(cursor),
-            limit
-        );
-        parentReferences.addAll(groupsInPartition.getGroups());
-        if (parentReferences.size() < groupsInPartition.getTotalCount()) {
-            getTenantDataGroups(
-                parentReferences,
-                partitionId,
-                groupsInPartition.getCursor(),
-                limit
-            );
-        }
     }
 
     @Override

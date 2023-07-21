@@ -31,7 +31,6 @@ import org.opengroup.osdu.entitlements.v2.jdbc.model.MemberInfoEntity;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.GroupRepository;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.JdbcTemplateRunner;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository.MemberRepository;
-import org.opengroup.osdu.entitlements.v2.jdbc.util.PartitionIndexerServiceAccUtil;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.Role;
@@ -52,7 +51,6 @@ public class CreateGroupRepoJdbc implements CreateGroupRepo {
 	private final GroupRepository groupRepository;
 	private final MemberRepository memberRepository;
 	private final JdbcTemplateRunner jdbcTemplateRunner;
-	private final PartitionIndexerServiceAccUtil indexerServiceAccUtil;
 	private final GroupCacheService groupCacheService;
 
 	@Override
@@ -62,7 +60,6 @@ public class CreateGroupRepoJdbc implements CreateGroupRepo {
 				groupNode.getName()));
 
 			executeCreateGroupOperation(groupNode, createGroupRepoDto);
-			flushIndexerCacheIfDataGroup(groupNode);
 
 			auditLogger.createGroup(AuditStatus.SUCCESS, groupNode.getNodeId());
 			return ImmutableSet.of(createGroupRepoDto.getRequesterNode().getNodeId());
@@ -73,19 +70,6 @@ public class CreateGroupRepoJdbc implements CreateGroupRepo {
 				throw new DatabaseAccessException(HttpStatus.CONFLICT, "This group already exists");
 			}
 			throw e;
-		}
-	}
-
-	private void flushIndexerCacheIfDataGroup(EntityNode groupNode) {
-		//Indexer service account should have access to ALL data groups we will flush his cache if a data group has been created
-		if (groupNode.isDataGroup()) {
-			String indexerServiceAccount = indexerServiceAccUtil.getTenantIndexerServiceAccount();
-			if (indexerServiceAccount != null) {
-				String indexerDataGroupsKey = indexerServiceAccUtil.getTenantIndexerServiceAccCacheKey(
-						indexerServiceAccount, groupNode.getDataPartitionId());
-				groupCacheService.flushListGroupCacheForUser(indexerDataGroupsKey,
-						groupNode.getDataPartitionId());
-			}
 		}
 	}
 
@@ -100,11 +84,12 @@ public class CreateGroupRepoJdbc implements CreateGroupRepo {
 		addRequesterAsOwnerMemberToGroup(createdGroup, createGroupRepoDto);
 
 		if (createGroupRepoDto.isAddDataRootGroup()) {
-			addRootGroupNodeAsMemberOfGroupNewGroup(createdGroup, createGroupRepoDto);
+			addRootGroupNodeAsMemberOfNewGroup(createdGroup, createGroupRepoDto);
 		}
 	}
 
-	private void addRootGroupNodeAsMemberOfGroupNewGroup(GroupInfoEntity createdGroup, CreateGroupRepoDto createGroupRepoDto) {
+	private void addRootGroupNodeAsMemberOfNewGroup(GroupInfoEntity createdGroup,
+			CreateGroupRepoDto createGroupRepoDto) {
 		GroupInfoEntity dataRootGroup = groupRepository
 				.findByEmail(createGroupRepoDto.getDataRootGroupNode().getNodeId())
 				.stream()
@@ -115,7 +100,13 @@ public class CreateGroupRepoJdbc implements CreateGroupRepo {
 								"Could not find the group with email: " +
 										createGroupRepoDto.getDataRootGroupNode().getNodeId()));
 
+		Set<String> dataRootGroupMembers = jdbcTemplateRunner.getAffectedMembersForGroup(
+				createGroupRepoDto.getDataRootGroupNode());
+
 		groupRepository.addChildGroupById(createdGroup.getId(), dataRootGroup.getId());
+
+		groupCacheService.refreshListGroupCache(dataRootGroupMembers,
+				createGroupRepoDto.getPartitionId());
 	}
 
 	private void addRequesterAsOwnerMemberToGroup(GroupInfoEntity createdGroup, CreateGroupRepoDto createGroupRepoDto) {

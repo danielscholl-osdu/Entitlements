@@ -10,6 +10,9 @@
       "groupName": "users"
     },
     {
+      "groupName": "users.data.root"
+    },
+    {
       "groupName": "data.default.viewers"
     },
     {

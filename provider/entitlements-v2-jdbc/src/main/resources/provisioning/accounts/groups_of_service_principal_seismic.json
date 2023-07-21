@@ -1,0 +1,19 @@
+{
+  "users": [
+    {
+      "email": "SERVICE_PRINCIPAL_SEISMIC",
+      "role": "MEMBER"
+    }
+  ],
+  "membersOf": [
+    {
+      "groupName": "users"
+    },
+    {
+      "groupName": "users.datalake.ops"
+    },
+    {
+      "groupName": "service.legal.admin"
+    }
+  ]
+}
