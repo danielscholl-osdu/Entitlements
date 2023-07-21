@@ -32,10 +32,9 @@ import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupItem;
-import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupType;
-import org.opengroup.osdu.entitlements.v2.acceptance.model.request.GetGroupsRequestData;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.response.ListGroupResponse;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.ConfigurationService;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.EntitlementsV2Service;
@@ -49,21 +48,24 @@ public class GetDataGroupsIndexerServiceAccJdbcTest {
 
   private final String baseUrl;
   private final Client client;
-  private final TokenService tokenService =  new OpenIDTokenProvider();
+  private final TokenService tokenService = new OpenIDTokenProvider();
   private final ConfigurationService configurationService = new AnthosConfigurationService();
   private final EntitlementsV2Service entitlementsV2Service;
-  private final String partitionServiceAccountEmail;
+  private final String indexerServiceAccountEmail;
   private final Gson gson = new Gson();
+  private final Boolean dataRootGroupHierarchyEnabled;
 
   public GetDataGroupsIndexerServiceAccJdbcTest() {
     this.baseUrl = configurationService.getServiceUrl();
     this.client = getClient();
     this.entitlementsV2Service = new EntitlementsV2Service(configurationService, new HttpClientService(configurationService));
-    this.partitionServiceAccountEmail = System.getProperty("INDEXER_SERVICE_ACCOUNT_EMAIL", System.getenv("INDEXER_SERVICE_ACCOUNT_EMAIL"));
+    this.indexerServiceAccountEmail = System.getProperty("INDEXER_SERVICE_ACCOUNT_EMAIL", System.getenv("INDEXER_SERVICE_ACCOUNT_EMAIL"));
+    dataRootGroupHierarchyEnabled = Boolean.parseBoolean(System.getenv("DATA_ROOT_GROUP_HIERARCHY_ENABLED"));
   }
 
   @Test
   public void shouldReturnCreatedDataGroupForIndexerServiceAcc() throws Exception {
+    Assume.assumeTrue(dataRootGroupHierarchyEnabled);
     String dataGroupName = "data.indexer.test.group";
     String dataGroupEmail = dataGroupName + "@" + configurationService.getTenantId() + "." + configurationService.getDomain();
     String token = tokenService.getToken().getValue();
@@ -72,7 +74,8 @@ public class GetDataGroupsIndexerServiceAccJdbcTest {
       entitlementsV2Service.createGroup(dataGroupName, token);
     }
 
-    ClientResponse successfulResponse = sendGetParentGroupsRequest(token, partitionServiceAccountEmail);
+    ClientResponse successfulResponse = sendGetParentGroupsRequest(token,
+        indexerServiceAccountEmail);
     Assert.assertEquals(200, successfulResponse.getStatus());
     String successfulResponseBody = successfulResponse.getEntity(String.class);
     ListGroupResponse successfulGroupResponse = gson.fromJson(successfulResponseBody, ListGroupResponse.class);
@@ -80,12 +83,16 @@ public class GetDataGroupsIndexerServiceAccJdbcTest {
         .anyMatch(email1 -> email1.equals(dataGroupEmail)));
 
     entitlementsV2Service.deleteGroup(dataGroupEmail, token);
-    ClientResponse notFoundResponse = sendGetParentGroupsRequest(token, partitionServiceAccountEmail);
-    Assert.assertEquals(200, notFoundResponse.getStatus());
-    String notFoundResponseBody = notFoundResponse.getEntity(String.class);
-    ListGroupResponse notFoundGroupResponse = gson.fromJson(notFoundResponseBody, ListGroupResponse.class);
-    Assert.assertFalse(notFoundGroupResponse.getGroups().stream().map(GroupItem::getEmail)
-        .noneMatch(email -> email.equals(dataGroupEmail)));
+    ClientResponse getIndexerAccGroupsResponse = sendGetParentGroupsRequest(token,
+        indexerServiceAccountEmail);
+    Assert.assertEquals(200, getIndexerAccGroupsResponse.getStatus());
+    String indexerAccGroupsBody = getIndexerAccGroupsResponse.getEntity(String.class);
+    ListGroupResponse indexerAccGroups = gson.fromJson(indexerAccGroupsBody, ListGroupResponse.class);
+    Assert.assertFalse(
+        indexerAccGroups.getGroups().stream()
+            .map(GroupItem::getEmail)
+            .anyMatch(email -> email.equals(dataGroupEmail))
+    );
   }
 
   private boolean isNotDataGroupExist(String dataGroupEmail, String token) throws MalformedURLException {
