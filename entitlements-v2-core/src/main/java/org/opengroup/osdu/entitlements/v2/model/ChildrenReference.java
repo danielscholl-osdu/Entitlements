@@ -50,6 +50,10 @@ public class ChildrenReference {
                 .build();
     }
 
+    public static ChildrenReferenceBuilder builder(){
+        return new ChildrenReferenceBuilder();
+    }
+
     public boolean isGroup() {
         return type == NodeType.GROUP;
     }
