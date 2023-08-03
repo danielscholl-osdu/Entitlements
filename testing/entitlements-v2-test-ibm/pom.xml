@@ -14,13 +14,13 @@
 	<packaging>jar</packaging>
 
 	<properties>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.main.basedir>${project.basedir}</project.main.basedir>
 		<os-core-lib-ibm.version>0.20.0</os-core-lib-ibm.version>
 		<jackson.version>2.13.2.2</jackson.version>
-		<junit.version>4.12</junit.version>
+		<junit.version>4.13.2</junit.version>
 		<netty-all.version>4.1.50.Final</netty-all.version>
 	</properties>
 
@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.20</version>
+			<version>1.18.28</version>
 			<scope>provided</scope>
 		</dependency>
 
