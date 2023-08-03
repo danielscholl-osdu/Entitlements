@@ -1,129 +1,82 @@
 package org.opengroup.osdu.entitlements.v2.acceptance.util;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.apache.hc.client5.http.config.ConnectionConfig;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.io.BasicHttpClientConnectionManager;
+import org.apache.hc.core5.http.ClassicHttpRequest;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.io.support.ClassicRequestBuilder;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.request.RequestData;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import javax.ws.rs.core.MediaType;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.net.HttpURLConnection;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Map.Entry;
-import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class HttpClientService {
 
-    private final Client client;
+    private final CloseableHttpClient httpClient;
     private final String baseUrl;
     //set this mode to true if running the service and tests locally
     private Boolean localMode;
     private String header_x_user_id;
 
     public HttpClientService(ConfigurationService configurationService) {
-        this.client = getClient();
+        this.httpClient = createHttpClient();
         this.baseUrl = configurationService.getServiceUrl();
     }
 
-    public ClientResponse send(RequestData requestData) throws Exception {
+    public CloseableHttpResponse send(RequestData requestData) throws IOException {
+        ClassicHttpRequest httpRequest = createHttpRequest(requestData);
+        return httpClient.execute(httpRequest, new CustomHttpClientResponseHandler());
+    }
+
+    private ClassicHttpRequest createHttpRequest(RequestData requestData) throws MalformedURLException {
+        ClassicRequestBuilder classicRequestBuilder = addRequiredDetails(requestData);
+        addOptionalDetails(requestData, classicRequestBuilder);
+        addXUserIdHeaderForLocalMode(classicRequestBuilder);
+        return classicRequestBuilder.build();
+    }
+
+    private  void addOptionalDetails(RequestData requestData, ClassicRequestBuilder classicRequestBuilder) {
+        requestData.getQueryParams().forEach(classicRequestBuilder::addParameter);
+        if(requestData.getBody() != null) {
+            classicRequestBuilder.setEntity(requestData.getBody(), ContentType.APPLICATION_JSON);
+        }
+    }
+
+    private  ClassicRequestBuilder addRequiredDetails(RequestData requestData) throws MalformedURLException {
         String resourceUrl = new URL(baseUrl + requestData.getRelativePath()).toString();
         log.info("Sending request to URL: {}", resourceUrl);
-        WebResource webResource = client.resource(resourceUrl);
-        if (!requestData.getQueryParams().isEmpty()) {
-            for (Entry<String, String> entry : requestData.getQueryParams().entrySet()) {
-                webResource = webResource.queryParam(entry.getKey(), entry.getValue());
-            }
-        }
-        WebResource.Builder builder = webResource.getRequestBuilder();
+        return ClassicRequestBuilder.create(requestData.getMethod())
+                .setUri(resourceUrl)
+                .addHeader("Authorization", "Bearer " + requestData.getToken())
+                .addHeader("data-partition-id", requestData.getDataPartitionId());
+    }
+    private  BasicHttpClientConnectionManager createBasicHttpClientConnectionManager() {
+        ConnectionConfig connConfig = ConnectionConfig.custom()
+                .setConnectTimeout(1500000, TimeUnit.MILLISECONDS)
+                .setSocketTimeout(1500000, TimeUnit.MILLISECONDS)
+                .build();
+        BasicHttpClientConnectionManager cm = new BasicHttpClientConnectionManager();
+        cm.setConnectionConfig(connConfig);
+        return cm;
+    }
 
+    private CloseableHttpClient createHttpClient() {
+        BasicHttpClientConnectionManager cm = createBasicHttpClientConnectionManager();
+        return HttpClientBuilder.create().setConnectionManager(cm).build();
+    }
+
+    private void addXUserIdHeaderForLocalMode(ClassicRequestBuilder classicRequestBuilder) {
         localMode= Boolean.parseBoolean(System.getenv("LOCAL_MODE"));
-        if (!localMode) {
-
-        builder.accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + requestData.getToken())
-                .header("data-partition-id", requestData.getDataPartitionId());
-        }
-        else
-        {
+        if (localMode) {
             header_x_user_id=System.getenv("HEADER_X_USER_ID");
-            if(!StringUtils.isEmpty(requestData.getToken())) {
-                builder.accept(MediaType.APPLICATION_JSON)
-                        .type(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + requestData.getToken())
-                        .header("data-partition-id", requestData.getDataPartitionId())
-                        .header("x-user-id", header_x_user_id);
-            }
-            else
-            {
-                builder.accept(MediaType.APPLICATION_JSON)
-                        .type(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + requestData.getToken())
-                        .header("data-partition-id", requestData.getDataPartitionId());
-
-            }
-        }
-
-        if (requestData.getBody() != null) {
-            return builder.method(requestData.getMethod(), ClientResponse.class, requestData.getBody());
-        }
-        return builder.method(requestData.getMethod(), ClientResponse.class);
-    }
-
-    private Client getClient() {
-        TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
-            @Override
-            public X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-
-            @Override
-            public void checkClientTrusted(X509Certificate[] certs, String authType) {
-            }
-
-            @Override
-            public void checkServerTrusted(X509Certificate[] certs, String authType) {
-            }
-        }};
-        try {
-            SSLContext sc = SSLContext.getInstance("TLS");
-            sc.init(null, trustAllCerts, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        } catch (Exception e) {/*do nothing*/}
-        allowMethods("PATCH");
-        return Client.create();
-    }
-
-    private void allowMethods(String... methods) {
-        try {
-            Field methodsField = HttpURLConnection.class.getDeclaredField("methods");
-
-            Field modifiersField = Field.class.getDeclaredField("modifiers");
-            modifiersField.setAccessible(true);
-            modifiersField.setInt(methodsField, methodsField.getModifiers() & ~Modifier.FINAL);
-
-            methodsField.setAccessible(true);
-
-            String[] oldMethods = (String[]) methodsField.get(null);
-            Set<String> methodsSet = new LinkedHashSet<>(Arrays.asList(oldMethods));
-            methodsSet.addAll(Arrays.asList(methods));
-            String[] newMethods = methodsSet.toArray(new String[0]);
-
-            methodsField.set(null/*static field*/, newMethods);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new IllegalStateException(e);
+            classicRequestBuilder.addHeader("x-user-id", header_x_user_id);
         }
     }
 }

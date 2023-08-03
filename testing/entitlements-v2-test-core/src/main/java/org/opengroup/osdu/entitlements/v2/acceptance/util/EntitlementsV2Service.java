@@ -1,11 +1,9 @@
 package org.opengroup.osdu.entitlements.v2.acceptance.util;
 
 import com.google.gson.Gson;
-import com.sun.jersey.api.client.ClientResponse;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringJoiner;
 import lombok.RequiredArgsConstructor;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.junit.Assert;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupItem;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.request.AddMemberRequestData;
@@ -14,6 +12,10 @@ import org.opengroup.osdu.entitlements.v2.acceptance.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.response.ListGroupInPartitionResponse;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.response.ListGroupResponse;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.response.ListMemberResponse;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringJoiner;
 
 /**
  * Service has logic for successful scenarios.
@@ -30,9 +32,9 @@ public class EntitlementsV2Service {
                 .method("GET").dataPartitionId(configurationService.getTenantId())
                 .relativePath("groups")
                 .token(token).build();
-        ClientResponse response = httpClientService.send(getGroupsRequestData);
-        Assert.assertEquals(200, response.getStatus());
-        String getGroupsResponseBody = response.getEntity(String.class);
+        CloseableHttpResponse response = httpClientService.send(getGroupsRequestData);
+        Assert.assertEquals(200, response.getCode());
+        String getGroupsResponseBody = EntityUtils.toString(response.getEntity());
         return gson.fromJson(getGroupsResponseBody, ListGroupResponse.class);
     }
 
@@ -52,9 +54,9 @@ public class EntitlementsV2Service {
                 .dataPartitionId(configurationService.getTenantId())
                 .token(token)
                 .build();
-        ClientResponse response = httpClientService.send(requestData);
-        Assert.assertEquals(200, response.getStatus());
-        String getGroupsResponseBody = response.getEntity(String.class);
+        CloseableHttpResponse response = httpClientService.send(requestData);
+        Assert.assertEquals(200, response.getCode());
+        String getGroupsResponseBody = EntityUtils.toString(response.getEntity());
         return gson.fromJson(getGroupsResponseBody, ListGroupResponse.class);
     }
 
@@ -64,9 +66,9 @@ public class EntitlementsV2Service {
                 .relativePath("groups")
                 .token(token)
                 .body(gson.toJson(GroupItem.builder().name(groupName).description("desc").build())).build();
-        ClientResponse response = httpClientService.send(requestData);
-        Assert.assertEquals(201, response.getStatus());
-        return gson.fromJson(response.getEntity(String.class), GroupItem.class);
+        CloseableHttpResponse response = httpClientService.send(requestData);
+        Assert.assertEquals(201, response.getCode());
+        return gson.fromJson(EntityUtils.toString(response.getEntity()), GroupItem.class);
     }
 
     public void deleteGroup(String groupEmail, String token) throws Exception {
@@ -76,8 +78,8 @@ public class EntitlementsV2Service {
                 .dataPartitionId(configurationService.getTenantId())
                 .token(token)
                 .build();
-        ClientResponse response = httpClientService.send(requestData);
-        Assert.assertEquals(204, response.getStatus());
+        CloseableHttpResponse response = httpClientService.send(requestData);
+        Assert.assertEquals(204, response.getCode());
     }
 
     public ListMemberResponse getMembers(String groupEmail, String token) throws Exception {
@@ -85,9 +87,9 @@ public class EntitlementsV2Service {
                 .method("GET").dataPartitionId(configurationService.getTenantId())
                 .relativePath(String.format("groups/%s/members", groupEmail))
                 .token(token).build();
-        ClientResponse response = httpClientService.send(getGroupsRequestData);
-        Assert.assertEquals(200, response.getStatus());
-        String getGroupsResponseBody = response.getEntity(String.class);
+        CloseableHttpResponse response = httpClientService.send(getGroupsRequestData);
+        Assert.assertEquals(200, response.getCode());
+        String getGroupsResponseBody = EntityUtils.toString(response.getEntity());
         return gson.fromJson(getGroupsResponseBody, ListMemberResponse.class);
     }
 
@@ -100,9 +102,9 @@ public class EntitlementsV2Service {
                 .relativePath(String.format("groups/%s/members", addMemberRequestData.getGroupEmail()))
                 .token(token)
                 .body(gson.toJson(requestBody)).build();
-        ClientResponse response = httpClientService.send(requestData);
-        Assert.assertEquals(200, response.getStatus());
-        return gson.fromJson(response.getEntity(String.class), GroupItem.class);
+        CloseableHttpResponse response = httpClientService.send(requestData);
+        Assert.assertEquals(200, response.getCode());
+        return gson.fromJson(EntityUtils.toString(response.getEntity()), GroupItem.class);
     }
 
     public void removeMember(String groupEmail, String memberEmail, String token) throws Exception {
@@ -110,8 +112,8 @@ public class EntitlementsV2Service {
                 .method("DELETE").dataPartitionId(configurationService.getTenantId())
                 .relativePath(String.format("groups/%s/members/%s", groupEmail, memberEmail))
                 .token(token).build();
-        ClientResponse response = httpClientService.send(requestData);
-        Assert.assertEquals(204, response.getStatus());
+        CloseableHttpResponse response = httpClientService.send(requestData);
+        Assert.assertEquals(204, response.getCode());
     }
 
     public void provisionGroupsForNewTenant(String token) throws Exception {
@@ -119,19 +121,19 @@ public class EntitlementsV2Service {
                 .method("POST").dataPartitionId(configurationService.getTenantId())
                 .relativePath("tenant-provisioning")
                 .token(token).build();
-        ClientResponse response = httpClientService.send(requestData);
-        Assert.assertEquals(200, response.getStatus());
+        CloseableHttpResponse response = httpClientService.send(requestData);
+        Assert.assertEquals(200, response.getCode());
     }
 
-    public ClientResponse deleteMember(String memberEmail, String token) throws Exception {
+    public CloseableHttpResponse deleteMember(String memberEmail, String token) throws Exception {
         RequestData requestData = RequestData.builder()
                 .method("DELETE")
                 .relativePath("members/" + memberEmail)
                 .dataPartitionId(configurationService.getTenantId())
                 .token(token)
                 .build();
-        ClientResponse response = httpClientService.send(requestData);
-        Assert.assertTrue(204 == response.getStatus() || 404 == response.getStatus());
+        CloseableHttpResponse response = httpClientService.send(requestData);
+        Assert.assertTrue(204 == response.getCode() || 404 == response.getCode());
         return response;
     }
 
@@ -151,9 +153,9 @@ public class EntitlementsV2Service {
             .token(token)
             .build();
 
-        ClientResponse clientResponse = httpClientService.send(requestData);
-        Assert.assertEquals(200, clientResponse.getStatus());
-        String entity = clientResponse.getEntity(String.class);
+        CloseableHttpResponse clientResponse = httpClientService.send(requestData);
+        Assert.assertEquals(200, clientResponse.getCode());
+        String entity = EntityUtils.toString(clientResponse.getEntity());
         return gson.fromJson(entity, ListGroupInPartitionResponse.class);
     }
 }
