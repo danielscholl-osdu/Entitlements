@@ -1,14 +1,13 @@
 package org.opengroup.osdu.entitlements.v2.acceptance;
 
 import com.google.gson.Gson;
-import com.sun.jersey.api.client.ClientResponse;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.junit.Assert;
 import org.junit.Test;
-import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupItem;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.Token;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.request.UpdateGroupRequestData;
-import org.opengroup.osdu.entitlements.v2.acceptance.model.response.ListGroupResponse;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.response.UpdateGroupResponse;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.ConfigurationService;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.TokenService;
@@ -32,9 +31,9 @@ public abstract class UpdateGroupTest extends AcceptanceBaseTest {
 
         entitlementsV2Service.createGroup(oldGroupName, token.getValue());
 
-        ClientResponse response = httpClientService.send(getRenameGroupRequestData(oldGroupName, newGroupName, token.getValue()));
-        UpdateGroupResponse updateGroupResponse = new Gson().fromJson(response.getEntity(String.class), UpdateGroupResponse.class);
-        Assert.assertEquals(200, response.getStatus());
+        CloseableHttpResponse response = httpClientService.send(getRenameGroupRequestData(oldGroupName, newGroupName, token.getValue()));
+        UpdateGroupResponse updateGroupResponse = new Gson().fromJson(EntityUtils.toString(response.getEntity()), UpdateGroupResponse.class);
+        Assert.assertEquals(200, response.getCode());
         Assert.assertEquals(newGroupName.toLowerCase(), updateGroupResponse.getName());
         Assert.assertEquals(configurationService.getIdOfGroup(newGroupName).toLowerCase(), updateGroupResponse.getEmail());
         Assert.assertEquals(newGroupName.toLowerCase(), updateGroupResponse.getName().toLowerCase());
@@ -50,9 +49,9 @@ public abstract class UpdateGroupTest extends AcceptanceBaseTest {
 
         entitlementsV2Service.createGroup(groupName, token.getValue());
 
-        ClientResponse response = httpClientService.send(getUpdateAppIdsRequestData(groupName, newAppIds, token.getValue()));
-        UpdateGroupResponse updateGroupResponse = new Gson().fromJson(response.getEntity(String.class), UpdateGroupResponse.class);
-        Assert.assertEquals(200, response.getStatus());
+        CloseableHttpResponse response = httpClientService.send(getUpdateAppIdsRequestData(groupName, newAppIds, token.getValue()));
+        UpdateGroupResponse updateGroupResponse = new Gson().fromJson(EntityUtils.toString(response.getEntity()), UpdateGroupResponse.class);
+        Assert.assertEquals(200, response.getCode());
         Assert.assertEquals(groupName.toLowerCase(), updateGroupResponse.getName());
         Assert.assertEquals(configurationService.getIdOfGroup(groupName).toLowerCase(), updateGroupResponse.getEmail());
         Assert.assertEquals(new HashSet<>(updateGroupResponse.getAppIds()), newAppIds);

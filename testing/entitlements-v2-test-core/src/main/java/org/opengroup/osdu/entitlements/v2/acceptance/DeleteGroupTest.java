@@ -1,6 +1,6 @@
 package org.opengroup.osdu.entitlements.v2.acceptance;
 
-import com.sun.jersey.api.client.ClientResponse;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.junit.Assert;
 import org.junit.Test;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupItem;
@@ -43,7 +43,7 @@ public abstract class DeleteGroupTest extends AcceptanceBaseTest {
                 .method("GET").dataPartitionId(configurationService.getTenantId())
                 .relativePath(String.format("groups/%s/members", email))
                 .token(value).build();
-        ClientResponse response = httpClientService.send(getGroupsRequestData);
-        Assert.assertEquals(404, response.getStatus());
+        CloseableHttpResponse response = httpClientService.send(getGroupsRequestData);
+        Assert.assertEquals(404, response.getCode());
     }
 }

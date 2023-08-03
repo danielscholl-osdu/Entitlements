@@ -1,11 +1,7 @@
 package org.opengroup.osdu.entitlements.v2.acceptance.api;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import com.sun.jersey.api.client.ClientResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.junit.Test;
 import org.opengroup.osdu.entitlements.v2.acceptance.AcceptanceBaseTest;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.VersionInfo;
@@ -13,6 +9,9 @@ import org.opengroup.osdu.entitlements.v2.acceptance.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.ConfigurationService;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.TokenService;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.VersionInfoUtils;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @Slf4j
 public abstract class InfoApiTest extends AcceptanceBaseTest {
@@ -37,9 +36,9 @@ public abstract class InfoApiTest extends AcceptanceBaseTest {
             .token(tokenService.getToken().getValue())
             .dataPartitionId(DATA_PARTITION_ID)
             .build();
-    ClientResponse response = httpClientService.send(request);
+    CloseableHttpResponse response = httpClientService.send(request);
 
-    assertEquals(200, response.getStatus());
+    assertEquals(200, response.getCode());
     VersionInfo responseObject = versionInfoUtils.getVersionInfoFromResponse(response);
 
     assertNotNull(responseObject.getGroupId());
