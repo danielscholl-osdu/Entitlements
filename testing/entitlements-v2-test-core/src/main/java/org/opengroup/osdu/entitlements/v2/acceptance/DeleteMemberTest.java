@@ -1,6 +1,5 @@
 package org.opengroup.osdu.entitlements.v2.acceptance;
 
-import com.sun.jersey.api.client.ClientResponse;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.junit.Test;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupItem;
