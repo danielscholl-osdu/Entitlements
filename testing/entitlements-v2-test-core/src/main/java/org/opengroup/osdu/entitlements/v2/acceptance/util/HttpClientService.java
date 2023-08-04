@@ -5,7 +5,7 @@ import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.client5.http.impl.io.BasicHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.io.support.ClassicRequestBuilder;
@@ -51,25 +51,27 @@ public class HttpClientService {
 
     private  ClassicRequestBuilder addRequiredDetails(RequestData requestData) throws MalformedURLException {
         String resourceUrl = new URL(baseUrl + requestData.getRelativePath()).toString();
-        log.info("Sending request to URL: {}", resourceUrl);
+        log.info("Sending request to URL: {} HTTP Method: {}", resourceUrl, requestData.getMethod());
         return ClassicRequestBuilder.create(requestData.getMethod())
                 .setUri(resourceUrl)
                 .addHeader("Authorization", "Bearer " + requestData.getToken())
                 .addHeader("data-partition-id", requestData.getDataPartitionId());
     }
-    private  BasicHttpClientConnectionManager createBasicHttpClientConnectionManager() {
+    private  PoolingHttpClientConnectionManager createBasicHttpClientConnectionManager() {
         ConnectionConfig connConfig = ConnectionConfig.custom()
                 .setConnectTimeout(1500000, TimeUnit.MILLISECONDS)
                 .setSocketTimeout(1500000, TimeUnit.MILLISECONDS)
                 .build();
-        BasicHttpClientConnectionManager cm = new BasicHttpClientConnectionManager();
-        cm.setConnectionConfig(connConfig);
-        return cm;
+        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+        connectionManager.setDefaultConnectionConfig(connConfig);
+        connectionManager.setMaxTotal(20);
+        connectionManager.setDefaultMaxPerRoute(20);
+        return connectionManager;
     }
 
     private CloseableHttpClient createHttpClient() {
-        BasicHttpClientConnectionManager cm = createBasicHttpClientConnectionManager();
-        return HttpClientBuilder.create().setConnectionManager(cm).build();
+        PoolingHttpClientConnectionManager cm = createBasicHttpClientConnectionManager();
+        return HttpClientBuilder.create().setConnectionManager(cm).setConnectionManagerShared(true).build();
     }
 
     private void addXUserIdHeaderForLocalMode(ClassicRequestBuilder classicRequestBuilder) {
