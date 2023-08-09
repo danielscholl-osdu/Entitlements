@@ -4,10 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
-import org.opengroup.osdu.core.common.logging.audit.AuditStatus;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.core.common.model.tenant.TenantInfo;
-import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.ParentTreeDto;
@@ -43,7 +41,7 @@ public class ListGroupServiceTests {
     @MockBean
     private RetrieveGroupRepo retrieveGroupRepo;
     @MockBean
-    private GroupCacheService groupCacheService;
+    private GroupsProvider groupsProvider;
     @MockBean
     private RequestInfo requestInfo;
 
@@ -75,12 +73,12 @@ public class ListGroupServiceTests {
         Set<ParentReference> parents1 = unfilteredParentRefs.stream()
                 .filter(p -> "dp".equals(p.getDataPartitionId()))
                 .collect(Collectors.toSet());
-        when(groupCacheService.getFromPartitionCache("datafier@serviceaccount", "dp")).thenReturn(parents1);
+        when(groupsProvider.getGroupsInContext("datafier@serviceaccount", "dp")).thenReturn(parents1);
 
         Set<ParentReference> parents2 = unfilteredParentRefs.stream()
                 .filter(p -> "dp1".equals(p.getDataPartitionId()))
                 .collect(Collectors.toSet());
-        when(groupCacheService.getFromPartitionCache("datafier@serviceaccount", "dp1")).thenReturn(parents2);
+        when(groupsProvider.getGroupsInContext("datafier@serviceaccount", "dp1")).thenReturn(parents2);
 
         Set<ParentReference> parentReferences = listGroupService.getGroups(listGroupServiceDto);
 
@@ -100,7 +98,7 @@ public class ListGroupServiceTests {
         Set<ParentReference> parents = unfilteredParentRefs.stream()
                 .filter(p -> "dp".equals(p.getDataPartitionId()))
                 .collect(Collectors.toSet());
-        when(groupCacheService.getFromPartitionCache("datafier@serviceaccount", "dp")).thenReturn(parents);
+        when(groupsProvider.getGroupsInContext("datafier@serviceaccount", "dp")).thenReturn(parents);
 
         Set<ParentReference> parentReferences = listGroupService.getGroups(listGroupServiceDto);
 
@@ -121,7 +119,7 @@ public class ListGroupServiceTests {
         Set<ParentReference> parents = unfilteredParentRefs.stream()
                 .filter(p -> "dp".equals(p.getDataPartitionId()))
                 .collect(Collectors.toSet());
-        when(groupCacheService.getFromPartitionCache("anycaller", "dp")).thenReturn(parents);
+        when(groupsProvider.getGroupsInContext("anycaller", "dp")).thenReturn(parents);
 
         Set<ParentReference> parentReferences = listGroupService.getGroups(listGroupServiceDto);
         assertEquals(4, parentReferences.size());
