@@ -52,9 +52,7 @@ public class IdDoc {
     public boolean equals(Object o) {
         if (this == o) return true;
 
-        if (!(o instanceof IdDoc)) return false;
-
-        IdDoc idDoc = (IdDoc) o;
+        if (!(o instanceof IdDoc idDoc)) return false;
 
         return new EqualsBuilder().append(nodeId, idDoc.nodeId).append(dataPartitionId, idDoc.dataPartitionId).isEquals();
     }

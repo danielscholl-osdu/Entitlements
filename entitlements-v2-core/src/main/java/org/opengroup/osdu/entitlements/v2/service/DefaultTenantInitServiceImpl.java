@@ -167,9 +167,9 @@ public class DefaultTenantInitServiceImpl implements TenantInitService {
     }
 
     private boolean isConflictException(Exception e, final String expectedErrorMessage) {
-        return e instanceof AppException
-                && ((AppException) e).getError().getCode() == HttpStatus.CONFLICT.value()
-                && ((AppException) e).getError().getMessage().contains(expectedErrorMessage);
+        return e instanceof AppException appException
+                && appException.getError().getCode() == HttpStatus.CONFLICT.value()
+                && appException.getError().getMessage().contains(expectedErrorMessage);
     }
 
     private String createEmail(String name, String partitionDomain) {
