@@ -17,7 +17,7 @@ public class ListGroupService {
     private final JaxRsDpsLog log;
     private final RequestInfo requestInfo;
     private final RetrieveGroupRepo retrieveGroupRepo;
-    private final GroupCacheService groupCacheService;
+    private final GroupsProvider groupsProvider;
 
     public Set<ParentReference> getGroups(ListGroupServiceDto listGroupServiceDto) {
         log.debug(String.format("ListGroupService#run timestamp: %d", System.currentTimeMillis()));
@@ -25,7 +25,7 @@ public class ListGroupService {
         log.info(ListGroupService.class.getName(), String.format("requested by %s", requesterId));
         Set<ParentReference> groups = new HashSet<>();
         listGroupServiceDto.getPartitionIds().forEach(partitionId ->
-                groups.addAll(groupCacheService.getFromPartitionCache(requesterId, partitionId)));
+                groups.addAll(groupsProvider.getGroupsInContext(requesterId, partitionId)));
         log.debug(String.format("ListGroupService#run cache look up done timestamp: %d", System.currentTimeMillis()));
         String serviceAccount = requestInfo.getTenantInfo().getServiceAccount();
         if (serviceAccount.equalsIgnoreCase(requesterId) || Strings.isNullOrEmpty(listGroupServiceDto.getAppId())) {
