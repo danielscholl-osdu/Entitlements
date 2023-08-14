@@ -178,6 +178,9 @@ azure_test:
 aws-test-java:
   image: $CI_REGISTRY/osdu/platform/deployment-and-operations/base-containers-aws/aws-maven/aws-maven:v2.0
 
+aws-mongodb-test-java:
+  image: $CI_REGISTRY/osdu/platform/deployment-and-operations/base-containers-aws/aws-maven/aws-maven:v2.0
+
 fossa-analyze:
   image: $CI_REGISTRY/divido/fossa-with-cache:v0.9-jdk17
 fossa-check-notice:
