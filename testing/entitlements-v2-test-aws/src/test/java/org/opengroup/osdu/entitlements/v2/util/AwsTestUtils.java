@@ -76,7 +76,7 @@ public class AwsTestUtils  {
             awsOauthCustomScope = getSsmParameter(oauth_custom_scope);
 
             sp = new ServicePrincipal(amazonRegion, tokenUrl, awsOauthCustomScope);
-            sptoken = sp.getServicePrincipalAccessToken(client_credentials_clientid, client_credentials_secret);
+            sptoken = sp.getServicePrincipalAccessToken_JDK17(client_credentials_clientid, client_credentials_secret);
         }
 
         return sptoken;
