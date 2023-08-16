@@ -40,9 +40,6 @@ public class AwsTestUtils  {
     private final static String COGNITO_NAME = "COGNITO_NAME";
     private final static String REGION = "AWS_REGION";
 
-
-
-
     private AWSCredentialsProvider amazonAWSCredentials;
     private AWSSimpleSystemsManagement ssmManager;
     String sptoken=null;
@@ -76,7 +73,7 @@ public class AwsTestUtils  {
             awsOauthCustomScope = getSsmParameter(oauth_custom_scope);
 
             sp = new ServicePrincipal(amazonRegion, tokenUrl, awsOauthCustomScope);
-            sptoken = sp.getServicePrincipalAccessToken_JDK17(client_credentials_clientid, client_credentials_secret);
+            sptoken = sp.getServicePrincipalAccessToken(client_credentials_clientid, client_credentials_secret);
         }
 
         return sptoken;
