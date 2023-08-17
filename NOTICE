@@ -654,7 +654,6 @@ GPL-3.0-only
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- Jakarta Activation API (from https://github.com/eclipse-ee4j/jaf, https://github.com/jakartaee/jaf-api, https://repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api)
 - Jakarta Annotations API (from https://projects.eclipse.org/projects/ee4j.ca)
 
 ========================================================================
