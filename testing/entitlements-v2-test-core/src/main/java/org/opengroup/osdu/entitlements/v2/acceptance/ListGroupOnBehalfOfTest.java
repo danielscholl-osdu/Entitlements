@@ -1,6 +1,6 @@
 package org.opengroup.osdu.entitlements.v2.acceptance;
 
-import com.sun.jersey.api.client.ClientResponse;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.junit.Test;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupItem;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupType;
@@ -71,8 +71,8 @@ public abstract class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
                 .dataPartitionId(configurationService.getTenantId())
                 .token(token.getValue())
                 .build();
-        ClientResponse response = httpClientService.send(requestData);
-        assertEquals(400, response.getStatus());
+        CloseableHttpResponse response = httpClientService.send(requestData);
+        assertEquals(400, response.getCode());
     }
 
     @Test
@@ -84,8 +84,8 @@ public abstract class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
                 .dataPartitionId(configurationService.getTenantId())
                 .token(token.getValue())
                 .build();
-        ClientResponse response = httpClientService.send(requestData);
-        assertEquals(400, response.getStatus());
+        CloseableHttpResponse response = httpClientService.send(requestData);
+        assertEquals(400, response.getCode());
     }
 
     @Override

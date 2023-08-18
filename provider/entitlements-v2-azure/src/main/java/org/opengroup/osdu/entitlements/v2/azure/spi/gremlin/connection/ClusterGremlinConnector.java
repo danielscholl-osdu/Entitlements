@@ -140,8 +140,7 @@ public class ClusterGremlinConnector implements GremlinConnector {
     }
 
     private boolean isResourceNotFoundException(ExecutionException e) {
-        if (e.getCause() instanceof ResponseException) {
-            ResponseException responseException = (ResponseException) e.getCause();
+        if (e.getCause() instanceof ResponseException responseException) {
             if (ResponseStatusCode.SERVER_ERROR.equals(responseException.getResponseStatusCode())) {
                 return StringUtils.contains(responseException.getMessage(), NOT_FOUND_EXCEPTION_TYPE);
             }

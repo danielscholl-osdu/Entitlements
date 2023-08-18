@@ -67,6 +67,10 @@ public class ParentReference {
                 .build();
     }
 
+    public static ParentReferenceBuilder builder(){
+        return new ParentReferenceBuilder();
+    }
+
     @JsonIgnore
     public Set<String> getAppIds() {
         return appIds;

@@ -1,7 +1,8 @@
 package org.opengroup.osdu.entitlements.v2.acceptance;
 
 import com.google.gson.Gson;
-import com.sun.jersey.api.client.ClientResponse;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupItem;
@@ -91,12 +92,12 @@ public abstract class AddMemberTest extends AcceptanceBaseTest {
                 .relativePath(String.format("groups/%s/members", addMemberRequestData.getGroupEmail()))
                 .token(token)
                 .body(new Gson().toJson(requestBody)).build();
-        ClientResponse response = httpClientService.send(requestData);
-        Assert.assertEquals(409, response.getStatus());
+        CloseableHttpResponse response = httpClientService.send(requestData);
+        Assert.assertEquals(409, response.getCode());
         String errorMessage = String.format("%s is already a member of group %s",
                 addMemberRequestData.getMemberEmail().toLowerCase(), addMemberRequestData.getGroupEmail());
         ErrorResponse expectedConflictResponse = ErrorResponse.builder().code(409).reason("Conflict")
                 .message(errorMessage).build();
-        Assert.assertEquals(expectedConflictResponse, new Gson().fromJson(response.getEntity(String.class), ErrorResponse.class));
+        Assert.assertEquals(expectedConflictResponse, new Gson().fromJson(EntityUtils.toString(response.getEntity()), ErrorResponse.class));
     }
 }

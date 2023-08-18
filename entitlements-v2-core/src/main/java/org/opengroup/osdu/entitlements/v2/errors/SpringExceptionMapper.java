@@ -76,7 +76,7 @@ public class SpringExceptionMapper extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleGeneralException(Exception e) {
-        if (e instanceof BeanCreationException && ((BeanCreationException) e).getBeanName().equalsIgnoreCase("scopedTarget.getTenantInfo")) {
+        if (e instanceof BeanCreationException beanCreationException && beanCreationException.getBeanName().equalsIgnoreCase("scopedTarget.getTenantInfo")) {
             return this.getErrorResponse(new AppException(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase(), PartitionHeaderValidationService.INVALID_DP_HEADER_ERROR));
         }
         return this.getErrorResponse(new AppException(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), "An unknown error has occurred", e));
@@ -100,9 +100,8 @@ public class SpringExceptionMapper extends ResponseEntityExceptionHandler {
     }
 
     private ResponseEntity<Object> getErrorResponse(AppException e) {
-        if (e.getCause() instanceof Exception) {
-            Exception original = (Exception) e.getCause();
-            this.log.error(original.getMessage(), original);
+        if (e.getCause() instanceof Exception originalException) {
+            this.log.error(originalException.getMessage(), originalException);
         }
 
         if (e.getError().getCode() > 499) {

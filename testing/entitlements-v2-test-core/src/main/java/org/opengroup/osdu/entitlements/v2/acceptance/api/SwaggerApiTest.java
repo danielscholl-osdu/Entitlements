@@ -1,7 +1,7 @@
 package org.opengroup.osdu.entitlements.v2.acceptance.api;
 
-import com.sun.jersey.api.client.ClientResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.http.HttpStatus;
 import org.junit.Test;
 import org.opengroup.osdu.entitlements.v2.acceptance.AcceptanceBaseTest;
@@ -32,9 +32,9 @@ public abstract class SwaggerApiTest extends AcceptanceBaseTest {
                     .token(tokenService.getToken().getValue())
                     .build();
 
-    ClientResponse response = httpClientService.send(request);
+    CloseableHttpResponse response = httpClientService.send(request);
 
-    assertEquals(HttpStatus.SC_OK, response.getStatus());
+    assertEquals(HttpStatus.SC_OK, response.getCode());
   }
 
   @Test
@@ -47,9 +47,9 @@ public abstract class SwaggerApiTest extends AcceptanceBaseTest {
                     .token(tokenService.getToken().getValue())
                     .build();
 
-    ClientResponse response = httpClientService.send(request);
+    CloseableHttpResponse response = httpClientService.send(request);
     
-    assertEquals(HttpStatus.SC_OK, response.getStatus());
+    assertEquals(HttpStatus.SC_OK, response.getCode());
   }
 
   @Override

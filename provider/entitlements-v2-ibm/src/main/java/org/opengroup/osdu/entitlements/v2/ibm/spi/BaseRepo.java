@@ -19,8 +19,8 @@ public abstract class BaseRepo {
      * If the transaction threw 409 or 404 exception, we should not roll back
      */
     protected void rollback(Exception ex) {
-        if (ex instanceof AppException) {
-            int errorCode = ((AppException) ex).getError().getCode();
+        if (ex instanceof AppException appException) {
+            int errorCode = appException.getError().getCode();
             if ((HttpStatus.CONFLICT.value() == errorCode) || (HttpStatus.NOT_FOUND.value() == errorCode)) {
                 return;
             }

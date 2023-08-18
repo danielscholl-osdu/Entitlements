@@ -17,15 +17,7 @@
 
 package org.opengroup.osdu.entitlements.v2.acceptance;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Every.everyItem;
-
-import com.sun.jersey.api.client.ClientResponse;
-import java.util.List;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.junit.Assert;
 import org.junit.Test;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupItem;
@@ -35,6 +27,15 @@ import org.opengroup.osdu.entitlements.v2.acceptance.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.response.ListGroupInPartitionResponse;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.ConfigurationService;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.TokenService;
+
+import java.util.List;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Every.everyItem;
 
 public abstract class ListAllPartitionGroupsTest extends AcceptanceBaseTest {
 
@@ -108,8 +109,8 @@ public abstract class ListAllPartitionGroupsTest extends AcceptanceBaseTest {
             .token(token.getValue())
             .build();
 
-        ClientResponse response = httpClientService.send(requestData);
-        Assert.assertEquals(400, response.getStatus());
+        CloseableHttpResponse response = httpClientService.send(requestData);
+        Assert.assertEquals(400, response.getCode());
     }
 
     private void sendGetGroupsWithTypeParam(GroupType groupType) throws Exception {

@@ -12,8 +12,8 @@ info can be found [here][JDBC documentation].
 
 In order to run this service from a local machine to Cloud Run, you need the following:
 
-- [Maven 3.6.0+](https://maven.apache.org/download.cgi)
-- [AdoptOpenJDK8](https://adoptopenjdk.net/)
+- [Maven 3.8.0+](https://maven.apache.org/download.cgi)
+- [AdoptOpenJDK17](https://adoptopenjdk.net/)
 - [Google Cloud SDK](https://cloud.google.com/sdk/)
 - [Docker](https://docs.docker.com/engine/install/)
 

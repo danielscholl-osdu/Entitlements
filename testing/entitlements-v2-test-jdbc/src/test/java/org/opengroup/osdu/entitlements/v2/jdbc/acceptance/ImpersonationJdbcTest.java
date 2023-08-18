@@ -25,7 +25,7 @@ import com.sun.jersey.api.client.WebResource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
-import org.opengroup.osdu.core.common.partition.*;
+import org.opengroup.osdu.core.common.partition.Property;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupItem;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.MemberItem;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.Token;

@@ -1,6 +1,6 @@
 package org.opengroup.osdu.entitlements.v2.acceptance;
 
-import com.sun.jersey.api.client.ClientResponse;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.junit.Test;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupItem;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.Token;
@@ -73,10 +73,10 @@ public abstract class DeleteMemberTest extends AcceptanceBaseTest {
 
         int threads = 10;
         ExecutorService executor = Executors.newFixedThreadPool(threads);
-        List<Callable<ClientResponse>> tasks = new ArrayList<>();
+        List<Callable<CloseableHttpResponse>> tasks = new ArrayList<>();
 
         for (int i = 0; i < threads; i++) {
-            Callable<ClientResponse> task = () -> {
+            Callable<CloseableHttpResponse> task = () -> {
                 try {
                     return entitlementsV2Service.deleteMember(groups.get(2).getEmail(), token.getValue());
                 } catch (Exception e) {
@@ -86,19 +86,19 @@ public abstract class DeleteMemberTest extends AcceptanceBaseTest {
             tasks.add(task);
         }
 
-        List<Future<ClientResponse>> responses = executor.invokeAll(tasks);
+        List<Future<CloseableHttpResponse>> responses = executor.invokeAll(tasks);
         executor.shutdown();
         //noinspection ResultOfMethodCallIgnored
         executor.awaitTermination(30, TimeUnit.SECONDS);
         int successResponseCount = 0;
-        for (Future<ClientResponse> future : responses) {
-            ClientResponse clientResponse = future.get();
-            if (clientResponse == null) {
+        for (Future<CloseableHttpResponse> future : responses) {
+            CloseableHttpResponse closeableHttpResponse = future.get();
+            if (closeableHttpResponse == null) {
                 fail("Failed to get response client response");
-            } else if (204 == clientResponse.getStatus() || 404 == clientResponse.getStatus()) {
+            } else if (204 == closeableHttpResponse.getCode() || 404 == closeableHttpResponse.getCode()) {
                 successResponseCount++;
             } else {
-                fail(String.format("Inappropriate status code %s from client response", clientResponse.getStatus()));
+                fail(String.format("Inappropriate status code %s from client response", closeableHttpResponse.getCode()));
             }
         }
 
