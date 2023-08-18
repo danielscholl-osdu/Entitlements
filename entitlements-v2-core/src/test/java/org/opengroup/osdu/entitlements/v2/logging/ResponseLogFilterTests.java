@@ -1,7 +1,5 @@
 package org.opengroup.osdu.entitlements.v2.logging;
 
-import java.io.IOException;
-import javax.servlet.ServletException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,18 +7,20 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.model.http.Request;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Locale;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class ResponseLogFilterTests {
     @Mock
     private RequestInfo requestInfo;
@@ -53,7 +53,6 @@ public class ResponseLogFilterTests {
     public void setup() {
         when(requestInfo.getHeaders()).thenReturn(headers);
         when(headers.getCorrelationId()).thenReturn("testcorrelationId");
-        when(headers.getAuthorization()).thenReturn("testJwt");
         when(requestInfo.getUri()).thenReturn("http://google.com");
         when(requestInfo.getUserIp()).thenReturn("127.0.0.1");
         when(servletRequest.getMethod()).thenReturn("OPTIONS");
@@ -63,23 +62,18 @@ public class ResponseLogFilterTests {
 
     @Test
     public void shouldNotThrowAppExceptionWhenIsACron() throws Exception {
-        when(requestInfo.isCronRequest()).thenReturn(true);
-        when(requestInfo.isHttps()).thenReturn(false);
         responseLogFilter.doFilter(servletRequest, servletResponse, filterChain);
         assertEquals(200, servletResponse.getStatus());
     }
 
     @Test
     public void shouldNotThrowAppExceptionWhenIsAHttpsRequest() throws Exception {
-        when(requestInfo.isHttps()).thenReturn(true);
         responseLogFilter.doFilter(servletRequest, servletResponse, filterChain);
         assertEquals(200, servletResponse.getStatus());
     }
 
     @Test
     public void shouldLogHttpRequestInfoWhenFilterIsCalled() throws Exception {
-        when(requestInfo.isCronRequest()).thenReturn(true);
-        when(requestInfo.isHttps()).thenReturn(true);
         responseLogFilter.doFilter(servletRequest, servletResponse, filterChain);
         assertEquals(200, servletResponse.getStatus());
         ArgumentCaptor<Request> argument = ArgumentCaptor.forClass(Request.class);
@@ -91,8 +85,6 @@ public class ResponseLogFilterTests {
 
     @Test
     public void shouldNotLogHttpRequestInfoWhenItsHealthCheckRequest() throws Exception {
-        when(requestInfo.isCronRequest()).thenReturn(true);
-        when(requestInfo.isHttps()).thenReturn(true);
         String[] healthCheckPaths = {"/liveness_check", "/readiness_check"};
         for (String path : healthCheckPaths) {
             when(requestInfo.getUri()).thenReturn("http:/" + path);
@@ -129,8 +121,6 @@ public class ResponseLogFilterTests {
         HttpServletResponse httpServletResponse = Mockito.mock(HttpServletResponse.class);
         FilterChain filterChain = Mockito.mock(FilterChain.class);
         Mockito.when(requestInfo.getUri()).thenReturn("https://test.com");
-        Mockito.when(requestInfo.isHttps()).thenReturn(true);
-        Mockito.when(headers.getAuthorization()).thenReturn("authorization-header-value");
         Mockito.when(headers.getCorrelationId()).thenReturn("correlation-id-value");
         Mockito.when(httpServletRequest.getMethod()).thenReturn("POST");
         when(httpServletRequest.getServletContext()).thenReturn(context);

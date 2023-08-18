@@ -28,4 +28,8 @@ public class ListGroupResponseDto {
 
     @Schema(description = "Represents a List of Groups")
     private List<ParentReference> groups;
+
+    public static ListGroupResponseDtoBuilder builder(){
+        return new ListGroupResponseDtoBuilder();
+    }
 }
