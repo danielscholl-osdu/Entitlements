@@ -198,7 +198,7 @@ if [[ "${ONPREM_ENABLED}" == "true" && "${DATA_PARTITION_ID_LIST}" == "" ]]; the
 elif [[ "${ONPREM_ENABLED}" == "false" && "${DATA_PARTITION_ID_LIST}" == "" ]]; then
   source ./validate-env.sh "PROJECT_ID"
   source ./validate-env.sh "REGISTER_PUBSUB_IDENTITY"
-  bootstrap_entitlements_gc "${DATA_PARTITION_ID}"
+  bootstrap_entitlements_gc_system_partition "${DATA_PARTITION_ID}"
 elif [[ "${ONPREM_ENABLED}" == "false" && "${DATA_PARTITION_ID_LIST}" != "" ]]; then
   source ./validate-env.sh "PROJECT_ID"
   source ./validate-env.sh "REGISTER_PUBSUB_IDENTITY"
