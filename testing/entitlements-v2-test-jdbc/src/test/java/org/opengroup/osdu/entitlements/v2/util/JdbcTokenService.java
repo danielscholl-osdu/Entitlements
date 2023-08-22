@@ -51,6 +51,24 @@ public class JdbcTokenService implements TokenService {
         }
     }
 
+    @Override
+    public Token getNoAccToken() {
+        Token testerToken = null;
+        String serviceAccountFile = System
+            .getProperty("NO_DATA_ACCESS_TESTER", System.getenv("NO_DATA_ACCESS_TESTER"));
+        try {
+            GoogleServiceAccount testerAccount = new GoogleServiceAccount(serviceAccountFile);
+
+            testerToken = Token.builder()
+                .value(testerAccount.getAuthToken())
+                .userId(testerAccount.getEmail())
+                .build();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return testerToken;
+    }
+
     @Nullable
     private Token getServiceAccToken() {
         Token testerToken = null;

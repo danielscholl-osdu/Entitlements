@@ -61,7 +61,7 @@ public class CreateGroupApiTest {
             Object[] args = invocation.getArguments();
             return (EntityNode) args[0];
         });
-        when(authService.isAuthorized(any(),any())).thenReturn(true);
+        when(authService.isCurrentUserAuthorized(any(),any())).thenReturn(true);
     }
 
     @Test

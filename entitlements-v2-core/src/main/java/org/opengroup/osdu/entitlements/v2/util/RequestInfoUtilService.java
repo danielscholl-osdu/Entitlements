@@ -33,6 +33,12 @@ public class RequestInfoUtilService {
         return userId;
     }
 
+    public String getImpersonationTarget(final DpsHeaders dpsHeaders){
+        String onBehalfOf = dpsHeaders.getOnBehalfOf();
+        log.debug("Getting on behalf User Id from Headers: {}", onBehalfOf);
+        return onBehalfOf;
+    }
+
     public String getDomain(final String partitionId) {
         return String.format("%s.%s", partitionId, appProperties.getDomain());
     }

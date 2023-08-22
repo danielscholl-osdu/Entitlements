@@ -20,8 +20,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Collections;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -52,7 +50,7 @@ public class RemoveMemberApiTest {
         tenantInfo.setDataPartitionId("common");
         tenantInfo.setServiceAccount("internal-service-account");
         when(tenantFactory.getTenantInfo("common")).thenReturn(tenantInfo);
-        when(authService.isAuthorized(any(),any())).thenReturn(true);
+        when(authService.isCurrentUserAuthorized(any(),any())).thenReturn(true);
     }
 
     @Test

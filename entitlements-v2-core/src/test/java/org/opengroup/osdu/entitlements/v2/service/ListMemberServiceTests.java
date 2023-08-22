@@ -100,7 +100,7 @@ public class ListMemberServiceTests {
         when(retrieveGroupRepo.getEntityNode("requesterid", "dp")).thenReturn(Optional.of(requesterNode));
         when(retrieveGroupRepo.groupExistenceValidation("data.y@dp.domain.com", "dp")).thenReturn(groupNode);
         when(retrieveGroupRepo.hasDirectChild(groupNode, ChildrenReference.createChildrenReference(requesterNode, Role.OWNER))).thenReturn(Boolean.FALSE);
-        when(authorizationService.isAuthorized(any(), eq(AppProperties.ADMIN))).thenThrow(AppException.createUnauthorized(""));
+        when(authorizationService.isCurrentUserAuthorized(any(), eq(AppProperties.ADMIN))).thenThrow(AppException.createUnauthorized(""));
         ListMemberServiceDto listMemberServiceDto = ListMemberServiceDto.builder()
                 .groupId("data.x@dp.domain.com")
                 .requesterId("requesterid")
@@ -124,7 +124,7 @@ public class ListMemberServiceTests {
         when(retrieveGroupRepo.groupExistenceValidation("data.x@dp.domain.com", partition)).thenReturn(groupNode);
         EntityNode requesterNode = EntityNode.builder().nodeId("requesterid").name("requesterid").type(NodeType.USER).dataPartitionId("dp").build();
         when(retrieveGroupRepo.hasDirectChild(groupNode, ChildrenReference.createChildrenReference(requesterNode, Role.OWNER))).thenReturn(Boolean.FALSE);
-        when(authorizationService.isAuthorized(any(), eq(AppProperties.ADMIN))).thenReturn(true);
+        when(authorizationService.isCurrentUserAuthorized(any(), eq(AppProperties.ADMIN))).thenReturn(true);
         ListMemberServiceDto listMemberServiceDto = ListMemberServiceDto.builder()
                 .groupId("data.x@dp.domain.com")
                 .requesterId(requesterId)
