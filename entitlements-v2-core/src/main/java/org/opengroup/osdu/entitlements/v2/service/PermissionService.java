@@ -67,7 +67,7 @@ public class PermissionService {
 
     private boolean isCallerHasOpsPermissions() {
         try {
-            return authorizationService.isAuthorized(requestInfo.getHeaders(), AppProperties.OPS);
+            return authorizationService.isCurrentUserAuthorized(requestInfo.getHeaders(), AppProperties.OPS);
         } catch (AppException e) {
             return false;
         }

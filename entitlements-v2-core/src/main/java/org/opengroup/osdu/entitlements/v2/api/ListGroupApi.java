@@ -71,4 +71,42 @@ public class ListGroupApi {
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
+    @Operation(summary = "${listGroupApi.listGroups.summary}", description = "${listGroupApi.listGroups.description}",
+        security = {@SecurityRequirement(name = "Authorization")}, tags = { "list-group-api" })
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "OK", content = { @Content(schema = @Schema(implementation = ListGroupResponseDto.class)) }),
+        @ApiResponse(responseCode = "400", description = "Bad Request",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+        @ApiResponse(responseCode = "401", description = "Unauthorized",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+        @ApiResponse(responseCode = "403", description = "User not authorized to perform the action.",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+        @ApiResponse(responseCode = "404", description = "Not Found",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+        @ApiResponse(responseCode = "502", description = "Bad Gateway",  content = {@Content(schema = @Schema(implementation = AppError.class ))}),
+        @ApiResponse(responseCode = "503", description = "Service Unavailable",  content = {@Content(schema = @Schema(implementation = AppError.class ))})
+    })
+    @PreAuthorize(
+        "@authorizationFilter.hasAnyPermission('" + AppProperties.OPS + "', '" + AppProperties.ADMIN + "', '" + AppProperties.USERS + "') "
+            + "and @authorizationFilter.requesterHasImpersonationPermission('" + AppProperties.IMPERSONATOR + "') "
+            + "and @authorizationFilter.targetCanBeImpersonated('" + AppProperties.IMPERSONATED_USER + "')")
+    @GetMapping(value = "/groups", headers = DpsHeaders.ON_BEHALF_OF)
+    public ResponseEntity<ListGroupResponseDto> listGroupsOnBehalf(){
+        DpsHeaders dpsHeaders = requestInfo.getHeaders();
+        List<String> partitionIdList = requestInfoUtilService.getPartitionIdList(dpsHeaders);
+        partitionHeaderValidationService.validateIfSpecialListGroupPartitionIsProvided(partitionIdList);
+        String impersonationTarget = requestInfoUtilService.getImpersonationTarget(dpsHeaders);
+
+        ListGroupServiceDto listGroupServiceDto = ListGroupServiceDto.builder()
+            .requesterId(impersonationTarget)
+            .appId(requestInfoUtilService.getAppId(dpsHeaders))
+            .partitionIds(partitionIdList)
+            .build();
+
+        ListGroupResponseDto body = ListGroupResponseDto.builder()
+            .groups(new ArrayList<>(listGroupService.getGroups(listGroupServiceDto)))
+            .desId(impersonationTarget)
+            .memberEmail(impersonationTarget)
+            .build();
+        log.debug(String.format("ListGroupResponseDto#create done timestamp: %d", System.currentTimeMillis()));
+        return new ResponseEntity<>(body, HttpStatus.OK);
+    }
+
 }

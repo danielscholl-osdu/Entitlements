@@ -41,7 +41,7 @@ public class ListMemberService {
 
     private boolean isCallerHasAdminPermissions() {
         try {
-            return authorizationService.isAuthorized(requestInfo.getHeaders(), AppProperties.ADMIN);
+            return authorizationService.isCurrentUserAuthorized(requestInfo.getHeaders(), AppProperties.ADMIN);
         } catch (AppException e) {
             log.warning("Caller does not have ADMIN permissions", e);
             return false;

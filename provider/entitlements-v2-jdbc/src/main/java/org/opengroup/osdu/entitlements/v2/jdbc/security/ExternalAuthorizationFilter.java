@@ -35,6 +35,6 @@ public class ExternalAuthorizationFilter {
         if (requiredRoles.length <= 0) {
             throw AppException.createUnauthorized("The user is not authorized to perform this action");
         }
-        return authService.isAuthorized(headers, requiredRoles);
+        return authService.isCurrentUserAuthorized(headers, requiredRoles);
     }
 }

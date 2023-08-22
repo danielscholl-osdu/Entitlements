@@ -50,7 +50,7 @@ public class PermissionServiceTest {
     @Test
     public void shouldAllowOpsRoleManageMembers() {
         EntityNode requester = EntityNode.builder().nodeId("member@xxx.com").name("member@xxx.com").type(NodeType.USER).dataPartitionId("dp").build();
-        Mockito.when(authorizationService.isAuthorized(null, AppProperties.OPS)).thenReturn(true);
+        Mockito.when(authorizationService.isCurrentUserAuthorized(null, AppProperties.OPS)).thenReturn(true);
         permissionService.verifyCanManageMembers(requester, null);
     }
 

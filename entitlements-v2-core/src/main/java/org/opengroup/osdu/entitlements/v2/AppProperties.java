@@ -11,6 +11,8 @@ public abstract class AppProperties {
     public static final String USERS = "service.entitlements.user";
     public static final String ADMIN = "service.entitlements.admin";
     public static final String OPS = "users.datalake.ops";
+    public static final String IMPERSONATOR = "users.datalake.delegation";
+    public static final String IMPERSONATED_USER = "users.datalake.impersonation";
 
     @Getter
     @Value("${app.projectId}")

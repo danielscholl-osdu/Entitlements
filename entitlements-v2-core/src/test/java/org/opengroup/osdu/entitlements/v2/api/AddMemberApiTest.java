@@ -57,7 +57,7 @@ public class AddMemberApiTest {
         tenantInfo.setServiceAccount("internal-service-account");
         when(tenantFactory.listTenantInfo()).thenReturn(Collections.singletonList(tenantInfo));
         when(tenantFactory.getTenantInfo("common")).thenReturn(tenantInfo);
-        when(authService.isAuthorized(any(),any())).thenReturn(true);
+        when(authService.isCurrentUserAuthorized(any(),any())).thenReturn(true);
     }
 
     @Test

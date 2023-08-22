@@ -19,6 +19,9 @@ public class RequestData {
     private String body;
     private String dataPartitionId;
     private String token;
+    private String url;
+    @Default
+    private Map<String, String> additionalHeaders = new HashMap<>();
     @Default
     private Map<String, String> queryParams = new HashMap<>();
 }

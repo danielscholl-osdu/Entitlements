@@ -26,8 +26,10 @@ import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 public class OpenIDProviderConfig {
 
     private String clientId;
+    private String noAccessClientId;
     private String url;
     private String clientSecret;
+    private String noAccessClientSecret;
     private String intTesterEmail;
     private final String[] scopes = {"openid"};
     private static final OpenIDProviderConfig openIDProviderConfig = new OpenIDProviderConfig();
@@ -36,8 +38,10 @@ public class OpenIDProviderConfig {
     public static OpenIDProviderConfig Instance() {
         try {
             openIDProviderConfig.clientId = System.getProperty("TEST_OPENID_PROVIDER_CLIENT_ID", System.getenv("TEST_OPENID_PROVIDER_CLIENT_ID"));
+            openIDProviderConfig.noAccessClientId =  System.getProperty("TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_ID", System.getenv("TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_ID"));
             openIDProviderConfig.url = System.getProperty("TEST_OPENID_PROVIDER_URL", System.getenv("TEST_OPENID_PROVIDER_URL"));
             openIDProviderConfig.clientSecret = System.getProperty("TEST_OPENID_PROVIDER_CLIENT_SECRET", System.getenv("TEST_OPENID_PROVIDER_CLIENT_SECRET"));
+            openIDProviderConfig.noAccessClientSecret = System.getProperty("TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_SECRET", System.getenv("TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_SECRET"));
             openIDProviderConfig.intTesterEmail = System.getProperty("INTEGRATION_TESTER_EMAIL", System.getenv("INTEGRATION_TESTER_EMAIL"));
             Issuer issuer = new Issuer(openIDProviderConfig.url);
             OIDCProviderConfigurationRequest request = new OIDCProviderConfigurationRequest(issuer);
@@ -54,8 +58,16 @@ public class OpenIDProviderConfig {
         return clientId;
     }
 
+    public String getNoAccessClientId() {
+        return noAccessClientId;
+    }
+
     public String getClientSecret() {
         return clientSecret;
+    }
+
+    public String getNoAccessClientSecret() {
+        return noAccessClientSecret;
     }
 
     public String[] getScopes() {
