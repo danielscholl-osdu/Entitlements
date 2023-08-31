@@ -274,6 +274,7 @@ The following software have components provided under the terms of this license:
 - Netty/Common (from https://repo1.maven.org/maven2/io/netty/netty-common)
 - Netty/Handler (from https://repo1.maven.org/maven2/io/netty/netty-handler)
 - Netty/Handler/Proxy (from https://repo1.maven.org/maven2/io/netty/netty-handler-proxy)
+- Netty/Handler/Ssl/Ocsp (from https://repo1.maven.org/maven2/io/netty/netty-handler-ssl-ocsp)
 - Netty/Incubator/Codec/Classes/Quic (from <https://repo1.maven.org/maven2/io/netty/incubator/netty-incubator-codec-classes-quic>, https://repo1.maven.org/maven2/io/netty/incubator/netty-incubator-codec-classes-quic)
 - Netty/Resolver (from https://repo1.maven.org/maven2/io/netty/netty-resolver)
 - Netty/Resolver/DNS (from https://repo1.maven.org/maven2/io/netty/netty-resolver-dns)
@@ -880,7 +881,6 @@ cc-pd
 The following software have components provided under the terms of this license:
 
 - Apache Commons Pool (from https://commons.apache.org/proper/commons-pool/)
-- Guava: Google Core Libraries for Java (from http://code.google.com/p/guava-libraries, https://github.com/google/guava, https://repo1.maven.org/maven2/com/google/guava/guava)
 - Netty/Codec (from https://repo1.maven.org/maven2/io/netty/netty-codec)
 
 ========================================================================
