@@ -71,7 +71,7 @@
         <dependency>
             <groupId>org.opengroup.osdu</groupId>
             <artifactId>os-core-common</artifactId>
-            <version>0.23.0-rc2</version>
+            <version>0.23.1</version>
         </dependency>
     </dependencies>
 
