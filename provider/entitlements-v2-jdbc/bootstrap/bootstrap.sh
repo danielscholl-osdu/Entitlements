@@ -101,7 +101,7 @@ bootstrap_entitlements_gc_system_partition() {
 },
 {
 "aliasId": "SERVICE_PRINCIPAL_SEISMIC",
-"userId": "wi-seismic-gc@${PROJECT_ID}.iam.gserviceaccount.com"
+"userId": "wi-seismic-store-gc@${PROJECT_ID}.iam.gserviceaccount.com"
 }
 ]
 }
@@ -161,7 +161,7 @@ cat <<EOF >/opt/other-partition-config.json
 },
 {
 "aliasId": "SERVICE_PRINCIPAL_SEISMIC",
-"userId": "wi-seismic-gc@${PROJECT_ID}.iam.gserviceaccount.com"
+"userId": "wi-seismic-store-gc@${PROJECT_ID}.iam.gserviceaccount.com"
 }
 ]
 }
