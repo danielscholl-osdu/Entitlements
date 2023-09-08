@@ -7,9 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.MDC;
 
 import javax.servlet.FilterChain;
@@ -18,8 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(MDC.class)
+@RunWith(MockitoJUnitRunner.class)
 public class AppIdFilterTest {
 
     @InjectMocks

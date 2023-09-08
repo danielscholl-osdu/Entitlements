@@ -44,18 +44,14 @@ class ListGroupApiResponseModifierAspect {
     if (Objects.nonNull(onBehalfOfValue)) {
       ListGroupResponseDto newListGroupResponseDto = new ListGroupResponseDto();
       HttpStatus newHttpStatus = HttpStatus.OK;
-      if (proceed instanceof ResponseEntity) {
-        Object body = ((ResponseEntity) proceed).getBody();
-        if (body instanceof ListGroupResponseDto) {
-          ListGroupResponseDto oldResponse = (ListGroupResponseDto) body;
+      if (proceed instanceof ResponseEntity responseEntity) {
+        Object body = responseEntity.getBody();
+        if (body instanceof ListGroupResponseDto oldResponse) {
           newListGroupResponseDto.setGroups(oldResponse.getGroups());
           newListGroupResponseDto.setMemberEmail(onBehalfOfValue);
           newListGroupResponseDto.setDesId(onBehalfOfValue);
         }
-        Object statusCode = ((ResponseEntity) proceed).getStatusCode();
-        if (statusCode instanceof HttpStatus) {
-          newHttpStatus = (HttpStatus) statusCode;
-        }
+        newHttpStatus = responseEntity.getStatusCode();
       }
       ResponseEntity newResponseEntity = new ResponseEntity(newListGroupResponseDto, newHttpStatus);
       return newResponseEntity;

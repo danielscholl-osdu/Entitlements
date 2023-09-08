@@ -21,15 +21,6 @@ import com.google.gson.Gson;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import javax.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -42,6 +33,16 @@ import org.opengroup.osdu.entitlements.v2.acceptance.util.HttpClientService;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.TokenService;
 import org.opengroup.osdu.entitlements.v2.util.AnthosConfigurationService;
 import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import javax.ws.rs.core.MediaType;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 
 @Slf4j
 public class GetDataGroupsIndexerServiceAccJdbcTest {

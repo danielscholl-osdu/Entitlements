@@ -40,9 +40,6 @@ public class AwsTestUtils  {
     private final static String COGNITO_NAME = "COGNITO_NAME";
     private final static String REGION = "AWS_REGION";
 
-
-
-
     private AWSCredentialsProvider amazonAWSCredentials;
     private AWSSimpleSystemsManagement ssmManager;
     String sptoken=null;

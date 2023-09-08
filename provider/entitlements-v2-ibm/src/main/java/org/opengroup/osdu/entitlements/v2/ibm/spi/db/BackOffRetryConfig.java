@@ -34,9 +34,8 @@ public class BackOffRetryConfig {
     private Predicate<Throwable> shouldRetry() {
         return p ->
         {
-            if (p instanceof AppException) {
-                AppException e = ((AppException) p);
-                return e.getError().getCode() == HttpStatus.SC_LOCKED;
+            if (p instanceof AppException appException) {
+                return appException.getError().getCode() == HttpStatus.SC_LOCKED;
             }
             return false;
         };

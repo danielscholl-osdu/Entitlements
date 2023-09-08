@@ -1,7 +1,8 @@
 package org.opengroup.osdu.entitlements.v2.acceptance;
 
 import com.google.gson.Gson;
-import com.sun.jersey.api.client.ClientResponse;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupItem;
@@ -44,9 +45,9 @@ public abstract class CreateGroupTest extends AcceptanceBaseTest {
                 .relativePath("groups")
                 .token(token)
                 .body(new Gson().toJson(GroupItem.builder().name(groupName).description("desc").build())).build();
-        ClientResponse conflictResponse = httpClientService.send(requestData);
-        Assert.assertEquals(409, conflictResponse.getStatus());
-        Assert.assertEquals(expectedConflictResponse, new Gson().fromJson(conflictResponse.getEntity(String.class), ErrorResponse.class));
+        CloseableHttpResponse conflictResponse = httpClientService.send(requestData);
+        Assert.assertEquals(409, conflictResponse.getCode());
+        Assert.assertEquals(expectedConflictResponse, new Gson().fromJson(EntityUtils.toString(conflictResponse.getEntity()), ErrorResponse.class));
     }
 
     @Override

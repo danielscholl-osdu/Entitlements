@@ -57,9 +57,7 @@ public class NodeRelationDoc {
     public boolean equals(Object o) {
         if (this == o) return true;
 
-        if (!(o instanceof NodeRelationDoc)) return false;
-
-        NodeRelationDoc that = (NodeRelationDoc) o;
+        if (!(o instanceof NodeRelationDoc that)) return false;
 
         return new EqualsBuilder().append(parentId, that.parentId).append(role, that.role).isEquals();
     }
