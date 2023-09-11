@@ -18,7 +18,7 @@
 		<maven.compiler.source>17</maven.compiler.source>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.main.basedir>${project.basedir}</project.main.basedir>
-		<os-core-lib-ibm.version>0.20.0</os-core-lib-ibm.version>
+		<os-core-lib-ibm.version>0.23.0</os-core-lib-ibm.version>
 		<jackson.version>2.13.2.2</jackson.version>
 		<junit.version>4.13.2</junit.version>
 		<netty-all.version>4.1.50.Final</netty-all.version>
