@@ -2,6 +2,7 @@ variables:
   AZURE_SERVICE: entitlements-v2
   AZURE_BUILD_SUBDIR: provider/entitlements-v2-azure
   AZURE_TEST_SUBDIR: testing/entitlements-v2-test-azure
+  SERVICE_JAVA_VERSION: "17"
 
   AWS_BUILD_SUBDIR: provider/entitlements-v2-aws/build-aws
   AWS_TEST_SUBDIR: testing/entitlements-v2-test-aws
