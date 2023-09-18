@@ -22,7 +22,7 @@ public class AzureTestConfiguration {
     @Bean
     public RedisAzureCache<String, ParentReferences> groupCache() {
         return new RedisAzureCache<>(String.class, ParentReferences.class,
-                new RedisAzureConfiguration(0, 3600, 7000, 3600));
+                new RedisAzureConfiguration(0, 3600, 7000, 3600, 5));
     }
 
     @Bean

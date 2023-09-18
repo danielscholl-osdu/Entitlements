@@ -17,6 +17,7 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.cache;
 
+import com.lambdaworks.redis.ClientOptions;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 import org.opengroup.osdu.core.common.cache.ICache;
 import org.opengroup.osdu.core.common.cache.IRedisCache;
@@ -33,6 +34,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CacheConfig {
 
+  private final ClientOptions clientOptions = new ClientOptions.Builder()
+          .disconnectedBehavior(ClientOptions.DisconnectedBehavior.REJECT_COMMANDS)
+          .build();
+
   @Bean
   public IRedisCache<String, UserInfo> userInfoIRedisCache(
       EntitlementsConfigurationProperties properties,
@@ -46,6 +51,7 @@ public class CacheConfig {
         properties.getRedisUserInfoPassword(),
         properties.getRedisUserInfoExpiration(),
         properties.getRedisUserInfoWithSsl(),
+        clientOptions,
         String.class,
         UserInfo.class
     );
@@ -64,6 +70,7 @@ public class CacheConfig {
         properties.getRedisUserGroupsPassword(),
         properties.getRedisUserGroupsExpiration(),
         properties.getRedisUserGroupsWithSsl(),
+        clientOptions,
         String.class,
         ParentReferences.class
     );
