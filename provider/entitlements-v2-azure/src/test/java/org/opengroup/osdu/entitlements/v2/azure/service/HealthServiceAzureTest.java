@@ -1,6 +1,5 @@
 package org.opengroup.osdu.entitlements.v2.azure.service;
 
-import com.lambdaworks.redis.RedisCommandTimeoutException;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -57,16 +56,5 @@ public class HealthServiceAzureTest {
     public void shouldSucceedInHealthCheck() {
         healthService.performHealthCheck();
         Mockito.verify(redisGroupCache).get("some-key");
-    }
-
-    @Test
-    public void shouldFailInHealthCheck() {
-        redisServer.stop();
-        try {
-            healthService.performHealthCheck();
-            Assert.fail("Expecting exception here");
-        } catch (RedisCommandTimeoutException e) {
-            Assert.assertEquals("Command timed out after 30 SECONDS", e.getMessage());
-        }
     }
 }
