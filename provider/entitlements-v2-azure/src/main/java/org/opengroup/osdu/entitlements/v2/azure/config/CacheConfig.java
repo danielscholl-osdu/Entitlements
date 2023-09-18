@@ -24,10 +24,6 @@ public class CacheConfig {
     @Value("${redis.expiration:3600}")
     private int redisExpiration;
 
-
-    @Value("${redis.command.timeout:5}")
-    private int commandTimeout;
-
     @Value("${spring.application.name}")
     private String applicationName;
 
@@ -40,7 +36,7 @@ public class CacheConfig {
     public RedisAzureCache<String, ParentReferences> groupCacheRedis(
             IRedisClientFactory<String, ParentReferences> redisClientFactory) {
         RedisAzureConfiguration redisConfig = new RedisAzureConfiguration(redisDatabase, redisExpiration, redisPort,
-                redisTtlSeconds, commandTimeout);
+                redisTtlSeconds);
 
         // Forcing the Redis client creation + connection establishment at service startup
         redisClientFactory.getClient(String.class, ParentReferences.class, redisConfig);

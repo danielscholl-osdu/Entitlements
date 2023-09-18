@@ -23,7 +23,7 @@
     <java.version>17</java.version>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.source>${java.version}</maven.compiler.source>
-    <os-core-common.version>0.24.0-rc3</os-core-common.version>
+    <os-core-common.version>0.23.1</os-core-common.version>
   </properties>
 
   <parent>
@@ -73,7 +73,7 @@
     <dependency>
       <groupId>org.opengroup.osdu</groupId>
       <artifactId>core-lib-gc</artifactId>
-      <version>0.24.0-rc3</version>
+      <version>0.23.0</version>
     </dependency>
 
     <dependency>
