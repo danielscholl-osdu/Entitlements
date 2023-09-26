@@ -28,10 +28,10 @@ public class UpdateAppIdsRepoMongoDB extends BasicEntitlementsHelper implements 
     @Override
     public Set<String> updateAppIds(EntityNode groupNode, Set<String> allowedAppIds) {
 
-        //TODO: check is need to replace IDS
+        //check is need to replace IDS
         groupHelper.updateAppIds(groupNode, allowedAppIds);
 
-        //TODO: return IDS then cash will work
+        //return IDS then cash will work
         return new HashSet<>();
     }
 }

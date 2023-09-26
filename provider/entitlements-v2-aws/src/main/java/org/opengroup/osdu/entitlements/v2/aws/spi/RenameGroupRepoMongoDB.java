@@ -31,7 +31,7 @@ public class RenameGroupRepoMongoDB extends BasicEntitlementsHelper implements R
 
         groupHelper.renameGroup(new IdDoc(groupNode.getNodeId(), groupNode.getDataPartitionId()), newGroupName);
 
-        //TODO: return IDS then cash will work
+        //return IDS then cash will work
         return new HashSet<>();
     }
 }

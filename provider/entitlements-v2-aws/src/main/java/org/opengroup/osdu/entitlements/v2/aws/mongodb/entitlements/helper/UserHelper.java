@@ -93,7 +93,7 @@ public class UserHelper extends NodeHelper {
                 getUserCollection(userId.getDataPartitionId()));
     }
 
-    //TODO: recheck duplicating
+    //recheck duplicating
     public void addMemberRelations(Set<IdDoc> userIds, Set<NodeRelationDoc> addedParents) {
         if (userIds.isEmpty() || addedParents.isEmpty()) {
             return;

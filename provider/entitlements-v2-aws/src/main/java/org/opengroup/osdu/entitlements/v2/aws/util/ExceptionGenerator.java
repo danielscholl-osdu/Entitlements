@@ -15,8 +15,9 @@
 
 package org.opengroup.osdu.entitlements.v2.aws.util;
 
-//TODO: Add more details to messages
 public class ExceptionGenerator {
+    private ExceptionGenerator() {
+    }
 
     public static IllegalArgumentException groupNotFound(String id, String tenant) {
         return new IllegalArgumentException(String.format("Group not found by id %s in tenant %s", id, tenant));

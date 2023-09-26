@@ -23,7 +23,7 @@ import static org.opengroup.osdu.entitlements.v2.aws.Util.NodeGenerator.generate
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {EntitlementsTestConfig.class, MockServletContext.class})
-public class RenameGroupRepoMongoDBTest extends ParentUtil {
+class RenameGroupRepoMongoDBTest extends ParentUtil {
 
     @MockBean
     private IEventPublisher messageBus;
@@ -33,7 +33,7 @@ public class RenameGroupRepoMongoDBTest extends ParentUtil {
 
 
     @BeforeEach
-    public void generateDataset() {
+    void generateDataset() {
         mongoTemplateHelper.dropCollections();
         initDefaultDataSet();
     }

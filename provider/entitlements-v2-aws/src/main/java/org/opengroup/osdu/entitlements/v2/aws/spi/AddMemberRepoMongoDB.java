@@ -28,6 +28,7 @@ import org.opengroup.osdu.entitlements.v2.spi.Operation;
 import org.opengroup.osdu.entitlements.v2.spi.addmember.AddMemberRepo;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
@@ -76,12 +77,12 @@ public class AddMemberRepoMongoDB extends BasicEntitlementsHelper implements Add
             userHelper.addMemberRelations(childUserIds, parentRelations);
         }
 
-        //TODO: return IDS then cash will work
+        //return IDS then cash will work
         return new HashSet<>();
     }
 
     @Override
     public Set<String> addMember(Deque<Operation> executedCommandsDeque, EntityNode groupEntityNode, AddMemberRepoDto addMemberRepoDto) {
-        return null;
+        return Collections.emptySet();
     }
 }
