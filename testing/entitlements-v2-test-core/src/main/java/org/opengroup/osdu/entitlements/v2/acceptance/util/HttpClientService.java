@@ -1,5 +1,6 @@
 package org.opengroup.osdu.entitlements.v2.acceptance.util;
 
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -50,13 +51,21 @@ public class HttpClientService {
     }
 
     private  ClassicRequestBuilder addRequiredDetails(RequestData requestData) throws MalformedURLException {
-        String resourceUrl = new URL(baseUrl + requestData.getRelativePath()).toString();
+        String requestDataUrl = requestData.getUrl();
+        String url = requestDataUrl == null ? baseUrl : requestDataUrl;
+        String resourceUrl = new URL(url + requestData.getRelativePath()).toString();
         log.info("Sending request to URL: {} HTTP Method: {}", resourceUrl, requestData.getMethod());
-        return ClassicRequestBuilder.create(requestData.getMethod())
-                .setUri(resourceUrl)
-                .addHeader("Authorization", "Bearer " + requestData.getToken())
-                .addHeader("data-partition-id", requestData.getDataPartitionId());
+        ClassicRequestBuilder requestBuilder = ClassicRequestBuilder.create(requestData.getMethod())
+            .setUri(resourceUrl)
+            .addHeader("Authorization", "Bearer " + requestData.getToken())
+            .addHeader("data-partition-id", requestData.getDataPartitionId());
+        Map<String, String> additionalHeaders = requestData.getAdditionalHeaders();
+        if(!additionalHeaders.isEmpty()){
+            additionalHeaders.forEach(requestBuilder::addHeader);
+        }
+        return requestBuilder;
     }
+
     private  PoolingHttpClientConnectionManager createBasicHttpClientConnectionManager() {
         ConnectionConfig connConfig = ConnectionConfig.custom()
                 .setConnectTimeout(1500000, TimeUnit.MILLISECONDS)

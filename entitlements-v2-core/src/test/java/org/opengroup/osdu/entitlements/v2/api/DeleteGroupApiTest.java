@@ -52,7 +52,7 @@ public class DeleteGroupApiTest {
         tenantInfo.setDataPartitionId("common");
         tenantInfo.setServiceAccount("internal-service-account");
         when(tenantFactory.getTenantInfo("common")).thenReturn(tenantInfo);
-        when(authService.isAuthorized(any(),any())).thenReturn(true);
+        when(authService.isCurrentUserAuthorized(any(),any())).thenReturn(true);
     }
 
     @Test

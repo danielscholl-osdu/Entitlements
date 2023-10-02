@@ -111,6 +111,9 @@ paths:
           required: true
           type: string
           default: common
+        - name: on-behalf-of
+          in: header
+          type: string
       responses:
         '200':
           description: OK

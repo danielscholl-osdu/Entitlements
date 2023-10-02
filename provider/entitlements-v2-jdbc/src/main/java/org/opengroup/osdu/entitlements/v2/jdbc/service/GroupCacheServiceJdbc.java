@@ -17,32 +17,20 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.service;
 
-import com.google.common.base.Strings;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.cache.ICache;
-import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
-import org.opengroup.osdu.core.common.model.http.AppException;
-import org.opengroup.osdu.core.common.model.http.RequestInfo;
-import org.opengroup.osdu.core.common.model.tenant.TenantInfo;
 import org.opengroup.osdu.entitlements.v2.jdbc.JdbcAppProperties;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.ParentReferences;
 import org.opengroup.osdu.entitlements.v2.service.GroupCacheService;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class GroupCacheServiceJdbc implements GroupCacheService {
-
-    private static final String CAN_IMPERSONATE = "users.datalake.delegation";
-
-    private static final String CAN_BE_IMPERSONATED = "users.datalake.impersonation";
 
     private final JdbcAppProperties config;
 
@@ -50,23 +38,10 @@ public class GroupCacheServiceJdbc implements GroupCacheService {
 
     private final RetrieveGroupRepo retrieveGroupRepo;
 
-    private final RequestInfo requestInfo;
-
-    private final JaxRsDpsLog log;
-
-    private final TenantInfo tenantInfo;
-
     @Override
     public Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId) {
       EntityNode entityNode = getNodeByNodeType(requesterId, partitionId);
       ParentReferences parentReferences = getFromCacheOrLoadParentReferences(entityNode);
-
-      String beneficialId = requestInfo.getHeaders().getOnBehalfOf();
-      if (!Strings.isNullOrEmpty(beneficialId)) {
-        return verifyAndGetBeneficialGroups(requesterId, partitionId, parentReferences,
-            beneficialId).getParentReferencesOfUser();
-      }
-
       return parentReferences.getParentReferencesOfUser();
     }
 
@@ -98,35 +73,5 @@ public class GroupCacheServiceJdbc implements GroupCacheService {
             entityGroupsCache.put(entityNode.getUniqueIdentifier(), parentReferences);
         }
         return parentReferences;
-    }
-
-    private ParentReferences verifyAndGetBeneficialGroups(String requesterId, String partitionId, ParentReferences requesterGroups,
-        String beneficialId) {
-        if (requesterGroups.getParentReferencesOfUser().stream().map(ParentReference::getName).collect(Collectors.toList()).contains(CAN_IMPERSONATE)) {
-            EntityNode beneficialNode = getNodeByNodeType(beneficialId, partitionId);
-            ParentReferences beneficialGroups = getFromCacheOrLoadParentReferences(beneficialNode);
-            Optional<ParentReference> group = beneficialGroups.getParentReferencesOfUser().stream()
-                .filter(item -> item.getName().equals(CAN_BE_IMPERSONATED))
-                .findFirst();
-            if (!group.isPresent()) {
-                log.error("Impersonation group not found");
-                throw new AppException(HttpStatus.FORBIDDEN.value(),
-                    HttpStatus.FORBIDDEN.getReasonPhrase(),
-                    "Impersonation not allowed for " + beneficialId);
-            } else {
-                if (tenantInfo.getServiceAccount().equalsIgnoreCase(beneficialId)) {
-                    log.error("Impersonation attempt for tenant service account");
-                    throw new AppException(HttpStatus.FORBIDDEN.value(),
-                        HttpStatus.FORBIDDEN.getReasonPhrase(),
-                        "Impersonation not allowed for tenant service account");
-              }
-                return beneficialGroups;
-            }
-        } else {
-            log.error("Delegation group not found");
-            throw new AppException(HttpStatus.FORBIDDEN.value(),
-                HttpStatus.FORBIDDEN.getReasonPhrase(),
-                "Impersonation not allowed for " + requesterId);
-        }
     }
 }

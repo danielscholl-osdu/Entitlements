@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <os-core-common.version>0.22.0-rc4</os-core-common.version>
+        <os-core-common.version>0.24.0-rc3</os-core-common.version>
         <java.version>17</java.version>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
@@ -12,7 +12,7 @@
 
     <groupId>org.opengroup.osdu.entitlements.v2</groupId>
     <artifactId>entitlements-v2-service</artifactId>
-    <version>0.23.0-SNAPSHOT</version>
+    <version>0.24.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>entitlements-v2-service</name>
     <description>Entitlements V2 service</description>

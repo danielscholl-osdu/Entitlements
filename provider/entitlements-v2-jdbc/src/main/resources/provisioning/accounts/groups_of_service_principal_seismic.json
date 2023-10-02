@@ -7,10 +7,7 @@
   ],
   "membersOf": [
     {
-      "groupName": "users"
-    },
-    {
-      "groupName": "users.datalake.ops"
+      "groupName": "service.entitlements.admin"
     },
     {
       "groupName": "service.legal.admin"

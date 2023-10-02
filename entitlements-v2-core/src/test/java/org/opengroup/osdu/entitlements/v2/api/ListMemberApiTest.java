@@ -30,7 +30,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -71,7 +70,7 @@ public class ListMemberApiTest {
         tenantInfo.setDataPartitionId("common");
         tenantInfo.setServiceAccount("internal-service-account");
         when(tenantFactory.getTenantInfo("common")).thenReturn(tenantInfo);
-        when(authService.isAuthorized(any(),any())).thenReturn(true);
+        when(authService.isCurrentUserAuthorized(any(),any())).thenReturn(true);
     }
 
     @Test
