@@ -63,4 +63,11 @@ spec:
       {{- end }}
         ports:
         - containerPort: 8080
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: api/entitlements/v2/_ah/liveness_check
+            port: 8080
+          initialDelaySeconds: 120
+          periodSeconds: 10
       serviceAccountName: {{ .Values.data.serviceAccountName | quote }}
