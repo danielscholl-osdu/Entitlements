@@ -38,13 +38,13 @@ class CreateGroupRepoMongoDBTest extends ParentUtil {
     private CreateGroupRepoMongoDB createGroupRepoMongoDB;
 
     @BeforeEach
-    public void generateDataset() {
+    void generateDataset() {
         mongoTemplateHelper.dropCollections();
         initDefaultDataSet();
     }
 
     @Test
-    public void whenUserNotExistUserInitiator() {
+    void whenUserNotExistUserInitiator() {
         //given
         EntityNode groupNode = generateGroupNode(102);
         EntityNode userNode = generateUserNode(103);
@@ -69,7 +69,7 @@ class CreateGroupRepoMongoDBTest extends ParentUtil {
     }
 
     @Test
-    public void whenExistsRootGroup() {
+    void whenExistsRootGroup() {
         //given
         EntityNode groupNode = generateGroupNode(102);
         EntityNode rootNode = generateGroupNode(9999);
@@ -98,7 +98,7 @@ class CreateGroupRepoMongoDBTest extends ParentUtil {
     }
 
     @Test
-    public void whenRootGroupRequiredButNull() {
+    void whenRootGroupRequiredButNull() {
         //given
         EntityNode groupNode = generateGroupNode(102);
         EntityNode userNode = generateUserNode(103);
@@ -113,7 +113,7 @@ class CreateGroupRepoMongoDBTest extends ParentUtil {
         Assertions.assertThrows(IllegalArgumentException.class, () -> createGroupRepoMongoDB.createGroup(groupNode, request));
     }
     @Test
-    public void whengroupExists() {
+    void whengroupExists() {
         //given
         EntityNode groupNode = generateGroupNode(4);
         EntityNode rootNode = generateGroupNode(15648);
@@ -131,7 +131,7 @@ class CreateGroupRepoMongoDBTest extends ParentUtil {
 
     @Disabled // todo enabled
     @Test
-    public void whenRequiredRootGroupNotExists() {
+    void whenRequiredRootGroupNotExists() {
         //given
         EntityNode groupNode = generateGroupNode(102);
         EntityNode rootNode = generateGroupNode(15648);

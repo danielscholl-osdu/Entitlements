@@ -20,6 +20,8 @@
         <jackson.version>2.14.2</jackson.version>
         <jackson-databind.version>2.14.2</jackson-databind.version>
         <spring-webmvc.version>5.3.22</spring-webmvc.version>
+        <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>
@@ -137,6 +139,12 @@
             <version>${reactor.netty.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>3.9.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
             <version>${reactor.core.version}</version>
@@ -201,6 +209,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
@@ -221,9 +230,9 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surefire.version}</version>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M5</version>
             </plugin>
             <plugin>
                 <groupId>pl.project13.maven</groupId>
@@ -254,10 +263,6 @@
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
-                        <configuration>
-                            <!-- Sets the VM argument line used when unit tests are run. -->
-                            <propertyName>jacocoArgLine</propertyName>
-                        </configuration>
                     </execution>
                     <execution>
                         <id>report</id>

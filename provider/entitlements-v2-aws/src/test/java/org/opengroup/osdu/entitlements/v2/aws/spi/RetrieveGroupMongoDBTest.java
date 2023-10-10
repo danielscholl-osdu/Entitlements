@@ -34,6 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.opengroup.osdu.entitlements.v2.aws.Util.NodeGenerator.generateGroupNode;
 import static org.opengroup.osdu.entitlements.v2.aws.Util.NodeGenerator.generateUserNode;
 
@@ -80,7 +81,7 @@ class RetrieveGroupMongoDBTest extends ParentUtil {
         //given
         IdDoc idDoc = createIdForGroup(656564);
         //then
-        assertThrows(AppException.class, () -> retrieveGroupMongoDB.groupExistenceValidation(idDoc.getNodeId(), idDoc.getDataPartitionId()));
+        assertThrows(AppException.class, () -> retrieveGroupMongoDB.groupExistenceValidation("someString1", "someString2"));
     }
 
     @Test

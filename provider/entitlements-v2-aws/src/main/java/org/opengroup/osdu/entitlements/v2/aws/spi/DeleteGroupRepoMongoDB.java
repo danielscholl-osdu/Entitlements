@@ -26,6 +26,7 @@ import org.opengroup.osdu.entitlements.v2.spi.deletegroup.DeleteGroupRepo;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
@@ -46,7 +47,7 @@ public class DeleteGroupRepoMongoDB extends BasicEntitlementsHelper implements D
         Set<IdDoc> usersToUpdateParentRelations = userHelper.getAllChildUsers(groupToRemove.getId());
         groupHelper.removeAllDirectChildrenRelations(groupToRemove.getId());
         userHelper.removeAllDirectChildrenRelations(groupToRemove.getId());
-        //TODO: slow but safe update for now (from user to group). Rewrite to faster implementation in reverse update (from group to user)
+        //slow but safe update for now (from user to group). Rewrite to faster implementation in reverse update (from group to user)
         for (IdDoc userIdToUpdateParentRelations : usersToUpdateParentRelations) {
             UserDoc userForUpdate = userHelper.getById(userIdToUpdateParentRelations);
             Set<NodeRelationDoc> directParentRelations = userForUpdate.getDirectParents();
@@ -61,12 +62,12 @@ public class DeleteGroupRepoMongoDB extends BasicEntitlementsHelper implements D
 
 
         groupHelper.delete(groupToRemove.getId());
-        //TODO: return IDS then cash will work
+        //return IDS then cash will work
         return new HashSet<>();
     }
 
     @Override
     public Set<String> deleteGroup(Deque<Operation> executedCommandsDeque, EntityNode groupNode) {
-        return null;
+        return Collections.emptySet();
     }
 }

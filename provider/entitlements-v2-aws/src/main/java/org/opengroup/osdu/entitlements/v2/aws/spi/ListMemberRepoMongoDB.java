@@ -31,7 +31,7 @@ import java.util.Set;
 public class ListMemberRepoMongoDB extends BasicEntitlementsHelper implements ListMemberRepo {
 
     @Override
-    //TODO: List only DIRECT children. Need to recheck is it is right requirements
+    //List only DIRECT children. Need to recheck is it is right requirements
     public List<ChildrenReference> run(ListMemberServiceDto request) {
 
         IdDoc groupIdToGetAllChildren = new IdDoc(request.getGroupId(), request.getPartitionId());

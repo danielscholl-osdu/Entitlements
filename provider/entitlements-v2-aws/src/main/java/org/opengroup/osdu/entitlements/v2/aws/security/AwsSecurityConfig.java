@@ -15,19 +15,22 @@
 package org.opengroup.osdu.entitlements.v2.aws.security;
 
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class AwsSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+public class AwsSecurityConfig {
+
+    @Bean
+    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http.httpBasic().disable()
                 .csrf().disable();  //disable default authN. AuthN handled by endpoints proxy
+        return http.build();
     }
 }
 

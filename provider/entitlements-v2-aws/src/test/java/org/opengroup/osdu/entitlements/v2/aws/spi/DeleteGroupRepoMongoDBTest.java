@@ -31,7 +31,7 @@ import static org.opengroup.osdu.entitlements.v2.aws.Util.NodeGenerator.generate
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {EntitlementsTestConfig.class, MockServletContext.class})
-public class DeleteGroupRepoMongoDBTest extends ParentUtil {
+class DeleteGroupRepoMongoDBTest extends ParentUtil {
 
     @MockBean
     private IEventPublisher messageBus;
@@ -40,13 +40,13 @@ public class DeleteGroupRepoMongoDBTest extends ParentUtil {
     private DeleteGroupRepoMongoDB deleteGroupRepoMongoDB;
 
     @BeforeEach
-    public void generateDataset() {
+    void generateDataset() {
         mongoTemplateHelper.dropCollections();
         initDefaultDataSet();
     }
 
     @Test
-    public void deleteGroup() {
+    void deleteGroup() {
 
         // given
         EntityNode deletedGroup4Node = generateGroupNode(4);

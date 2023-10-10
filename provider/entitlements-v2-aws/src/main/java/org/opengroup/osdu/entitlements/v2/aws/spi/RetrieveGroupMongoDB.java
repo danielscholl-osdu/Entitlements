@@ -119,7 +119,7 @@ public class RetrieveGroupMongoDB extends BasicEntitlementsHelper implements Ret
         if (childrenReference.getType() == NodeType.GROUP) {
             return groupHelper.checkDirectParent(nodeToCheckParent, relationForCheck);
         }
-        throw new RuntimeException("Unknown NodeType: " + childrenReference.getType());
+        throw new AppException(401,"Unknown NodeType: " + childrenReference.getType(), "Error getting node type" );
     }
 
 
@@ -159,7 +159,7 @@ public class RetrieveGroupMongoDB extends BasicEntitlementsHelper implements Ret
                     .parentReferences(parentReferences)
                     .build();
         }
-        throw new RuntimeException("Unknown NodeType: memberNode.getType()");
+        throw new AppException(401,"Unknown NodeType: memberNode.getType() ", "Error getting node type" );
     }
 
     @Override

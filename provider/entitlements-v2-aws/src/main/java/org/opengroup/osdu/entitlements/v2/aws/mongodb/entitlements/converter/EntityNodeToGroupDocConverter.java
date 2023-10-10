@@ -15,6 +15,7 @@
 
 package org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.converter;
 
+import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.GroupDoc;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.internal.IdDoc;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
@@ -33,7 +34,7 @@ public class EntityNodeToGroupDocConverter implements Converter<EntityNode, Grou
         IdDoc id = new IdDoc(entityNodeMDB.getNodeId(), entityNodeMDB.getDataPartitionId());
 
         if (entityNodeMDB.getType() == NodeType.USER) {
-            throw new RuntimeException("Incorrect converter was used");
+            throw new AppException(401, "Incorrect converter was used", "user cannot be converted to GroupDoc");
         }
 
         result.setId(id);
