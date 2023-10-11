@@ -57,7 +57,7 @@ public class RemoveMemberRepoMongoDB extends BasicEntitlementsHelper implements 
             groupHelper.removeDirectParentRelation(groupIdToRemoveParent, groupToRemoveFromParents);
 
             Set<IdDoc> usersToUpdateParentRelations = userHelper.getAllChildUsers(groupIdToRemoveParent);
-            //TODO: slow but safe update for now (from user to group). Rewrite to faster implementation in reverse update (from group to user)
+            //slow but safe update for now (from user to group). Rewrite to faster implementation in reverse update (from group to user)
             for (IdDoc userIdToUpdateParentRelations : usersToUpdateParentRelations) {
                 UserDoc userForUpdate = userHelper.getById(userIdToUpdateParentRelations);
                 Set<NodeRelationDoc> directParentRelations = userForUpdate.getDirectParents();
@@ -72,7 +72,7 @@ public class RemoveMemberRepoMongoDB extends BasicEntitlementsHelper implements 
         }
 
 
-        //TODO: return IDS then cash will work
+        //return IDS then cash will work
         return new HashSet<>();
     }
 }

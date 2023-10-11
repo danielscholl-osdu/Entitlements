@@ -43,7 +43,7 @@ public class IndexUpdater {
         this.updateIndexes(dataPartitionId);
     }
 
-    //TODO: recheck indexes
+    // implement in future recheck indexes
     private void updateIndexes(String dataPartitionId) {
         String groupCollection = "Group-" + dataPartitionId;
         helper.ensureIndex(groupCollection, new Index().on("_id.dataPartitionId", Sort.Direction.ASC));

@@ -44,11 +44,11 @@ public class GroupCacheServiceAws implements GroupCacheService {
 
     @Override
     public void refreshListGroupCache(Set<String> userIds, String partitionId) {
-
+      // this method is empty implement in future
     }
 
     @Override
     public void flushListGroupCacheForUser(String userId, String partitionId) {
-
+      // this method is empty implement in future
     }
 }

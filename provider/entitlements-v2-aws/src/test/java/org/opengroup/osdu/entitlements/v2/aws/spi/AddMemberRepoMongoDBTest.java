@@ -29,7 +29,7 @@ import static org.opengroup.osdu.entitlements.v2.aws.Util.NodeGenerator.generate
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {EntitlementsTestConfig.class, MockServletContext.class})
-public class AddMemberRepoMongoDBTest extends ParentUtil {
+class AddMemberRepoMongoDBTest extends ParentUtil {
 
     @MockBean
     private IEventPublisher messageBus;
@@ -39,13 +39,13 @@ public class AddMemberRepoMongoDBTest extends ParentUtil {
 
 
     @BeforeEach
-    public void generateDataset() {
+    void generateDataset() {
         mongoTemplateHelper.dropCollections();
         initDefaultDataSet();
     }
 
     @Test
-    public void addingUserMember() {
+    void addingUserMember() {
         // given
         Role role = Role.MEMBER;
         EntityNode groupNode = generateGroupNode(4);
@@ -69,7 +69,7 @@ public class AddMemberRepoMongoDBTest extends ParentUtil {
     }
 
     @Test
-    public void addingGroupMember() {
+    void addingGroupMember() {
         // given
         Role role = Role.MEMBER;
         EntityNode groupNode = generateGroupNode(4);
@@ -93,7 +93,7 @@ public class AddMemberRepoMongoDBTest extends ParentUtil {
     }
 
     @Test
-    public void addingMemberGroupNotExist() {
+    void addingMemberGroupNotExist() {
         // given
         Role role = Role.MEMBER;
         EntityNode groupNode = generateGroupNode(123); // this group not exist

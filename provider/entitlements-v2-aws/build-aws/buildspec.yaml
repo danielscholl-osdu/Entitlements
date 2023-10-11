@@ -71,8 +71,8 @@ phases:
       - if [ "$GIT_SECRETS_SCAN_RESULT" = "FAILED" ]; then echo "Secrets detected!" && exit 1; fi
 
       - echo "Building primary service assemblies..."
-      - mvn -ntp -B test install sonar:sonar -pl .,entitlements-v2-core,provider/entitlements-v2-aws -Ddeployment.environment=prod -Dsonar.login=${SONAR_USERNAME} -Dsonar.password=${SONAR_PASSWORD} -Dsonar.branch.name=${BRANCH_NAME} 
-
+      - mvn -ntp -B test install -pl .,entitlements-v2-core,provider/entitlements-v2-aws -Ddeployment.environment=prod  
+      - mvn sonar:sonar -pl .,provider/entitlements-v2-aws -Dsonar.login=${SONAR_USERNAME} -Dsonar.password=${SONAR_PASSWORD} -Dsonar.branch.name=${BRANCH_NAME}   
       - echo "Building integration testing assemblies and gathering artifacts..."
       - ./testing/entitlements-v2-test-aws/build-aws/prepare-dist.sh
 

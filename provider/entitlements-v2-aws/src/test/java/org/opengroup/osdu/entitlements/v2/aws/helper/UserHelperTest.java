@@ -40,7 +40,7 @@ import static org.opengroup.osdu.entitlements.v2.aws.Util.UserDocGenerator.gener
 @ExtendWith(SpringExtension.class)
 @EnableAutoConfiguration
 @SpringJUnitConfig(classes = {EntitlementsTestConfig.class, MockServletContext.class})
-public class UserHelperTest extends ParentUtil {
+class UserHelperTest extends ParentUtil {
 
     @MockBean
     private IEventPublisher messageBus;
@@ -49,12 +49,12 @@ public class UserHelperTest extends ParentUtil {
     UserHelper userHelper;
 
     @BeforeEach
-    public void cleanup() {
+    void cleanup() {
         mongoTemplateHelper.dropCollections();
     }
 
     @Test
-    public void create() {
+    void create() {
         //given
         UserDoc userDoc = generateUniqueUserDoc();
         IdDoc docId = userDoc.getId();
@@ -72,7 +72,7 @@ public class UserHelperTest extends ParentUtil {
     }
 
     @Test
-    public void getOrCreate() {
+    void getOrCreate() {
         //given
         UserDoc userDoc = generateUniqueUserDoc();
         mongoTemplateHelper.insert(userDoc);
@@ -90,7 +90,7 @@ public class UserHelperTest extends ParentUtil {
     }
 
     @Test
-    public void save() {
+    void save() {
         //given
         UserDoc userDoc = generateUniqueUserDoc();
         IdDoc docId = userDoc.getId();
@@ -107,7 +107,7 @@ public class UserHelperTest extends ParentUtil {
     }
 
     @Test
-    public void doubleSave() {
+    void doubleSave() {
 //        given
         UserDoc userDoc = generateUniqueUserDoc();
         mongoTemplateHelper.insert(userDoc);

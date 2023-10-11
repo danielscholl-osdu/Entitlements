@@ -20,7 +20,7 @@ import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.helper.UserHe
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 
-abstract public class BasicEntitlementsHelper {
+public abstract class BasicEntitlementsHelper {
 
     public static final String ID = "_id";
     public static final String NODE_ID = "_id.nodeId";

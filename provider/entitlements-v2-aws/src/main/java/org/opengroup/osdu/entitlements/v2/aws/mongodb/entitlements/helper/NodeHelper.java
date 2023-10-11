@@ -38,32 +38,34 @@ public abstract class NodeHelper {
 
     protected final BasicMongoDBHelper helper;
     protected final IndexUpdater indexUpdater;
-
-    public NodeHelper(BasicMongoDBHelper helper, IndexUpdater indexUpdater) {
+    private static final String PARENTID = "parentId";
+    private static final String DIRECTPARENTS = "directParents";
+    private static final String DATAPARTITIONID = "dataPartitionId";
+    protected NodeHelper(BasicMongoDBHelper helper, IndexUpdater indexUpdater) {
         this.helper = helper;
         this.indexUpdater = indexUpdater;
     }
 
-    //TODO: check performance limitations and rewrite if necessary.
+    //check performance limitations and rewrite if necessary.
     protected Set<ChildrenReference> getDirectChildren(IdDoc parentGroup, String collectionName) {
         AggregationOperation match = Aggregation.match(
                 Criteria.where(DIRECT_PARENTS).elemMatch(
-                        Criteria.where("parentId").is(parentGroup)
+                        Criteria.where(PARENTID).is(parentGroup)
                 )
         );
         AggregationOperation project = Aggregation.project()
-                .and("directParents").as("directParents")
+                .and(DIRECTPARENTS).as(DIRECTPARENTS)
                 .and("_id.nodeId").as("nodeId")
-                .and("_id.dataPartitionId").as("dataPartitionId")
+                .and("_id.dataPartitionId").as(DATAPARTITIONID)
                 .andExclude("_id");
-        AggregationOperation unwind = Aggregation.unwind("directParents");
+        AggregationOperation unwind = Aggregation.unwind(DIRECTPARENTS);
         AggregationOperation matchAfterUnwind = Aggregation.match(
                 Criteria.where("directParents.parentId.dataPartitionId").is(parentGroup.getDataPartitionId())
                         .and("directParents.parentId.nodeId").is(parentGroup.getNodeId())
         );
         AggregationOperation projectAfterUnwind = Aggregation.project()
                 .and("nodeId").as("_id")
-                .and("dataPartitionId").as("dataPartitionId")
+                .and(DATAPARTITIONID).as(DATAPARTITIONID)
                 .and("directParents.role").as("role");
         Aggregation aggregation = Aggregation.newAggregation(match, project, unwind, matchAfterUnwind, projectAfterUnwind);
         AggregationResults<ChildrenReference> results = helper.pipeline(aggregation, collectionName, ChildrenReference.class);
@@ -83,7 +85,7 @@ public abstract class NodeHelper {
                 .apply(
                         new Update().pull(
                                 DIRECT_PARENTS,
-                                Query.query(Criteria.where("parentId").is(groupToRemoveFromParents))
+                                Query.query(Criteria.where(PARENTID).is(groupToRemoveFromParents))
                         )
                 )
                 .first();
@@ -94,14 +96,14 @@ public abstract class NodeHelper {
                 .matching(
                         Query.query(
                                 Criteria.where(DIRECT_PARENTS).elemMatch(
-                                        Criteria.where("parentId").is(parentNode)
+                                        Criteria.where(PARENTID).is(parentNode)
                                 )
                         )
                 )
                 .apply(
                         new Update().pull(
                                 DIRECT_PARENTS,
-                                Query.query(Criteria.where("parentId").is(parentNode)
+                                Query.query(Criteria.where(PARENTID).is(parentNode)
                                 )
                         )
                 )

@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {EntitlementsTestConfig.class, MockServletContext.class})
-public class ListMemberRepoMongoDBTest extends ParentUtil {
+class ListMemberRepoMongoDBTest extends ParentUtil {
 
     @MockBean
     private IEventPublisher messageBus;
@@ -36,13 +36,13 @@ public class ListMemberRepoMongoDBTest extends ParentUtil {
 
 
     @BeforeEach
-    public void generateDataset() {
+    void generateDataset() {
         mongoTemplateHelper.dropCollections();
         initDefaultDataSet();
     }
 
     @Test
-    public void runTest() {
+    void runTest() {
         //given
         ListMemberServiceDto request = ListMemberServiceDto.builder()
                 .partitionId(DATA_PARTITION)
@@ -61,7 +61,7 @@ public class ListMemberRepoMongoDBTest extends ParentUtil {
 
     @Disabled // todo enabled
     @Test
-    public void runNotFoundGroup() {
+    void runNotFoundGroup() {
         //given
         ListMemberServiceDto request = ListMemberServiceDto.builder()
                 .partitionId(DATA_PARTITION)
