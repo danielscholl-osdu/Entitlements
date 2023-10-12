@@ -42,6 +42,7 @@ conf:
   entitlementsPostgresSecretName: "entitlements-postgres-secret"
   bootstrapOpenidSecretName: "datafier-secret"
   entitlementsRedisSecretName: "entitlements-redis-secret"
+  replicas: 1
 
 auth:
   keycloakUrl: ""
