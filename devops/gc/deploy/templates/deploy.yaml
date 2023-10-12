@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.conf.appName | quote }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.conf.replicas }}
   selector:
     matchLabels:
       app: {{ .Values.conf.appName | quote }}
