@@ -40,24 +40,34 @@ import java.util.Set;
 @Component
 public class CreateGroupRepoMongoDB extends BasicEntitlementsHelper implements CreateGroupRepo {
 
+    private <T> T convertFromNode(EntityNode node, Class<T> klass) {
+        T returnVal = conversionService.convert(node, klass);
+        if (returnVal == null) {
+            throw ExceptionGenerator.groupIsNull();
+        }
+
+        return returnVal;
+    }
+
     @Override
     public Set<String> createGroup(EntityNode groupNode, CreateGroupRepoDto createGroupRequest) {
 
-        GroupDoc groupToCreate = conversionService.convert(groupNode, GroupDoc.class);
-        UserDoc userInitiator = conversionService.convert(createGroupRequest.getRequesterNode(), UserDoc.class);
+        GroupDoc groupToCreate = convertFromNode(groupNode, GroupDoc.class);
+        UserDoc userInitiator = convertFromNode(createGroupRequest.getRequesterNode(), UserDoc.class);
         userInitiator = userHelper.getOrCreate(userInitiator);
+        GroupDoc rootGroup = null;
 
         //check add membership under root group
         if (createGroupRequest.isAddDataRootGroup()) {
-            GroupDoc rootGroup = conversionService.convert(createGroupRequest.getDataRootGroupNode(), GroupDoc.class);
-            if (rootGroup == null) {
-                throw ExceptionGenerator.groupIsNull();
-            }
-            groupToCreate.getDirectParents().add(new NodeRelationDoc(rootGroup.getId(), Role.MEMBER));
+            rootGroup = convertFromNode(createGroupRequest.getDataRootGroupNode(), GroupDoc.class);
+            rootGroup.getDirectParents().add(new NodeRelationDoc(groupToCreate.getId(), Role.MEMBER));
         }
 
         try {
-            groupHelper.save(groupToCreate);
+            groupHelper.insert(groupToCreate);
+            if (rootGroup != null) {
+                groupHelper.save(rootGroup);
+            }
         } catch (DuplicateKeyException duplicateKeyException) {
             throw new AppException(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT.getReasonPhrase(), "This group already exists");
         }

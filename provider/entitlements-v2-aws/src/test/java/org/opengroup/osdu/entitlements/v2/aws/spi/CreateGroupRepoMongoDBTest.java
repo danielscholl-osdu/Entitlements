@@ -109,8 +109,7 @@ class CreateGroupRepoMongoDBTest extends ParentUtil {
         assertNotNull(groupDoc);
         assertNotNull(rootGroup);
         assertTrue(userDoc.getAllParents().stream().anyMatch(u -> u.getParentId().equals(groupDoc.getId())));
-        assertTrue(groupDoc.getDirectParents().stream().anyMatch(g -> g.getParentId().equals(rootGroup.getId())));
-        assertTrue(groupDoc.getDirectParents().stream().anyMatch(g -> g.getParentId().equals(rootGroup.getId())));
+        assertTrue(rootGroup.getDirectParents().stream().anyMatch(g -> g.getParentId().equals(groupDoc.getId())));
     }
 
     @Test

@@ -59,11 +59,18 @@ public class GroupHelper extends NodeHelper {
         super(helper, indexUpdater);
     }
 
-    public void save(GroupDoc groupDoc) {
+    public void insert(GroupDoc groupDoc) {
         if (groupDoc == null) {
             throw ExceptionGenerator.groupIsNull();
         }
         helper.insert(groupDoc, getGroupCollection(groupDoc.getId().getDataPartitionId()));
+    }
+
+    public void save(GroupDoc groupDoc) {
+        if (groupDoc == null) {
+            throw ExceptionGenerator.groupIsNull();
+        }
+        helper.save(groupDoc, getGroupCollection(groupDoc.getId().getDataPartitionId()));
     }
 
     public GroupDoc getById(IdDoc groupId) {
