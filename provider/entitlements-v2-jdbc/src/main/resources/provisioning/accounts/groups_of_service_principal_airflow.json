@@ -41,6 +41,12 @@
     },
     {
       "groupName": "service.policy.user"
+    },
+    {
+      "groupName": "service.dataset.viewers"
+    },
+    {
+      "groupName": "service.dataset.editors"
     }
   ]
 }
