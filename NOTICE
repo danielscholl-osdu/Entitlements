@@ -37,7 +37,7 @@ The following software have components provided under the terms of this license:
 - Doxia :: FML Module (from https://repo1.maven.org/maven2/org/apache/maven/doxia/doxia-module-fml)
 - Doxia :: Sink API (from https://repo1.maven.org/maven2/org/apache/maven/doxia/doxia-sink-api)
 - Doxia :: XDoc Module (from https://repo1.maven.org/maven2/org/apache/maven/doxia/doxia-module-xdoc)
-- Maven Core (from https://repo1.maven.org/maven2/org/apache/maven/maven-core)
+- Maven Core (from https://maven.apache.org/ref/4.0.0-alpha-8/maven-core/, https://repo1.maven.org/maven2/org/apache/maven/maven-core)
 - Maven Error Diagnostics (from https://repo1.maven.org/maven2/org/apache/maven/maven-error-diagnostics)
 - Maven Monitor (from https://repo1.maven.org/maven2/org/apache/maven/maven-monitor)
 - Maven Plugin Descriptor Model (from https://repo1.maven.org/maven2/org/apache/maven/maven-plugin-descriptor)
@@ -60,7 +60,6 @@ The following software have components provided under the terms of this license:
 - AMQP 1.0 JMS Spring Boot Starter (from https://repo1.maven.org/maven2/org/amqphub/spring/amqp-10-jms-spring-boot-starter)
 - API Common (from https://github.com/googleapis, https://github.com/googleapis/api-common-java, https://repo1.maven.org/maven2/com/google/api/api-common)
 - ASM based accessors helper used by json-smart (from https://urielch.github.io/)
-- AWS Java SDK for AWS Elemental MediaLive (from https://aws.amazon.com/sdkforjava)
 - AWS Java SDK for AWS KMS (from https://aws.amazon.com/sdkforjava)
 - AWS Java SDK for AWS Lambda (from https://aws.amazon.com/sdkforjava)
 - AWS Java SDK for AWS STS (from https://aws.amazon.com/sdkforjava)
@@ -134,7 +133,7 @@ The following software have components provided under the terms of this license:
 - Byte Buddy Java agent (from https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy-agent)
 - Caffeine cache (from https://github.com/ben-manes/caffeine)
 - ClassMate (from http://github.com/cowtowncoder/java-classmate)
-- Cloud Key Management Service (KMS) API (from https://repo1.maven.org/maven2/com/google/apis/google-api-services-cloudkms)
+- Cloud Key Management Service (KMS) API v1-rev20231012-2.0.0 (from https://repo1.maven.org/maven2/com/google/apis/google-api-services-cloudkms)
 - Cobertura (from http://cobertura.sourceforge.net)
 - Cobertura Limited Runtime (from http://cobertura.sourceforge.net)
 - Collections (from https://repo1.maven.org/maven2/commons-collections/commons-collections)
@@ -228,20 +227,20 @@ The following software have components provided under the terms of this license:
 - Kotlin Stdlib Jdk7 (from <https://kotlinlang.org/>, https://kotlinlang.org/)
 - Kotlin Stdlib Jdk8 (from <https://kotlinlang.org/>, https://kotlinlang.org/)
 - Lettuce (from http://github.com/lettuce-io/lettuce-core)
-- Maven Artifact (from https://repo1.maven.org/maven2/org/apache/maven/maven-artifact)
+- Maven Artifact (from https://maven.apache.org/ref/4.0.0-alpha-8/maven-artifact/, https://repo1.maven.org/maven2/org/apache/maven/maven-artifact)
 - Maven Artifact Manager (from https://repo1.maven.org/maven2/org/apache/maven/maven-artifact-manager)
-- Maven Core (from https://repo1.maven.org/maven2/org/apache/maven/maven-core)
+- Maven Core (from https://maven.apache.org/ref/4.0.0-alpha-8/maven-core/, https://repo1.maven.org/maven2/org/apache/maven/maven-core)
 - Maven Error Diagnostics (from https://repo1.maven.org/maven2/org/apache/maven/maven-error-diagnostics)
-- Maven Model (from https://repo1.maven.org/maven2/org/apache/maven/maven-model)
+- Maven Model (from https://maven.apache.org/ref/4.0.0-alpha-8/maven-model/, https://repo1.maven.org/maven2/org/apache/maven/maven-model)
 - Maven Monitor (from https://repo1.maven.org/maven2/org/apache/maven/maven-monitor)
-- Maven Plugin API (from https://repo1.maven.org/maven2/org/apache/maven/maven-plugin-api)
+- Maven Plugin API (from https://maven.apache.org/ref/4.0.0-alpha-8/maven-plugin-api/, https://repo1.maven.org/maven2/org/apache/maven/maven-plugin-api)
 - Maven Plugin Descriptor Model (from https://repo1.maven.org/maven2/org/apache/maven/maven-plugin-descriptor)
 - Maven Plugin Parameter Documenter API (from https://repo1.maven.org/maven2/org/apache/maven/maven-plugin-parameter-documenter)
 - Maven Plugin Registry Model (from https://repo1.maven.org/maven2/org/apache/maven/maven-plugin-registry)
 - Maven Profile Model (from https://repo1.maven.org/maven2/org/apache/maven/maven-profile)
 - Maven Project (from https://repo1.maven.org/maven2/org/apache/maven/maven-project)
-- Maven Repository Metadata Model (from https://repo1.maven.org/maven2/org/apache/maven/maven-repository-metadata)
-- Maven Settings (from https://repo1.maven.org/maven2/org/apache/maven/maven-settings)
+- Maven Repository Metadata Model (from https://maven.apache.org/ref/4.0.0-alpha-8/maven-repository-metadata/, https://repo1.maven.org/maven2/org/apache/maven/maven-repository-metadata)
+- Maven Settings (from https://maven.apache.org/ref/4.0.0-alpha-8/maven-settings/, https://repo1.maven.org/maven2/org/apache/maven/maven-settings)
 - Metrics Core (from https://repo1.maven.org/maven2/io/dropwizard/metrics/metrics-core)
 - Microsoft Application Insights Java Agent (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Spring Boot starter (from https://github.com/Microsoft/ApplicationInsights-Java)
@@ -622,7 +621,6 @@ The following software have components provided under the terms of this license:
 
 - Cobertura (from http://cobertura.sourceforge.net)
 - Jakarta Annotations API (from https://projects.eclipse.org/projects/ee4j.ca)
-- RabbitMQ Java Client (from http://www.rabbitmq.com, https://www.rabbitmq.com)
 - tomcat-embed-core (from http://tomcat.apache.org/)
 
 ========================================================================
@@ -735,7 +733,6 @@ The following software have components provided under the terms of this license:
 - Animal Sniffer Annotations (from https://repo1.maven.org/maven2/org/codehaus/mojo/animal-sniffer-annotations)
 - Apache HttpClient Cache (from http://hc.apache.org/httpcomponents-client, http://hc.apache.org/httpcomponents-client-ga)
 - Apache Log4j API (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api)
-- Apache Log4j Core (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core)
 - Apache Log4j SLF4J Binding (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-slf4j-impl)
 - Apache Log4j to SLF4J Adapter (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-to-slf4j)
 - Apache TinkerPop :: Gremlin Core (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-core)
@@ -802,7 +799,6 @@ The following software have components provided under the terms of this license:
 
 - Cobertura (from http://cobertura.sourceforge.net)
 - Javassist (from http://www.javassist.org/)
-- RabbitMQ Java Client (from http://www.rabbitmq.com, https://www.rabbitmq.com)
 
 ========================================================================
 MPL-2.0
@@ -824,13 +820,6 @@ Python-2.0
 The following software have components provided under the terms of this license:
 
 - argparse (from https://github.com/ThomasWaldmann/argparse/)
-
-========================================================================
-RSA-MD
-========================================================================
-The following software have components provided under the terms of this license:
-
-- AWS Java SDK for Amazon SQS (from https://aws.amazon.com/sdkforjava)
 
 ========================================================================
 SAX-PD

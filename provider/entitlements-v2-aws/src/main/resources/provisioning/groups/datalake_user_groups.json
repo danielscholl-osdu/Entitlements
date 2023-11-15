@@ -23,6 +23,14 @@
     {
       "name": "users.data.root",
       "description": "Datalake root users"
+    },
+    {
+      "name": "users.datalake.delegation",
+      "description": "Datalake inpersonator"
+    },
+    {
+      "name": "users.datalake.impersonation",
+      "description": "Datalake inpersonator user"
     }
   ]
 }
