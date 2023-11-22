@@ -1,6 +1,8 @@
 package org.opengroup.osdu.entitlements.v2.acceptance;
 
-import org.junit.Assert;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupItem;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.Token;
@@ -9,8 +11,12 @@ import org.opengroup.osdu.entitlements.v2.acceptance.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.response.ListMemberResponse;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.ConfigurationService;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.TokenService;
+import org.springframework.http.HttpStatus;
+import java.io.IOException;
 
 public abstract class GetMembersTest extends AcceptanceBaseTest {
+
+    private final Token token = tokenService.getToken();
 
     public GetMembersTest(ConfigurationService configurationService, TokenService tokenService) {
         super(configurationService, tokenService);
@@ -62,15 +68,29 @@ public abstract class GetMembersTest extends AcceptanceBaseTest {
         ListMemberResponse listMemberResponse1 = entitlementsV2Service.getMembers(groupItem.getEmail(), token.getValue());
         boolean isChildGroup1AMember = listMemberResponse1.getMembers()
                 .stream().anyMatch(memberItem -> memberItem.getEmail().equals(childGroupItem1.getEmail()));
-        Assert.assertTrue(isChildGroup1AMember);
+        assertTrue(isChildGroup1AMember);
         ListMemberResponse listMemberResponse2 = entitlementsV2Service.getMembers(groupItem.getEmail(), token.getValue());
         boolean isChildGroup2AMember = listMemberResponse2.getMembers()
                 .stream().anyMatch(memberItem -> memberItem.getEmail().equals(childGroupItem2.getEmail()));
-        Assert.assertTrue(isChildGroup2AMember);
+        assertTrue(isChildGroup2AMember);
         ListMemberResponse listMemberResponse3 = entitlementsV2Service.getMembers(groupItem.getEmail(), token.getValue());
         boolean isChildGroup3AMember = listMemberResponse3.getMembers()
                 .stream().anyMatch(memberItem -> memberItem.getEmail().equals(childGroupItem3.getEmail()));
-        Assert.assertTrue(isChildGroup3AMember);
+        assertTrue(isChildGroup3AMember);
+    }
+
+    @Test
+    public void shouldReturnBadRequestWhenMakingHttpRequestWithInvalidUrl() throws IOException {
+        RequestData requestData = RequestData.builder()
+                .method("GET")
+                .relativePath("groups/%3B/members")
+                .dataPartitionId(configurationService.getTenantId())
+                .token(token.getValue())
+                .build();
+
+        CloseableHttpResponse closeableHttpResponse = httpClientService.send(requestData);
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), closeableHttpResponse.getCode());
     }
 
     @Override

@@ -745,6 +745,7 @@ The following software have components provided under the terms of this license:
 - Checker Qual (from https://checkerframework.org)
 - ClassGraph (from https://github.com/classgraph/classgraph)
 - Default Plexus Container (from https://repo1.maven.org/maven2/org/codehaus/plexus/plexus-container-default)
+- JCL 1.2 implemented over SLF4J (from http://www.slf4j.org)
 - JSch (from http://www.jcraft.com/jsch/)
 - JTidy (from http://jtidy.sourceforge.net)
 - JUL to SLF4J bridge (from http://www.slf4j.org)

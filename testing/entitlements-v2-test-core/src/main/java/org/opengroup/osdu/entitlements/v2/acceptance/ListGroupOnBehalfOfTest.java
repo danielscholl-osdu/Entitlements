@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
+import org.springframework.http.HttpStatus;
+import java.io.IOException;
+
 
 public abstract class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
     private final List<String> groupsForFurtherDeletion;
@@ -86,6 +89,20 @@ public abstract class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
                 .build();
         CloseableHttpResponse response = httpClientService.send(requestData);
         assertEquals(400, response.getCode());
+    }
+
+    @Test
+    public void shouldReturnBadRequestWhenMakingHttpRequestWithInvalidUrl() throws IOException {
+        RequestData requestData = RequestData.builder()
+                .method("GET")
+                .relativePath("members/%3B/groups")
+                .dataPartitionId(configurationService.getTenantId())
+                .token(token.getValue())
+                .build();
+
+        CloseableHttpResponse closeableHttpResponse = httpClientService.send(requestData);
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), closeableHttpResponse.getCode());
     }
 
     @Override
