@@ -3,7 +3,7 @@ package org.opengroup.osdu.entitlements.v2.acceptance;
 import com.google.gson.Gson;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.Token;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.request.RequestData;
@@ -16,8 +16,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import org.springframework.http.HttpStatus;
+import java.io.IOException;
 
 public abstract class UpdateGroupTest extends AcceptanceBaseTest {
+
+    private final Token token = tokenService.getToken();
 
     public UpdateGroupTest(ConfigurationService configurationService, TokenService tokenService) {
         super(configurationService, tokenService);
@@ -33,10 +37,10 @@ public abstract class UpdateGroupTest extends AcceptanceBaseTest {
 
         CloseableHttpResponse response = httpClientService.send(getRenameGroupRequestData(oldGroupName, newGroupName, token.getValue()));
         UpdateGroupResponse updateGroupResponse = new Gson().fromJson(EntityUtils.toString(response.getEntity()), UpdateGroupResponse.class);
-        Assert.assertEquals(200, response.getCode());
-        Assert.assertEquals(newGroupName.toLowerCase(), updateGroupResponse.getName());
-        Assert.assertEquals(configurationService.getIdOfGroup(newGroupName).toLowerCase(), updateGroupResponse.getEmail());
-        Assert.assertEquals(newGroupName.toLowerCase(), updateGroupResponse.getName().toLowerCase());
+        assertEquals(200, response.getCode());
+        assertEquals(newGroupName.toLowerCase(), updateGroupResponse.getName());
+        assertEquals(configurationService.getIdOfGroup(newGroupName).toLowerCase(), updateGroupResponse.getEmail());
+        assertEquals(newGroupName.toLowerCase(), updateGroupResponse.getName().toLowerCase());
     }
 
     @Test
@@ -51,10 +55,10 @@ public abstract class UpdateGroupTest extends AcceptanceBaseTest {
 
         CloseableHttpResponse response = httpClientService.send(getUpdateAppIdsRequestData(groupName, newAppIds, token.getValue()));
         UpdateGroupResponse updateGroupResponse = new Gson().fromJson(EntityUtils.toString(response.getEntity()), UpdateGroupResponse.class);
-        Assert.assertEquals(200, response.getCode());
-        Assert.assertEquals(groupName.toLowerCase(), updateGroupResponse.getName());
-        Assert.assertEquals(configurationService.getIdOfGroup(groupName).toLowerCase(), updateGroupResponse.getEmail());
-        Assert.assertEquals(new HashSet<>(updateGroupResponse.getAppIds()), newAppIds);
+        assertEquals(200, response.getCode());
+        assertEquals(groupName.toLowerCase(), updateGroupResponse.getName());
+        assertEquals(configurationService.getIdOfGroup(groupName).toLowerCase(), updateGroupResponse.getEmail());
+        assertEquals(new HashSet<>(updateGroupResponse.getAppIds()), newAppIds);
     }
 
     @Override
@@ -99,5 +103,19 @@ public abstract class UpdateGroupTest extends AcceptanceBaseTest {
                 .relativePath("groups/" + configurationService.getIdOfGroup(groupName))
                 .token(token)
                 .body(new Gson().toJson(Collections.singletonList(requestBody))).build();
+    }
+
+    @Test
+    public void shouldReturnBadRequestWhenMakingHttpRequestWithoutValidUrl() throws IOException {
+        RequestData requestData = RequestData.builder()
+                .method("PATCH")
+                .relativePath("groups/%25")
+                .dataPartitionId(configurationService.getTenantId())
+                .token(token.getValue())
+                .build();
+
+        CloseableHttpResponse closeableHttpResponse = httpClientService.send(requestData);
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), closeableHttpResponse.getCode());
     }
 }

@@ -1,15 +1,19 @@
 package org.opengroup.osdu.entitlements.v2.acceptance;
 
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupItem;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.Token;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.ConfigurationService;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.TokenService;
+import org.springframework.http.HttpStatus;
+import java.io.IOException;
 
 public abstract class DeleteGroupTest extends AcceptanceBaseTest {
+
+    private final Token token = tokenService.getToken();
 
     public DeleteGroupTest(ConfigurationService configurationService, TokenService tokenService) {
         super(configurationService, tokenService);
@@ -44,6 +48,20 @@ public abstract class DeleteGroupTest extends AcceptanceBaseTest {
                 .relativePath(String.format("groups/%s/members", email))
                 .token(value).build();
         CloseableHttpResponse response = httpClientService.send(getGroupsRequestData);
-        Assert.assertEquals(404, response.getCode());
+        assertEquals(404, response.getCode());
+    }
+
+    @Test
+    public void shouldReturnBadRequestWhenMakingHttpRequestWithInvalidUrl() throws IOException {
+        RequestData requestData = RequestData.builder()
+                .method("DELETE")
+                .relativePath("groups/%25")
+                .dataPartitionId(configurationService.getTenantId())
+                .token(token.getValue())
+                .build();
+
+        CloseableHttpResponse closeableHttpResponse = httpClientService.send(requestData);
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), closeableHttpResponse.getCode());
     }
 }
