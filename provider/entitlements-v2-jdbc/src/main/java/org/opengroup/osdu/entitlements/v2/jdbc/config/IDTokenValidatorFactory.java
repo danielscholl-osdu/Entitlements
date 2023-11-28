@@ -22,7 +22,7 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.openid.connect.sdk.validators.IDTokenValidator;
 import org.opengroup.osdu.core.common.model.http.AppException;
-import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsConfigurationProperties;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntConfigProperties;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.IapConfigurationProperties;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.OpenIdProviderProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,21 +38,21 @@ public class IDTokenValidatorFactory {
 
   private final EntOpenIDProviderConfig entOpenIDProviderConfig;
   private final OpenIdProviderProperties openIdConfigurationProperties;
-  private final EntitlementsConfigurationProperties entitlementsConfigurationProperties;
+  private final EntConfigProperties entConfigProperties;
   @Autowired(required = false)
   private IapConfigurationProperties iapConfigurationProperties;
 
   @Autowired
   public IDTokenValidatorFactory(EntOpenIDProviderConfig entOpenIDProviderConfig,
                                  OpenIdProviderProperties openIdConfigurationProperties,
-                                 EntitlementsConfigurationProperties entitlementsConfigurationProperties) {
+                                 EntConfigProperties entConfigProperties) {
     this.entOpenIDProviderConfig = entOpenIDProviderConfig;
     this.openIdConfigurationProperties = openIdConfigurationProperties;
-    this.entitlementsConfigurationProperties = entitlementsConfigurationProperties;
+    this.entConfigProperties = entConfigProperties;
   }
 
   public IDTokenValidator createTokenValidator(String clientId) {
-    if (entitlementsConfigurationProperties.getGcpAuthenticationMode().equals("IAP")) {
+    if (entConfigProperties.getGcpAuthenticationMode().equals("IAP")) {
       return createIapTokenValidator(clientId);
     } else {
       return createIdTokenValidator(clientId);

@@ -17,18 +17,21 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.config;
 
+import static org.opengroup.osdu.entitlements.v2.jdbc.config.MultiTenantRoutingDatasource.SCHEMA;
+import static org.opengroup.osdu.entitlements.v2.jdbc.config.PropertyResolverUtil.getPartitionProperty;
+
+import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.opengroup.osdu.core.common.model.http.AppException;
-import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsConfigurationProperties;
+import org.opengroup.osdu.core.common.partition.IPropertyResolver;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntConfigProperties;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Objects;
 
 @Slf4j
 @Component
@@ -36,7 +39,8 @@ import java.util.Objects;
 public class DatabaseCheck {
 
   private final JdbcTemplate jdbcTemplate;
-  private final EntitlementsConfigurationProperties entitlementsProperties;
+  private final EntConfigProperties properties;
+  private final IPropertyResolver propertyResolver;
 
   @EventListener
   public void onApplicationEvent(ApplicationReadyEvent event) {
@@ -47,13 +51,15 @@ public class DatabaseCheck {
     String request = "SELECT schema_name\n" + "FROM information_schema.schemata;";
     List<String> data = jdbcTemplate.queryForList(request, String.class);
 
-    if (Objects.nonNull(data) && data.contains(entitlementsProperties.getDatastoreSchema())) {
-      log.debug("Schema {} exists in DB.", entitlementsProperties.getDatastoreSchema());
+    String systemTenant = properties.getSystemTenant();
+    String systemSchema = getPartitionProperty(properties, propertyResolver, SCHEMA, systemTenant);
+    if (Objects.nonNull(data) && data.contains(systemSchema)) {
+      log.debug("Schema {} exists in DB.", systemSchema);
     } else {
       throw new AppException(
           HttpStatus.INTERNAL_SERVER_ERROR.value(),
           HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-          "Schema " + entitlementsProperties.getDatastoreSchema() + " does not exist in DB.");
+          "Schema " + systemSchema + " does not exist in DB.");
     }
   }
 }

@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties
 @Data
-public class EntitlementsConfigurationProperties {
+public class EntConfigProperties {
 
     private String gcpAuthenticationMode;
     private String gcpXUserIdentityHeaderName;
@@ -45,5 +45,6 @@ public class EntitlementsConfigurationProperties {
     private int partitionInfoVmCacheExpTime = 60;
     private int partitionInfoVmCacheSize = 100;
 
-    private String datastoreSchema;
+    private String systemTenant;
+    private String partitionPropertiesPrefix;
 }

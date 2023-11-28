@@ -26,7 +26,7 @@ import org.opengroup.osdu.core.common.cache.enums.CachingStrategy;
 import org.opengroup.osdu.core.common.partition.PartitionInfo;
 import org.opengroup.osdu.core.gcp.cache.RedisCacheBuilder;
 import org.opengroup.osdu.core.gcp.cache.RedisCodecFactory;
-import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsConfigurationProperties;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntConfigProperties;
 import org.opengroup.osdu.entitlements.v2.model.ParentReferences;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +40,7 @@ public class CacheConfig {
 
   @Bean
   public IRedisCache<String, UserInfo> userInfoIRedisCache(
-      EntitlementsConfigurationProperties properties,
+      EntConfigProperties properties,
       RedisCodecFactory<String, UserInfo> redisCodecFactory
   ) {
     RedisCacheBuilder<String, UserInfo> userInfoRedisCacheBuilder = new RedisCacheBuilder<>(
@@ -59,7 +59,7 @@ public class CacheConfig {
 
   @Bean
   public ICache<String, ParentReferences> userGroupsCache(
-      EntitlementsConfigurationProperties properties,
+      EntConfigProperties properties,
       RedisCodecFactory<String, ParentReferences> redisCodecFactory
   ) {
     RedisCacheBuilder<String, ParentReferences> userInfoRedisCacheBuilder = new RedisCacheBuilder<>(
@@ -78,7 +78,7 @@ public class CacheConfig {
 
   @Bean
   public ICache<String, PartitionInfo> partitionInfoCache(
-      EntitlementsConfigurationProperties properties) {
+      EntConfigProperties properties) {
     return new VmCache<>(properties.getPartitionInfoVmCacheExpTime(),
         properties.getPartitionInfoVmCacheSize(), CachingStrategy.EXPIRE_AFTER_WRITE);
   }
