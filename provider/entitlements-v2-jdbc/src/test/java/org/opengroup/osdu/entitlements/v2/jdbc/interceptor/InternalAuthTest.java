@@ -35,7 +35,7 @@ import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.entitlements.v2.jdbc.Utils;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.DatabaseCheck;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.IDTokenValidatorFactory;
-import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsConfigurationProperties;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -68,7 +68,7 @@ public class InternalAuthTest {
   @MockBean private JaxRsDpsLog jaxRsDpsLog;
   @MockBean private IRedisCache<String, UserInfo> cache;
   @MockBean private IDTokenValidatorFactory tokenValidatorFactory;
-  @Autowired private EntitlementsConfigurationProperties entitlementsConfigurationProperties;
+  @Autowired private EntConfigProperties entConfigProperties;
   @Autowired public RequestHeaderInterceptor interceptor;
   @Autowired private ApplicationContext applicationContext;
 
@@ -105,7 +105,7 @@ public class InternalAuthTest {
   @Test
   public void testShouldAuthenticateWhenValidAuthorizationAndUserIdHeadersPresent() {
     when(request.getHeader(DpsHeaders.AUTHORIZATION)).thenReturn("Bearer " + correctToken);
-    when(request.getHeader(entitlementsConfigurationProperties.getGcpXUserIdentityHeaderName()))
+    when(request.getHeader(entConfigProperties.getGcpXUserIdentityHeaderName()))
         .thenReturn(MATCHING_USER_EMAIL);
     assertTrue(interceptor.preHandle(request, response, handler));
     DpsHeaders headers = applicationContext.getBean(DpsHeaders.class);
@@ -120,14 +120,14 @@ public class InternalAuthTest {
   @Test(expected = AppException.class)
   public void testShouldNotAuthenticateWhenNotMatchingUserIdHeaderPresent() {
     when(request.getHeader(DpsHeaders.AUTHORIZATION)).thenReturn(correctToken);
-    when(request.getHeader(entitlementsConfigurationProperties.getGcpXUserIdentityHeaderName()))
+    when(request.getHeader(entConfigProperties.getGcpXUserIdentityHeaderName()))
         .thenReturn(NOT_MATCHING_USER_EMAIL);
     interceptor.preHandle(request, response, handler);
   }
 
   @Test(expected = AppException.class)
   public void testShouldNotAuthenticateWhenOnlyUserIdHeaderPresent() {
-    when(request.getHeader(entitlementsConfigurationProperties.getGcpXUserIdentityHeaderName()))
+    when(request.getHeader(entConfigProperties.getGcpXUserIdentityHeaderName()))
         .thenReturn(NOT_MATCHING_USER_EMAIL);
     interceptor.preHandle(request, response, handler);
   }

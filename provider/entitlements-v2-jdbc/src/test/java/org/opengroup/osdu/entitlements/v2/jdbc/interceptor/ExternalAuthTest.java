@@ -35,7 +35,7 @@ import org.opengroup.osdu.entitlements.v2.jdbc.Utils;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.DatabaseCheck;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.EntOpenIDProviderConfig;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.IDTokenValidatorFactory;
-import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntitlementsConfigurationProperties;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -68,7 +68,7 @@ public class ExternalAuthTest {
   @MockBean private JaxRsDpsLog jaxRsDpsLog;
   @MockBean private EntOpenIDProviderConfig entOpenIDProviderConfig;
   @MockBean private IDTokenValidatorFactory tokenValidatorFactory;
-  @Autowired private EntitlementsConfigurationProperties entitlementsConfigurationProperties;
+  @Autowired private EntConfigProperties entConfigProperties;
   @Autowired public RequestHeaderInterceptor interceptor;
   @Autowired private ApplicationContext applicationContext;
 
@@ -98,7 +98,7 @@ public class ExternalAuthTest {
 
   @Test
   public void shouldAuthenticateWhenOnlyUserIdHeaderPresent() {
-    when(request.getHeader(entitlementsConfigurationProperties.getGcpXUserIdentityHeaderName()))
+    when(request.getHeader(entConfigProperties.getGcpXUserIdentityHeaderName()))
         .thenReturn(MATCHING_USER_EMAIL);
     assertTrue(interceptor.preHandle(request, response, handler));
     DpsHeaders headers = applicationContext.getBean(DpsHeaders.class);
@@ -116,7 +116,7 @@ public class ExternalAuthTest {
   @Test
   public void shouldAuthenticateWhenOpenIDTokenAndUserIdHeadersPresentAndMatching() {
     when(request.getHeader(DpsHeaders.AUTHORIZATION)).thenReturn(correctToken);
-    when(request.getHeader(entitlementsConfigurationProperties.getGcpXUserIdentityHeaderName()))
+    when(request.getHeader(entConfigProperties.getGcpXUserIdentityHeaderName()))
         .thenReturn(MATCHING_USER_EMAIL);
     assertTrue(interceptor.preHandle(request, response, handler));
     DpsHeaders headers = applicationContext.getBean(DpsHeaders.class);
@@ -131,7 +131,7 @@ public class ExternalAuthTest {
   @Test(expected = AppException.class)
   public void shouldNotAuthenticateWhenOpenIDTokenAndUserIdHeadersPresentAndNotMatching() {
     when(request.getHeader(DpsHeaders.AUTHORIZATION)).thenReturn(correctToken);
-    when(request.getHeader(entitlementsConfigurationProperties.getGcpXUserIdentityHeaderName()))
+    when(request.getHeader(entConfigProperties.getGcpXUserIdentityHeaderName()))
         .thenReturn(NOT_MATCHING_USER_EMAIL);
     interceptor.preHandle(request, response, handler);
   }
@@ -139,7 +139,7 @@ public class ExternalAuthTest {
   @Test(expected = AppException.class)
   public void shouldNotAuthenticateWhenOpenIDTokenAndUserIdHeadersPresentAndTokenNotCorrect() {
     when(request.getHeader(DpsHeaders.AUTHORIZATION)).thenReturn(TOKEN_WITH_NOT_CORRECT_SECRET);
-    when(request.getHeader(entitlementsConfigurationProperties.getGcpXUserIdentityHeaderName()))
+    when(request.getHeader(entConfigProperties.getGcpXUserIdentityHeaderName()))
         .thenReturn(MATCHING_USER_EMAIL);
     interceptor.preHandle(request, response, handler);
   }

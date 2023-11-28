@@ -455,6 +455,7 @@ The following software have components provided under the terms of this license:
 - Google Auth Library for Java - Credentials (from https://repo1.maven.org/maven2/com/google/auth/google-auth-library-credentials)
 - Google Auth Library for Java - OAuth2 HTTP (from https://repo1.maven.org/maven2/com/google/auth/google-auth-library-oauth2-http)
 - Google OAuth Client Library for Java (from https://repo1.maven.org/maven2/com/google/oauth-client/google-oauth-client)
+- H2 Database Engine (from https://h2database.com)
 - Hamcrest (from http://hamcrest.org/JavaHamcrest/)
 - Hamcrest Core (from http://hamcrest.org/, http://hamcrest.org/JavaHamcrest/, https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core)
 - Hamcrest Library (from http://hamcrest.org/JavaHamcrest/)
@@ -572,6 +573,7 @@ EPL-1.0
 The following software have components provided under the terms of this license:
 
 - AspectJ Weaver (from http://www.aspectj.org, https://www.eclipse.org/aspectj/)
+- H2 Database Engine (from https://h2database.com)
 - JUnit Jupiter (Aggregator) (from https://junit.org/junit5/)
 - JUnit Jupiter API (from http://junit.org/junit5/, https://junit.org/junit5/)
 - JUnit Jupiter Engine (from http://junit.org/junit5/, https://junit.org/junit5/)
@@ -720,6 +722,7 @@ LGPL-2.1-or-later
 ========================================================================
 The following software have components provided under the terms of this license:
 
+- H2 Database Engine (from https://h2database.com)
 - Java Native Access (from https://github.com/java-native-access/jna, https://github.com/twall/jna)
 - Java Native Access Platform (from https://github.com/java-native-access/jna)
 - Javassist (from http://www.javassist.org/)
@@ -806,6 +809,7 @@ MPL-2.0
 ========================================================================
 The following software have components provided under the terms of this license:
 
+- H2 Database Engine (from https://h2database.com)
 - RabbitMQ Java Client (from http://www.rabbitmq.com, https://www.rabbitmq.com)
 
 ========================================================================

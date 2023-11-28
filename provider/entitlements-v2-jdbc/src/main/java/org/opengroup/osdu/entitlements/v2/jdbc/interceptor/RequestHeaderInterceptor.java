@@ -1,17 +1,17 @@
 /*
- * Copyright 2021 Google LLC
- * Copyright 2021 EPAM Systems, Inc
+ *  Copyright 2020-2023 Google LLC
+ *  Copyright 2020-2023 EPAM Systems, Inc
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- *     https://www.apache.org/licenses/LICENSE-2.0
+ *    http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
 package org.opengroup.osdu.entitlements.v2.jdbc.interceptor;
@@ -22,10 +22,12 @@ import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
+import org.opengroup.osdu.entitlements.v2.jdbc.config.ThreadLocalTenantStorage;
 import org.opengroup.osdu.entitlements.v2.jdbc.interceptor.authenticator.IAuthenticator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 @Component
 @RequiredArgsConstructor
@@ -46,12 +48,21 @@ public class RequestHeaderInterceptor implements HandlerInterceptor {
         }
         log.debug("Intercepted the request. Now validating headers..");
         if (iAuthenticator.requestIsAuthenticated(request)) {
+            String tenantId = request.getHeader(DpsHeaders.DATA_PARTITION_ID);
+            ThreadLocalTenantStorage.setTenantName(tenantId);
             return true;
         } else {
             throw new AppException(HttpStatus.UNAUTHORIZED.value(),
                 HttpStatus.UNAUTHORIZED.getReasonPhrase(),
                 "Not valid authorization headers provided");
         }
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+        ModelAndView modelAndView) throws Exception {
+        ThreadLocalTenantStorage.clear();
+        HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
     }
 
     private boolean isSwaggerRequest(HttpServletRequest request) {
