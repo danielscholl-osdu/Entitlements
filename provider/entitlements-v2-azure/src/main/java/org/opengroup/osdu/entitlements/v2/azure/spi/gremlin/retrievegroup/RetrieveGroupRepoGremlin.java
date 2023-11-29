@@ -1,7 +1,6 @@
 package org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.retrievegroup;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__;
@@ -32,6 +31,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -181,7 +181,40 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
 
     @Override
     public ListGroupsOfPartitionDto getGroupsInPartition(String dataPartitionId, GroupType groupType, String cursor, Integer limit) {
-        throw new NotImplementedException();
+
+        int offsetValue = 0;
+        if (Objects.nonNull(cursor) && !cursor.isEmpty()) {
+            try {
+                offsetValue = Integer.parseInt(cursor);
+            } catch (NumberFormatException e) {
+                throw new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Malformed cursor, must be integer value");
+            }
+        }
+
+        Traversal<Vertex, Vertex> traversal = gremlinConnector.getGraphTraversalSource().V()
+                .has(VertexPropertyNames.DATA_PARTITION_ID, dataPartitionId)
+                .hasLabel(NodeType.GROUP.toString())
+                .order()
+                .by(VertexPropertyNames.NAME);
+        List<NodeVertex> vertices = gremlinConnector.getVertices(traversal);
+
+        List<ParentReference> parentReferencesByGroupType = vertices.stream()
+                .map(vertexUtilService::createParentReference)
+                .filter(group -> groupType.equals(GroupType.NONE) || group.isMatchGroupType(groupType))
+                .toList();
+        List<ParentReference> parentReferencesByLimit = parentReferencesByGroupType.stream()
+                .skip(offsetValue)
+                .limit(limit)
+                .toList();
+
+        int totalCount = parentReferencesByGroupType.size();
+        int cursorValue = totalCount > (offsetValue+limit) ? (offsetValue+limit) : 0;
+
+        return ListGroupsOfPartitionDto.builder()
+                .groups(parentReferencesByLimit)
+                .cursor(String.valueOf(cursorValue))
+                .totalCount((long) totalCount)
+                .build();
     }
 
     private int calculateMaxDepth() {
