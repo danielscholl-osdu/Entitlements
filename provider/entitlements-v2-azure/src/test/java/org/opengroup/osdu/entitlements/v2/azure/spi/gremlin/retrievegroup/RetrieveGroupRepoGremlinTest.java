@@ -17,15 +17,18 @@ import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenTreeDto;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
+import org.opengroup.osdu.entitlements.v2.model.GroupType;
 import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.ParentTreeDto;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
+import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupsOfPartitionDto;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
@@ -37,6 +40,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -749,10 +753,276 @@ users.x@dp.domain.com  users.y@dp.domain.com    member2@xxx.com -----------
         Assert.assertEquals(1, parents.getParentReferences().size());
     }
 
+    @Test
+    public void shouldReturnEmptyGroupsForNonExistingPartition() {
+        createGroupsForPartition("dp");
+        String cursor = "0";
+        Integer limit = 6;
+
+        ListGroupsOfPartitionDto listGroupsOfPartitionDto = retrieveGroupRepo
+                .getGroupsInPartition("testPartition", GroupType.NONE, cursor, limit);
+
+        assertEquals(0, listGroupsOfPartitionDto.getGroups().size());
+        assertEquals(0, listGroupsOfPartitionDto.getTotalCount());
+        assertEquals("0", listGroupsOfPartitionDto.getCursor());
+    }
+
+    @Test
+    public void shouldReturnAllGroupsForPartition() {
+        createGroupsForPartition("dp");
+        String cursor = "0";
+        Integer limit = 6;
+
+        ListGroupsOfPartitionDto listGroupsOfPartitionDto = retrieveGroupRepo
+                .getGroupsInPartition("dp", GroupType.NONE, cursor, limit);
+
+        assertEquals(6, listGroupsOfPartitionDto.getGroups().size());
+        assertEquals(6, listGroupsOfPartitionDto.getTotalCount());
+        assertEquals("0", listGroupsOfPartitionDto.getCursor());
+        assertParentReferencesEquals(listGroupsOfPartitionDto.getGroups(), "data.x@dp.domain.com",
+                "data.y@dp.domain.com", "service.x@dp.domain.com", "service.y@dp.domain.com",
+                "users.x@dp.domain.com", "users.y@dp.domain.com");
+    }
+
+    @Test
+    public void shouldReturnDataGroupsForPartition() {
+        createGroupsForPartition("dp");
+        String cursor = "0";
+        Integer limit = 6;
+
+        ListGroupsOfPartitionDto listGroupsOfPartitionDto = retrieveGroupRepo
+                .getGroupsInPartition("dp", GroupType.DATA, cursor, limit);
+
+        assertEquals(2, listGroupsOfPartitionDto.getGroups().size());
+        assertEquals(2, listGroupsOfPartitionDto.getTotalCount());
+        assertEquals("0", listGroupsOfPartitionDto.getCursor());
+        assertParentReferencesEquals(listGroupsOfPartitionDto.getGroups(), "data.x@dp.domain.com",
+                "data.y@dp.domain.com");
+    }
+
+    @Test
+    public void shouldReturnUserGroupsForPartition() {
+        createGroupsForPartition("dp");
+        String cursor = "0";
+        Integer limit = 6;
+
+        ListGroupsOfPartitionDto listGroupsOfPartitionDto = retrieveGroupRepo
+                .getGroupsInPartition("dp", GroupType.USER, cursor, limit);
+
+        assertEquals(2, listGroupsOfPartitionDto.getGroups().size());
+        assertEquals(2, listGroupsOfPartitionDto.getTotalCount());
+        assertEquals("0", listGroupsOfPartitionDto.getCursor());
+        assertParentReferencesEquals(listGroupsOfPartitionDto.getGroups(), "users.x@dp.domain.com",
+                "users.y@dp.domain.com");
+    }
+
+    @Test
+    public void shouldReturnServiceGroupsForPartition() {
+        createGroupsForPartition("dp");
+        String cursor = "0";
+        Integer limit = 6;
+
+        ListGroupsOfPartitionDto listGroupsOfPartitionDto = retrieveGroupRepo
+                .getGroupsInPartition("dp", GroupType.SERVICE, cursor, limit);
+
+        assertEquals(2, listGroupsOfPartitionDto.getGroups().size());
+        assertEquals(2, listGroupsOfPartitionDto.getTotalCount());
+        assertEquals("0", listGroupsOfPartitionDto.getCursor());
+        assertParentReferencesEquals(listGroupsOfPartitionDto.getGroups(), "service.x@dp.domain.com",
+                "service.y@dp.domain.com");
+    }
+
+    @Test
+    public void shouldReturnAllGroupsForPartition_whenCursorIsEmpty() {
+        createGroupsForPartition("dp");
+        String cursor = "";
+        Integer limit = 6;
+
+        ListGroupsOfPartitionDto listGroupsOfPartitionDto = retrieveGroupRepo
+                .getGroupsInPartition("dp", GroupType.NONE, cursor, limit);
+
+        assertEquals(6, listGroupsOfPartitionDto.getGroups().size());
+        assertEquals(6, listGroupsOfPartitionDto.getTotalCount());
+        assertEquals("0", listGroupsOfPartitionDto.getCursor());
+        assertParentReferencesEquals(listGroupsOfPartitionDto.getGroups(), "data.x@dp.domain.com",
+                "data.y@dp.domain.com", "service.x@dp.domain.com", "service.y@dp.domain.com",
+                "users.x@dp.domain.com", "users.y@dp.domain.com");
+    }
+
+    @Test
+    public void shouldReturnAllGroupsForPartition_whenCursorIsNull() {
+        createGroupsForPartition("dp");
+        String cursor = null;
+        Integer limit = 6;
+
+        ListGroupsOfPartitionDto listGroupsOfPartitionDto = retrieveGroupRepo
+                .getGroupsInPartition("dp", GroupType.NONE, cursor, limit);
+
+        assertEquals(6, listGroupsOfPartitionDto.getGroups().size());
+        assertEquals(6, listGroupsOfPartitionDto.getTotalCount());
+        assertEquals("0", listGroupsOfPartitionDto.getCursor());
+        assertParentReferencesEquals(listGroupsOfPartitionDto.getGroups(), "data.x@dp.domain.com",
+                "data.y@dp.domain.com", "service.x@dp.domain.com", "service.y@dp.domain.com",
+                "users.x@dp.domain.com", "users.y@dp.domain.com");
+    }
+
+    @Test
+    public void shouldThrowAppExceptionWithBadRequest_whenCursorIsInvalid() {
+        createGroupsForPartition("dp");
+        String cursor = "c";
+        Integer limit = 6;
+
+        AppException appException = assertThrows(AppException.class, () ->
+                retrieveGroupRepo.getGroupsInPartition("dp", GroupType.NONE, cursor, limit));
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), appException.getError().getCode());
+        assertEquals(HttpStatus.BAD_REQUEST.getReasonPhrase(), appException.getError().getReason());
+        assertEquals("Malformed cursor, must be integer value", appException.getError().getMessage());
+
+    }
+
+    @Test
+    public void shouldReturnAllGroupsForPartitionAndValidCursor_WhenTotalCountIsGreaterThanLimit() {
+        createGroupsForPartition("dp");
+        String cursor = "0";
+        Integer limit = 2;
+
+        ListGroupsOfPartitionDto listGroupsOfPartitionDto = retrieveGroupRepo
+                .getGroupsInPartition("dp", GroupType.NONE, cursor, limit);
+
+        assertEquals(2, listGroupsOfPartitionDto.getGroups().size());
+        assertEquals(6, listGroupsOfPartitionDto.getTotalCount());
+        assertEquals("2", listGroupsOfPartitionDto.getCursor());
+        assertParentReferencesEquals(listGroupsOfPartitionDto.getGroups(), "data.x@dp.domain.com",
+                "data.y@dp.domain.com");
+
+        cursor = "2";
+        limit = 2;
+        listGroupsOfPartitionDto = retrieveGroupRepo
+                .getGroupsInPartition("dp", GroupType.NONE, cursor, limit);
+
+        assertEquals(2, listGroupsOfPartitionDto.getGroups().size());
+        assertEquals(6, listGroupsOfPartitionDto.getTotalCount());
+        assertEquals("4", listGroupsOfPartitionDto.getCursor());
+        assertParentReferencesEquals(listGroupsOfPartitionDto.getGroups(), "service.x@dp.domain.com",
+                "service.y@dp.domain.com");
+
+        cursor = "4";
+        limit = 2;
+        listGroupsOfPartitionDto = retrieveGroupRepo
+                .getGroupsInPartition("dp", GroupType.NONE, cursor, limit);
+        assertEquals(2, listGroupsOfPartitionDto.getGroups().size());
+        assertEquals(6, listGroupsOfPartitionDto.getTotalCount());
+        assertEquals("0", listGroupsOfPartitionDto.getCursor());
+        assertParentReferencesEquals(listGroupsOfPartitionDto.getGroups(), "users.x@dp.domain.com",
+                "users.y@dp.domain.com");
+    }
+
+    @Test
+    public void shouldReturnAllGroupsForPartitionAndValidCursorAsZero_WhenTotalCountIsLesserThanLimit() {
+        createGroupsForPartition("dp");
+        String cursor = "0";
+        Integer limit = 10;
+
+        ListGroupsOfPartitionDto listGroupsOfPartitionDto = retrieveGroupRepo
+                .getGroupsInPartition("dp", GroupType.NONE, cursor, limit);
+
+        assertEquals(6, listGroupsOfPartitionDto.getGroups().size());
+        assertEquals(6, listGroupsOfPartitionDto.getTotalCount());
+        assertEquals("0", listGroupsOfPartitionDto.getCursor());
+        assertParentReferencesEquals(listGroupsOfPartitionDto.getGroups(), "data.x@dp.domain.com",
+                "data.y@dp.domain.com", "service.x@dp.domain.com", "service.y@dp.domain.com",
+                "users.x@dp.domain.com", "users.y@dp.domain.com");
+    }
+
     private void addMember(String childNodeId, NodeType typeOfChild, String parentNodeId, Role role) {
         EntityNode groupNode = EntityNode.builder().nodeId(parentNodeId).dataPartitionId("dp").build();
         EntityNode memberNode = EntityNode.builder().nodeId(childNodeId).dataPartitionId("dp").type(typeOfChild).build();
         AddMemberRepoDto addMemberRepoDto = AddMemberRepoDto.builder().memberNode(memberNode).role(role).build();
         addMemberRepoGremlin.addMember(groupNode, addMemberRepoDto);
     }
+
+    private void createGroupsForPartition(String dataPartitionId) {
+        GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
+
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "users.x@dp.domain.com")
+                .property(VertexPropertyNames.NAME, "users.x")
+                .property(VertexPropertyNames.DESCRIPTION, "")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, dataPartitionId)
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
+                .next();
+
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "users.y@dp.domain.com")
+                .property(VertexPropertyNames.NAME, "users.y")
+                .property(VertexPropertyNames.DESCRIPTION, "")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, dataPartitionId)
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
+                .next();
+
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "data.x@dp.domain.com")
+                .property(VertexPropertyNames.NAME, "data.x")
+                .property(VertexPropertyNames.DESCRIPTION, "")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, dataPartitionId)
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
+                .next();
+
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "data.y@dp.domain.com")
+                .property(VertexPropertyNames.NAME, "data.y")
+                .property(VertexPropertyNames.DESCRIPTION, "")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, dataPartitionId)
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
+                .next();
+
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "service.x@dp.domain.com")
+                .property(VertexPropertyNames.NAME, "service.x")
+                .property(VertexPropertyNames.DESCRIPTION, "")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, dataPartitionId)
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
+                .next();
+
+        graphTraversalSource.addV(NodeType.GROUP.toString())
+                .property(VertexPropertyNames.NODE_ID, "service.y@dp.domain.com")
+                .property(VertexPropertyNames.NAME, "service.y")
+                .property(VertexPropertyNames.DESCRIPTION, "")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, dataPartitionId)
+                .property(VertexPropertyNames.APP_ID, "App1")
+                .property(VertexPropertyNames.APP_ID, "App2")
+                .next();
+
+        addMember("users.x@dp.domain.com", NodeType.GROUP, "data.x@dp.domain.com", Role.MEMBER);
+        addMember("users.x@dp.domain.com", NodeType.GROUP, "data.y@dp.domain.com", Role.MEMBER);
+        addMember("users.y@dp.domain.com", NodeType.GROUP, "data.y@dp.domain.com", Role.MEMBER);
+        addMember("member@xxx.com", NodeType.USER, "users.x@dp.domain.com", Role.MEMBER);
+        addMember("member@xxx.com", NodeType.USER, "users.y@dp.domain.com", Role.MEMBER);
+        addMember("users.x@dp.domain.com", NodeType.GROUP, "service.x@dp.domain.com", Role.MEMBER);
+        addMember("users.x@dp.domain.com", NodeType.GROUP, "service.y@dp.domain.com", Role.MEMBER);
+        addMember("users.y@dp.domain.com", NodeType.GROUP, "service.y@dp.domain.com", Role.MEMBER);
+
+        EntityNode memberNode = EntityNode.createMemberNodeForNewUser("member@xxx.com", dataPartitionId);
+    }
+
+    private void assertParentReferencesEquals(List<ParentReference> parentReferences, String... expectedEmails) {
+        List<String> actualEmailsList = parentReferences.stream()
+                .map(ParentReference::getId)
+                .collect(Collectors.toList());
+        List<String> expectedEmailsList = Arrays.asList(expectedEmails);
+        assertTrue(compareListsIgnoringOrder(expectedEmailsList, actualEmailsList));
+    }
+
+    private boolean compareListsIgnoringOrder(List<String> list1, List<String> list2) {
+        if (list1 == null || list2 == null || list1.size() != list2.size()) return false;
+        list2.removeAll(list1);
+        return list2.isEmpty();
+    }
+
 }
