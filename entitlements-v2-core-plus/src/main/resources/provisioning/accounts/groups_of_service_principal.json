@@ -1,0 +1,118 @@
+{
+  "users": [
+    {
+      "email": "SERVICE_PRINCIPAL",
+      "role": "OWNER"
+    }
+  ],
+  "ownersOf": [
+    {
+      "groupName": "users"
+    },
+    {
+      "groupName": "users.data.root"
+    },
+    {
+      "groupName": "users.datalake.ops"
+    },
+    {
+      "groupName": "service.storage.admin"
+    },
+    {
+      "groupName": "users.datalake.admins"
+    },
+    {
+      "groupName": "users.datalake.editors"
+    },
+    {
+      "groupName": "users.datalake.viewers"
+    },
+    {
+      "groupName": "service.entitlements.admin"
+    },
+    {
+      "groupName": "service.legal.editor"
+    },
+    {
+      "groupName": "service.storage.creator"
+    },
+    {
+      "groupName": "service.legal.admin"
+    },
+    {
+      "groupName": "service.legal.user"
+    },
+    {
+      "groupName": "service.messaging.user"
+    },
+    {
+      "groupName": "service.plugin.user"
+    },
+    {
+      "groupName": "service.entitlements.user"
+    },
+    {
+      "groupName": "service.search.user"
+    },
+    {
+      "groupName": "service.storage.viewer"
+    },
+    {
+      "groupName": "service.search.admin"
+    },
+    {
+      "groupName": "service.schema-service.editors"
+    },
+    {
+      "groupName": "service.schema-service.viewers"
+    },
+    {
+      "groupName": "service.schema-service.admin"
+    },
+    {
+      "groupName": "service.schema-service.system-admin"
+    },
+    {
+      "groupName": "service.file.editors"
+    },
+    {
+      "groupName": "service.file.viewers"
+    },
+    {
+      "groupName": "service.workflow.creator"
+    },
+    {
+      "groupName": "service.workflow.viewer"
+    },
+    {
+      "groupName": "service.workflow.admin"
+    },
+    {
+      "groupName": "service.workflow.system-admin"
+    },
+    {
+      "groupName": "service.dataset.viewers"
+    },
+    {
+      "groupName": "service.dataset.editors"
+    },
+    {
+      "groupName": "service.edsdms.user"
+    },
+    {
+      "groupName": "service.reservoir-dms.viewers"
+    },
+    {
+      "groupName": "service.reservoir-dms.owners"
+    },
+    {
+      "groupName": "service.secret.admin"
+    },
+    {
+      "groupName": "service.secret.editor"
+    },
+    {
+      "groupName": "service.secret.viewer"
+    }
+  ]
+}
