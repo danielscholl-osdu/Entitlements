@@ -1,0 +1,16 @@
+{
+  "users": [
+    {
+      "email": "SERVICE_PRINCIPAL_SEISMIC",
+      "role": "MEMBER"
+    }
+  ],
+  "membersOf": [
+    {
+      "groupName": "service.entitlements.admin"
+    },
+    {
+      "groupName": "service.legal.admin"
+    }
+  ]
+}
