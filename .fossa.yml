@@ -16,6 +16,10 @@ analyze:
     type: mvn
     target: entitlements-v2-core/pom.xml
     path: .
+  - name: entitlements-v2-core-plus
+    type: mvn
+    target: entitlements-v2-core-plus/pom.xml
+    path: .
   - name: entitlements-v2-azure
     type: mvn
     target: provider/entitlements-v2-azure/pom.xml
