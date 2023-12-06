@@ -66,7 +66,6 @@ include:
     file: "cloud-providers/gc-global.yml"
 
   - local: "devops/gc/pipeline/override-stages.yml"
-  - local: "devops/core-plus/pipeline/override-stages.yml"
 
 .maven:
   image: maven:3.9.3-eclipse-temurin-17
@@ -165,26 +164,6 @@ include:
     - export MAVEN_FOREACH=$(tempfile -m 755 -p fr-ec -s .sh)
     - echo "#!/bin/sh" > $MAVEN_FOREACH
     - echo 'xargs -0rI {} $MAVEN_BUILD {} "$@" < $ALL_MAVEN_BUILD_DIRS_Z' >> $MAVEN_FOREACH
-
-download_plugins:
-  image: maven:3.8.3-openjdk-17-slim
-  stage: build
-  variables:
-    OQM_PACKAGE_REGISRTY_URL: "https://community.opengroup.org/api/v4/projects/1450/packages/maven"
-    OQM_VERSION: "0.25.0-rc1"
-
-  artifacts:
-    paths:
-      - ./tmp/*.jar
-    when: always
-    expire_in: 1 days
-
-  script:
-    - mvn dependency:copy -DrepoUrl=$OQM_PACKAGE_REGISRTY_URL -Dartifact="org.opengroup.osdu:os-oqm-rabbitmq:$OQM_VERSION:jar:plugin" -Dtransitive=false -DoutputDirectory="./tmp"
-
-  only:
-    variables:
-      - $PROTECTED == '1'
 
 gemnasium-maven-dependency_scanning:
   variables:
