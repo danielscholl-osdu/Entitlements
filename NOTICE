@@ -874,13 +874,6 @@ The following software have components provided under the terms of this license:
 - Netty/Codec (from https://repo1.maven.org/maven2/io/netty/netty-codec)
 
 ========================================================================
-mit-old-style-no-advert
-========================================================================
-The following software have components provided under the terms of this license:
-
-- Brave (from https://repo1.maven.org/maven2/io/zipkin/brave/brave)
-
-========================================================================
 proprietary-license
 ========================================================================
 The following software have components provided under the terms of this license:
