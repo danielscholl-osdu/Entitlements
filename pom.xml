@@ -8,6 +8,8 @@
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-security-core.version>5.8.9</spring-security-core.version>
+        <json-smart.version>2.5.0</json-smart.version>
     </properties>
 
     <groupId>org.opengroup.osdu.entitlements.v2</groupId>
@@ -22,7 +24,7 @@
         <module>entitlements-v2-core-plus</module>
         <module>provider/entitlements-v2-azure</module>
         <module>provider/entitlements-v2-aws</module>
-		    <module>provider/entitlements-v2-ibm</module>
+        <module>provider/entitlements-v2-ibm</module>
         <module>provider/entitlements-v2-jdbc</module>
     </modules>
 
@@ -65,7 +67,12 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
-                <version>5.8.2</version>
+                <version>${spring-security-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.minidev</groupId>
+                <artifactId>json-smart</artifactId>
+                <version>${json-smart.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
