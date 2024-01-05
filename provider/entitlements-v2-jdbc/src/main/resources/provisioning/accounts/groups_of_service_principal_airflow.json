@@ -47,9 +47,6 @@
     },
     {
       "groupName": "service.dataset.editors"
-    },
-    {
-      "groupName": "users.datalake.delegation"
     }
   ]
 }
