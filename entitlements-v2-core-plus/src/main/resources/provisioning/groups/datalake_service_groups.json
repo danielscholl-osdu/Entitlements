@@ -993,6 +993,18 @@
           "name": "users.datalake.admins"
         }
       ]
+    },
+    {
+      "name": "users.datalake.impersonation",
+      "description" : "Impersonated group for Workflow Service",
+      "members": [
+        {
+          "name": "service.workflow.admin"
+        },
+        {
+          "name": "service.workflow.creator"
+        }
+      ]
     }
   ]
 }
