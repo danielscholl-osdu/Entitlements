@@ -24,6 +24,9 @@
       "members": [
         {
           "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
         }
       ]
     },
