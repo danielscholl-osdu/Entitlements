@@ -178,6 +178,24 @@ curl --request DELETE \
 </details>
 &nbsp;
 
+
+*  **GET /entitlements/v1/groups/{group_email}/membersCount** - Retrieves the count of members that belong to a group_email within the data partition provided in _data-partition-id_ header.
+   E.g. group_email value is {name}@{data-partition-id}.{domain}.com. Query parameter role can be specified to filter group
+   members by role of OWNER or MEMBER. The user or service extracted from JWT in _Authorization_ header checked for
+   membership within group_email as the OWNER or within users.datalake.admins group or within users.datalake.ops group. This API lists the count of direct members of
+   the group (excluding hierarchical groups).
+
+<details>
+
+```
+curl --request GET \
+  --url '/entitlements/v1/groups/service.example.viewers@opendes.contoso.com/membersCount?role=OWNER' \
+  --header 'authorization: Bearer <JWT>' \
+  --header 'content-type: application/json' \
+  --header 'data-partition-id: opendes'
+```
+</details>
+
 * **PATCH /groups/{group_email}** - Updates entitlements group. The user or service extracted from JWT in _Authorization_ header checked for membership
 within group_email as the OWNER or within users.datalake.ops (ops user) group. In case user is not ops user, it should be within service.entitlements.admin
 or service.entitlements.user group.

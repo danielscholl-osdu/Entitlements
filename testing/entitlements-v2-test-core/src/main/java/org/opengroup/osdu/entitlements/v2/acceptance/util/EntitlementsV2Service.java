@@ -12,6 +12,7 @@ import org.opengroup.osdu.entitlements.v2.acceptance.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.response.ListGroupInPartitionResponse;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.response.ListGroupResponse;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.response.ListMemberResponse;
+import org.opengroup.osdu.entitlements.v2.acceptance.model.response.MembersCountResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -137,25 +138,38 @@ public class EntitlementsV2Service {
         return response;
     }
 
-    public ListGroupInPartitionResponse getGroupsWithinPartition(String token, String...params) throws Exception {
+    public ListGroupInPartitionResponse getGroupsWithinPartition(String token, String... params) throws Exception {
         String joinedParams = "";
-        if(params.length > 0){
+        if (params.length > 0) {
             StringJoiner paramJoiner = new StringJoiner("&", "?", "");
-            for (String param: params){
+            for (String param : params) {
                 paramJoiner.add(param);
             }
             joinedParams = paramJoiner.toString();
         }
         RequestData requestData = RequestData.builder()
-            .method("GET")
-            .relativePath("groups/all" + joinedParams)
-            .dataPartitionId(configurationService.getTenantId())
-            .token(token)
-            .build();
+                .method("GET")
+                .relativePath("groups/all" + joinedParams)
+                .dataPartitionId(configurationService.getTenantId())
+                .token(token)
+                .build();
 
         CloseableHttpResponse clientResponse = httpClientService.send(requestData);
         Assert.assertEquals(200, clientResponse.getCode());
         String entity = EntityUtils.toString(clientResponse.getEntity());
         return gson.fromJson(entity, ListGroupInPartitionResponse.class);
+    }
+
+    public MembersCountResponse getMembersCount(String groupEmail, String token) throws Exception {
+        RequestData countGroupsRequestData = RequestData.builder()
+                .method("GET").dataPartitionId(configurationService.getTenantId())
+                .relativePath(String.format("groups/%s/membersCount", groupEmail))
+                .token(token).build();
+
+        CloseableHttpResponse response = httpClientService.send(countGroupsRequestData);
+
+        Assert.assertEquals(200, response.getCode());
+        String membersCountResponseBody = EntityUtils.toString(response.getEntity());
+        return gson.fromJson(membersCountResponseBody, MembersCountResponse.class);
     }
 }
