@@ -2,8 +2,10 @@ package org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.retrievegroup;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
+import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__;
+import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.azure.model.NodeVertex;
@@ -12,28 +14,14 @@ import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinCo
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.EdgePropertyNames;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.StepLabel;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPropertyNames;
-import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
-import org.opengroup.osdu.entitlements.v2.model.ChildrenTreeDto;
-import org.opengroup.osdu.entitlements.v2.model.EntityNode;
-import org.opengroup.osdu.entitlements.v2.model.GroupType;
-import org.opengroup.osdu.entitlements.v2.model.NodeType;
-import org.opengroup.osdu.entitlements.v2.model.ParentReference;
-import org.opengroup.osdu.entitlements.v2.model.ParentTreeDto;
+import org.opengroup.osdu.entitlements.v2.model.*;
 import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupsOfPartitionDto;
+import org.opengroup.osdu.entitlements.v2.model.memberscount.MembersCountResponseDto;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -208,12 +196,33 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
                 .toList();
 
         int totalCount = parentReferencesByGroupType.size();
-        int cursorValue = totalCount > (offsetValue+limit) ? (offsetValue+limit) : 0;
+        int cursorValue = totalCount > (offsetValue + limit) ? (offsetValue + limit) : 0;
 
         return ListGroupsOfPartitionDto.builder()
                 .groups(parentReferencesByLimit)
                 .cursor(String.valueOf(cursorValue))
                 .totalCount((long) totalCount)
+                .build();
+    }
+
+    @Override
+    public MembersCountResponseDto getMembersCount(String partitionId, String groupId, Role role) {
+        GraphTraversal<Vertex, Edge> vertexEdgeGraphTraversal = gremlinConnector.getGraphTraversalSource().V()
+                .has(VertexPropertyNames.DATA_PARTITION_ID, partitionId)
+                .and(buildOrTraversalsByNodeIds(groupId))
+                .outE(EdgePropertyNames.CHILD_EDGE_LB)
+                .as(StepLabel.EDGE);
+
+        if (role != null)
+            vertexEdgeGraphTraversal = vertexEdgeGraphTraversal.has(EdgePropertyNames.ROLE, role.toString());
+
+        Traversal<Vertex, Map<String, Object>> traversal = vertexEdgeGraphTraversal.inV()
+                .as(StepLabel.VERTEX).select(StepLabel.EDGE, StepLabel.VERTEX);
+
+        return MembersCountResponseDto
+                .builder()
+                .membersCount(gremlinConnector.getVerticesAndEdges(traversal).size())
+                .groupEmail(groupId)
                 .build();
     }
 

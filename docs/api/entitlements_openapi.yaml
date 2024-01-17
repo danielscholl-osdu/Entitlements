@@ -35,6 +35,8 @@ tags:
     description: List Member Api
   - name: info
     description: Version info endpoint
+  - name: count-members-api
+    description: Count Members Api
 paths:
   /_ah/liveness_check:
     get:
@@ -562,6 +564,50 @@ paths:
           description: Version info.
           schema:
             $ref: '#/definitions/VersionInfo'
+  '/groups/{group_email}/membersCount':
+    get:
+      tags:
+        - count-members-api
+      summary: countGroupMembers
+      operationId: countGroupMembersUsingGET
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: data-partition-id
+          in: header
+          description: tenant
+          required: true
+          type: string
+          default: common
+        - name: group_email
+          in: path
+          description: group_email
+          required: true
+          type: string
+        - name: role
+          in: query
+          description: role
+          required: false
+          type: string
+          enum:
+            - MEMBER
+            - OWNER
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/MembersCountResponseDto'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      security:
+        - JWT:
+            - global
 securityDefinitions:
   JWT:
     type: apiKey
@@ -583,6 +629,8 @@ definitions:
   UpdateGroupOperation:
     type: object
   UpdateGroupResponseDto:
+    type: object
+  MembersCountResponseDto:
     type: object
   VersionInfo:
     type: object

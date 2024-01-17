@@ -38,7 +38,8 @@ import org.springframework.context.annotation.Profile;
                 @Tag(name = "remove-member-api", description = "Remove Member API"),
                 @Tag(name = "init-api", description = "Init API"),
                 @Tag(name = "health-checks-api", description = "Health Checks API"),
-                @Tag(name = "info", description = "Version info endpoint")
+                @Tag(name = "info", description = "Version info endpoint"),
+                @Tag(name = "members-count-api", description = "Count Members of a group")
         }
 )
 @SecurityScheme(name = "Authorization", scheme = "bearer", bearerFormat = "Authorization", type = SecuritySchemeType.HTTP)

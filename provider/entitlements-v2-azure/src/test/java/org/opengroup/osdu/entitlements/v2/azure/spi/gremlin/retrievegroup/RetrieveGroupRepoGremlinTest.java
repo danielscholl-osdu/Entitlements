@@ -24,6 +24,7 @@ import org.opengroup.osdu.entitlements.v2.model.ParentTreeDto;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
 import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupsOfPartitionDto;
+import org.opengroup.osdu.entitlements.v2.model.memberscount.MembersCountResponseDto;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -933,6 +934,81 @@ users.x@dp.domain.com  users.y@dp.domain.com    member2@xxx.com -----------
         assertParentReferencesEquals(listGroupsOfPartitionDto.getGroups(), "data.x@dp.domain.com",
                 "data.y@dp.domain.com", "service.x@dp.domain.com", "service.y@dp.domain.com",
                 "users.x@dp.domain.com", "users.y@dp.domain.com");
+    }
+
+    @Test
+    public void shouldGetMemberCountSuccessfully_whenMemberRoleIsSpecified() {
+        GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
+        graphTraversalSource.addV(NodeType.GROUP.toString()).property(VertexPropertyNames.NODE_ID, "groupId1")
+                .property(VertexPropertyNames.NAME, "groupId1")
+                .property(VertexPropertyNames.DESCRIPTION, "xxx")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
+                .next();
+        graphTraversalSource.addV(NodeType.GROUP.toString()).property(VertexPropertyNames.NODE_ID, "groupId2")
+                .property(VertexPropertyNames.NAME, "groupId2")
+                .property(VertexPropertyNames.DESCRIPTION, "xxx")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
+                .next();
+        graphTraversalSource.addV(NodeType.USER.toString()).property(VertexPropertyNames.NODE_ID, "userId")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp").next();
+
+        addMember("userId", NodeType.USER, "groupId1", Role.OWNER);
+        addMember("groupId2", NodeType.GROUP, "groupId1", Role.MEMBER);
+
+        MembersCountResponseDto result = retrieveGroupRepo.getMembersCount("dp", "groupId1", Role.MEMBER);
+
+        Assert.assertEquals(1, result.getMembersCount());
+        Assert.assertEquals("groupId1", result.getGroupEmail());
+    }
+
+    @Test
+    public void shouldGetMemberCountSuccessfully_whenOwnerRoleIsSpecified() {
+        GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
+        graphTraversalSource.addV(NodeType.GROUP.toString()).property(VertexPropertyNames.NODE_ID, "groupId1")
+                .property(VertexPropertyNames.NAME, "groupId1")
+                .property(VertexPropertyNames.DESCRIPTION, "xxx")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
+                .next();
+        graphTraversalSource.addV(NodeType.GROUP.toString()).property(VertexPropertyNames.NODE_ID, "groupId2")
+                .property(VertexPropertyNames.NAME, "groupId2")
+                .property(VertexPropertyNames.DESCRIPTION, "xxx")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
+                .next();
+        graphTraversalSource.addV(NodeType.USER.toString()).property(VertexPropertyNames.NODE_ID, "userId")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp").next();
+
+        addMember("userId", NodeType.USER, "groupId1", Role.OWNER);
+        addMember("groupId2", NodeType.GROUP, "groupId1", Role.MEMBER);
+
+        MembersCountResponseDto result = retrieveGroupRepo.getMembersCount("dp", "groupId1", Role.OWNER);
+
+        Assert.assertEquals(1, result.getMembersCount());
+        Assert.assertEquals("groupId1", result.getGroupEmail());
+    }
+
+    @Test
+    public void shouldGetMemberCountSuccessfully_whenNoRoleIsSpecified() {
+        GraphTraversalSource graphTraversalSource = gremlinConnector.getGraphTraversalSource();
+        graphTraversalSource.addV(NodeType.GROUP.toString()).property(VertexPropertyNames.NODE_ID, "groupId1")
+                .property(VertexPropertyNames.NAME, "groupId1")
+                .property(VertexPropertyNames.DESCRIPTION, "xxx")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
+                .next();
+        graphTraversalSource.addV(NodeType.GROUP.toString()).property(VertexPropertyNames.NODE_ID, "groupId2")
+                .property(VertexPropertyNames.NAME, "groupId2")
+                .property(VertexPropertyNames.DESCRIPTION, "xxx")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp")
+                .next();
+        graphTraversalSource.addV(NodeType.USER.toString()).property(VertexPropertyNames.NODE_ID, "userId")
+                .property(VertexPropertyNames.DATA_PARTITION_ID, "dp").next();
+
+        addMember("userId", NodeType.USER, "groupId1", Role.OWNER);
+        addMember("groupId2", NodeType.GROUP, "groupId1", Role.MEMBER);
+
+        MembersCountResponseDto result = retrieveGroupRepo.getMembersCount("dp", "groupId1", null);
+
+        Assert.assertEquals(2, result.getMembersCount());
+        Assert.assertEquals("groupId1", result.getGroupEmail());
     }
 
     private void addMember(String childNodeId, NodeType typeOfChild, String parentNodeId, Role role) {
