@@ -11,6 +11,8 @@
         <openapi.version>1.6.14</openapi.version>
         <jackson-databind.version>2.14.2</jackson-databind.version>
         <jackson.version>2.14.2</jackson.version>
+        <plexus-utils.version>4.0.0</plexus-utils.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
     </properties>
 
     <parent>
@@ -118,6 +120,10 @@
                     <artifactId>servlet-api-2.5</artifactId>
                     <groupId>org.mortbay.jetty</groupId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven</groupId>
+                    <artifactId>maven-core</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -125,13 +131,21 @@
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>${openapi.version}</version>
         </dependency>
-
 		<!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-core -->
 		<dependency>
 		    <groupId>org.apache.tomcat.embed</groupId>
 		    <artifactId>tomcat-embed-core</artifactId>
 		</dependency>
-
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>${plexus-utils.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>${commons-collections.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <pluginManagement>

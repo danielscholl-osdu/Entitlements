@@ -15,7 +15,6 @@ Apache-1.1
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- Apache Commons CLI (from https://commons.apache.org/proper/commons-cli/, https://repo1.maven.org/maven2/commons-cli/commons-cli)
 - Apache Commons Pool (from https://commons.apache.org/proper/commons-pool/)
 - Apache Geronimo JMS Spec 2.0 (from http://geronimo.apache.org/maven/${siteId}/${version})
 - Apache Log4j JUL Adapter (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-jul)
@@ -23,7 +22,6 @@ The following software have components provided under the terms of this license:
 - Apache Maven Reporting API (from https://repo1.maven.org/maven2/org/apache/maven/reporting/maven-reporting-api)
 - Apache Maven Reporting Implementation (from https://repo1.maven.org/maven2/org/apache/maven/reporting/maven-reporting-impl)
 - Apache Maven Wagon :: API (from https://repo1.maven.org/maven2/org/apache/maven/wagon/wagon-provider-api)
-- Apache Maven Wagon :: Providers :: File Provider (from https://repo1.maven.org/maven2/org/apache/maven/wagon/wagon-file)
 - AspectJ Weaver (from http://www.aspectj.org, https://www.eclipse.org/aspectj/)
 - Cobertura (from http://cobertura.sourceforge.net)
 - Default Plexus Container (from https://repo1.maven.org/maven2/org/codehaus/plexus/plexus-container-default)
@@ -32,11 +30,6 @@ The following software have components provided under the terms of this license:
 - Doxia :: FML Module (from https://repo1.maven.org/maven2/org/apache/maven/doxia/doxia-module-fml)
 - Doxia :: Sink API (from https://repo1.maven.org/maven2/org/apache/maven/doxia/doxia-sink-api)
 - Doxia :: XDoc Module (from https://repo1.maven.org/maven2/org/apache/maven/doxia/doxia-module-xdoc)
-- Maven Core (from https://repo1.maven.org/maven2/org/apache/maven/maven-core)
-- Maven Error Diagnostics (from https://repo1.maven.org/maven2/org/apache/maven/maven-error-diagnostics)
-- Maven Monitor (from https://repo1.maven.org/maven2/org/apache/maven/maven-monitor)
-- Maven Plugin Descriptor Model (from https://repo1.maven.org/maven2/org/apache/maven/maven-plugin-descriptor)
-- Maven Plugin Parameter Documenter API (from https://repo1.maven.org/maven2/org/apache/maven/maven-plugin-parameter-documenter)
 - Microsoft Application Insights Java Agent (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Spring Boot starter (from https://github.com/Microsoft/ApplicationInsights-Java)
 - Microsoft Application Insights Java SDK Web Module (from https://github.com/Microsoft/ApplicationInsights-Java)
@@ -103,12 +96,6 @@ The following software have components provided under the terms of this license:
 - Apache Maven Reporting Implementation (from https://repo1.maven.org/maven2/org/apache/maven/reporting/maven-reporting-impl)
 - Apache Maven Shared Utils (from https://repo1.maven.org/maven2/org/apache/maven/shared/maven-shared-utils)
 - Apache Maven Wagon :: API (from https://repo1.maven.org/maven2/org/apache/maven/wagon/wagon-provider-api)
-- Apache Maven Wagon :: Providers :: File Provider (from https://repo1.maven.org/maven2/org/apache/maven/wagon/wagon-file)
-- Apache Maven Wagon :: Providers :: HTTP Shared Library (from https://repo1.maven.org/maven2/org/apache/maven/wagon/wagon-http-shared)
-- Apache Maven Wagon :: Providers :: Lightweight HTTP Provider (from https://repo1.maven.org/maven2/org/apache/maven/wagon/wagon-http-lightweight)
-- Apache Maven Wagon :: Providers :: SSH Common Library (from https://repo1.maven.org/maven2/org/apache/maven/wagon/wagon-ssh-common)
-- Apache Maven Wagon :: Providers :: SSH External Provider (from https://repo1.maven.org/maven2/org/apache/maven/wagon/wagon-ssh-external)
-- Apache Maven Wagon :: Providers :: SSH Provider (from https://repo1.maven.org/maven2/org/apache/maven/wagon/wagon-ssh)
 - Apache TinkerPop :: Gremlin Core (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-core)
 - Apache TinkerPop :: Gremlin Driver (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-driver)
 - Apache TinkerPop :: Gremlin Groovy (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-groovy)
@@ -237,13 +224,9 @@ The following software have components provided under the terms of this license:
 - Maven Artifact Resolver Utilities (from https://repo1.maven.org/maven2/org/apache/maven/resolver/maven-resolver-util)
 - Maven Builder Support (from https://repo1.maven.org/maven2/org/apache/maven/maven-builder-support)
 - Maven Core (from https://repo1.maven.org/maven2/org/apache/maven/maven-core)
-- Maven Error Diagnostics (from https://repo1.maven.org/maven2/org/apache/maven/maven-error-diagnostics)
 - Maven Model (from https://repo1.maven.org/maven2/org/apache/maven/maven-model)
 - Maven Model Builder (from https://repo1.maven.org/maven2/org/apache/maven/maven-model-builder)
-- Maven Monitor (from https://repo1.maven.org/maven2/org/apache/maven/maven-monitor)
 - Maven Plugin API (from https://repo1.maven.org/maven2/org/apache/maven/maven-plugin-api)
-- Maven Plugin Descriptor Model (from https://repo1.maven.org/maven2/org/apache/maven/maven-plugin-descriptor)
-- Maven Plugin Parameter Documenter API (from https://repo1.maven.org/maven2/org/apache/maven/maven-plugin-parameter-documenter)
 - Maven Plugin Registry Model (from https://repo1.maven.org/maven2/org/apache/maven/maven-plugin-registry)
 - Maven Profile Model (from https://repo1.maven.org/maven2/org/apache/maven/maven-profile)
 - Maven Project (from https://repo1.maven.org/maven2/org/apache/maven/maven-project)
@@ -442,7 +425,6 @@ The following software have components provided under the terms of this license:
 - Hamcrest (from http://hamcrest.org/JavaHamcrest/)
 - Hamcrest Core (from http://hamcrest.org/, http://hamcrest.org/JavaHamcrest/, https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core)
 - HdrHistogram (from http://hdrhistogram.github.io/HdrHistogram/)
-- JSch (from http://www.jcraft.com/jsch/)
 - Jodd BeanUtil (from http://jodd.org)
 - Jodd Core (from http://jodd.org)
 - LatencyUtils (from http://latencyutils.github.io/LatencyUtils/)
@@ -477,7 +459,6 @@ The following software have components provided under the terms of this license:
 - Hamcrest Core (from http://hamcrest.org/, http://hamcrest.org/JavaHamcrest/, https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core)
 - Hamcrest Library (from http://hamcrest.org/JavaHamcrest/)
 - JLine (from https://repo1.maven.org/maven2/jline/jline)
-- JSch (from http://www.jcraft.com/jsch/)
 - Jakarta Activation API (from https://github.com/eclipse-ee4j/jaf, https://github.com/jakartaee/jaf-api, https://repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api)
 - Jakarta Annotations API (from https://projects.eclipse.org/projects/ee4j.ca)
 - Jakarta XML Binding API (from https://repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api, https://repo1.maven.org/maven2/org/jboss/spec/javax/xml/bind/jboss-jaxb-api_2.3_spec)
@@ -602,11 +583,13 @@ The following software have components provided under the terms of this license:
 - Logback Contrib :: JSON :: Core (from https://repo1.maven.org/maven2/ch/qos/logback/contrib/logback-json-core)
 - Logback Contrib :: Jackson (from https://repo1.maven.org/maven2/ch/qos/logback/contrib/logback-jackson)
 - Logback Core Module (from http://logback.qos.ch, https://repo1.maven.org/maven2/ch/qos/logback/logback-core)
+- Maven Artifact (from https://repo1.maven.org/maven2/org/apache/maven/maven-artifact)
 - Maven Artifact Resolver Provider (from https://repo1.maven.org/maven2/org/apache/maven/maven-resolver-provider)
 - Maven Builder Support (from https://repo1.maven.org/maven2/org/apache/maven/maven-builder-support)
 - Maven Core (from https://repo1.maven.org/maven2/org/apache/maven/maven-core)
 - Maven Model (from https://repo1.maven.org/maven2/org/apache/maven/maven-model)
 - Maven Model Builder (from https://repo1.maven.org/maven2/org/apache/maven/maven-model-builder)
+- Maven Plugin API (from https://repo1.maven.org/maven2/org/apache/maven/maven-plugin-api)
 - Maven Repository Metadata Model (from https://repo1.maven.org/maven2/org/apache/maven/maven-repository-metadata)
 - Maven Settings (from https://repo1.maven.org/maven2/org/apache/maven/maven-settings)
 - Maven Settings Builder (from https://repo1.maven.org/maven2/org/apache/maven/maven-settings-builder)
@@ -772,8 +755,6 @@ The following software have components provided under the terms of this license:
 - Default Plexus Container (from https://repo1.maven.org/maven2/org/codehaus/plexus/plexus-container-default)
 - Google Guice - Core Library (from https://repo1.maven.org/maven2/com/google/inject/guice)
 - JCL 1.2 implemented over SLF4J (from http://www.slf4j.org)
-- JSch (from http://www.jcraft.com/jsch/)
-- JTidy (from http://jtidy.sourceforge.net)
 - JUL to SLF4J bridge (from http://www.slf4j.org)
 - Jackson-core (from http://wiki.fasterxml.com/JacksonHome, https://github.com/FasterXML/jackson-core)
 - Java Client Runtime for AutoRest (from https://github.com/Azure/autorest-clientruntime-for-java)
@@ -799,7 +780,6 @@ The following software have components provided under the terms of this license:
 - Mockito (from http://mockito.org, http://www.mockito.org, https://github.com/mockito/mockito)
 - Netty/Codec/HTTP (from https://repo1.maven.org/maven2/io/netty/netty-codec-http)
 - Netty/Common (from https://repo1.maven.org/maven2/io/netty/netty-common)
-- Plexus Default Interactivity Handler (from https://repo1.maven.org/maven2/org/codehaus/plexus/plexus-interactivity-api)
 - Plexus Interpolation API (from https://repo1.maven.org/maven2/org/codehaus/plexus/plexus-interpolation)
 - Project Lombok (from http://projectlombok.org, https://projectlombok.org)
 - PyJWT (from http://github.com/jpadilla/pyjwt, https://github.com/jpadilla/pyjwt)
@@ -870,7 +850,6 @@ W3C-19980720
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- JTidy (from http://jtidy.sourceforge.net)
 - Xerces2-j (from https://repo1.maven.org/maven2/xerces/xercesImpl, https://xerces.apache.org/xerces2-j/)
 - xml-apis (from https://repo1.maven.org/maven2/xml-apis/xml-apis)
 
@@ -921,10 +900,3 @@ unknown
 The following software have components provided under the terms of this license:
 
 - xml-apis (from https://repo1.maven.org/maven2/xml-apis/xml-apis)
-
-========================================================================
-xpp
-========================================================================
-The following software have components provided under the terms of this license:
-
-- Plexus Common Utilities (from http://plexus.codehaus.org/plexus-utils, https://repo1.maven.org/maven2/org/codehaus/plexus/plexus-utils)
