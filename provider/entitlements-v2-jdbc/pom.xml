@@ -24,6 +24,7 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <os-core-common.version>0.25.0</os-core-common.version>
+    <postgresql.version>42.7.1</postgresql.version>
   </properties>
 
   <parent>
@@ -85,7 +86,7 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.6.0</version>
+      <version>${postgresql.version}</version>
     </dependency>
 
     <dependency>
