@@ -84,7 +84,7 @@ gc-baremetal-deploy:
       --set data.logLevel=INFO
       --set data.springProfilesActive=$GC_SPRING_PROFILES_ACTIVE
       --set data.bucketPrefix=$BUCKET_PREFIX
-      --set data.dataPartitionId=$GC_TENANT
+      --set global.dataPartitionId=$GC_TENANT
       --set data.groupId=$GROUP_ID
       --set data.adminUserEmail=$GC_ADMIN_USER_EMAIL
       --set data.airflowComposerEmail=$GC_AIRFLOW_COMPOSER_EMAIL

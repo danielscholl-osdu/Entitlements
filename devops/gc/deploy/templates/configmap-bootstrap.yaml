@@ -6,7 +6,6 @@ metadata:
   name: {{ printf "%s-bootstrap" .Values.conf.configmap | quote }}
   namespace: {{ .Release.Namespace | quote }}
 data:
-  DATA_PARTITION_ID: {{ .Values.data.dataPartitionId | quote }}
   ENTITLEMENTS_HOST: {{ .Values.data.entitlementsHost | quote }}
   ADMIN_USER_EMAIL: {{ .Values.data.adminUserEmail | quote }}
   GROUP_ID: {{ .Values.data.entitlementsDomain | quote }}
@@ -14,6 +13,9 @@ data:
   {{- if not .Values.global.onPremEnabled }}
   PROJECT_ID: {{ .Values.data.projectId | quote }}
   REGISTER_PUBSUB_IDENTITY: {{ .Values.data.registerPubsubIdentity | quote }}
+  DATA_PARTITION_ID: {{ "system" }}
+  {{- else }}
+  DATA_PARTITION_ID: {{ .Values.global.dataPartitionId | quote }}
   {{- end }}
   ONPREM_ENABLED: {{ .Values.global.onPremEnabled | quote }}
   DATA_PARTITION_ID_LIST: {{ join "," .Values.data.dataPartitionIdList | quote }}
