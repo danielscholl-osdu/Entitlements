@@ -33,6 +33,7 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 **global.domain** | your domain for the external endpoint, ex `example.com` | string | - | yes
 **global.onPremEnabled** | whether on-prem is enabled | boolean | false | yes
 **global.limitsEnabled** | whether CPU and memory limits are enabled | boolean | true | yes
+**global.dataPartitionId** | partition ID | string | - | yes
 
 ### Configmap variables
 
@@ -41,7 +42,6 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 **data.logLevel** | logging level | string | `ERROR` | yes
 **data.springProfilesActive** | Spring profile that activate default configuration for Google Cloud environment | string | `gcp` | yes
 **data.entitlementsHost** | Entitlements service host | string | `http://entitlements` | yes
-**data.dataPartitionId** | partition ID | string | - | yes
 **data.dataPartitionIdList** | list of partition IDs | array | - | yes
 **data.adminUserEmail** | admin user email | string | - | yes
 **data.airflowComposerEmail** | airflow composer email  | string | - | yes

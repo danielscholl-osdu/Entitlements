@@ -2,10 +2,10 @@ global:
   domain: ""
   onPremEnabled: false
   limitsEnabled: true
+  dataPartitionId: ""
 
 data:
   # Configmaps
-  dataPartitionId: ""
   dataPartitionIdList: []
   entitlementsHost: "http://entitlements"
   adminUserEmail: ""
