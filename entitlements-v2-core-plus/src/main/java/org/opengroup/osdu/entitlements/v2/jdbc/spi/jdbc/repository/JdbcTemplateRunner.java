@@ -68,8 +68,13 @@ public class JdbcTemplateRunner {
             getRecursiveGroupsRequestForGroup() :
             getRecursiveGroupsRequestForMember();
 
-        return jdbcTemplate.query(sqlRequest, groupInfoEntityMapper, entityNode.getNodeId(), entityNode.getDataPartitionId());
-    }
+		return jdbcTemplate.query(con -> {
+			PreparedStatement ps = con.prepareStatement(sqlRequest);
+				ps.setString(1, entityNode.getNodeId());
+				ps.setString(2, entityNode.getDataPartitionId());
+				return ps;
+		}, groupInfoEntityMapper);
+	}
 
     public GroupInfoEntityList getGroupsInPartition(String dataPartitionId, GroupType groupType, Integer offset, Integer limit) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
