@@ -6,7 +6,6 @@ global:
 
 data:
   # Configmaps
-  dataPartitionIdList: []
   entitlementsHost: "http://entitlements"
   adminUserEmail: ""
   airflowComposerEmail: ""
