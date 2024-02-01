@@ -42,7 +42,6 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 **data.logLevel** | logging level | string | `ERROR` | yes
 **data.springProfilesActive** | Spring profile that activate default configuration for Google Cloud environment | string | `gcp` | yes
 **data.entitlementsHost** | Entitlements service host | string | `http://entitlements` | yes
-**data.dataPartitionIdList** | list of partition IDs | array | - | yes
 **data.adminUserEmail** | admin user email | string | - | yes
 **data.airflowComposerEmail** | airflow composer email  | string | - | yes
 **data.partitionHost** | Partition service host | string | `http://partition` | yes
