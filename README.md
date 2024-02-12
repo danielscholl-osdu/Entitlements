@@ -20,6 +20,12 @@ Instructions for running the JDBC integration tests can be found [here][JDBC doc
 
 All the Swagger and OpenAPI related common properties are managed here [swagger.properties](./entitlements-v2-core/src/main/resources/swagger.properties)
 
+#### Server Url(full path vs relative path) configuration
+- `api.server.fullUrl.enabled=true` It will generate full server url in the OpenAPI swagger
+- `api.server.fullUrl.enabled=false` It will generate only the contextPath only
+- default value is false (Currently only in Azure it is enabled)
+[Reference]:(https://springdoc.org/faq.html#_how_is_server_url_generated)
+
 ##***REMOVED***
 
 Instructions for running the AWS integration tests can be found [here](./provider/entitlements-v2-aws/README.md).
