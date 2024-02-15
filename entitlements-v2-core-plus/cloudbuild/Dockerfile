@@ -21,6 +21,5 @@ CMD java -Djava.security.egd=file:/dev/./urandom \
          -Dserver.port=${PORT} \
          -Dlog4j.formatMsgNoLookups=true \
          -Dloader.path=plugins/ \
-         -Dloader.debug=true \
          -Dloader.main=org.opengroup.osdu.entitlements.v2.jdbc.EntitlementsV2Application \
          -jar entitlements-${PROVIDER_NAME}.jar
