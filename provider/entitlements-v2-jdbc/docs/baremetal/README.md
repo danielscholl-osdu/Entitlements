@@ -34,7 +34,6 @@ Defined in default application property file but possible to override:
 | `SYSTEM_TENANT`                      | ex `system`                              | System tenant ID, default is `system`                                                                                                                                                        | no         |        |
 | `PARTITION_PROPERTIES_PREFIX`        | ex `entitlements`                        | Prefix for Database connection properties in Partition configuration, default `entitlements`, result `entitlements.datasource.url`                                                           | no         |        |
 
-
 ## Postgres Connection configuration
 
 Entitlements database connection is configured via properties, provided by the Partition service:
@@ -132,6 +131,10 @@ used for token validation.
 
 **Entitlements configuration for integration accounts**
 
-| INTEGRATION_TESTER                                                                               |
-|--------------------------------------------------------------------------------------------------|
-| users<br/>service.entitlements.user<br/>service.entitlements.admin<br/>users.datalake.delegation |
+| INTEGRATION_TESTER         | NO ACCESS TESTER          |
+|----------------------------|---------------------------|
+| users                      | users                     |
+| service.entitlements.user  | service.entitlements.user |
+| service.entitlements.admin |                           |
+| users.datalake.delegation  |                           |
+
