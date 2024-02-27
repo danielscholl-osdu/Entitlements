@@ -113,6 +113,9 @@ used for token validation.
 
 **Entitlements configuration for integration accounts**
 
-| INTEGRATION_TESTER                                                                               |
-|--------------------------------------------------------------------------------------------------|
-| users<br/>service.entitlements.user<br/>service.entitlements.admin<br/>users.datalake.delegation |
+| INTEGRATION_TESTER         | NO ACCESS TESTER          |
+|----------------------------|---------------------------|
+| users                      | users                     |
+| service.entitlements.user  | service.entitlements.user |
+| service.entitlements.admin |                           |
+| users.datalake.delegation  |                           |
