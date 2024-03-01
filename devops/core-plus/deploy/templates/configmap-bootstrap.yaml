@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: {{ printf "%s-bootstrap" .Values.conf.appName | quote }}
+  name: {{ printf "%s-bootstrap" .Values.conf.configmap | quote }}
+  namespace: {{ .Release.Namespace | quote }}
+data:
+  ENTITLEMENTS_HOST: {{ .Values.data.entitlementsHost | quote }}
+  ADMIN_USER_EMAIL: {{ .Values.data.adminUserEmail | quote }}
+  GROUP_ID: {{ .Values.data.entitlementsDomain | quote }}
+  AIRFLOW_COMPOSER_EMAIL: {{ .Values.data.airflowComposerEmail | quote }}
+  DATA_PARTITION_ID: {{ .Values.global.dataPartitionId | quote }}
+  ONPREM_ENABLED: "true"

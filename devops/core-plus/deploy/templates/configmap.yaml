@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: {{ .Values.conf.appName | quote }}
+  name: {{ .Values.conf.configmap | quote }}
+  namespace: {{ .Release.Namespace | quote }}
+data:
+  GROUP_ID: {{ .Values.data.entitlementsDomain | quote }}
+  LOG_LEVEL: {{ .Values.data.logLevel | quote }}
+  PARTITION_HOST: {{ .Values.data.partitionHost | quote }}
+  _JAVA_OPTIONS: {{ .Values.data.javaOptions | quote }}
+  DATASTORE_SCHEMA_NAME: {{ .Values.data.datastoreSchemaName | quote }}
+  {{- if .Values.data.redisEntHost }}
+  REDIS_USER_INFO_HOST: {{ .Values.data.redisEntHost | quote }}
+  REDIS_USER_GROUPS_HOST: {{ .Values.data.redisEntHost | quote }}
+  {{- else }}
+  REDIS_USER_INFO_HOST: {{ printf "redis-%s" .Values.conf.appName | quote }}
+  REDIS_USER_GROUPS_HOST: {{ printf "redis-%s" .Values.conf.appName | quote }}
+  {{- end }}
+  REDIS_USER_INFO_PORT: {{ .Values.data.redisEntPort | quote }}
+  REDIS_USER_GROUPS_PORT: {{ .Values.data.redisEntPort | quote }}

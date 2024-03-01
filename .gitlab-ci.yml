@@ -65,6 +65,9 @@ include:
   - project: "osdu/platform/ci-cd-pipelines"
     file: "cloud-providers/gc-global.yml"
 
+  - project: "osdu/platform/ci-cd-pipelines"
+    file: "cloud-providers/core-global.yml"
+
   - local: "devops/gc/pipeline/override-stages.yml"
   - local: "devops/core-plus/pipeline/override-stages.yml"
 
@@ -172,16 +175,13 @@ download_plugins:
   variables:
     OQM_PACKAGE_REGISRTY_URL: "https://community.opengroup.org/api/v4/projects/1450/packages/maven"
     OQM_VERSION: "0.25.0-rc1"
-
   artifacts:
     paths:
       - ./tmp/*.jar
     when: always
     expire_in: 1 days
-
   script:
     - mvn dependency:copy -DrepoUrl=$OQM_PACKAGE_REGISRTY_URL -Dartifact="org.opengroup.osdu:os-oqm-rabbitmq:$OQM_VERSION:jar:plugin" -Dtransitive=false -DoutputDirectory="./tmp"
-
   only:
     variables:
       - $PROTECTED == '1'

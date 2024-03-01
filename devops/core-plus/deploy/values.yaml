@@ -1,0 +1,51 @@
+global:
+  domain: ""
+  limitsEnabled: true
+  dataPartitionId: ""
+
+data:
+  # Configmaps
+  entitlementsHost: "http://entitlements"
+  adminUserEmail: "entitlements_admin@service.local"
+  airflowComposerEmail: "airflow@service.local"
+  logLevel: "ERROR"
+  partitionHost: "http://partition"
+  # redis connection. Change it if you want to use external redis
+  redisEntHost: ""
+  redisEntPort: 6379
+  redisImage: "docker.io/library/redis:7"
+  # Don't change or use the parameter unless necessary
+  entitlementsDomain: "group"
+  # Deployments
+  bootstrapImage: ""
+  bootstrapServiceAccountName: ""
+  requestsCpu: "5m"
+  requestsMemory: "350Mi"
+  limitsCpu: "1"
+  limitsMemory: "1G"
+  serviceAccountName: "entitlements"
+  image: ""
+  imagePullPolicy: "IfNotPresent"
+  javaOptions: "-XX:MaxDirectMemorySize=512M"
+
+conf:
+  configmap: "entitlements-config"
+  appName: "entitlements"
+  entitlementsPostgresSecretName: "entitlements-multi-tenant-postgres-secret"
+  bootstrapOpenidSecretName: "datafier-secret"
+  entitlementsRedisSecretName: "entitlements-redis-secret"
+  replicas: 1
+
+auth:
+  keycloakUrl: ""
+  localUrl: "keycloak"
+  realm: "osdu"
+
+istio:
+  proxyCPU: "5m"
+  proxyCPULimit: "200m"
+  proxyMemory: "64Mi"
+  proxyMemoryLimit: "256Mi"
+  bootstrapProxyCPU: "5m"
+  bootstrapProxyCPULimit: "100m"
+  sidecarInject: true
