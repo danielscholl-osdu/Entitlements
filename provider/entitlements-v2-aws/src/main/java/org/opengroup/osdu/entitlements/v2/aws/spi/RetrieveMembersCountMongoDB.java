@@ -19,7 +19,6 @@ package org.opengroup.osdu.entitlements.v2.aws.spi;
 
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.internal.IdDoc;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
-import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.memberscount.MembersCountServiceDto;
 import org.opengroup.osdu.entitlements.v2.model.memberscount.MembersCountResponseDto;
 import org.opengroup.osdu.entitlements.v2.spi.memberscount.MembersCountRepo;
