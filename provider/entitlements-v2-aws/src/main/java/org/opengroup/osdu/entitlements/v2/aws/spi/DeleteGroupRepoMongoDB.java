@@ -41,10 +41,11 @@ public class DeleteGroupRepoMongoDB extends BasicEntitlementsHelper implements D
     @Override
     public Set<String> deleteGroup(EntityNode groupNode) {
 
-        GroupDoc groupToRemove = groupHelper.getById(new IdDoc(groupNode.getNodeId(), groupNode.getDataPartitionId()));
         if (groupHelper == null) {
             throw ExceptionGenerator.groupIsNull();
         }
+
+        GroupDoc groupToRemove = groupHelper.getById(new IdDoc(groupNode.getNodeId(), groupNode.getDataPartitionId()));
 
         Set<IdDoc> usersToUpdateParentRelations = userHelper.getAllChildUsers(groupToRemove.getId());
         groupHelper.removeAllDirectChildrenRelations(groupToRemove.getId());
