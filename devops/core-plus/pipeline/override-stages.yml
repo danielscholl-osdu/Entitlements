@@ -1,111 +1,24 @@
-gc-containerize-gitlab:core-plus:
-  stage: containerize
-  needs:
-    - "compile-and-unit-test"
-    - "download_plugins"
-  tags: ["osdu-small"]
-  image: docker:19.03
-  cache: {}
-  variables:
-    BUILD_ARGS: "--build-arg PORT=$GC_PORT"
-    BUILD_PATH: "entitlements-v2-core-plus/cloudbuild/Dockerfile"
-    IMAGE_NAME: "entitlements-v2-core-plus"
-  script:
-    - !reference [.gc_set_image_name, script]
-    - docker build $EXTRA_TAG -f $BUILD_PATH $BUILD_ARGS .
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker push $CI_REGISTRY_IMAGE/$IMAGE_NAME
-  rules:
-    - if: "$CI_COMMIT_BRANCH =~ /^release/"
-      when: never
-    - if: "$CI_COMMIT_TAG"
-      when: never
-    - if: "$PROTECTED == '1'"
-      when: on_success
+variables:
+  CORE_SERVICE: entitlements-v2
+  CORE_BUILD_PATH: "entitlements-v2-core-plus/cloudbuild/Dockerfile"
+  CORE_BUILD_BOOTSTRAP_PATH: "entitlements-v2-core-plus/bootstrap/Dockerfile"
+  CORE_HELM_PACKAGE_NAME: core-plus-entitlements-deploy
+  CORE_ENABLE_BOOTSTRAP: "true"
+  CORE_HELM_TIMEOUT: "--timeout 20m"
+  CORE_TEST_SUBDIR: "testing/entitlements-v2-test-baremetal"
+  CORE_TEST_PROJECT: "entitlements-v2-test-core,entitlements-v2-test-baremetal"
 
-gc-helm-charts-gitlab:core-plus:
-  stage: containerize
-  tags: ["osdu-small"]
-  needs: ["gc-containerize-gitlab:core-plus"]
-  image:
-    name: alpine/helm:3.11.2
-    entrypoint: [""]
+core-containerize-bootstrap-gitlab:
   variables:
-    IMAGE_NAME: "entitlements-v2-core-plus"
-  before_script:
-    - helm registry login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - !reference [.gc_set_image_name, script]
-    - !reference [.gc_substitute_image_in_helm, script]
-  script:
-    - !reference [.gc_define_app_version, script]
-    - helm package $GC_HELM_DEPLOYMENT_DIR -u --version $GC_HELM_PACKAGE_VERSION-$HELM_TAG --app-version $APP_VERSION
-    - helm push $GC_HELM_PACKAGE_NAME-$GC_HELM_PACKAGE_VERSION-$HELM_TAG.tgz oci://$CI_REGISTRY_IMAGE/core-plus-helm
-  rules:
-    - if: "$CI_COMMIT_BRANCH =~ /^release/"
-      when: never
-    - if: "$CI_COMMIT_TAG"
-      when: never
-    - if: "$PROTECTED == '1'"
-      when: on_success
+    IMAGE_BOOTSTRAP_NAME: "core-plus-bootstrap-entitlements-v2"
 
-gc-baremetal-deploy:
-  environment:
-    name: GC_Baremetal
-  extends: .gc-baremetal-variables
-  id_tokens:
-    GITLAB_OIDC_TOKEN:
-      aud: https://iam.googleapis.com/projects/${GC_PROJECT_NUMBER}/locations/global/workloadIdentityPools/${GC_POOL_ID}/providers/${GC_PROVIDER_ID}
-  tags: ["osdu-small"]
-  image: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
-  stage: deploy
-  needs:
-    - "gc-containerize-gitlab:core-plus"
-    - "gc-helm-charts-gitlab:core-plus"
-  retry: 1
+core-deploy:
   variables:
-    IMAGE_NAME: "entitlements-v2-core-plus"
-    GC_SA_EMAIL: $GC_SA_GKE_EMAIL
-  script:
-    - !reference [.gc_obtain_credentials, script]
-    - !reference [.gc_set_image_name, script]
-    - !reference [.gc_common_config, script]
-    - >
-      helm upgrade $GC_SERVICE-deploy oci://$CI_REGISTRY_IMAGE/core-plus-helm/$GC_HELM_PACKAGE_NAME
-      --version $GC_HELM_PACKAGE_VERSION-$HELM_TAG
-      --install
-      --create-namespace
-      --namespace=$GC_HELM_NAMESPACE
-      --wait
-      --history-max=3
-      --set global.onPremEnabled=true
-      --set global.domain=$GC_DOMAIN
-      --set data.serviceAccountName=$GC_SERVICE
-      --set data.bootstrapServiceAccountName=$GC_BOOTSTRAP_SA
-      --set data.logLevel=INFO
-      --set data.springProfilesActive=$GC_SPRING_PROFILES_ACTIVE
-      --set data.bucketPrefix=$BUCKET_PREFIX
-      --set global.dataPartitionId=$GC_TENANT
-      --set data.groupId=$GROUP_ID
-      --set data.adminUserEmail=$GC_ADMIN_USER_EMAIL
-      --set data.airflowComposerEmail=$GC_AIRFLOW_COMPOSER_EMAIL
-      --set data.sharedTenantName=$GC_TENANT
-      --set opa.data.serviceAccountName=opa
-      --set data.bucketName=$GC_POLICY_BUCKET
-      --set data.googleCloudProject=$GC_PROJECT
-      --set data.subscriberPrivateKeyId=$GC_BAREMETAL_SUBSCRIBER_PRIVATE_KEY_ID
-      $GC_HELM_SETS
-      $GC_HELM_TIMEOUT
-    - !reference [.gc_verify_deploy, script]
-    - !reference [.gc_verify_bootstrap, script]
+    CORE_SERVICE: "entitlements"
 
-  rules:
-    - if: "$CI_COMMIT_BRANCH =~ /^release/"
-      when: never
-    - if: "$CI_COMMIT_TAG"
-      when: never
-    - if: "$PROTECTED == '1'"
-      when: on_success
-
-gc-baremetal-test:
+core-test:
   variables:
-    GC_VENDOR: baremetal
+    ENTITLEMENT_V2_URL: https://osdu.core-dev.gcp.gnrg-osdu.projects.epam.com/api/entitlements/v2/
+    PARTITION_API: https://osdu.core-dev.gcp.gnrg-osdu.projects.epam.com/api/partition/v1
+    INDEXER_SERVICE_ACCOUNT_EMAIL: indexer@service.local
+    DATA_ROOT_GROUP_HIERARCHY_ENABLED: "true"
