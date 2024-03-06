@@ -3,6 +3,10 @@ kind: Deployment
 metadata:
   name: {{ .Values.conf.appName | quote }}
   namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: {{ .Values.conf.appName | quote }}
+    type: core
+    source: java
 spec:
   replicas: {{ .Values.conf.replicas }}
   selector:
