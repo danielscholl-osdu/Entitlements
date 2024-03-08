@@ -1,0 +1,46 @@
+site_name: OSDU Entitlements Service Documentation
+site_description: OSDU Entitlements Service
+site_author: Shane Hutchins
+
+# Repository
+repo_url: https://community.opengroup.org/osdu/platform/security-and-compliance/entitlements
+repo_name: entitlements
+
+# Copyright
+copyright: Copyright &copy; 2023 Open Subsurface Data Universe Software
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+markdown_extensions:
+  - admonition
+  - tables
+
+plugins:
+  - search
+  - git-revision-date
+
+nav:
+  - OSDU Entitlements Service: 'index.md'
+  - Bootstrap: 'bootstrap-groups-structure.md'
+  - API: 'api.md'
+  - Running Locally: 'running-locally.md'
+  - Configuration:
+      - JDBC Entitlements: 'JDBC.md'
+      - Envoy Filter Headers: 'Envoy-Filter-Headers.md'
