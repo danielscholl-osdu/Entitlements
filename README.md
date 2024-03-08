@@ -1,5 +1,9 @@
+# Entitlement Service
+Official documentation can be found at [https://osdu.pages.opengroup.org/platform/security-and-compliance/entitlements/](https://osdu.pages.opengroup.org/platform/security-and-compliance/entitlements/)
+
 ## Running the Entitlements Service locally
 The Entitlements Service is a Maven multi-module project with each cloud implemention placed in its submodule.
+
 #***REMOVED***
 
 Instructions for running and testing this service can be found [here](./provider/entitlements-v2-aws/README.md)

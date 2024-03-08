@@ -2,7 +2,7 @@
 
 ## Database structure
 
-![Jdbc diagram](jdbc.png)
+![Jdbc diagram](JDBC.png)
 
 
 ## Entitlements tables

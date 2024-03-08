@@ -1,15 +1,17 @@
 # Bootstrap groups structure
 
-### Introduction
+## Introduction
 In order to bootstrap the minimum permission groups for a new partition to be functioning, the entitlements service implements the POST /tenant-provisioning API to bootstrap the basic service permission groups for a new partition.
 
 The API is idempotent and needs to be executed for new provisioned partitions before the partition can be used.
 
 The bootstrap groups and relationships created by this API are not allowed to be deleted.
 
-### group structure
+## Group Structure
 
 ![](bootstrap-hierarchy.png)
+
+### Post /tenant-provisioning API
 
 The following table illustrates all the groups created in the POST /tenant-provisioning API
 
