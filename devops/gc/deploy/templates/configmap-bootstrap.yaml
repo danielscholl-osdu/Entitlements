@@ -13,7 +13,6 @@ data:
   {{- if not .Values.global.onPremEnabled }}
   PROJECT_ID: {{ .Values.data.projectId | quote }}
   REGISTER_PUBSUB_IDENTITY: {{ .Values.data.registerPubsubIdentity | quote }}
-  DATA_PARTITION_ID: {{ "system" }}
   DATA_PARTITION_ID_LIST: {{  .Values.global.dataPartitionId | quote }}
   {{- else }}
   DATA_PARTITION_ID: {{ .Values.global.dataPartitionId | quote }}
