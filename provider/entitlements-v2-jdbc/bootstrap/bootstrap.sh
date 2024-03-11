@@ -184,22 +184,28 @@ EOF
 
 }
 
-source ./validate-env.sh "DATA_PARTITION_ID"
 source ./validate-env.sh "ENTITLEMENTS_HOST"
 source ./validate-env.sh "ADMIN_USER_EMAIL"
 source ./validate-env.sh "GROUP_ID"
 source ./validate-env.sh "AIRFLOW_COMPOSER_EMAIL"
 
 if [[ "${ONPREM_ENABLED}" == "true" && "${DATA_PARTITION_ID_LIST}" == "" ]]; then
+  source ./validate-env.sh "DATA_PARTITION_ID"
   source ./validate-env.sh "OPENID_PROVIDER_URL"
   source ./validate-env.sh "OPENID_PROVIDER_CLIENT_ID"
   source ./validate-env.sh "OPENID_PROVIDER_CLIENT_SECRET"
   bootstrap_entitlements_onprem "${DATA_PARTITION_ID}"
 elif [[ "${ONPREM_ENABLED}" == "false" && "${DATA_PARTITION_ID_LIST}" == "" ]]; then
+  # Specifying "system" partition for GC installation 
+  export DATA_PARTITION_ID="system"
+  
   source ./validate-env.sh "PROJECT_ID"
   source ./validate-env.sh "REGISTER_PUBSUB_IDENTITY"
   bootstrap_entitlements_gc_system_partition "${DATA_PARTITION_ID}"
 elif [[ "${ONPREM_ENABLED}" == "false" && "${DATA_PARTITION_ID_LIST}" != "" ]]; then
+  # Specifying "system" partition for GC installation 
+  export DATA_PARTITION_ID="system"
+
   source ./validate-env.sh "PROJECT_ID"
   source ./validate-env.sh "REGISTER_PUBSUB_IDENTITY"
 
