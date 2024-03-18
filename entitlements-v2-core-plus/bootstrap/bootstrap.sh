@@ -184,47 +184,31 @@ EOF
 
 }
 
+source ./validate-env.sh "DATA_PARTITION_ID"
 source ./validate-env.sh "ENTITLEMENTS_HOST"
 source ./validate-env.sh "ADMIN_USER_EMAIL"
 source ./validate-env.sh "GROUP_ID"
 source ./validate-env.sh "AIRFLOW_COMPOSER_EMAIL"
 
-if [[ "${ONPREM_ENABLED}" == "true" && "${DATA_PARTITION_ID_LIST}" == "" ]]; then
-  source ./validate-env.sh "DATA_PARTITION_ID"
+if [[ "${ONPREM_ENABLED}" == "true" ]]; then
   source ./validate-env.sh "OPENID_PROVIDER_URL"
   source ./validate-env.sh "OPENID_PROVIDER_CLIENT_ID"
   source ./validate-env.sh "OPENID_PROVIDER_CLIENT_SECRET"
   bootstrap_entitlements_onprem "${DATA_PARTITION_ID}"
-elif [[ "${ONPREM_ENABLED}" == "false" && "${DATA_PARTITION_ID_LIST}" == "" ]]; then
+elif [[ "${ONPREM_ENABLED}" == "false" ]]; then
   # Specifying "system" partition for GC installation 
-  export DATA_PARTITION_ID="system"
+  export SYSTEM_PARTITION_ID="system"
 
   source ./validate-env.sh "PROJECT_ID"
   source ./validate-env.sh "REGISTER_PUBSUB_IDENTITY"
-  bootstrap_entitlements_gc_system_partition "${DATA_PARTITION_ID}"
-elif [[ "${ONPREM_ENABLED}" == "false" && "${DATA_PARTITION_ID_LIST}" != "" ]]; then
-  # Specifying "system" partition for GC installation 
-  export DATA_PARTITION_ID="system"
-  
-  source ./validate-env.sh "PROJECT_ID"
-  source ./validate-env.sh "REGISTER_PUBSUB_IDENTITY"
 
-  # Creating list of partitions 
-  IFS=',' read -ra PARTITIONS <<<"${DATA_PARTITION_ID_LIST}"
-  PARTITIONS=("${DATA_PARTITION_ID}" "${PARTITIONS[@]}")
+  echo "Bootstrapping entitlements for data_partition: ${SYSTEM_PARTITION_ID}"
+  bootstrap_entitlements_gc_system_partition "${SYSTEM_PARTITION_ID}"
+  echo "Finished entitlements bootstrap for data_partition: ${SYSTEM_PARTITION_ID}"
 
-  # Bootstrapping entitlements for each partition
-  for PARTITION in "${PARTITIONS[@]}"; do
-    if [[ "${PARTITION}" == "${DATA_PARTITION_ID}" ]]; then
-      echo "Bootstrapping entitlements for data_partition: ${DATA_PARTITION_ID}"
-      bootstrap_entitlements_gc_system_partition "${DATA_PARTITION_ID}"
-      echo "Finished entitlements bootstrap for data_partition: ${DATA_PARTITION_ID}"
-    else
-      echo "Bootstrapping entitlements for data_partition: ${PARTITION}"
-      bootstrap_entitlements_gc_non_system_partition "${PARTITION}"
-      echo "Finished entitlements bootstrap for data_partition: ${PARTITION}"
-    fi
-  done
+  echo "Bootstrapping entitlements for data_partition: ${DATA_PARTITION_ID}"
+  bootstrap_entitlements_gc_non_system_partition "${DATA_PARTITION_ID}"
+  echo "Finished entitlements bootstrap for data_partition: ${DATA_PARTITION_ID}"
 fi
 
 touch /tmp/bootstrap_ready
