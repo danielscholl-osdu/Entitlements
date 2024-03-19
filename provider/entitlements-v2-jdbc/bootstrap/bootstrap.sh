@@ -4,7 +4,7 @@ set -ex
 
 bootstrap_entitlements_onprem() {
 
-  DATA_PARTITION_ID=$1
+  local DATA_PARTITION_ID=$1
 
   ID_TOKEN="$(curl --location --silent --globoff --request POST "${OPENID_PROVIDER_URL}/protocol/openid-connect/token" \
     --header "data-partition-id: ${DATA_PARTITION_ID}" \
@@ -66,7 +66,7 @@ EOF
 
 bootstrap_entitlements_gc_system_partition() {
 
-  DATA_PARTITION_ID=$1
+  local DATA_PARTITION_ID=$1
 
   ACCESS_TOKEN="$(gcloud auth print-access-token)"
   export ACCESS_TOKEN
@@ -126,7 +126,7 @@ EOF
 
 bootstrap_entitlements_gc_non_system_partition() {
 
-  DATA_PARTITION_ID=$1
+  local DATA_PARTITION_ID=$1
 
   ACCESS_TOKEN="$(gcloud auth print-access-token)"
   export ACCESS_TOKEN
