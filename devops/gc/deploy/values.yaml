@@ -11,7 +11,6 @@ data:
   airflowComposerEmail: ""
   logLevel: "ERROR"
   partitionHost: "http://partition"
-  springProfilesActive: "gcp"
   projectId: ""
   registerPubsubIdentity: ""
   # redis connection. Change it if you want to use external redis

@@ -9,7 +9,11 @@ data:
   GROUP_ID: {{ .Values.data.entitlementsDomain | quote }}
   LOG_LEVEL: {{ .Values.data.logLevel | quote }}
   PARTITION_HOST: {{ .Values.data.partitionHost | quote }}
-  SPRING_PROFILES_ACTIVE: {{ .Values.data.springProfilesActive | quote }}
+  {{- if .Values.global.onPremEnabled }}
+  SPRING_PROFILES_ACTIVE: "anthos"
+  {{- else }}
+  SPRING_PROFILES_ACTIVE: "gcp"
+  {{- end }}
   _JAVA_OPTIONS: {{ .Values.data.javaOptions | quote }}
   DATASTORE_SCHEMA_NAME: {{ .Values.data.datastoreSchemaName | quote }}
   {{- if .Values.data.redisEntHost }}
