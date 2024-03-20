@@ -10,15 +10,8 @@ variables:
 
 core-containerize-bootstrap-gitlab:
   variables:
-    IMAGE_BOOTSTRAP_NAME: "core-plus-bootstrap-entitlements-v2"
+    CORE_IMAGE_BOOTSTRAP_NAME: "core-plus-bootstrap-entitlements-v2"
 
 core-deploy:
   variables:
     CORE_SERVICE: "entitlements"
-
-core-test:
-  variables:
-    ENTITLEMENT_V2_URL: https://osdu.core-dev.gcp.gnrg-osdu.projects.epam.com/api/entitlements/v2/
-    PARTITION_API: https://osdu.core-dev.gcp.gnrg-osdu.projects.epam.com/api/partition/v1
-    INDEXER_SERVICE_ACCOUNT_EMAIL: indexer@service.local
-    DATA_ROOT_GROUP_HIERARCHY_ENABLED: "true"
