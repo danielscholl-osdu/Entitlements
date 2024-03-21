@@ -43,7 +43,7 @@ public abstract class DeleteMemberTest extends AcceptanceBaseTest {
     protected RequestData getRequestDataForNoTokenTest() {
         return RequestData.builder()
                 .method("DELETE")
-                .relativePath("members/member@test.com")
+                .relativePath(String.format("members/%s", this.configurationService.getMemberMailId()))
                 .dataPartitionId(configurationService.getTenantId())
                 .build();
     }

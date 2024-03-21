@@ -9,4 +9,12 @@ public interface ConfigurationService {
     String getDomain();
 
     String getIdOfGroup(String groupName);
+
+    default String getMemberMailId() {
+        return "testMember@test.com";
+    }
+
+    default String getOwnerMailId() {
+        return "testmMemberOwner@test.com";
+    }
 }
