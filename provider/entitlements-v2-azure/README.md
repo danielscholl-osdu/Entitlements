@@ -177,6 +177,16 @@ $ ./mvnw test -f testing/entitlements-v2-test-azure
 6. Define environment variables for integration tests (e.g. maven options):
 [See this link](https://community.opengroup.org/osdu/platform/deployment-and-operations/infra-azure-provisioning/-/blob/master/tools/variables/entitlements.sh#L176)
 
+New variables added:
+
+| name                             | value                 | description                                                                                     | sensitive? | source |
+|----------------------------------|-----------------------|-------------------------------------------------------------------------------------------------|------------|--------|
+| `AZURE_AD_VALID_OID_USER1`       | `xxxx-xxxx-xxxx-xxxx` | OID of a valid user                                                                             | yes        | -      |
+| `AZURE_AD_VALID_OID_USER2`       | `xxxx-xxxx-xxxx-xxxx` | OID of another user                                                                             | yes        | -      |
+| `AZURE_AD_NO_DATA_ACCESS_SP_OID` | `xxxx-xxxx-xxxx-xxxx` | Client Id of a Service Principal account, other than the one configured for running the service | Yes        | -      |
+| `AZURE_AD_GROUP_OID`             | `xxxx-xxxx-xxxx-xxxx` | OID of a valid Azure AD Group                                                                   | Yes        | -      |
+
+
 7. Run integration tests:
 
 ```bash

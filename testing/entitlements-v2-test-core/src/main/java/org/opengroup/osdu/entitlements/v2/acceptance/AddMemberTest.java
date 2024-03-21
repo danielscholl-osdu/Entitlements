@@ -27,8 +27,8 @@ public abstract class AddMemberTest extends AcceptanceBaseTest {
     public void shouldAddMemberSuccessfully() throws Exception {
         String groupName = "groupName-" + currentTime;
         String childGroupName = "child-groupName-" + currentTime;
-        String memberEmail = "testMember@test.com";
-        String ownerMemberEmail = "testmMemberOwner@test.com";
+        String memberEmail = this.configurationService.getMemberMailId();
+        String ownerMemberEmail = this.configurationService.getOwnerMailId();
         Token token = tokenService.getToken();
 
         GroupItem groupItem = entitlementsV2Service.createGroup(groupName, token.getValue());
@@ -68,7 +68,7 @@ public abstract class AddMemberTest extends AcceptanceBaseTest {
     protected RequestData getRequestDataForNoTokenTest() {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("role", "MEMBER");
-        requestBody.put("email", "memberName-" + System.currentTimeMillis() + "@test.com");
+        requestBody.put("email", this.configurationService.getMemberMailId());
         return RequestData.builder()
                 .method("POST").dataPartitionId(configurationService.getTenantId())
                 .relativePath(String.format("groups/%s/members", configurationService.getIdOfGroup("users")))

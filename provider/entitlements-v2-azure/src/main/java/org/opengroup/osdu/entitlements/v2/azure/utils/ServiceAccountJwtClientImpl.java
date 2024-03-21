@@ -32,6 +32,6 @@ public class ServiceAccountJwtClientImpl implements IServiceAccountJwtClient {
 
         this.dpsHeaders.put(DpsHeaders.USER_EMAIL, tenant.getServiceAccount());
 
-        return this.tokenService.getAuthorizationToken();
+        return "Bearer " + this.tokenService.getAuthorizationToken();
     }
 }

@@ -41,7 +41,7 @@ public abstract class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
 
     @Test
     public void shouldReturnAllGroupsThatGivenMemberBelongsTo() throws Exception {
-        String memberEmail = "testMember@test.com";
+        String memberEmail = this.configurationService.getMemberMailId();
 
         List<GroupItem> createdGroups = setup(memberEmail);
 
@@ -70,7 +70,7 @@ public abstract class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
     public void shouldReturn400WhenGroupsTypeIsMissed() throws Exception {
         RequestData requestData = RequestData.builder()
                 .method("GET")
-                .relativePath("members/testMember@test.com/groups")
+                .relativePath(String.format("members/%s/groups", this.configurationService.getMemberMailId()))
                 .dataPartitionId(configurationService.getTenantId())
                 .token(token.getValue())
                 .build();
@@ -82,7 +82,7 @@ public abstract class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
     public void shouldReturn400WhenGroupsTypeIsUnknown() throws Exception {
         RequestData requestData = RequestData.builder()
                 .method("GET")
-                .relativePath("members/testMember@test.com/groups")
+                .relativePath(String.format("members/%s/groups", this.configurationService.getMemberMailId()))
                 .queryParams(Collections.singletonMap("type", "test"))
                 .dataPartitionId(configurationService.getTenantId())
                 .token(token.getValue())
@@ -109,7 +109,7 @@ public abstract class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
     protected RequestData getRequestDataForNoTokenTest() {
         return RequestData.builder()
                 .method("GET")
-                .relativePath("members/testMember@test.com/groups")
+                .relativePath(String.format("members/%s/groups", this.configurationService.getMemberMailId()))
                 .queryParams(Collections.singletonMap("type", GroupType.NONE.toString()))
                 .dataPartitionId(configurationService.getTenantId())
                 .build();
@@ -134,7 +134,7 @@ public abstract class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
         groupsForFurtherDeletion.add(group3Item.getEmail());
         groups.add(group3Item);
 
-        addMember(group1Item.getEmail(), group2Item.getEmail());
+        addMember(group1Item.getEmail(), memberEmail);
         addMember(group2Item.getEmail(), memberEmail);
         addMember(group3Item.getEmail(), memberEmail);
 

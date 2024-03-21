@@ -10,6 +10,12 @@ import org.opengroup.osdu.entitlements.v2.acceptance.util.ConfigurationService;
 public class AzureConfigurationService implements ConfigurationService {
     private static String SERVICE_URL;
 
+    private static final String APP_USER_OID1 =
+            System.getProperty("AZURE_AD_VALID_OID_USER1", System.getenv("AZURE_AD_VALID_OID_USER1"));
+
+    private static final String APP_USER_OID2 =
+            System.getProperty("AZURE_AD_VALID_OID_USER2", System.getenv("AZURE_AD_VALID_OID_USER2"));
+
     @Override
     public String getTenantId() {
         String tenantId = System.getProperty("TENANT_NAME", System.getenv("TENANT_NAME"));
@@ -43,5 +49,13 @@ public class AzureConfigurationService implements ConfigurationService {
     @Override
     public String getIdOfGroup(String groupName) {
         return groupName.toLowerCase() + "@" + getTenantId() + "." + getDomain();
+    }
+
+    public String getMemberMailId() {
+        return APP_USER_OID1;
+    }
+
+    public String getOwnerMailId() {
+        return APP_USER_OID2;
     }
 }
