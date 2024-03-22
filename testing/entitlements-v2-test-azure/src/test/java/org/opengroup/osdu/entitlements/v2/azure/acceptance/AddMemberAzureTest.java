@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import org.opengroup.osdu.entitlements.v2.acceptance.AddMemberTest;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.GroupItem;
@@ -25,12 +26,19 @@ public class AddMemberAzureTest extends AddMemberTest {
     private static final String GROUP_OID =
             System.getProperty("AZURE_AD_GROUP_OID", System.getenv("AZURE_AD_GROUP_OID"));
 
+    private static final String isOidValidationTrue = System.getProperty("AZURE_OID_VALIDATION_INTEGRATION_TESTS", System.getenv("AZURE_OID_VALIDATION_INTEGRATION_TESTS"));
+
     public AddMemberAzureTest() {
         super(new AzureConfigurationService(), new AzureTokenService());
     }
 
     @Test
     public void addMemberBySPOid_shouldFailWith400() throws Exception{
+        //when variable is unset, test will be ignored
+        Assume.assumeNotNull(isOidValidationTrue);
+        //when its set and false, this test will be ignored
+        Assume.assumeTrue(isOidValidationTrue.equals("true"));
+
         String groupName = "groupName-" + currentTime;
         String memberEmail = APP_SP_OID;
         Token token = tokenService.getToken();
