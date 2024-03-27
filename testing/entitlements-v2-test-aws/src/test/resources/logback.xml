@@ -1,0 +1,17 @@
+<configuration>
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.opengroup.osdu" level="debug"/>
+    <logger name="org.apache.http.headers" level="debug"/>
+    <!-- /!\ Enabling DEBUG level for `http.wire` will dump all the requests body in the logs
+    This could lead to leaked credentials in the Pipeline -->
+    <logger name="org.apache.http.wire" level="info"/>
+
+    <root level="info">
+        <appender-ref ref="consoleAppender" />
+    </root>
+</configuration>
