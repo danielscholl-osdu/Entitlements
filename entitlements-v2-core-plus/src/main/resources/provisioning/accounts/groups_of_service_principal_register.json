@@ -11,6 +11,15 @@
     },
     {
       "groupName": "notification.pubsub"
+    },
+    {
+      "groupName": "service.entitlements.user"
+    },
+    {
+      "groupName": "service.secret.viewer"
+    },
+    {
+      "groupName": "service.secret.admin"
     }
   ]
 }
