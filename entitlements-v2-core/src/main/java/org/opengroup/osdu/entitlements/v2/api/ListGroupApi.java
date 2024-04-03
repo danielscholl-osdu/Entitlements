@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class ListGroupApi {
     })
     @GetMapping("/groups")
     @PreAuthorize("@authorizationFilter.hasAnyPermission('" + AppProperties.OPS + "', '" + AppProperties.ADMIN + "', '" + AppProperties.USERS + "')")
-    public ResponseEntity<ListGroupResponseDto> listGroups() {
+    public ResponseEntity<ListGroupResponseDto> listGroups(@RequestParam(required = false, defaultValue = "false") Boolean roleRequired) {
         DpsHeaders dpsHeaders = requestInfo.getHeaders();
         List<String> partitionIdList = requestInfoUtilService.getPartitionIdList(dpsHeaders);
         partitionHeaderValidationService.validateIfSpecialListGroupPartitionIsProvided(partitionIdList);
@@ -61,6 +62,7 @@ public class ListGroupApi {
                 .requesterId(userId)
                 .appId(requestInfoUtilService.getAppId(dpsHeaders))
                 .partitionIds(partitionIdList)
+                .roleRequired(roleRequired)
                 .build();
         ListGroupResponseDto body = ListGroupResponseDto.builder()
                 .groups(new ArrayList<>(listGroupService.getGroups(listGroupServiceDto)))

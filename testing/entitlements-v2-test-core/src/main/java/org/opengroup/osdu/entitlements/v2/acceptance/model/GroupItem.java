@@ -13,4 +13,5 @@ public class GroupItem {
     private String name;
     private String email;
     private String description;
+    private String role;
 }

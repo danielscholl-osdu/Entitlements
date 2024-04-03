@@ -25,4 +25,8 @@ public interface GroupsProvider {
 
   Set<ParentReference> getGroupsInContext(String requesterId, String partitionId);
 
+  default   Set<ParentReference> getGroupsInContext(String requesterId, String partitionId, Boolean roleRequired){
+    return getGroupsInContext(requesterId, partitionId);
+  }
+
 }

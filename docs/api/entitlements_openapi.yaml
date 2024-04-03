@@ -116,6 +116,11 @@ paths:
         - name: on-behalf-of
           in: header
           type: string
+        - name: roleRequired
+          in: query
+          type: boolean
+          required: false
+          default: false
       responses:
         '200':
           description: OK
@@ -447,6 +452,11 @@ paths:
           description: appid
           required: false
           type: string
+        - name: roleRequired
+          in: query
+          type: boolean
+          required: false
+          default: false
       responses:
         '200':
           description: OK

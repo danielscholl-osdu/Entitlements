@@ -144,12 +144,12 @@ public class GroupCacheServiceAzureTest {
     @Test
     public void shouldGetAllParentsFromRepoForTheFirstTime() {
         when(this.redisGroupCache.get("requesterId1-dp")).thenReturn(null);
-        when(this.retrieveGroupRepo.loadAllParents(this.requester1)).thenReturn(this.parentTreeDto);
+        when(this.retrieveGroupRepo.loadAllParents(this.requester1, false)).thenReturn(this.parentTreeDto);
         when(this.parentTreeDto.getParentReferences()).thenReturn(this.parents);
 
         Set<ParentReference> result = this.sut.getFromPartitionCache("requesterId1", "dp");
         assertEquals(this.parents, result);
-        verify(this.retrieveGroupRepo).loadAllParents(this.requester1);
+        verify(this.retrieveGroupRepo).loadAllParents(this.requester1, false);
         verify(this.redisGroupCache).put("requesterId1-dp", 1000000L, this.parentReferences);
         verify(this.metricService).sendMissesMetric();
     }
@@ -172,7 +172,7 @@ public class GroupCacheServiceAzureTest {
         }
         cacheValues.add(this.parentReferences);
         when(this.redisGroupCache.get("requesterId1-dp")).thenAnswer(AdditionalAnswers.returnsElementsOf(cacheValues));
-        when(this.retrieveGroupRepo.loadAllParents(this.requester1)).thenAnswer((Answer<ParentTreeDto>) invocationOnMock -> {
+        when(this.retrieveGroupRepo.loadAllParents(this.requester1, false)).thenAnswer((Answer<ParentTreeDto>) invocationOnMock -> {
             await().pollDelay(Duration.FIVE_SECONDS).until(() -> true);
             return parentTreeDto;
         });
@@ -190,7 +190,7 @@ public class GroupCacheServiceAzureTest {
         List<Future<Set<ParentReference>>> responses = executor.invokeAll(tasks);
         executor.shutdown();
 
-        verify(this.retrieveGroupRepo, times(1)).loadAllParents(this.requester1);
+        verify(this.retrieveGroupRepo, times(1)).loadAllParents(this.requester1, false);
         responses.forEach(result -> {
             try {
                 assertEquals(this.parents, result.get());
@@ -203,7 +203,7 @@ public class GroupCacheServiceAzureTest {
     @Test
     public void shouldThrowExceptionIfTimeout() throws InterruptedException {
         when(this.redisGroupCache.get("requesterId1-dp")).thenReturn(null);
-        when(this.retrieveGroupRepo.loadAllParents(this.requester1)).thenAnswer((Answer<ParentTreeDto>) invocationOnMock -> {
+        when(this.retrieveGroupRepo.loadAllParents(this.requester1, false)).thenAnswer((Answer<ParentTreeDto>) invocationOnMock -> {
             await().pollDelay(Duration.FIVE_SECONDS).until(() -> true);
             return parentTreeDto;
         });
@@ -221,7 +221,7 @@ public class GroupCacheServiceAzureTest {
         List<Future<Set<ParentReference>>> responses = executor.invokeAll(tasks);
         executor.shutdown();
 
-        verify(this.retrieveGroupRepo, times(1)).loadAllParents(this.requester1);
+        verify(this.retrieveGroupRepo, times(1)).loadAllParents(this.requester1, false);
         assertEquals(1, responses.stream().filter(result -> {
             try {
                 return this.parents.equals(result.get());
@@ -280,4 +280,18 @@ public class GroupCacheServiceAzureTest {
         verify(this.redisGroupCache, times(1)).getTtl("requesterId1-dp");
         assertNull(this.redisGroupCache.get("requesterId1-dp"));
     }
+
+    @Test
+    public void shouldGetAllParentsFromRepoForTheFirstTime_WithRole() {
+        when(this.redisGroupCache.get("requesterId1-dp")).thenReturn(null);
+        when(this.retrieveGroupRepo.loadAllParents(this.requester1, true)).thenReturn(this.parentTreeDto);
+        when(this.parentTreeDto.getParentReferences()).thenReturn(this.parents);
+
+        Set<ParentReference> result = this.sut.getFromPartitionCache("requesterId1", "dp", true);
+        assertEquals(this.parents, result);
+        verify(this.retrieveGroupRepo).loadAllParents(this.requester1, true);
+        verify(this.redisGroupCache).put("requesterId1-dp-role", 1000000L, this.parentReferences);
+        verify(this.metricService).sendMissesMetric();
+    }
+
 }

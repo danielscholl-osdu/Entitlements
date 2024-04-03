@@ -3,6 +3,7 @@ package org.opengroup.osdu.entitlements.v2.model;
 import com.dslplatform.json.CompiledJson;
 import com.dslplatform.json.JsonAttribute;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,6 +38,9 @@ public class ParentReference {
     @JsonIgnore
     @Builder.Default
     private Set<String> appIds = new HashSet<>();
+
+    @JsonInclude(JsonInclude.Include.NON_ABSENT)
+    private String role;
 
     @JsonAttribute(index = 3)
     public String getId() {

@@ -72,12 +72,12 @@ public class ListGroupServiceTests {
         Set<ParentReference> parents1 = unfilteredParentRefs.stream()
                 .filter(p -> "dp".equals(p.getDataPartitionId()))
                 .collect(Collectors.toSet());
-        when(groupsProvider.getGroupsInContext("datafier@serviceaccount", "dp")).thenReturn(parents1);
+        when(groupsProvider.getGroupsInContext("datafier@serviceaccount", "dp", Boolean.FALSE)).thenReturn(parents1);
 
         Set<ParentReference> parents2 = unfilteredParentRefs.stream()
                 .filter(p -> "dp1".equals(p.getDataPartitionId()))
                 .collect(Collectors.toSet());
-        when(groupsProvider.getGroupsInContext("datafier@serviceaccount", "dp1")).thenReturn(parents2);
+        when(groupsProvider.getGroupsInContext("datafier@serviceaccount", "dp1", Boolean.FALSE)).thenReturn(parents2);
 
         Set<ParentReference> parentReferences = listGroupService.getGroups(listGroupServiceDto);
 
@@ -97,7 +97,7 @@ public class ListGroupServiceTests {
         Set<ParentReference> parents = unfilteredParentRefs.stream()
                 .filter(p -> "dp".equals(p.getDataPartitionId()))
                 .collect(Collectors.toSet());
-        when(groupsProvider.getGroupsInContext("datafier@serviceaccount", "dp")).thenReturn(parents);
+        when(groupsProvider.getGroupsInContext("datafier@serviceaccount", "dp", Boolean.FALSE)).thenReturn(parents);
 
         Set<ParentReference> parentReferences = listGroupService.getGroups(listGroupServiceDto);
 
@@ -118,7 +118,7 @@ public class ListGroupServiceTests {
         Set<ParentReference> parents = unfilteredParentRefs.stream()
                 .filter(p -> "dp".equals(p.getDataPartitionId()))
                 .collect(Collectors.toSet());
-        when(groupsProvider.getGroupsInContext("anycaller", "dp")).thenReturn(parents);
+        when(groupsProvider.getGroupsInContext("anycaller", "dp", Boolean.FALSE)).thenReturn(parents);
 
         Set<ParentReference> parentReferences = listGroupService.getGroups(listGroupServiceDto);
         assertEquals(4, parentReferences.size());

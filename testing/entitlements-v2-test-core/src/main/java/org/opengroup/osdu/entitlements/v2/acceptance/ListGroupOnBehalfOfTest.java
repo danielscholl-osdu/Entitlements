@@ -115,7 +115,7 @@ public abstract class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
                 .build();
     }
 
-    private List<GroupItem> setup(String memberEmail) throws Exception {
+    protected List<GroupItem> setup(String memberEmail) throws Exception {
         List<GroupItem> groups = new ArrayList<>();
 
         String group1Name = "group1-" + currentTime;

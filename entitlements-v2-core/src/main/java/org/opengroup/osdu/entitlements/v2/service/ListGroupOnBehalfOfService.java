@@ -30,7 +30,9 @@ public class ListGroupOnBehalfOfService {
         ListGroupServiceDto listGroupServiceDto = ListGroupServiceDto.builder()
                 .requesterId(memberId)
                 .appId(listGroupOnBehalfOfServiceDto.getAppId())
-                .partitionIds(Collections.singletonList(listGroupOnBehalfOfServiceDto.getPartitionId())).build();
+                .partitionIds(Collections.singletonList(listGroupOnBehalfOfServiceDto.getPartitionId()))
+                .roleRequired(listGroupOnBehalfOfServiceDto.getRoleRequired())
+                .build();
 
         Set<ParentReference> groups = listGroupService.getGroups(listGroupServiceDto);
         ListGroupResponseDto listGroupResponse = filterGroups(groups, listGroupOnBehalfOfServiceDto.getGroupType(), memberId);

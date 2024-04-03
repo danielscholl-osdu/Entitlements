@@ -85,6 +85,12 @@ public class VertexUtilService {
                 .collect(Collectors.toList());
     }
 
+    public List<NodeEdge> getNodeEdgesFromResultList(List<Result> resultList) {
+        return resultList.stream()
+                .map(result -> GSON.fromJson(GSON.toJson(getResultObject(result)), NodeEdge.class))
+                .collect(Collectors.toList());
+    }
+
     @SuppressWarnings("unchecked")
     public NodeVertex getVertexFromResultList(final List<Result> resultList) {
         Map<String, Map<String, List<String>>> vertex = null;

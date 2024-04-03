@@ -1,6 +1,7 @@
 package org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection;
 
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
+import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
@@ -32,4 +33,6 @@ public interface GremlinConnector {
     void removeVertex(Traversal<Vertex, Vertex> traversal);
 
     void updateVertex(Traversal<Vertex, Vertex> traversal);
+
+    List<NodeEdge> getEdge(GraphTraversal<Vertex, List<Edge>> traversal);
 }

@@ -57,7 +57,7 @@ public class ListGroupOnBehalfOfApi {
     @PreAuthorize("@authorizationFilter.hasAnyPermission('" + AppProperties.OPS + "', '" + AppProperties.ADMIN + "')")
     public ResponseEntity<ListGroupResponseDto> listGroupsOnBehalfOf(@Parameter(description = "Member Email") @PathVariable("member_email") String memberId,
         @Parameter(description = "Type of the Group. Allowable Values = \"NONE,DATA,USER,SERVICE\"", example = "NONE") @RequestParam(name = "type") String type,
-        @Parameter(description = "App Id")  @RequestParam(name = "appid", required = false) String appId) {
+        @Parameter(description = "App Id")  @RequestParam(name = "appid", required = false) String appId, @RequestParam(required = false, defaultValue = "false") Boolean roleRequired) {
 
         memberId = memberId.toLowerCase();
         String partitionId = requestInfo.getHeaders().getPartitionId();
@@ -68,6 +68,7 @@ public class ListGroupOnBehalfOfApi {
                 .groupType(groupType)
                 .partitionId(partitionId)
                 .appId(appId)
+                .roleRequired(roleRequired)
                 .build();
 
         ListGroupResponseDto responseDto = listGroupOnBehalfOfService.getGroupsOnBehalfOfMember(listGroupOnBehalfOfServiceDto);

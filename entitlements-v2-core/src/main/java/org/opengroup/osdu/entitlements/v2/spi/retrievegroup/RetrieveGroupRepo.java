@@ -32,6 +32,13 @@ public interface RetrieveGroupRepo {
      */
     ParentTreeDto loadAllParents(EntityNode memberNode);
 
+    /**
+     * Returns parents of given member, including from other data partitions.
+     */
+    default ParentTreeDto loadAllParents(EntityNode memberNode, Boolean roleRequired){
+        return loadAllParents(memberNode);
+    }
+
     List<ChildrenReference> loadDirectChildren(String partitionId, String... nodeId);
 
     ChildrenTreeDto loadAllChildrenUsers(EntityNode node);
