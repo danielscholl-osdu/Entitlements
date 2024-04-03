@@ -8,6 +8,10 @@ public interface GroupCacheService {
 
     Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId);
 
+    default Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId, Boolean roleRequired){
+        return getFromPartitionCache(requesterId, partitionId);
+    }
+
     void refreshListGroupCache(final Set<String> userIds, String partitionId);
 
     void flushListGroupCacheForUser(String userId, String partitionId);

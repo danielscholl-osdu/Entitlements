@@ -8,6 +8,7 @@ import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__;
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.entitlements.v2.azure.model.NodeEdge;
 import org.opengroup.osdu.entitlements.v2.azure.model.NodeVertex;
 import org.opengroup.osdu.entitlements.v2.azure.service.VertexUtilService;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
@@ -99,15 +100,46 @@ public class RetrieveGroupRepoGremlin implements RetrieveGroupRepo {
 
     @Override
     public ParentTreeDto loadAllParents(EntityNode memberNode) {
+        return loadAllParents(memberNode, false);
+    }
+
+    @Override
+    public ParentTreeDto loadAllParents(EntityNode memberNode, Boolean roleRequired ) {
         Traversal<Vertex, Vertex> traversal = gremlinConnector.getGraphTraversalSource().V()
                 .has(VertexPropertyNames.DATA_PARTITION_ID, memberNode.getDataPartitionId())
                 .has(VertexPropertyNames.NODE_ID, memberNode.getNodeId())
                 .emit(__.hasLabel(NodeType.GROUP.toString()))
                 .repeat(__.outE(EdgePropertyNames.PARENT_EDGE_LB).inV());
+
         List<NodeVertex> vertices = gremlinConnector.getVertices(traversal);
+
         Set<ParentReference> parentReferences = vertices.stream()
                 .map(vertexUtilService::createParentReference)
                 .collect(Collectors.toSet());
+
+        if(Boolean.TRUE == roleRequired)
+        {
+            parentReferences.parallelStream().forEach(parentReference -> {
+                GraphTraversal<Vertex, List<Edge>> traversalEdge = gremlinConnector.getGraphTraversalSource().V()
+                        .has(VertexPropertyNames.DATA_PARTITION_ID, memberNode.getDataPartitionId())
+                        .has(VertexPropertyNames.NODE_ID, parentReference.getId())
+                        .outE(EdgePropertyNames.CHILD_EDGE_LB)
+                        .as(StepLabel.EDGE)
+                        .inV()
+                        .has(VertexPropertyNames.NODE_ID, memberNode.getNodeId())
+                        .select(StepLabel.EDGE);
+
+                //this is like from parent->child edge by traversing from parent to all child groups and recursively looking for user, that will give us the edge connected to parent and from there properties should contain edge.
+                List<NodeEdge> edges = gremlinConnector.getEdge(traversalEdge);
+
+                if(edges.size()>0)
+                    parentReference.setRole(edges.get(0).getRole());
+                else
+                    parentReference.setRole("MEMBER");
+
+            });
+        }
+
         return ParentTreeDto.builder()
                 .parentReferences(parentReferences)
                 .maxDepth(calculateMaxDepth())

@@ -13,4 +13,6 @@ public class ListGroupOnBehalfOfServiceDto {
     private GroupType groupType;
     private String partitionId;
     private String appId;
+    @Builder.Default
+    private Boolean roleRequired = Boolean.FALSE;
 }

@@ -29,19 +29,22 @@ import org.springframework.web.context.annotation.RequestScope;
 @RequestScope
 @RequiredArgsConstructor
 public class RequestScopeGroupsProviderImpl implements GroupsProvider {
-
   private final Map<String, Set<ParentReference>> groupMap = new HashMap<>();
   private final GroupCacheService groupCacheService;
 
   @Override
   public Set<ParentReference> getGroupsInContext(String requesterId, String partitionId) {
-    String mapKey = requesterId + "-" + partitionId;
+   return getGroupsInContext(requesterId, partitionId, false);
+  }
+
+  @Override
+  public Set<ParentReference> getGroupsInContext(String requesterId, String partitionId, Boolean roleRequired) {
+    String mapKey = Boolean.TRUE==roleRequired ? requesterId + "-" + partitionId + "-role" : requesterId + "-" + partitionId;
     Set<ParentReference> groups = groupMap.get(mapKey);
     if (groups == null || groups.isEmpty()) {
-      groups = groupCacheService.getFromPartitionCache(requesterId, partitionId);
+      groups = groupCacheService.getFromPartitionCache(requesterId, partitionId, roleRequired);
       groupMap.put(mapKey, groups);
     }
     return groups;
   }
-
 }

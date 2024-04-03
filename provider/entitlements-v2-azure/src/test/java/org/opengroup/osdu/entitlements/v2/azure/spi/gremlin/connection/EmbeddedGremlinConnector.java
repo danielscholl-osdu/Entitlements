@@ -1,6 +1,7 @@
 package org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection;
 
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
+import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Graph;
@@ -87,6 +88,13 @@ public class EmbeddedGremlinConnector implements GremlinConnector {
     @Override
     public void updateVertex(Traversal<Vertex, Vertex> traversal) {
         traversal.next();
+    }
+
+    @Override
+    public List<NodeEdge> getEdge(GraphTraversal<Vertex, List<Edge>> traversal) {
+        List<NodeEdge> edgesList = new ArrayList<>();
+        traversal.forEachRemaining(edges -> edges.forEach(item -> edgesList.add(createNodeEdge(item))));
+        return edgesList;
     }
 
     public NodeVertex createNodeVertex(Vertex vertex) {

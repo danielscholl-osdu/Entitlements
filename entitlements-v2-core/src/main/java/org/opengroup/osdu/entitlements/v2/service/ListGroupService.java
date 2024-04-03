@@ -25,7 +25,7 @@ public class ListGroupService {
         log.info(ListGroupService.class.getName(), String.format("requested by %s", requesterId));
         Set<ParentReference> groups = new HashSet<>();
         listGroupServiceDto.getPartitionIds().forEach(partitionId ->
-                groups.addAll(groupsProvider.getGroupsInContext(requesterId, partitionId)));
+                groups.addAll(groupsProvider.getGroupsInContext(requesterId, partitionId, listGroupServiceDto.getRoleRequired())));
         log.debug(String.format("ListGroupService#run cache look up done timestamp: %d", System.currentTimeMillis()));
         String serviceAccount = requestInfo.getTenantInfo().getServiceAccount();
         if (serviceAccount.equalsIgnoreCase(requesterId) || Strings.isNullOrEmpty(listGroupServiceDto.getAppId())) {

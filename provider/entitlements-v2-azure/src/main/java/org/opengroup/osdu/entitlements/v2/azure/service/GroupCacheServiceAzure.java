@@ -47,12 +47,21 @@ public class GroupCacheServiceAzure implements GroupCacheService {
 
     @Override
     public Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId) {
+        return getFromPartitionCache(requesterId, partitionId, false);
+    }
+
+    @Override
+    public Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId, Boolean roleRequired) {
         String cacheKey = String.format(REDIS_KEY_FORMAT, requesterId, partitionId);
+
+        if(Boolean.TRUE == roleRequired)
+            cacheKey += "-role";
+
         ParentReferences parentReferences = redisGroupCache.get(cacheKey);
         if (parentReferences == null) {
             String lockKey = String.format("lock-%s", cacheKey);
             RLock cacheEntryLock = redisGroupCache.getLock(lockKey);
-            return lockCacheEntryAndRebuild(cacheEntryLock, cacheKey, requesterId, partitionId);
+            return lockCacheEntryAndRebuild(cacheEntryLock, cacheKey, requesterId, partitionId, roleRequired);
         } else {
             metricService.sendHitsMetric();
             return parentReferences.getParentReferencesOfUser();
@@ -90,11 +99,11 @@ public class GroupCacheServiceAzure implements GroupCacheService {
      * Refer to: https://github.com/redisson/redisson/issues/581
      */
     private Set<ParentReference> lockCacheEntryAndRebuild(RLock cacheEntryLock, String key, String requesterId,
-            String partitionId) {
+            String partitionId, Boolean roleRequired) {
         boolean locked = false;
         if (cacheEntryLock == null) {
             log.info("Redis secrets are not available yet");
-            ParentReferences parentReferences = rebuildCache(requesterId, partitionId);
+            ParentReferences parentReferences = rebuildCache(requesterId, partitionId, roleRequired);
             return parentReferences.getParentReferencesOfUser();
         } else {
             try {
@@ -102,7 +111,7 @@ public class GroupCacheServiceAzure implements GroupCacheService {
                         TimeUnit.MILLISECONDS);
                 if (locked) {
                     metricService.sendMissesMetric();
-                    ParentReferences parentReferences = rebuildCache(requesterId, partitionId);
+                    ParentReferences parentReferences = rebuildCache(requesterId, partitionId, roleRequired);
                     long ttlOfKey = 1000L * cacheTtl;
                     redisGroupCache.put(key, ttlOfKey, parentReferences);
                     return parentReferences.getParentReferencesOfUser();
@@ -135,9 +144,9 @@ public class GroupCacheServiceAzure implements GroupCacheService {
                 "Failed to get the groups");
     }
 
-    private ParentReferences rebuildCache(String requesterId, String partitionId) {
+    private ParentReferences rebuildCache(String requesterId, String partitionId, Boolean roleRequired) {
         EntityNode entityNode = EntityNode.createMemberNodeForNewUser(requesterId, partitionId);
-        Set<ParentReference> allParents = retrieveGroupRepo.loadAllParents(entityNode).getParentReferences();
+        Set<ParentReference> allParents = retrieveGroupRepo.loadAllParents(entityNode, roleRequired).getParentReferences();
         ParentReferences parentReferences = new ParentReferences();
         parentReferences.setParentReferencesOfUser(allParents);
         return parentReferences;

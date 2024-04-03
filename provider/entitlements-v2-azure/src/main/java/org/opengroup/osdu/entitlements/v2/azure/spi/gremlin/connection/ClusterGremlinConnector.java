@@ -7,6 +7,7 @@ import org.apache.tinkerpop.gremlin.driver.ResultSet;
 import org.apache.tinkerpop.gremlin.driver.exception.ResponseException;
 import org.apache.tinkerpop.gremlin.driver.message.ResponseStatusCode;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
+import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
 import org.apache.tinkerpop.gremlin.process.traversal.translator.GroovyTranslator;
 import org.apache.tinkerpop.gremlin.structure.Edge;
@@ -95,6 +96,11 @@ public class ClusterGremlinConnector implements GremlinConnector {
     @Override
     public void updateVertex(Traversal<Vertex, Vertex> traversal) {
         submitTraversalAsQueryString(traversal);
+    }
+
+    @Override
+    public List<NodeEdge> getEdge(GraphTraversal<Vertex, List<Edge>> traversal) {
+        return vertexUtilService.getNodeEdgesFromResultList(submitTraversalAsQueryString(traversal));
     }
 
     private List<Result> submitTraversalAsQueryString(Traversal<?, ?> traversal) {

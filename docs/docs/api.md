@@ -12,11 +12,13 @@ See [OpenAPI Spec](https://community.opengroup.org/osdu/platform/security-and-co
 header for the data partition provided in _data-partition-id_ header. This API gives the flat list of the groups
 (including all hierarchical groups) that user belongs to.
 
+Optional query parameter 'roleRequired' when passed gives the additional information of a user's Role in the groups he's part of.
+
 <details><summary>Curl Get Groups</summary>
 
 ```
 curl --request GET \
-  --url '/entitlements/v1/groups' \
+  --url '/entitlements/v1/groups?roleRequired=true' \
   --header 'authorization: Bearer <JWT>' \
   --header 'content-type: application/json' \
   --header 'data-partition-id: opendes, common'
@@ -58,11 +60,13 @@ membership within group_email as the OWNER or within users.datalake.admins group
 the group (excluding hierarchical groups). When we need to get all members in the hierarchy, client needs to implement
 its own recursive function, but "includeType=true" query parameter could be useful to determine whether a member is a USER or GROUP.
 
+Optional query parameter 'roleRequired' when passed gives us additional parameter in the response containing the user's Role in the groups he's member of.
+
 <details><summary>Curl Get Members</summary>
 
 ```
 curl --request GET \
-  --url '/entitlements/v1/groups/service.example.viewers@opendes.contoso.com/members?includeType=false' \
+  --url '/entitlements/v1/groups/service.example.viewers@opendes.contoso.com/members?includeType=false?roleRequired=true' \
   --header 'authorization: Bearer <JWT>' \
   --header 'content-type: application/json' \
   --header 'data-partition-id: opendes'
