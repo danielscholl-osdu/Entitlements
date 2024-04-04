@@ -48,7 +48,7 @@ public class GroupInfoEntity {
 	private String email;
 	private String description;
 	private String partitionId;
-	@MappedCollection(keyColumn = "group_id", idColumn = "group_id")
+	@MappedCollection(keyColumn = "app_id", idColumn = "group_id")
 	private Set<AppId> appIds;
 
 	public EntityNode toEntityNode() {

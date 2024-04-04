@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Hidden
 @RequestMapping("/error")
@@ -50,8 +50,8 @@ public class GlobalErrorController implements ErrorController {
     }
 
     private String getString(HttpServletRequest request) {
-        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
-        Exception exception = (Exception) request.getAttribute("javax.servlet.error.exception");
+        Integer statusCode = (Integer) request.getAttribute("jakarta.servlet.error.status_code");
+        Exception exception = (Exception) request.getAttribute("jakarta.servlet.error.exception");
         String err = "";
         if (statusCode == 500) {
             err = "An unknown error has occurred";

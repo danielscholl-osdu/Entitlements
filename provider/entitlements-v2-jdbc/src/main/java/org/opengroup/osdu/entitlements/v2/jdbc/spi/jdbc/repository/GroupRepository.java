@@ -28,7 +28,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GroupRepository extends CrudRepository<GroupInfoEntity, Long> {
 
-	@Query("SELECT *  FROM \"group\" AS g LEFT JOIN app_id ON g.id = app_id.group_id WHERE g.email = :email")
+	@Query("SELECT *  FROM \"group\" AS g WHERE g.email = :email")
 	List<GroupInfoEntity> findByEmail(@Param("email") String email);
 
 	@Query("SELECT g.* FROM embedded_group as gg LEFT JOIN \"group\" as g ON gg.child_id = g.id WHERE gg.parent_id = :parentId AND g.email = :childEmail")

@@ -1,7 +1,7 @@
 package org.opengroup.osdu.entitlements.v2.validation;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class UpdateGroupPathValidator implements ConstraintValidator<ValidUpdateGroupPath, String> {
     @Override

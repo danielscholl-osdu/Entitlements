@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.Min;
+import jakarta.validation.constraints.Min;
 
 @Validated
 @RestController
@@ -57,7 +57,7 @@ public class ListGroupOnBehalfOfApi {
     @PreAuthorize("@authorizationFilter.hasAnyPermission('" + AppProperties.OPS + "', '" + AppProperties.ADMIN + "')")
     public ResponseEntity<ListGroupResponseDto> listGroupsOnBehalfOf(@Parameter(description = "Member Email") @PathVariable("member_email") String memberId,
         @Parameter(description = "Type of the Group. Allowable Values = \"NONE,DATA,USER,SERVICE\"", example = "NONE") @RequestParam(name = "type") String type,
-        @Parameter(description = "App Id")  @RequestParam(name = "appid", required = false) String appId, @RequestParam(required = false, defaultValue = "false") Boolean roleRequired) {
+        @Parameter(description = "App Id")  @RequestParam(name = "appid", required = false) String appId, @RequestParam(name="roleRequired", required = false, defaultValue = "false") Boolean roleRequired) {
 
         memberId = memberId.toLowerCase();
         String partitionId = requestInfo.getHeaders().getPartitionId();

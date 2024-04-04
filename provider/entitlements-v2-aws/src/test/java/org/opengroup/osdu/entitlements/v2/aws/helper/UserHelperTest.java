@@ -32,6 +32,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
@@ -56,6 +57,7 @@ import static org.opengroup.osdu.entitlements.v2.aws.Util.UserDocGenerator.gener
 @ExtendWith(SpringExtension.class)
 @EnableAutoConfiguration
 @SpringJUnitConfig(classes = {EntitlementsTestConfig.class, MockServletContext.class})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class UserHelperTest extends ParentUtil {
 
     @MockBean

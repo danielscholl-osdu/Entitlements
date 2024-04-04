@@ -8,7 +8,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <redisson.version>3.13.2</redisson.version>
         <protobuf-java.version>3.12.4</protobuf-java.version>
-        <openapi.version>1.6.14</openapi.version>
+        <openapi.version>2.3.0</openapi.version>
         <jackson-databind.version>2.14.2</jackson-databind.version>
         <jackson.version>2.14.2</jackson.version>
         <plexus-utils.version>4.0.0</plexus-utils.version>
@@ -71,7 +71,7 @@
         </dependency>
         <dependency>
             <groupId>org.opengroup.osdu</groupId>
-            <artifactId>os-core-common</artifactId>
+            <artifactId>os-core-common-spring6</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -128,7 +128,7 @@
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${openapi.version}</version>
         </dependency>
 		<!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-core -->

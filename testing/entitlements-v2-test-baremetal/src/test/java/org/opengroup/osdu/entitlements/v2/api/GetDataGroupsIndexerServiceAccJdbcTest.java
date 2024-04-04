@@ -120,7 +120,7 @@ public class GetDataGroupsIndexerServiceAccJdbcTest {
 
   private ClientResponse sendGetParentGroupsRequest(String token, String partitionServiceAccountEmail)
       throws MalformedURLException {
-    String resourceUrl = new URL(baseUrl + "members/" + partitionServiceAccountEmail + "/groups/?type=data").toString();
+    String resourceUrl = new URL(baseUrl + "members/" + partitionServiceAccountEmail + "/groups?type=data").toString();
     log.info("Sending request to URL: {}", resourceUrl);
     WebResource webResource = client.resource(resourceUrl);
     return webResource.getRequestBuilder()

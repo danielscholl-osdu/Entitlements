@@ -25,7 +25,7 @@
     <java.version>17</java.version>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.source>${java.version}</maven.compiler.source>
-    <os-core-common.version>0.25.0</os-core-common.version>
+    <os-core-common.version>0.26.0-rc2</os-core-common.version>
   </properties>
 
   <parent>
@@ -73,7 +73,7 @@
     </dependency>
     <dependency>
       <groupId>org.opengroup.osdu</groupId>
-      <artifactId>os-core-common</artifactId>
+      <artifactId>os-core-common-spring6</artifactId>
       <version>${os-core-common.version}</version>
     </dependency>
     <!-- OpenID Connect -->
@@ -105,16 +105,10 @@
       <artifactId>logback-json-classic</artifactId>
       <version>0.1.5</version>
     </dependency>
-    <dependency>
-      <groupId>org.yaml</groupId>
-      <artifactId>snakeyaml</artifactId>
-      <version>2.0</version>
-    </dependency>
     <!-- Spring -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jdbc</artifactId>
-      <version>2.7.12</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -181,7 +175,7 @@
         <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
-          <version>2.7.6</version>
+          <version>3.2.2</version>
           <executions>
             <execution>
               <goals>
@@ -190,7 +184,7 @@
               <configuration>
                 <classifier>spring-boot</classifier>
                 <mainClass>
-                  org.springframework.boot.loader.PropertiesLauncher
+                  org.springframework.boot.loader.launch.PropertiesLauncher
                 </mainClass>
               </configuration>
             </execution>
@@ -221,7 +215,20 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>2.7.6</version>
+        <version>3.2.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+            <configuration>
+              <classifier>spring-boot</classifier>
+              <mainClass>
+                org.springframework.boot.loader.launch.PropertiesLauncher
+              </mainClass>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
