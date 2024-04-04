@@ -16,7 +16,7 @@ data:
   # redis connection. Change it if you want to use external redis
   redisEntHost: ""
   redisEntPort: 6379
-  redisImage: "docker.io/library/redis:7"
+  redisImage: "docker.io/library/redis:7.2-alpine"
   # Don't change or use the parameter unless necessary
   entitlementsDomain: "group"
   # Deployments
