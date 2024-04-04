@@ -53,7 +53,7 @@ public class ListGroupApi {
     })
     @GetMapping("/groups")
     @PreAuthorize("@authorizationFilter.hasAnyPermission('" + AppProperties.OPS + "', '" + AppProperties.ADMIN + "', '" + AppProperties.USERS + "')")
-    public ResponseEntity<ListGroupResponseDto> listGroups(@RequestParam(required = false, defaultValue = "false") Boolean roleRequired) {
+    public ResponseEntity<ListGroupResponseDto> listGroups(@RequestParam(name="roleRequired",required = false, defaultValue = "false") Boolean roleRequired) {
         DpsHeaders dpsHeaders = requestInfo.getHeaders();
         List<String> partitionIdList = requestInfoUtilService.getPartitionIdList(dpsHeaders);
         partitionHeaderValidationService.validateIfSpecialListGroupPartitionIsProvided(partitionIdList);

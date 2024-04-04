@@ -13,13 +13,13 @@ import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.model.http.Request;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
@@ -170,16 +170,6 @@ public class ResponseLogFilterTests {
             }
 
             @Override
-            public String encodeUrl(String s) {
-                return null;
-            }
-
-            @Override
-            public String encodeRedirectUrl(String s) {
-                return null;
-            }
-
-            @Override
             public void sendError(int i, String s) {
             }
 
@@ -218,10 +208,6 @@ public class ResponseLogFilterTests {
             @Override
             public void setStatus(int i) {
                 response = i;
-            }
-
-            @Override
-            public void setStatus(int i, String s) {
             }
 
             @Override

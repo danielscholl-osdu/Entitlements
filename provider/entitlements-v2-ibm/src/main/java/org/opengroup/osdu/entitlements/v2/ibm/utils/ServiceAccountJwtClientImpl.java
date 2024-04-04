@@ -1,6 +1,6 @@
 package org.opengroup.osdu.entitlements.v2.ibm.utils;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.apache.http.HttpStatus;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
