@@ -26,6 +26,6 @@ public class ImpersonationJdbcTest extends ImpersonationTest {
 
   public ImpersonationJdbcTest() {
     super(new AnthosConfigurationService(), new OpenIDTokenProvider(),
-        new PartitionService(new AnthosConfigurationService()));
+        new PartitionService(new AnthosConfigurationService(), new OpenIDTokenProvider()));
   }
 }
