@@ -44,6 +44,9 @@ phases:
       - git clone https://github.com/awslabs/git-secrets.git
       - cd git-secrets && make install && cd ..
       - git secrets --install && git secrets --register-aws
+      # install ssl 1.1 for test using de.flapdoodle.mongodb.embedded
+      - wget https://debian.mirror.ac.za/debian/pool/main/o/openssl/libssl1.1_1.1.1w-0%2Bdeb11u1_amd64.deb
+      - dpkg -i libssl1.1_1.1.1w-0+deb11u1_amd64.deb
   pre_build:
     commands:
       - echo "Logging in to Amazon ECR..."
