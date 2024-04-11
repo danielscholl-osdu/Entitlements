@@ -29,6 +29,6 @@ public class ImpersonationJdbcTest extends ImpersonationTest {
 
   public ImpersonationJdbcTest() {
     super(new JdbcConfigurationService(), new JdbcTokenService(),
-        new PartitionService(new JdbcConfigurationService()));
+        new PartitionService(new JdbcConfigurationService(), new JdbcTokenService()));
   }
 }

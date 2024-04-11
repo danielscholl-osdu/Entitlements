@@ -19,10 +19,12 @@ public class PartitionService {
   private final Gson gson = new Gson();
   private final ConfigurationService configurationService;
   private final HttpClientService httpClientService;
+  private final TokenService tokenService;
 
-  public PartitionService(ConfigurationService configurationService) {
+  public PartitionService(ConfigurationService configurationService, TokenService tokenService) {
     this.configurationService = configurationService;
     this.httpClientService = new HttpClientService(configurationService);
+    this.tokenService = tokenService;
   }
 
   public String getPartitionProperty(String property) throws Exception {
@@ -30,6 +32,7 @@ public class PartitionService {
 
     RequestData requestData = RequestData.builder()
         .url(partitionApi)
+        .token(tokenService.getToken().getValue())
         .relativePath("/partitions/" + configurationService.getTenantId())
         .method("GET")
         .build();
@@ -39,7 +42,7 @@ public class PartitionService {
 
     Type parametrizedType = TypeToken.getParameterized(Map.class,
         new Class[]{String.class, Property.class}).getType();
-    Map<String, Property> properties = (Map) gson.fromJson(new InputStreamReader(content), parametrizedType);
+    Map<String, Property> properties = gson.fromJson(new InputStreamReader(content), parametrizedType);
 
     Assert.assertNotNull(properties.get(property));
     return properties.get(property).getValue().toString();
