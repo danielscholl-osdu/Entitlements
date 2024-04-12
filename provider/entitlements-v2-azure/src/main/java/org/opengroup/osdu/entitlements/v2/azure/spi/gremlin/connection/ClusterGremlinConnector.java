@@ -121,26 +121,30 @@ public class ClusterGremlinConnector implements GremlinConnector {
             log.error(String.format("getting error from cosmos db: %s", e.getMessage()), e);
             if (isResourceNotFoundException(e)) {
                 throw new AppException(
-                        HttpStatus.NOT_FOUND.value(),
-                        HttpStatus.NOT_FOUND.getReasonPhrase(),
-                        RESOURCE_NOT_FOUND_ERROR_MESSAGE, e);
+                    HttpStatus.NOT_FOUND.value(),
+                    HttpStatus.NOT_FOUND.getReasonPhrase(),
+                    RESOURCE_NOT_FOUND_ERROR_MESSAGE,
+                    e);
             }
             if (e.getMessage().contains("Request rate is large")) {
                 throw new AppException(
-                        HttpStatus.SERVICE_UNAVAILABLE.value(),
-                        HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase(),
-                        COSMOS_DB_RATE_LIMIT_ERROR_MESSAGE, e);
+                    HttpStatus.TOO_MANY_REQUESTS.value(),
+                    HttpStatus.TOO_MANY_REQUESTS.getReasonPhrase(),
+                    COSMOS_DB_RATE_LIMIT_ERROR_MESSAGE,
+                    e);
             }
             throw new AppException(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                    HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                    RETRIEVING_RESULT_SET_ERROR_MESSAGE, e);
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                RETRIEVING_RESULT_SET_ERROR_MESSAGE,
+                e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new AppException(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                    HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                    RETRIEVING_RESULT_SET_ERROR_MESSAGE, e);
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                RETRIEVING_RESULT_SET_ERROR_MESSAGE,
+                e);
         }
         return resultList;
     }
@@ -157,9 +161,9 @@ public class ClusterGremlinConnector implements GremlinConnector {
     private void validateRequestSuccessful(Map<String, Object> statusAttributes) {
         if ((Integer) statusAttributes.get("x-ms-status-code") != 200) {
             throw new AppException(
-                    HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                    HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                    TRAVERSAL_SUBMIT_ERROR_MESSAGE);
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                TRAVERSAL_SUBMIT_ERROR_MESSAGE);
         }
     }
 }
