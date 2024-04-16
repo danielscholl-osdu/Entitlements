@@ -36,7 +36,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.main.basedir>${project.basedir}</project.main.basedir>
         <jackson.version>2.13.2.2</jackson.version>
-        <core-lib-azure.version>0.25.0</core-lib-azure.version>
+        <core-lib-azure.version>0.26.0</core-lib-azure.version>
         <junit.version>4.13.2</junit.version>
         <netty-all.version>4.1.50.Final</netty-all.version>
     </properties>

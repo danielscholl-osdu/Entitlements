@@ -175,7 +175,7 @@ download_plugins:
   stage: build
   variables:
     OQM_PACKAGE_REGISRTY_URL: "https://community.opengroup.org/api/v4/projects/1450/packages/maven"
-    OQM_VERSION: "0.25.0-rc1"
+    OQM_VERSION: "0.26.0"
   artifacts:
     paths:
       - ./tmp/*.jar
