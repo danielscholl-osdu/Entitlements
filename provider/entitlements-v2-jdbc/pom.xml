@@ -23,7 +23,7 @@
     <java.version>17</java.version>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.source>${java.version}</maven.compiler.source>
-    <os-core-common.version>0.26.0-rc2</os-core-common.version>
+    <os-core-common.version>0.26.0</os-core-common.version>
     <postgresql.version>42.7.1</postgresql.version>
   </properties>
 
@@ -81,13 +81,13 @@
     <dependency>
       <groupId>org.opengroup.osdu</groupId>
       <artifactId>core-lib-gc-spring6</artifactId>
-      <version>0.26.0-rc5</version>
+      <version>0.26.0</version>
     </dependency>
 
     <dependency>
       <groupId>org.opengroup.osdu</groupId>
       <artifactId>oqm</artifactId>
-      <version>0.25.0</version>
+      <version>0.26.0</version>
       <exclusions>
         <exclusion>
           <artifactId>os-core-common</artifactId>
