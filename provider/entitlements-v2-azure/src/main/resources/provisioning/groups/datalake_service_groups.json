@@ -226,6 +226,18 @@
       ]
     },
     {
+      "name": "service.file.admin",
+      "description": "Datalake File admins",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        }
+      ]
+    },
+    {
       "name": "service.file.editors",
       "description": "Editors group for file service",
       "members": [
@@ -324,6 +336,18 @@
     {
       "name": "service.policy.admin",
       "description": "Admin group for policy service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        }
+      ]
+    },
+    {
+      "name": "service.dataset.admin",
+      "description": "Datalake Dataset admins",
       "members": [
         {
           "name": "users.datalake.ops"
