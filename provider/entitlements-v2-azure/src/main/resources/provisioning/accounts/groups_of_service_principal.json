@@ -70,6 +70,12 @@
       "groupName": "service.schema-service.admin"
     },
     {
+      "groupName": "service.dataset.admin"
+    },
+    {
+      "groupName": "service.file.admin"
+    },
+    {
       "groupName": "service.file.editors"
     },
     {
