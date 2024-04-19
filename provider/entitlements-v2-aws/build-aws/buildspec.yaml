@@ -27,6 +27,8 @@ env:
   parameter-store:
     SONAR_URL: /osdu/devops/sonar_url
 
+  shell: bash
+
 phases:
   install:
     runtime-versions:
@@ -42,9 +44,21 @@ phases:
       - git clone https://github.com/awslabs/git-secrets.git
       - cd git-secrets && make install && cd ..
       - git secrets --install && git secrets --register-aws
-      # install ssl 1.1 for test using de.flapdoodle.mongodb.embedded
-      - wget https://debian.mirror.ac.za/debian/pool/main/o/openssl/libssl1.1_1.1.1w-0%2Bdeb11u1_amd64.deb
-      - dpkg -i libssl1.1_1.1.1w-0+deb11u1_amd64.deb
+      -
+      # Temporary fix for AWS Unit tests using Embedded MongoDB that requires libcrypto.so.1.1
+      - apt-get install -y build-essential wget
+      - mkdir $HOME/opt
+      - pushd $HOME/opt &&
+        wget --no-verbose https://www.openssl.org/source/old/1.1.1/openssl-1.1.1w.tar.gz  &&
+        tar -zxf openssl-1.1.1w.tar.gz &&
+        cd openssl-1.1.1w &&
+        ./config && make > make-openssl.log &&
+        mkdir $HOME/opt/lib &&
+        mv $HOME/opt/openssl-1.1.1w/libcrypto.so.1.1 $HOME/opt/lib/ &&
+        mv $HOME/opt/openssl-1.1.1w/libssl.so.1.1 $HOME/opt/lib/ &&
+        export LD_LIBRARY_PATH=$HOME/opt/lib:$LD_LIBRARY_PATH &&
+        popd
+
   pre_build:
     commands:
       - echo "Logging in to Amazon ECR..."

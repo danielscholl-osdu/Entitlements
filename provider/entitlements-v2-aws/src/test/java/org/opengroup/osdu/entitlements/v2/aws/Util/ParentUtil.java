@@ -29,7 +29,7 @@ import java.util.Collections;
 import static org.opengroup.osdu.entitlements.v2.aws.Util.GroupDocGenerator.generateGroupDoc;
 
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public abstract class ParentUtil extends DbUtil {
 
     protected MongoTemplateHelper mongoTemplateHelper;
