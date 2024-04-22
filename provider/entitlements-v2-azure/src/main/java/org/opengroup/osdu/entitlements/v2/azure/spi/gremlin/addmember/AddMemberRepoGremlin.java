@@ -2,7 +2,7 @@ package org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.addmember;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpStatus;
+import org.springframework.http.HttpStatus;
 import org.opengroup.osdu.azure.graph.GraphService;
 import org.opengroup.osdu.azure.util.AuthUtils;
 import org.opengroup.osdu.core.common.feature.IFeatureFlag;
@@ -115,7 +115,7 @@ public class AddMemberRepoGremlin implements AddMemberRepo {
         if (aadIssuedBearerToken != null &&
                 !requestInfo.getTenantInfo().getServiceAccount().equals(nodeId)  &&
                 !graphService.isOidValid(requestInfo.getHeaders().getPartitionId(), nodeId)) {
-            throw new AppException(HttpStatus.SC_BAD_REQUEST, "Bad Request", "email field could not be validated, check if the provided value is correct");
+            throw new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), "The given OID is not present in the environment as either an Entra User, Group or Service Principal Client ID. Please use the correct ID as the input.");
         }
         log.info("User OID: " + nodeId + " validated");
     }

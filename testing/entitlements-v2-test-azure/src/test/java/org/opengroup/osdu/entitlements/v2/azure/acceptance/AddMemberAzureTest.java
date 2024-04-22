@@ -60,7 +60,7 @@ public class AddMemberAzureTest extends AddMemberTest {
         CloseableHttpResponse response = httpClientService.send(requestData);
 
         Assert.assertEquals(400, response.getCode());
-        String errorMessage = "Service principals should be added via client-ids";
+        String errorMessage = "The given OID matches with a provisioned Service Principal. They should be added to OSDU groups via their Client ID. Please use the correct ID as the input";
         ErrorResponse expectedConflictResponse = ErrorResponse.builder().code(400).reason("Bad Request")
                 .message(errorMessage).build();
         Assert.assertEquals(expectedConflictResponse, new Gson().fromJson(EntityUtils.toString(response.getEntity()), ErrorResponse.class));
