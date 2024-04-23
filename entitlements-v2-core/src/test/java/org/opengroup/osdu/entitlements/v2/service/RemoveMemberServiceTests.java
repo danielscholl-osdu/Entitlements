@@ -15,6 +15,7 @@ import org.opengroup.osdu.entitlements.v2.AppProperties;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeAction;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeEvent;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeType;
+import org.opengroup.osdu.entitlements.v2.service.featureflag.PartitionFeatureFlagService;
 import org.opengroup.osdu.entitlements.v2.service.util.ReflectionTestUtil;
 import org.opengroup.osdu.entitlements.v2.validation.BootstrapGroupsConfigurationService;
 import org.opengroup.osdu.entitlements.v2.validation.ServiceAccountsConfigurationService;
@@ -66,6 +67,8 @@ public class RemoveMemberServiceTests {
     private IEventPublisher publisher;
     @Mock
     private DpsHeaders headers;
+    @Mock
+    private PartitionFeatureFlagService partitionFeatureFlagService;
     @InjectMocks
     private RemoveMemberService removeMemberService;
 
@@ -481,6 +484,72 @@ public class RemoveMemberServiceTests {
         } catch (Exception ex) {
             fail(String.format("should now throw exception: %s", ex.getMessage()));
         }
+    }
+
+    @Test
+    public void shouldDeleteUsersdatarootGroupFromAnyDataGroupIfDataRootGroupHierarchyDisabled() {
+        when(partitionFeatureFlagService.getFeature(any(), any())).thenReturn(true);
+        EntityNode memberNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("users.data.root@common.contoso.com")
+                .name("users.data.root")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.getMemberNodeForRemovalFromGroup(
+                "users.data.root@common.contoso.com", "common")).thenReturn(memberNode);
+        EntityNode groupNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("data.test@common.contoso.com")
+                .name("data.test")
+                .dataPartitionId("common")
+                .build();
+        EntityNode requesterNode = EntityNode.builder()
+                .type(NodeType.USER)
+                .nodeId("requesterid")
+                .name("requesterid")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.groupExistenceValidation(
+                "data.test@common.contoso.com", "common")).thenReturn(groupNode);
+        when(retrieveGroupRepo.getEntityNode("requesterid", "common")).thenReturn(Optional.of(requesterNode));
+        EntityNode rootDataGroupNode = EntityNode.builder()
+                .type(NodeType.GROUP)
+                .nodeId("users.data.root@common.contoso.com")
+                .name("users.data.root")
+                .dataPartitionId("common")
+                .build();
+        when(retrieveGroupRepo.groupExistenceValidation(
+                "users.data.root@common.contoso.com", "common")).thenReturn(rootDataGroupNode);
+        when(retrieveGroupRepo.hasDirectChild(
+                rootDataGroupNode,
+                ChildrenReference.createChildrenReference(requesterNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
+        when(retrieveGroupRepo.hasDirectChild(
+                groupNode,
+                ChildrenReference.createChildrenReference(memberNode, Role.MEMBER))).thenReturn(Boolean.TRUE);
+        when(requestInfoUtilService.getDomain("common")).thenReturn("common.contoso.com");
+
+        RemoveMemberServiceDto removeMemberServiceDto = RemoveMemberServiceDto.builder()
+                .groupEmail("data.test@common.contoso.com")
+                .memberEmail("users.data.root@common.contoso.com")
+                .requesterId("requesterid")
+                .partitionId("common")
+                .build();
+
+        when(serviceAccountsConfigurationService.isMemberProtectedServiceAccount(memberNode, groupNode)).thenReturn(false);
+        removeMemberService.removeMember(removeMemberServiceDto);
+
+        verify(removeMemberRepo).removeMember(groupNode, memberNode, removeMemberServiceDto);
+        verify(groupCacheService).refreshListGroupCache(Collections.emptySet(), "common");
+        EntitlementsChangeEvent[] event = {
+                EntitlementsChangeEvent.builder()
+                        .kind(EntitlementsChangeType.groupChanged)
+                        .group("data.test@common.contoso.com")
+                        .user("users.data.root@common.contoso.com")
+                        .action(EntitlementsChangeAction.remove)
+                        .modifiedBy("requesterid")
+                        .modifiedOn(1291371330000L).build()
+        };
+        verify(publisher).publish(event, headersMap);
     }
 
     @Test

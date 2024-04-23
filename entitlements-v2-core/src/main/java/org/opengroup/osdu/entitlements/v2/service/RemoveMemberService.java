@@ -8,6 +8,8 @@ import org.opengroup.osdu.core.common.status.IEventPublisher;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeAction;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeEvent;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeType;
+import org.opengroup.osdu.entitlements.v2.service.featureflag.FeatureFlag;
+import org.opengroup.osdu.entitlements.v2.service.featureflag.PartitionFeatureFlagService;
 import org.opengroup.osdu.entitlements.v2.validation.BootstrapGroupsConfigurationService;
 import org.opengroup.osdu.entitlements.v2.validation.ServiceAccountsConfigurationService;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
@@ -32,6 +34,7 @@ public class RemoveMemberService {
     private final BootstrapGroupsConfigurationService bootstrapGroupsConfigurationService;
     private final PermissionService permissionService;
     private final RequestInfo requestInfo;
+    private final PartitionFeatureFlagService partitionFeatureFlagService;
     @Autowired(required = false)
     private IEventPublisher eventPublisher;
     @Value("${event-publishing.enabled:false}")
@@ -61,7 +64,7 @@ public class RemoveMemberService {
                     String.format("Key service accounts hierarchy is enforced, %s cannot be removed from group %s", memberEmail, groupEmail));
         }
 
-        if (memberNode.isUsersDataRootGroup() && existingGroupEntityNode.isDataGroup()) {
+        if (violateDataRootGroupHierarchy(memberNode, existingGroupEntityNode, removeMemberServiceDto.getPartitionId())) {
             throw new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(),
                     "Users data root group hierarchy is enforced, member users.data.root cannot be removed");
         }
@@ -89,5 +92,10 @@ public class RemoveMemberService {
                     .modifiedOn(System.currentTimeMillis()).build()};
             eventPublisher.publish(event, requestInfo.getHeaders().getHeaders());
         }
+    }
+
+    private boolean violateDataRootGroupHierarchy(EntityNode memberNode, EntityNode existingGroupEntityNode, String dataPartitionId) {
+        return !this.partitionFeatureFlagService.getFeature(FeatureFlag.DISABLE_DATA_ROOT_GROUP_HIERARCHY.label, dataPartitionId)
+            && memberNode.isUsersDataRootGroup() && existingGroupEntityNode.isDataGroup();
     }
 }
