@@ -100,6 +100,7 @@ curl --request POST \
 The member deleted can either be a _user_ or a _group_. E.g. group_email value is {name}@{data-partition-id}.{domain}.com.
 Path parameter member_email needs an email of a member. The user or service extracted from JWT in _Authorization_ header checked for OWNER role membership within group_email
 and within users.datalake.ops (ops user) group.
+* Elementary data partition group(users@{data-partition-id}.{domain}) governs the access to complete data partition, and removing a user from this group essentially is equivalent to deleting the user from all groups. Remove API should be only used in this case, if it's the last group a user belongs to. As long as a user is member of other groups, removing them from elementary data partition groups should be done via Delete MEMBER API. The Remove API throws 400 Bad request, in this case if it's used to remove a user from this users group while the user still exists in other groups.
 
 <details><summary>Curl Delete Members</summary>
 

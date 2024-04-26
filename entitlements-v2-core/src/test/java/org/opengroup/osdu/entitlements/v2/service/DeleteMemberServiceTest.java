@@ -6,13 +6,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
-import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.deletemember.DeleteMemberDto;
 import org.opengroup.osdu.entitlements.v2.model.removemember.RemoveMemberServiceDto;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
+import org.opengroup.osdu.entitlements.v2.validation.BootstrapGroupsConfigurationService;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -31,6 +30,8 @@ public class DeleteMemberServiceTest {
     private RemoveMemberService removeMemberService;
     @Mock
     private GroupCacheService groupCacheService;
+    @Mock
+    private BootstrapGroupsConfigurationService bootstrapGroupsConfigurationService;
     @InjectMocks
     private DeleteMemberService deleteMemberService;
 
@@ -42,29 +43,22 @@ public class DeleteMemberServiceTest {
         String groupName2 = "data.x2";
         String groupEmail2 = groupName2 + "@" + domain;
 
-        List<ParentReference> directParents = Arrays.asList(
-                ParentReference.builder()
-                        .id(groupEmail1)
-                        .name(groupName1)
-                        .dataPartitionId(DATA_PARTITION_ID)
-                        .build(),
-
-                ParentReference.builder()
-                        .id(groupEmail2)
-                        .name(groupName2)
-                        .dataPartitionId(DATA_PARTITION_ID)
-                        .build()
+        Set<String> parentEmails = Set.of(
+                groupEmail1,
+                groupEmail2
         );
-        when(retrieveGroupRepo.loadDirectParents(DATA_PARTITION_ID, MEMBER_EMAIL)).thenReturn(directParents);
+        when(removeMemberService.getDirectParentsEmails(DATA_PARTITION_ID, MEMBER_EMAIL)).thenReturn(parentEmails);
+        when(bootstrapGroupsConfigurationService.getElementaryDataPartitionUsersGroup(DATA_PARTITION_ID)).thenReturn(String.format("users@%s.%s", DATA_PARTITION_ID, domain));
 
         DeleteMemberDto deleteMemberDto = DeleteMemberDto.builder()
                 .memberEmail(MEMBER_EMAIL)
                 .partitionId(DATA_PARTITION_ID)
                 .requesterId(REQUEST_ID)
                 .build();
+
         deleteMemberService.deleteMember(deleteMemberDto);
 
-        verify(retrieveGroupRepo, times(1)).loadDirectParents(DATA_PARTITION_ID, MEMBER_EMAIL);
+        verify(removeMemberService, times(1)).getDirectParentsEmails(DATA_PARTITION_ID, MEMBER_EMAIL);
         verify(removeMemberService, times(1)).removeMember(buildRemoveMemberServiceDto(groupEmail1));
         verify(removeMemberService, times(1)).removeMember(buildRemoveMemberServiceDto(groupEmail2));
         verify(groupCacheService).flushListGroupCacheForUser(MEMBER_EMAIL, DATA_PARTITION_ID);

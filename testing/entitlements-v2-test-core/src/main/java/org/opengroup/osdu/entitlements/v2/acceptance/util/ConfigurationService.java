@@ -17,4 +17,8 @@ public interface ConfigurationService {
     default String getOwnerMailId() {
         return "testmMemberOwner@test.com";
     }
+
+    default String getMemberMailId_toBeDeleted(long timestamp) {
+        return String.format("testMember-%s@test.com", timestamp);
+    }
 }
