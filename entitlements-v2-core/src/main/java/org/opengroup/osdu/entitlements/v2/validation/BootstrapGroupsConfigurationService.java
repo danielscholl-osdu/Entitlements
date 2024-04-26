@@ -38,6 +38,10 @@ public class BootstrapGroupsConfigurationService {
         return membersPerGroup.getOrDefault(groupNode.getName(), new HashSet<>()).contains(memberNode.getName());
     }
 
+    public String getElementaryDataPartitionUsersGroup(String dataPartitionId){
+        return String.format("users@%s.%s", dataPartitionId, appProperties.getDomain());
+    }
+
     private void loadConfiguration(final String fileName) {
         String fileContent = fileReaderService.readFile(fileName);
         JsonArray groups = getGroupList(fileContent);

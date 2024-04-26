@@ -5,6 +5,7 @@ import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.core.common.status.IEventPublisher;
+import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeAction;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeEvent;
 import org.opengroup.osdu.entitlements.v2.model.events.EntitlementsChangeType;
@@ -21,7 +22,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +38,7 @@ public class RemoveMemberService {
     private final PermissionService permissionService;
     private final RequestInfo requestInfo;
     private final PartitionFeatureFlagService partitionFeatureFlagService;
+
     @Autowired(required = false)
     private IEventPublisher eventPublisher;
     @Value("${event-publishing.enabled:false}")
@@ -59,12 +63,21 @@ public class RemoveMemberService {
                     + "explicit member declaration.", groupEmail, memberEmail))
         ));
 
+        checkIfMemberCanBeRemoved(groupEmail, memberEmail, existingGroupEntityNode, memberNode);
+
+        Set<String> impactedUsers = removeMemberRepo.removeMember(existingGroupEntityNode, memberNode, removeMemberServiceDto);
+        groupCacheService.refreshListGroupCache(impactedUsers, removeMemberServiceDto.getPartitionId());
+        publishRemoveMemberEntitlementsChangeEvent(removeMemberServiceDto);
+        return impactedUsers;
+    }
+
+    private void checkIfMemberCanBeRemoved(String groupEmail, String memberEmail, EntityNode existingGroupEntityNode, EntityNode memberNode) {
         if (serviceAccountsConfigurationService.isMemberProtectedServiceAccount(memberNode, existingGroupEntityNode)) {
             throw new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(),
                     String.format("Key service accounts hierarchy is enforced, %s cannot be removed from group %s", memberEmail, groupEmail));
         }
 
-        if (violateDataRootGroupHierarchy(memberNode, existingGroupEntityNode, removeMemberServiceDto.getPartitionId())) {
+        if (violateDataRootGroupHierarchy(memberNode, existingGroupEntityNode, memberNode.getDataPartitionId())) {
             throw new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(),
                     "Users data root group hierarchy is enforced, member users.data.root cannot be removed");
         }
@@ -75,10 +88,15 @@ public class RemoveMemberService {
                             memberNode.getName(), existingGroupEntityNode.getName()));
         }
 
-        Set<String> impactedUsers = removeMemberRepo.removeMember(existingGroupEntityNode, memberNode, removeMemberServiceDto);
-        groupCacheService.refreshListGroupCache(impactedUsers, removeMemberServiceDto.getPartitionId());
-        publishRemoveMemberEntitlementsChangeEvent(removeMemberServiceDto);
-        return impactedUsers;
+        //Removing a user from elementary data partition is not allowed unless it's the last group to be deleted
+        //ADR: https://community.opengroup.org/osdu/platform/security-and-compliance/entitlements/-/issues/162
+        if((groupEmail.equals(
+                bootstrapGroupsConfigurationService.getElementaryDataPartitionUsersGroup(memberNode.getDataPartitionId()))
+                && getDirectParentsEmails(memberNode.getDataPartitionId(), memberEmail).size() > 1)){
+            throw new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                    String.format("Member %s cannot be removed from elementary data partition group %s, since the user is still provisioned inside other groups. Please use Delete Member API to remove the user from all the groups.",
+                            memberEmail, groupEmail));
+        }
     }
 
     private void publishRemoveMemberEntitlementsChangeEvent(RemoveMemberServiceDto removeMemberServiceDto) {
@@ -97,5 +115,13 @@ public class RemoveMemberService {
     private boolean violateDataRootGroupHierarchy(EntityNode memberNode, EntityNode existingGroupEntityNode, String dataPartitionId) {
         return !this.partitionFeatureFlagService.getFeature(FeatureFlag.DISABLE_DATA_ROOT_GROUP_HIERARCHY.label, dataPartitionId)
             && memberNode.isUsersDataRootGroup() && existingGroupEntityNode.isDataGroup();
+    }
+
+    public Set<String> getDirectParentsEmails(String dataPartitionId, String memberEmail) {
+        List<ParentReference> directParents = retrieveGroupRepo.loadDirectParents(
+                dataPartitionId, memberEmail);
+        return directParents.parallelStream()
+                .map(ParentReference::getId)
+                .collect(Collectors.toSet());
     }
 }

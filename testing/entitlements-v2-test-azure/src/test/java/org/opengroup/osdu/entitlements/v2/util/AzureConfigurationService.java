@@ -58,4 +58,8 @@ public class AzureConfigurationService implements ConfigurationService {
     public String getOwnerMailId() {
         return APP_USER_OID2;
     }
+
+    public String getMemberMailId_toBeDeleted(long timestamp) {
+        return APP_USER_OID1;
+    }
 }
