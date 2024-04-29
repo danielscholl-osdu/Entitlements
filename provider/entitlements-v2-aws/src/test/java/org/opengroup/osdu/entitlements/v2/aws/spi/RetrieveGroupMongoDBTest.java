@@ -1,18 +1,15 @@
 /**
-* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-* 
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-* 
-*      http://www.apache.org/licenses/LICENSE-2.0
-* 
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.opengroup.osdu.entitlements.v2.aws.spi;
 
@@ -235,7 +232,7 @@ class RetrieveGroupMongoDBTest extends ParentUtil {
     }
 
     @Test
-    void loadDirectParents() {
+    void loadDirectParentsForGroup() {
         //given
         IdDoc idForGroup1 = createIdForGroup(1);
         IdDoc idForGroup2 = createIdForGroup(2);
@@ -248,6 +245,25 @@ class RetrieveGroupMongoDBTest extends ParentUtil {
                 idForGroup3.getNodeId());
         //then
         List<String> fromDb = idDocs.stream().flatMap(idDoc -> mongoTemplateHelper.findById(idDoc, GroupDoc.class).getDirectParents().stream()).map(nodeRelationDoc -> nodeRelationDoc.getParentId().getNodeId()).collect(Collectors.toList());
+        assertEquals(fromDb.size(), parentReferences.size());
+        List<String> listIds = parentReferences.stream().map(ParentReference::getId).collect(Collectors.toList());
+        assertTrue(fromDb.containsAll(listIds));
+    }
+
+    @Test
+    void loadDirectParentsForUser() {
+        //given
+        IdDoc idForUser1 = createIdForUser(1);
+        IdDoc idForUser2 = createIdForUser(2);
+        IdDoc idForUser3 = createIdForUser(3);
+        List<IdDoc> idDocs = Arrays.asList(idForUser1, idForUser2, idForUser3);
+        //when
+        List<ParentReference> parentReferences = retrieveGroupMongoDB.loadDirectParents(idForUser1.getDataPartitionId(),
+                idForUser1.getNodeId(),
+                idForUser2.getNodeId(),
+                idForUser3.getNodeId());
+        //then
+        List<String> fromDb = idDocs.stream().flatMap(idDoc -> mongoTemplateHelper.findById(idDoc, UserDoc.class).getDirectParents().stream()).map(nodeRelationDoc -> nodeRelationDoc.getParentId().getNodeId()).collect(Collectors.toList());
         assertEquals(fromDb.size(), parentReferences.size());
         List<String> listIds = parentReferences.stream().map(ParentReference::getId).collect(Collectors.toList());
         assertTrue(fromDb.containsAll(listIds));

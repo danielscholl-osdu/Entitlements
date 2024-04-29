@@ -55,7 +55,7 @@ public abstract class DeleteMemberTest extends AcceptanceBaseTest {
      * 4) Check that the group 3 is not a member of the groups 1 and 2.
      */
     @Test
-    public void shouldSuccessfullyDeleteMember() throws Exception {
+    public void shouldSuccessfullyDeleteGroupMember() throws Exception {
         List<GroupItem> groups = setup();
 
         assertTrue(isGroupAMemberOfAnotherGroup(groups.get(2).getEmail(), groups.get(0).getEmail()));
@@ -65,6 +65,22 @@ public abstract class DeleteMemberTest extends AcceptanceBaseTest {
 
         assertFalse(isGroupAMemberOfAnotherGroup(groups.get(2).getEmail(), groups.get(0).getEmail()));
         assertFalse(isGroupAMemberOfAnotherGroup(groups.get(2).getEmail(), groups.get(1).getEmail()));
+    }
+
+    /**
+     * 1) Create 2 groups.
+     * 2) Add the user member to these 2 groups
+     * 3) Delete the user member
+     * 4) Check that the user member is not part of the 2 groups
+     */
+    @Test
+    public void shouldSuccessfullyDeleteUserMember() throws Exception {
+        String member = configurationService.getMemberMailId_toBeDeleted(currentTime);
+        List<GroupItem> groups = setupUsers(member);
+        entitlementsV2Service.deleteMember(member, token.getValue());
+        // check that the member is not a memberOf the groups (reusing the already written method)
+        assertFalse(isGroupAMemberOfAnotherGroup(member, groups.get(0).getEmail()));
+        assertFalse(isGroupAMemberOfAnotherGroup(member, groups.get(1).getEmail()));
     }
 
     @Test
@@ -129,6 +145,27 @@ public abstract class DeleteMemberTest extends AcceptanceBaseTest {
 
         return groups;
     }
+
+    private List<GroupItem> setupUsers(String member) throws Exception {
+        List<GroupItem> groups = new ArrayList<>();
+
+        String group1Name = "group1-" + currentTime;
+        String group2Name = "group2-" + currentTime;
+
+        GroupItem group1Item = entitlementsV2Service.createGroup(group1Name, token.getValue());
+        groupsForFurtherDeletion.add(group1Item.getEmail());
+        groups.add(group1Item);
+
+        GroupItem group2Item = entitlementsV2Service.createGroup(group2Name, token.getValue());
+        groupsForFurtherDeletion.add(group2Item.getEmail());
+        groups.add(group2Item);
+
+        addMember(group1Item.getEmail(), member);
+        addMember(group2Item.getEmail(), member);
+
+        return groups;
+    }
+
 
     private void addMember(String groupEMail, String memberEmail) throws Exception {
         AddMemberRequestData addMemberRequestData = AddMemberRequestData.builder()

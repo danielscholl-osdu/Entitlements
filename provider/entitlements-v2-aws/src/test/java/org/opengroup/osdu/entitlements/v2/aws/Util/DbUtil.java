@@ -27,9 +27,9 @@ import org.opengroup.osdu.entitlements.v2.model.Role;
 public abstract class DbUtil {
 
     public static final String DATA_PARTITION = "osdu";
-    public static final String DOMAIN = "domain.com";
-    public static final String GROUP_TEMPLATE = "group-%s.group@" + DOMAIN;
-    public static final String USER_TEMPLATE = "user-%s.user@" + DOMAIN;
+    public static final String DOMAIN = "example.com";
+    public static final String GROUP_TEMPLATE = "group-%s@" + DATA_PARTITION+"."+DOMAIN;
+    public static final String USER_TEMPLATE = "user-%s@" + DOMAIN;
     public static final String USER_DOC_COLLECTION_PREFIX = "User-";
     public static final String GROUP_DOC_COLLECTION_PREFIX = "Group-";
     public static final String DEFAULT_APP = "default_app";
