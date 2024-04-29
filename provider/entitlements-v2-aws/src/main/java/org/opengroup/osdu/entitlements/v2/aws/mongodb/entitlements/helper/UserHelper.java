@@ -1,19 +1,19 @@
 /**
-* Copyright MongoDB, Inc or its affiliates. All Rights Reserved.
-* Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*      http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright MongoDB, Inc or its affiliates. All Rights Reserved.
+ * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.helper;
 
@@ -23,6 +23,7 @@ import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.intern
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.internal.NodeRelationDoc;
 import org.opengroup.osdu.entitlements.v2.aws.util.ExceptionGenerator;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
+import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
@@ -33,11 +34,8 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.opengroup.osdu.entitlements.v2.aws.spi.BasicEntitlementsHelper.DIRECT_PARENTS;
@@ -166,5 +164,20 @@ public class UserHelper extends NodeHelper {
     private String getUserCollection(String dataPartitionId) {
         indexUpdater.checkIndex(dataPartitionId);
         return "User-" + dataPartitionId;
+    }
+
+
+    public List<ParentReference> loadDirectParents(IdDoc userId) {
+        UserDoc user = this.getById(userId);
+        Set<NodeRelationDoc> directRelations = user.getDirectParents();
+        List<ParentReference> parentReferences = new ArrayList<>();
+        for (NodeRelationDoc directRelation : directRelations) {
+            parentReferences.add(ParentReference.builder()
+                    .id(directRelation.getParentId().getNodeId())
+                    .dataPartitionId(directRelation.getParentId().getDataPartitionId())
+                    .build()
+            );
+        }
+        return parentReferences;
     }
 }

@@ -130,7 +130,12 @@ public class RetrieveGroupMongoDB extends BasicEntitlementsHelper implements Ret
 
         List<ParentReference> parentReferences = new ArrayList<>();
         for (String nodeId : nodeIds) {
-            parentReferences.addAll(groupHelper.loadDirectParents(new IdDoc(nodeId, partitionId)));
+            if (!nodeId.endsWith(String.format("@%s.%s", partitionId, config.getDomain()))) { //it is a user not a group
+                parentReferences.addAll(userHelper.loadDirectParents(new IdDoc(nodeId, partitionId)));
+            }
+            else { //its a group
+                parentReferences.addAll(groupHelper.loadDirectParents(new IdDoc(nodeId, partitionId)));
+            }
         }
         return parentReferences;
     }
