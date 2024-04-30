@@ -6,6 +6,7 @@ import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.partition.*;
 import org.opengroup.osdu.core.common.util.IServiceAccountJwtClient;
+import org.opengroup.osdu.entitlements.v2.config.PartitionFeatureFlagConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -35,6 +36,8 @@ public class PartitionFeatureFlagServiceImplTests {
     private IPartitionProvider partitionProvider;
     @MockBean
     private PartitionInfo partitionInfo;
+    @MockBean
+    private PartitionFeatureFlagConfig partitionFeatureFlagConfig;
 
     @Autowired
     private PartitionFeatureFlagService partitionFeatureFlagService;
