@@ -59,7 +59,11 @@ public class CreateGroupRepoMongoDB extends BasicEntitlementsHelper implements C
 
         //check add membership under root group
         if (createGroupRequest.isAddDataRootGroup()) {
-            rootGroup = convertFromNode(createGroupRequest.getDataRootGroupNode(), GroupDoc.class);
+            GroupDoc rootGroupNode = convertFromNode(createGroupRequest.getDataRootGroupNode(), GroupDoc.class);
+            rootGroup = groupHelper.getById(rootGroupNode.getId());
+            if (rootGroup == null) {
+                throw ExceptionGenerator.groupNotFound(rootGroupNode.getId().getNodeId(), rootGroupNode.getId().getDataPartitionId());
+            }
             rootGroup.getDirectParents().add(new NodeRelationDoc(groupToCreate.getId(), Role.MEMBER));
         }
 
