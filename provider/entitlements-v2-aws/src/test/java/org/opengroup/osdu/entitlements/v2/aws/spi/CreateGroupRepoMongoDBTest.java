@@ -136,6 +136,10 @@ class CreateGroupRepoMongoDBTest extends ParentUtil {
                 .dataRootGroupNode(rootNode)
                 .build();
 
+        // Create the root group
+        CreateGroupRepoDto rootRequest = CreateGroupRepoDto.builder().partitionId(DATA_PARTITION).requesterNode(userNode).addDataRootGroup(false).build();
+        createGroupRepoMongoDB.createGroup(rootNode, rootRequest);
+
         //when
         Assertions.assertThrows(AppException.class, () -> createGroupRepoMongoDB.createGroup(groupNode, request));
     }
