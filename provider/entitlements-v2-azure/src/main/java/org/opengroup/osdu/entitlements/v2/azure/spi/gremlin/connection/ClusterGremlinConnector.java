@@ -12,6 +12,8 @@ import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSo
 import org.apache.tinkerpop.gremlin.process.traversal.translator.GroovyTranslator;
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
+import org.opengroup.osdu.azure.logging.DependencyLogger;
+import org.opengroup.osdu.azure.logging.DependencyLoggingOptions;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.azure.model.NodeEdge;
@@ -47,6 +49,9 @@ public class ClusterGremlinConnector implements GremlinConnector {
 
     @Autowired
     private JaxRsDpsLog log;
+
+    @Autowired
+    private DependencyLogger dependencyLogger;
 
     @Override
     public GraphTraversalSource getGraphTraversalSource() {
@@ -117,6 +122,13 @@ public class ClusterGremlinConnector implements GremlinConnector {
             completableFutureResults = resultSet.all();
             resultList = completableFutureResults.get();
             validateRequestSuccessful(completableFutureStatusAttributes.get());
+
+            long latency = ((Double)completableFutureStatusAttributes.get().get("x-ms-total-server-time-ms")).longValue();
+            double requestCharge = (Double)completableFutureStatusAttributes.get().get("x-ms-total-request-charge");
+            String requestId = resultSet.getOriginalRequestMessage().getArgs().toString();
+            DependencyLoggingOptions loggingOptions = DependencyLoggingOptions.builder().type("CosmosStore").name("COSMOS_GRAPH").data(requestId).timeTakenInMs(latency).requestCharge(requestCharge).resultCode(200).success(true).build();
+            this.dependencyLogger.logDependency(loggingOptions);
+
         } catch (ExecutionException e) {
             log.error(String.format("getting error from cosmos db: %s", e.getMessage()), e);
             if (isResourceNotFoundException(e)) {
@@ -166,4 +178,5 @@ public class ClusterGremlinConnector implements GremlinConnector {
                 TRAVERSAL_SUBMIT_ERROR_MESSAGE);
         }
     }
+
 }
