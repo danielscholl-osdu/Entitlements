@@ -17,29 +17,50 @@
 package org.opengroup.osdu.entitlements.v2.aws.service;
 
 import lombok.RequiredArgsConstructor;
+import org.opengroup.osdu.core.aws.cache.CacheFactory;
+import org.opengroup.osdu.core.common.cache.ICache;
+import org.opengroup.osdu.core.common.cache.VmCache;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.service.GroupCacheService;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
 public class GroupCacheServiceAws implements GroupCacheService {
 
     private final RetrieveGroupRepo retrieveGroupRepo;
-    private final AwsGroupCache awsGroupCache;
+    private final ICache<String, Set<ParentReference>> awsGroupCache = new VmCache<>(300, 1000);
+
+    @Value("${app.domain}")
+    private String domain;
+
+    private EntityNode createEntityNode(String requesterId, String partitionId) {
+        Pattern domainPattern = Pattern.compile(String.format(".+@%s\\.%s", Pattern.quote(partitionId), Pattern.quote(domain)));
+        if (domainPattern.matcher(requesterId).matches()) {
+            return EntityNode.createNodeFromGroupEmail(requesterId);
+        } else {
+            return EntityNode.createMemberNodeForNewUser(requesterId, partitionId);
+        }
+    }
+
+    private String getKey(String requesterId, String partitionId) {
+        return String.format("%s-%s", requesterId, partitionId);
+    }
 
     @Override
     public Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId) {
-        String key = String.format("%s-%s", requesterId, partitionId);
-        Set<ParentReference> result = awsGroupCache.getGroupCache(key);
+        String key = getKey(requesterId, partitionId);
+        Set<ParentReference> result = awsGroupCache.get(key);
         if (result == null) {
-            EntityNode entityNode = EntityNode.createMemberNodeForNewUser(requesterId, partitionId);
+            EntityNode entityNode = createEntityNode(requesterId, partitionId);
             result = retrieveGroupRepo.loadAllParents(entityNode).getParentReferences();
-            awsGroupCache.addGroupCache(key, result);
+            awsGroupCache.put(key, result);
         }
         return result;
     }
@@ -51,6 +72,6 @@ public class GroupCacheServiceAws implements GroupCacheService {
 
     @Override
     public void flushListGroupCacheForUser(String userId, String partitionId) {
-      // this method is empty implement in future
+        awsGroupCache.delete(getKey(userId, partitionId));
     }
 }
