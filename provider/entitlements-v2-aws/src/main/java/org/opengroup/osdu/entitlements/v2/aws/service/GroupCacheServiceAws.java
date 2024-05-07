@@ -17,9 +17,6 @@
 package org.opengroup.osdu.entitlements.v2.aws.service;
 
 import lombok.RequiredArgsConstructor;
-import org.opengroup.osdu.core.aws.cache.CacheFactory;
-import org.opengroup.osdu.core.common.cache.ICache;
-import org.opengroup.osdu.core.common.cache.VmCache;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.service.GroupCacheService;
@@ -35,7 +32,7 @@ import java.util.regex.Pattern;
 public class GroupCacheServiceAws implements GroupCacheService {
 
     private final RetrieveGroupRepo retrieveGroupRepo;
-    private final ICache<String, Set<ParentReference>> awsGroupCache = new VmCache<>(300, 1000);
+    private final AwsGroupCache awsGroupCache;
 
     @Value("${app.domain}")
     private String domain;
@@ -49,18 +46,14 @@ public class GroupCacheServiceAws implements GroupCacheService {
         }
     }
 
-    private String getKey(String requesterId, String partitionId) {
-        return String.format("%s-%s", requesterId, partitionId);
-    }
-
     @Override
     public Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId) {
-        String key = getKey(requesterId, partitionId);
-        Set<ParentReference> result = awsGroupCache.get(key);
+        String key = String.format("%s-%s", requesterId, partitionId);
+        Set<ParentReference> result = awsGroupCache.getGroupCache(key);
         if (result == null) {
             EntityNode entityNode = createEntityNode(requesterId, partitionId);
             result = retrieveGroupRepo.loadAllParents(entityNode).getParentReferences();
-            awsGroupCache.put(key, result);
+            awsGroupCache.addGroupCache(key, result);
         }
         return result;
     }
@@ -72,6 +65,6 @@ public class GroupCacheServiceAws implements GroupCacheService {
 
     @Override
     public void flushListGroupCacheForUser(String userId, String partitionId) {
-        awsGroupCache.delete(getKey(userId, partitionId));
+      // this method is empty implement in future
     }
 }
