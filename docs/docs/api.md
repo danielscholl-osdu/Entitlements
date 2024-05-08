@@ -32,7 +32,7 @@ received from _data-partition_id_ header. The user or service extracted from JWT
 of the group. The user or service must belong to service.entitlements.admin@{data-partition-id}.{domain}.com group.
 This API will be mainly used to create service and data groups.
 
-   Group creation guidelines: <a name="group-creation-guideline"></a>
+### Group creation guidelines:
    - **Data groups** used for data authorization e.g. of group name is : data.{resourceName}.{permission}@{data-partition-id}.{domain}.com
    - **Service groups** used for service authorization e.g. of group name is : service.{serviceName}.{permission}@{data-partition-id}.{domain}.com
    - **User groups** used for hierarchical grouping of user and service identities e.g. of group name is : users.{serviceName}.{permission}@{data-partition-id}.{domain}.com

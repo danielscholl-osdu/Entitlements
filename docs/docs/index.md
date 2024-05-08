@@ -28,7 +28,7 @@ For each group you can either be added as an OWNER or a MEMBER. The only differe
 
 A group naming convention has been adopted,
 such that the group's name should start with the word "data." for data groups; "service." for service groups; and "users." for user groups.
-The group's name is case-insensitive. Please refer to [group creation guideline](#group-creation-guideline) under the API section for more details.
+The group's name is case-insensitive. Please refer to [group creation guidelines](api.md#group-creation-guidelines) under the API section for more details.
 
 ## Basic concepts
 
