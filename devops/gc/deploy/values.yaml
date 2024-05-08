@@ -12,7 +12,6 @@ data:
   logLevel: "ERROR"
   partitionHost: "http://partition"
   projectId: ""
-  registerPubsubIdentity: ""
   # redis connection. Change it if you want to use external redis
   redisEntHost: ""
   redisEntPort: 6379
