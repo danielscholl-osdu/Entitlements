@@ -32,6 +32,10 @@ bootstrap_entitlements_onprem() {
 "userId": "indexer@service.local"
 },
 {
+"aliasId": "SERVICE_PRINCIPAL_REGISTER",
+"userId": "register@service.local"
+},
+{
 "aliasId": "SERVICE_PRINCIPAL_NOTIFICATION",
 "userId": "notification@service.local"
 },
@@ -85,7 +89,7 @@ bootstrap_entitlements_gc_system_partition() {
 },
 {
 "aliasId": "SERVICE_PRINCIPAL_REGISTER",
-"userId": "$REGISTER_PUBSUB_IDENTITY"
+"userId": "wi-register-gc@${PROJECT_ID}.iam.gserviceaccount.com"
 },
 {
 "aliasId": "SERVICE_PRINCIPAL_INDEXER",
@@ -145,7 +149,7 @@ cat <<EOF >/opt/other-partition-config.json
 },
 {
 "aliasId": "SERVICE_PRINCIPAL_REGISTER",
-"userId": "$REGISTER_PUBSUB_IDENTITY"
+"userId": "wi-register-gc@${PROJECT_ID}.iam.gserviceaccount.com"
 },
 {
 "aliasId": "SERVICE_PRINCIPAL_INDEXER",
@@ -200,7 +204,6 @@ elif [[ "${ONPREM_ENABLED}" == "false" ]]; then
   export SYSTEM_PARTITION_ID="system"
 
   source ./validate-env.sh "PROJECT_ID"
-  source ./validate-env.sh "REGISTER_PUBSUB_IDENTITY"
 
   echo "Bootstrapping entitlements for data_partition: ${SYSTEM_PARTITION_ID}"
   bootstrap_entitlements_gc_system_partition "${SYSTEM_PARTITION_ID}"

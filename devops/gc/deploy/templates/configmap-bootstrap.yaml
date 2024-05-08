@@ -12,7 +12,6 @@ data:
   AIRFLOW_COMPOSER_EMAIL: {{ .Values.data.airflowComposerEmail | quote }}
   {{- if not .Values.global.onPremEnabled }}
   PROJECT_ID: {{ .Values.data.projectId | quote }}
-  REGISTER_PUBSUB_IDENTITY: {{ .Values.data.registerPubsubIdentity | quote }}
   {{- end }}
   DATA_PARTITION_ID: {{ .Values.global.dataPartitionId | quote }}
   ONPREM_ENABLED: {{ .Values.global.onPremEnabled | quote }}
