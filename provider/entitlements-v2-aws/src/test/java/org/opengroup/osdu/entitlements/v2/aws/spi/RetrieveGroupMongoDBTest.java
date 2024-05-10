@@ -24,16 +24,22 @@ import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.GroupD
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.UserDoc;
 import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.internal.IdDoc;
 import org.opengroup.osdu.entitlements.v2.model.*;
+import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupsOfPartitionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.google.common.annotations.VisibleForTesting;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.swing.GroupLayout.Group;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.opengroup.osdu.entitlements.v2.aws.Util.NodeGenerator.generateGroupNode;
@@ -314,5 +320,17 @@ class RetrieveGroupMongoDBTest extends ParentUtil {
         Set<ParentReference> parentReferences = retrieveGroupMongoDB.filterParentsByAppId(parentTreeDto.getParentReferences(), idDoc.getDataPartitionId(), groupDoc1.getAppIds().stream().findFirst().get());
         //then
         assertEquals(8, parentReferences.size());
+    }
+
+    @Test
+    void getGroupsByPartitionId() {
+        IdDoc idDoc1 = createIdForGroup(1);
+        IdDoc idDoc2 = createIdForGroup(2);
+        GroupDoc group1 = mongoTemplateHelper.findById(idDoc1, GroupDoc.class);
+        GroupDoc group2 = mongoTemplateHelper.findById(idDoc2, GroupDoc.class);
+
+        ListGroupsOfPartitionDto groupsInPartition = retrieveGroupMongoDB.getGroupsInPartition(DATA_PARTITION, GroupType.NONE, null, 100);
+        assertEquals(9, groupsInPartition.getTotalCount());
+        
     }
 }

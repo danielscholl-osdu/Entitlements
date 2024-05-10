@@ -207,7 +207,27 @@ public class RetrieveGroupMongoDB extends BasicEntitlementsHelper implements Ret
 
     @Override
     public ListGroupsOfPartitionDto getGroupsInPartition(String dataPartitionId, GroupType groupType, String cursor, Integer limit) {
-        throw new NotImplementedException();
+        List<GroupDoc> groupDocs = groupHelper.getGroupsByPartitionId(dataPartitionId, groupType, cursor, limit);
+        List<ParentReference> groups = groupDocs.stream()
+            .map(groupDoc -> ParentReference.builder()
+                .id(groupDoc.getId().getNodeId())
+                .dataPartitionId(groupDoc.getId().getDataPartitionId())
+                .name(groupDoc.getName())
+                .description(groupDoc.getDescription())
+                .appIds(groupDoc.getAppIds())
+                .build())
+            .collect(Collectors.toSet()) // Collect into a Set to remove duplicates
+            .stream() // Stream the Set
+            .collect(Collectors.toList()); // Collect back into a List
+
+        Long totalCount = (long) groups.size();
+        
+        return ListGroupsOfPartitionDto.builder()
+                .groups( groups)
+                .totalCount(totalCount)
+                .cursor(cursor)
+                .build();
+        
     }
 
     @Override
