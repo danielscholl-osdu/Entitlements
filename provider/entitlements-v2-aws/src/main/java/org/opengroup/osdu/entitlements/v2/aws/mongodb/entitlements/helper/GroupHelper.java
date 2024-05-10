@@ -25,13 +25,16 @@ import org.opengroup.osdu.entitlements.v2.aws.mongodb.entitlements.entity.intern
 import org.opengroup.osdu.entitlements.v2.aws.util.ExceptionGenerator;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
+import org.opengroup.osdu.entitlements.v2.model.GroupType;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.opengroup.osdu.core.common.model.http.AppException;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,6 +47,7 @@ import java.util.stream.Collectors;
 import static org.opengroup.osdu.entitlements.v2.aws.spi.BasicEntitlementsHelper.APP_IDS;
 import static org.opengroup.osdu.entitlements.v2.aws.spi.BasicEntitlementsHelper.DIRECT_PARENTS;
 import static org.opengroup.osdu.entitlements.v2.aws.spi.BasicEntitlementsHelper.ID;
+import static org.opengroup.osdu.entitlements.v2.aws.spi.BasicEntitlementsHelper.TYPE;
 import static org.opengroup.osdu.entitlements.v2.aws.spi.BasicEntitlementsHelper.NAME;
 import static org.opengroup.osdu.entitlements.v2.aws.spi.BasicEntitlementsHelper.NODE_ID;
 
@@ -138,10 +142,35 @@ public class GroupHelper extends NodeHelper {
             return Collections.emptyList();
         }
         return helper.find(
-                Query.query(Criteria.where(ID).in(ids)),
+            Query.query(Criteria.where(ID).in(ids)),
                 GroupDoc.class,
                 getGroupCollection(ids.stream().findAny().get().getDataPartitionId())
         );
+    }
+
+    public List<GroupDoc> getGroupsByPartitionId(String dataPartitionId, GroupType groupType, String cursor, Integer limit) {
+        Criteria dataPartitionIdCriteria = Criteria.where("_id.dataPartitionId").is(dataPartitionId);
+        Criteria nameRegexCriteria = Criteria.where("name").regex("^" + groupType, "i");
+        Criteria combinedCriteria = (groupType == GroupType.NONE) ? dataPartitionIdCriteria : new Criteria().andOperator(dataPartitionIdCriteria, nameRegexCriteria);
+
+        Query query = new Query(combinedCriteria);
+
+        int offset = 0;
+        if (cursor != null && !cursor.isEmpty()) {
+            try {
+                offset = Integer.parseInt(cursor);
+            } catch (NumberFormatException e) {
+                throw new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), "Malformed cursor, must be integer value");
+            }
+        }
+        // Apply skip and limit for pagination
+        query.skip(offset);
+        
+        if (limit != null) {
+            query.limit(limit);
+        }
+
+        return helper.find(query, GroupDoc.class, getGroupCollection(dataPartitionId));
     }
 
     public Set<ChildrenReference> getDirectChildren(IdDoc parentGroup) {
