@@ -1,6 +1,6 @@
 /*
- * Copyright 2021 Google LLC
- * Copyright 2021 EPAM Systems, Inc
+ * Copyright 2024 Google LLC
+ * Copyright 2024 EPAM Systems, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,23 @@ public interface GroupRepository extends CrudRepository<GroupInfoEntity, Long> {
 
 	@Query("SELECT g.* FROM embedded_group as gg LEFT JOIN \"group\" as g ON gg.child_id = g.id WHERE gg.parent_id IN (:parentIds)")
 	List<GroupInfoEntity> findDirectChildren(@Param("parentIds") List<Long> parentIds);
+
+  @Query("SELECT count(jg.id) " +
+      "FROM \"group\" as g " +
+      "JOIN embedded_group as eg ON eg.parent_id = g.id " +
+      "JOIN \"group\" as jg ON jg.id = eg.child_id AND jg.partition_id = :partitionId " +
+      "WHERE g.email = :groupEmail")
+  int countSubGroups(@Param("partitionId") String partitionId,
+      @Param("groupEmail") String groupEmail);
+
+  @Query("SELECT count(m.id) " +
+      "FROM \"group\" as g " +
+      "JOIN member_to_group as mg ON mg.group_id = g.id " +
+      "JOIN member as m on m.id = mg.member_id AND m.partition_id = :partitionId " +
+      "WHERE g.email = :groupEmail AND mg.role IN (:roles)")
+  int countUsers(@Param("partitionId") String partitionId,
+      @Param("groupEmail") String groupEmail,
+      @Param("roles") List<String> roles);
 
 	@Modifying
 	@Query("INSERT INTO embedded_group VALUES (:parentId, :childId)")
