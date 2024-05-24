@@ -63,6 +63,12 @@ public abstract class DeleteMemberTest extends AcceptanceBaseTest {
 
         entitlementsV2Service.deleteMember(groups.get(2).getEmail(), token.getValue());
 
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
         assertFalse(isGroupAMemberOfAnotherGroup(groups.get(2).getEmail(), groups.get(0).getEmail()));
         assertFalse(isGroupAMemberOfAnotherGroup(groups.get(2).getEmail(), groups.get(1).getEmail()));
     }

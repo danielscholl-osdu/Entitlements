@@ -30,6 +30,7 @@ public class UpdateGroupService {
 
     private final RetrieveGroupRepo retrieveGroupRepo;
     private final GroupCacheService groupCacheService;
+    private final MemberCacheService memberCacheService;
     private final RenameGroupRepo renameGroupRepo;
     private final UpdateAppIdsRepo updateAppIdsRepo;
     private final DefaultGroupsService defaultGroupsService;
@@ -74,6 +75,7 @@ public class UpdateGroupService {
             result.setAppIds(allowedAppIdsList);
         }
         groupCacheService.refreshListGroupCache(new HashSet<>(impactedUsers), updateGroupServiceDto.getPartitionId());
+        memberCacheService.flushListMemberCacheForGroup(existingGroupEmail, partitionId);
         publishRenameGroupEntitlementsChangeEvent(updateGroupServiceDto);
         return result;
     }

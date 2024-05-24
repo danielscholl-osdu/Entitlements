@@ -3,9 +3,7 @@ package org.opengroup.osdu.entitlements.v2.service;
 import lombok.RequiredArgsConstructor;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
-import org.opengroup.osdu.core.common.model.http.DpsHeaders;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
-import org.opengroup.osdu.core.common.model.status.Message;
 import org.opengroup.osdu.core.common.status.IEventPublisher;
 import org.opengroup.osdu.entitlements.v2.AppProperties;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberDto;
@@ -24,7 +22,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,6 +35,7 @@ public class AddMemberService {
     private final JaxRsDpsLog log;
     private final PermissionService permissionService;
     private final GroupCacheService groupCacheService;
+    private final MemberCacheService memberCacheService;
     private final RequestInfo requestInfo;
     @Autowired(required = false)
     private IEventPublisher eventPublisher;
@@ -80,6 +78,7 @@ public class AddMemberService {
                 partitionId(addMemberServiceDto.getPartitionId()).existingParents(allExistingParents).build();
         Set<String> impactedUsers = addMemberRepo.addMember(existingGroupEntityNode, addMemberRepoDto);
         groupCacheService.refreshListGroupCache(impactedUsers, addMemberServiceDto.getPartitionId());
+        memberCacheService.flushListMemberCacheForGroup(addMemberServiceDto.getGroupEmail(), addMemberServiceDto.getPartitionId());
         publishAddMemberEntitlementsChangeEvent(addMemberDto, addMemberServiceDto);
     }
 

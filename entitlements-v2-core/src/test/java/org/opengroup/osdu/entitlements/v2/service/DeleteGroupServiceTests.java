@@ -44,6 +44,8 @@ public class DeleteGroupServiceTests {
     @Mock
     private GroupCacheService groupCacheService;
     @Mock
+    private MemberCacheService memberCacheService;
+    @Mock
     private JaxRsDpsLog logger;
     @Mock
     private DefaultGroupsService defaultGroupsService;
@@ -101,6 +103,7 @@ public class DeleteGroupServiceTests {
 
         verify(deleteGroupRepo).deleteGroup(groupNode);
         verify(groupCacheService).refreshListGroupCache(impactedUsers, "common");
+        verify(memberCacheService).flushListMemberCacheForGroup("data.x.viewers@common.contoso.com", "common");
         verify(publisher).publish(event, headersMap);
     }
 
@@ -202,6 +205,7 @@ public class DeleteGroupServiceTests {
 
         verify(deleteGroupRepo).deleteGroup(groupNode);
         verify(groupCacheService).refreshListGroupCache(impactedUsers, "common");
+        verify(memberCacheService).flushListMemberCacheForGroup("data.x.viewers@common.contoso.com", "common");
         verifyNoInteractions(publisher);
     }
 }

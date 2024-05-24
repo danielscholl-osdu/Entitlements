@@ -65,11 +65,8 @@ public class PermissionServiceTest {
     @Test
     public void shouldAllowGroupIsDataOrUserGroupAndCallerIsNotOwnerOfGroupButCallerBelongsToDataRootGroup() {
         EntityNode groupNode = EntityNode.builder().nodeId("users.y@dp.domain.com").name("users.y").type(NodeType.GROUP).dataPartitionId("dp").build();
-        EntityNode rootDataGroupNode = EntityNode.builder().nodeId("users.data.root@dp.domain.com").name("users.data.root").type(NodeType.GROUP).dataPartitionId("dp").build();
         EntityNode requester = EntityNode.builder().nodeId("member@xxx.com").name("member@xxx.com").type(NodeType.USER).dataPartitionId("dp").build();
-        Mockito.when(retrieveGroupRepo.hasDirectChild(Mockito.eq(groupNode), Mockito.any())).thenReturn(false);
-        Mockito.when(retrieveGroupRepo.hasDirectChild(Mockito.eq(rootDataGroupNode), Mockito.any())).thenReturn(true);
-        Mockito.when(retrieveGroupRepo.groupExistenceValidation(rootDataGroupNode.getNodeId(), rootDataGroupNode.getDataPartitionId())).thenReturn(rootDataGroupNode);
+        Mockito.when(authorizationService.isCurrentUserAuthorized(null, "users.data.root")).thenReturn(true);
 
         permissionService.verifyCanManageMembers(requester, groupNode);
 
@@ -82,8 +79,7 @@ public class PermissionServiceTest {
     public void shouldThrow401IfItIsNotOwnerOfTheGroup() {
         EntityNode groupNode = EntityNode.builder().nodeId("user.x@dp.domain.com").name("user.x").dataPartitionId("dp").type(NodeType.GROUP).build();
         EntityNode requester = EntityNode.builder().nodeId("member@xxx.com").name("member@xxx.com").type(NodeType.USER).dataPartitionId("dp").build();
-        EntityNode rootDataGroupNode = EntityNode.builder().nodeId("users.data.root@dp.domain.com").name("users.data.root").type(NodeType.GROUP).dataPartitionId("dp").build();
-        Mockito.when(retrieveGroupRepo.groupExistenceValidation(rootDataGroupNode.getNodeId(), rootDataGroupNode.getDataPartitionId())).thenReturn(rootDataGroupNode);
+        Mockito.when(authorizationService.isCurrentUserAuthorized(null, "users.data.root")).thenReturn(false);
         Mockito.when(retrieveGroupRepo.hasDirectChild(Mockito.eq(groupNode), Mockito.any())).thenReturn(false);
         try {
             permissionService.verifyCanManageMembers(requester, groupNode);

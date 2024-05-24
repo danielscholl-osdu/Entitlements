@@ -26,6 +26,7 @@ public class DeleteGroupService {
     private final DeleteGroupRepo deleteGroupRepo;
     private final RetrieveGroupRepo retrieveGroupRepo;
     private final GroupCacheService groupCacheService;
+    private final MemberCacheService memberCacheService;
     private final JaxRsDpsLog log;
     private final DefaultGroupsService defaultGroupsService;
     private final PermissionService permissionService;
@@ -48,6 +49,7 @@ public class DeleteGroupService {
         }
         Set<String> impactedUsers = deleteGroupRepo.deleteGroup(existingGroupEntityNode.get());
         groupCacheService.refreshListGroupCache(impactedUsers, deleteGroupServiceDto.getPartitionId());
+        memberCacheService.flushListMemberCacheForGroup(groupNode.getNodeId(), deleteGroupServiceDto.getPartitionId());
         publishDeleteGroupEntitlementsChangeEvent(groupNode.getNodeId(), deleteGroupServiceDto.getRequesterId());
     }
 

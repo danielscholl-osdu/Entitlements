@@ -33,7 +33,7 @@ public class ListMemberService {
         log.info(String.format("requested by %s", listMemberServiceDto.getRequesterId()));
         EntityNode groupNode = retrieveGroupRepo.groupExistenceValidation(listMemberServiceDto.getGroupId(), listMemberServiceDto.getPartitionId());
         EntityNode requesterNode = EntityNode.createMemberNodeForRequester(listMemberServiceDto.getRequesterId(), listMemberServiceDto.getPartitionId());
-        if (!permissionService.hasOwnerPermissionOf(requesterNode, groupNode) && !isCallerHasAdminPermissions()) {
+        if (!isCallerHasAdminPermissions() && !permissionService.hasOwnerPermissionOf(requesterNode, groupNode)) {
             throw new AppException(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase(), NOT_AUTHORIZED_MESSAGE);
         }
         return listMemberRepo.run(listMemberServiceDto);

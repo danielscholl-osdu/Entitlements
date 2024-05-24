@@ -5,12 +5,16 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.opengroup.osdu.azure.cache.RedisAzureCache;
+import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.entitlements.v2.azure.config.CacheConfig;
+import org.opengroup.osdu.entitlements.v2.azure.service.metrics.hitsnmisses.HitsNMissesMetricService;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.addmember.AddMemberRepoGremlin;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.GremlinConnector;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.constant.VertexPropertyNames;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
 import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
+import org.opengroup.osdu.entitlements.v2.model.ChildrenReferences;
 import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.Role;
@@ -36,6 +40,15 @@ public class ListMemberRepoGremlinTest {
 
     @Autowired
     private AddMemberRepoGremlin addMemberRepoGremlin;
+
+    @MockBean
+    private RedisAzureCache<String, ChildrenReferences> redisMemberCache;
+
+    @MockBean
+    private HitsNMissesMetricService metricService;
+
+    @MockBean
+    private JaxRsDpsLog log;
 
     @MockBean
     private AuditLogger auditLogger;
