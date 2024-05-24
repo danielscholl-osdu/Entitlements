@@ -53,6 +53,8 @@ public class UpdateGroupServiceTests {
     @Mock
     private GroupCacheService groupCacheService;
     @Mock
+    private MemberCacheService memberCacheService;
+    @Mock
     private RenameGroupRepo renameGroupRepo;
     @Mock
     private UpdateAppIdsRepo updateAppIdsRepo;
@@ -109,6 +111,7 @@ public class UpdateGroupServiceTests {
         Assert.assertEquals("users.test.x@dp.domain", responseDto.getEmail());
         Assert.assertEquals("users.test.x", responseDto.getName());
         Mockito.verify(groupCacheService).refreshListGroupCache(Collections.emptySet(), "dp");
+        Mockito.verify(memberCacheService).flushListMemberCacheForGroup(TEST_EXISTING_USER_GROUP_EMAIL, "dp");
         verify(publisher).publish(event, headersMap);
     }
 
@@ -226,6 +229,7 @@ public class UpdateGroupServiceTests {
         Assert.assertNotNull(responseDto);
         Assert.assertEquals(appIds, responseDto.getAppIds());
         Mockito.verify(groupCacheService).refreshListGroupCache(Collections.emptySet(), "dp");
+        Mockito.verify(memberCacheService).flushListMemberCacheForGroup(TEST_EXISTING_USER_GROUP_EMAIL, "dp");
         verify(publisher, times(0)).publish(any(), any());
     }
 
@@ -265,6 +269,7 @@ public class UpdateGroupServiceTests {
         Assert.assertEquals("users.test.x@dp.domain", responseDto.getEmail());
         Assert.assertEquals("users.test.x", responseDto.getName());
         Mockito.verify(groupCacheService).refreshListGroupCache(impactedUsers, "dp");
+        Mockito.verify(memberCacheService).flushListMemberCacheForGroup(TEST_EXISTING_USER_GROUP_EMAIL, "dp");
         verify(publisher).publish(event, headersMap);
     }
 
@@ -294,6 +299,7 @@ public class UpdateGroupServiceTests {
         Assert.assertEquals("users.test.x@dp.domain", responseDto.getEmail());
         Assert.assertEquals("users.test.x", responseDto.getName());
         Mockito.verify(groupCacheService).refreshListGroupCache(Collections.emptySet(), "dp");
+        Mockito.verify(memberCacheService).flushListMemberCacheForGroup(TEST_EXISTING_USER_GROUP_EMAIL, "dp");
         verifyNoInteractions(publisher);
     }
 

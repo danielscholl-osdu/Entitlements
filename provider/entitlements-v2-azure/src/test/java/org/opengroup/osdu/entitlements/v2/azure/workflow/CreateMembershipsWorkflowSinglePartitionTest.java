@@ -25,6 +25,7 @@ import org.opengroup.osdu.entitlements.v2.azure.AzureAppProperties;
 import org.opengroup.osdu.entitlements.v2.azure.config.CacheConfig;
 import org.opengroup.osdu.entitlements.v2.azure.service.metrics.hitsnmisses.HitsNMissesMetricService;
 import org.opengroup.osdu.entitlements.v2.logging.AuditLogger;
+import org.opengroup.osdu.entitlements.v2.model.ChildrenReferences;
 import org.opengroup.osdu.entitlements.v2.model.GroupType;
 import org.opengroup.osdu.entitlements.v2.model.ParentReference;
 import org.opengroup.osdu.entitlements.v2.model.ParentReferences;
@@ -95,6 +96,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     private AuthorizationService authService;
     @MockBean
     private RedisAzureCache<String, ParentReferences> redisGroupCache;
+    @MockBean
+    private RedisAzureCache<String, ChildrenReferences> redisMemberCache;
     @MockBean
     private CacheConfig cacheConfig;
     @Mock

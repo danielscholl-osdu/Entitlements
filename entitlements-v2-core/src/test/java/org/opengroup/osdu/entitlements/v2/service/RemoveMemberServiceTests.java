@@ -48,6 +48,8 @@ public class RemoveMemberServiceTests {
     @Mock
     private GroupCacheService groupCacheService;
     @Mock
+    private MemberCacheService memberCacheService;
+    @Mock
     private RemoveMemberRepo removeMemberRepo;
     @Mock
     private RequestInfo requestInfo;
@@ -147,6 +149,7 @@ public class RemoveMemberServiceTests {
 
         verify(removeMemberRepo).removeMember(groupNode, memberNode, removeMemberServiceDto);
         verify(groupCacheService).refreshListGroupCache(Collections.emptySet(), "common");
+        verify(memberCacheService).flushListMemberCacheForGroup("data.x@common.contoso.com", "common");
         verify(publisher).publish(event, headersMap);
     }
 
@@ -199,6 +202,7 @@ public class RemoveMemberServiceTests {
         removeMemberService.removeMember(removeMemberServiceDto);
 
         verify(groupCacheService).refreshListGroupCache(Collections.emptySet(), "common");
+        verify(memberCacheService).flushListMemberCacheForGroup("data.x@common.contoso.com", "common");
         verify(removeMemberRepo).removeMember(groupNode, memberNode, removeMemberServiceDto);
         verify(publisher).publish(event, headersMap);
     }
@@ -602,6 +606,7 @@ public class RemoveMemberServiceTests {
 
         verify(removeMemberRepo).removeMember(groupNode, memberNode, removeMemberServiceDto);
         verify(groupCacheService).refreshListGroupCache(Collections.emptySet(), "common");
+        verify(memberCacheService).flushListMemberCacheForGroup("data.x@common.contoso.com", "common");
         verifyNoInteractions(publisher);
     }
 }

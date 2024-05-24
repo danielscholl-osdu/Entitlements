@@ -13,6 +13,7 @@ public abstract class AppProperties {
     public static final String OPS = "users.datalake.ops";
     public static final String IMPERSONATOR = "users.datalake.delegation";
     public static final String IMPERSONATED_USER = "users.datalake.impersonation";
+    public static final String DATA_ROOT = "users.data.root";
 
     @Getter
     @Value("${app.projectId}")

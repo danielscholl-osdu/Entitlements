@@ -48,6 +48,8 @@ public class AddMemberServiceTests {
     @Mock
     private GroupCacheService groupCacheService;
     @Mock
+    private MemberCacheService memberCacheService;
+    @Mock
     private AddMemberRepo addMemberRepo;
     @Mock
     private JaxRsDpsLog log;
@@ -119,6 +121,7 @@ public class AddMemberServiceTests {
         assertThat(captor.getValue().getRole()).isEqualTo(Role.MEMBER);
         assertThat(captor.getValue().getPartitionId()).isEqualTo("common");
         verify(groupCacheService).refreshListGroupCache(allImpactUsers, "common");
+        verify(memberCacheService).flushListMemberCacheForGroup("data.x@common.contoso.com", "common");
         verify(publisher).publish(event, headersMap);
     }
 
@@ -165,6 +168,7 @@ public class AddMemberServiceTests {
         assertThat(captor.getValue().getRole()).isEqualTo(Role.MEMBER);
         assertThat(captor.getValue().getPartitionId()).isEqualTo("common");
         verify(groupCacheService).refreshListGroupCache(allImpactUsers, "common");
+        verify(memberCacheService).flushListMemberCacheForGroup("data.x@common.contoso.com", "common");
         verify(publisher).publish(event, headersMap);
     }
 
@@ -242,6 +246,7 @@ public class AddMemberServiceTests {
         assertThat(captor.getValue().getRole()).isEqualTo(Role.MEMBER);
         assertThat(captor.getValue().getPartitionId()).isEqualTo("common");
         verify(groupCacheService).refreshListGroupCache(allImpactUsers, "common");
+        verify(memberCacheService).flushListMemberCacheForGroup("data.x@common.contoso.com", "common");
         verify(publisher).publish(event, headersMap);
     }
 
@@ -492,6 +497,7 @@ public class AddMemberServiceTests {
         assertThat(captor.getValue().getRole()).isEqualTo(Role.MEMBER);
         assertThat(captor.getValue().getPartitionId()).isEqualTo("common");
         verify(groupCacheService).refreshListGroupCache(allImpactUsers, "common");
+        verify(memberCacheService).flushListMemberCacheForGroup("data.x@common.contoso.com", "common");
         verifyNoInteractions(publisher);
     }
 }

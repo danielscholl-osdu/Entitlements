@@ -1,5 +1,6 @@
 package org.opengroup.osdu.entitlements.v2.service;
 
+import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.entitlements.v2.AppProperties;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PermissionService {
+
+    @Autowired
+    private JaxRsDpsLog log;
 
     @Autowired
     private RetrieveGroupRepo retrieveGroupRepo;
@@ -54,31 +58,31 @@ public class PermissionService {
 
     /**
      * Returns true if requestNode has owner permissions of group
-     * Returns true if requestNode is a direct child of rootGroupNode
+     * Returns true if requestNode is a child of rootGroupNode
      */
     public boolean hasOwnerPermissionOf(final EntityNode requestNode, final EntityNode group, final String rootGroupId) {
-        if (Boolean.TRUE.equals(retrieveGroupRepo.hasDirectChild(group, ChildrenReference.createChildrenReference(requestNode, Role.OWNER)))) {
+        if ((group.isDataGroup() || group.isUserGroup()) && isCallerHasDataRootPermissions()){
             return true;
         }
-        final String dataPartitionId = requestNode.getDataPartitionId();
-        EntityNode dataRootGroupNode = retrieveGroupRepo.groupExistenceValidation(rootGroupId, dataPartitionId);
-        return (group.isDataGroup() || group.isUserGroup()) && hasDirectChildReference(requestNode, dataRootGroupNode);
+
+        return Boolean.TRUE.equals(retrieveGroupRepo.hasDirectChild(group, ChildrenReference.createChildrenReference(requestNode, Role.OWNER))) ? true : false;
     }
 
     private boolean isCallerHasOpsPermissions() {
         try {
             return authorizationService.isCurrentUserAuthorized(requestInfo.getHeaders(), AppProperties.OPS);
         } catch (AppException e) {
+            log.warning("Caller does not have OP permissions", e);
             return false;
         }
     }
 
-    private boolean hasDirectChildReference(EntityNode requestNode, EntityNode groupNode) {
-        ChildrenReference ownerRef = ChildrenReference.createChildrenReference(requestNode, Role.OWNER);
-        if (Boolean.TRUE.equals(retrieveGroupRepo.hasDirectChild(groupNode, ownerRef))) {
-            return true;
+    private boolean isCallerHasDataRootPermissions() {
+        try {
+            return authorizationService.isCurrentUserAuthorized(requestInfo.getHeaders(), AppProperties.DATA_ROOT);
+        } catch (AppException e) {
+            log.warning("Caller does not have DATA ROOT permissions", e);
+            return false;
         }
-        ChildrenReference memberRef = ChildrenReference.createChildrenReference(requestNode, Role.MEMBER);
-        return Boolean.TRUE.equals(retrieveGroupRepo.hasDirectChild(groupNode, memberRef));
     }
 }

@@ -32,6 +32,7 @@ public class RemoveMemberService {
     private final RemoveMemberRepo removeMemberRepo;
     private final RetrieveGroupRepo retrieveGroupRepo;
     private final GroupCacheService groupCacheService;
+    private final MemberCacheService memberCacheService;
     private final JaxRsDpsLog log;
     private final ServiceAccountsConfigurationService serviceAccountsConfigurationService;
     private final BootstrapGroupsConfigurationService bootstrapGroupsConfigurationService;
@@ -67,6 +68,7 @@ public class RemoveMemberService {
 
         Set<String> impactedUsers = removeMemberRepo.removeMember(existingGroupEntityNode, memberNode, removeMemberServiceDto);
         groupCacheService.refreshListGroupCache(impactedUsers, removeMemberServiceDto.getPartitionId());
+        memberCacheService.flushListMemberCacheForGroup(groupEmail, partitionId);
         publishRemoveMemberEntitlementsChangeEvent(removeMemberServiceDto);
         return impactedUsers;
     }
