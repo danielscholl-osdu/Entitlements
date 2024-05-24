@@ -1,6 +1,6 @@
 /*
- *  Copyright 2020-2023 Google LLC
- *  Copyright 2020-2023 EPAM Systems, Inc
+ *  Copyright 2020-2024 Google LLC
+ *  Copyright 2020-2024 EPAM Systems, Inc
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,13 +45,10 @@ import javax.sql.DataSource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.opengroup.osdu.core.common.partition.IPartitionProvider;
 import org.opengroup.osdu.core.common.partition.IPropertyResolver;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntConfigProperties;
-import org.opengroup.osdu.entitlements.v2.jdbc.interceptor.authenticator.IAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -72,12 +69,6 @@ public class MultiTenantJdbcTemplateTest {
 
   @Autowired
   private IPropertyResolver propertyResolver;
-
-  @MockBean
-  private IPartitionProvider partitionProvider;
-
-  @MockBean
-  private IAuthenticator authenticator;
 
   @Before
   public void setUp() throws SQLException {

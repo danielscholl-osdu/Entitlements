@@ -1,6 +1,6 @@
 /*
- *  Copyright 2020-2022 Google LLC
- *  Copyright 2020-2022 EPAM Systems, Inc
+ *  Copyright 2020-2024 Google LLC
+ *  Copyright 2020-2024 EPAM Systems, Inc
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,9 +20,9 @@ package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.core.common.partition.IPartitionFactory;
-import org.opengroup.osdu.entitlements.v2.jdbc.JdbcAppProperties;
+import org.opengroup.osdu.core.common.partition.IPartitionProvider;
+import org.opengroup.osdu.entitlements.v2.jdbc.interceptor.authenticator.IAuthenticator;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -39,10 +39,9 @@ public class SpiJdbcTestConfig {
     private JaxRsDpsLog logger;
     @MockBean
     private IPartitionFactory partitionFactory;
+    @MockBean
+    private IPartitionProvider iPartitionProvider;
+    @MockBean
+    private IAuthenticator iAuthenticator;
 
-
-    @Bean
-    public JdbcAppProperties getJdbcAppProperties(){
-        return new JdbcAppProperties();
-    }
 }

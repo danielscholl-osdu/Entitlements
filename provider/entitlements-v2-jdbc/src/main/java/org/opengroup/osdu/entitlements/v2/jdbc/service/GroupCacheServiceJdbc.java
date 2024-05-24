@@ -1,6 +1,6 @@
 /*
- *  Copyright 2020-2023 Google LLC
- *  Copyright 2020-2023 EPAM Systems, Inc
+ *  Copyright 2020-2024 Google LLC
+ *  Copyright 2020-2024 EPAM Systems, Inc
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -40,9 +40,17 @@ public class GroupCacheServiceJdbc implements GroupCacheService {
 
     @Override
     public Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId) {
-      EntityNode entityNode = getNodeByNodeType(requesterId, partitionId);
-      ParentReferences parentReferences = getFromCacheOrLoadParentReferences(entityNode);
-      return parentReferences.getParentReferencesOfUser();
+        return getFromPartitionCache(requesterId, partitionId, Boolean.FALSE);
+    }
+
+    @Override
+    public Set<ParentReference> getFromPartitionCache(String requesterId, String partitionId,
+        Boolean roleRequired) {
+
+        EntityNode entityNode = getNodeByNodeType(requesterId, partitionId);
+        ParentReferences parentReferences =
+            getFromCacheOrLoadParentReferences(entityNode, roleRequired);
+        return parentReferences.getParentReferencesOfUser();
     }
 
     @Override
@@ -64,13 +72,17 @@ public class GroupCacheServiceJdbc implements GroupCacheService {
             : EntityNode.createMemberNodeForNewUser(memberId, partitionId);
     }
 
-    private ParentReferences getFromCacheOrLoadParentReferences(EntityNode entityNode) {
-        ParentReferences parentReferences = this.entityGroupsCache.get(entityNode.getUniqueIdentifier());
+    private ParentReferences getFromCacheOrLoadParentReferences(EntityNode entityNode,
+        boolean roleRequired) {
+        String cacheKey = entityNode.getUniqueIdentifier() + "-" + roleRequired;
+        ParentReferences parentReferences = this.entityGroupsCache.get(cacheKey);
         if (parentReferences == null) {
-            Set<ParentReference> parentReferenceSet = retrieveGroupRepo.loadAllParents(entityNode).getParentReferences();
+            Set<ParentReference> parentReferenceSet = retrieveGroupRepo
+                .loadAllParents(entityNode, roleRequired)
+                .getParentReferences();
             parentReferences = new ParentReferences();
             parentReferences.setParentReferencesOfUser(parentReferenceSet);
-            entityGroupsCache.put(entityNode.getUniqueIdentifier(), parentReferences);
+            entityGroupsCache.put(cacheKey, parentReferences);
         }
         return parentReferences;
     }
