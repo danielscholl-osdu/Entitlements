@@ -1,6 +1,6 @@
 /*
- *  Copyright 2020-2023 Google LLC
- *  Copyright 2020-2023 EPAM Systems, Inc
+ *  Copyright 2020-2024 Google LLC
+ *  Copyright 2020-2024 EPAM Systems, Inc
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,30 +17,28 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.config;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.core.common.partition.IPropertyResolver;
 import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntConfigProperties;
 import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.SpiJdbcTestConfig;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @SpringBootTest(classes = {SpiJdbcTestConfig.class, MultiTenantJdbcTestConfig.class})
-@EnableConfigurationProperties(value = {EntConfigProperties.class})
-@RunWith(SpringRunner.class)
-public class DatabaseCheckTest {
+@ExtendWith(SpringExtension.class)
+class DatabaseCheckTest {
 
   @Mock
   private JdbcTemplate jdbcTemplate;
@@ -52,7 +50,7 @@ public class DatabaseCheckTest {
   private IPropertyResolver propertyResolver;
 
   @Test
-  public void check_databaseCheck_with_correct_schema() {
+  void check_databaseCheck_with_correct_schema() {
     DatabaseCheck databaseCheck = new DatabaseCheck(jdbcTemplate, entitlementsProperties,
         propertyResolver);
     List<String> schemaList = Arrays.asList(new String[]{"PUBLIC"});
@@ -64,7 +62,7 @@ public class DatabaseCheckTest {
   }
 
   @Test
-  public void check_databaseCheck_with_notCorrect_schema() {
+  void check_databaseCheck_with_notCorrect_schema() {
     DatabaseCheck databaseCheck = new DatabaseCheck(jdbcTemplate, entitlementsProperties,
         propertyResolver);
     List<String> schemaList = Arrays.asList(new String[]{"entitlements_2", "entitlements_3"});
@@ -79,7 +77,7 @@ public class DatabaseCheckTest {
   }
 
   @Test
-  public void check_databaseCheck_with_nullSchemaList() {
+  void check_databaseCheck_with_nullSchemaList() {
     DatabaseCheck databaseCheck = new DatabaseCheck(jdbcTemplate, entitlementsProperties,
         propertyResolver);
     when(jdbcTemplate.queryForList(
