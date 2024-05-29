@@ -34,7 +34,6 @@ The following software have components provided under the terms of this license:
 - API Common (from https://github.com/googleapis, https://github.com/googleapis/api-common-java, https://repo1.maven.org/maven2/com/google/api/api-common)
 - ASM based accessors helper used by json-smart (from https://urielch.github.io/)
 - AWS Java SDK for AWS KMS (from https://aws.amazon.com/sdkforjava)
-- AWS Java SDK for AWS Lambda (from https://aws.amazon.com/sdkforjava)
 - AWS Java SDK for AWS STS (from https://aws.amazon.com/sdkforjava)
 - AWS Java SDK for AWS Secrets Manager (from https://aws.amazon.com/sdkforjava)
 - AWS Java SDK for Amazon CloudWatch Logs (from https://aws.amazon.com/sdkforjava)
@@ -44,7 +43,6 @@ The following software have components provided under the terms of this license:
 - AWS Java SDK for Amazon SNS (from https://aws.amazon.com/sdkforjava)
 - AWS Java SDK for Amazon SQS (from https://aws.amazon.com/sdkforjava)
 - AWS Java SDK for the AWS Simple Systems Management (SSM) Service (from https://aws.amazon.com/sdkforjava)
-- AWS SDK for Java - BOM (from https://aws.amazon.com/sdkforjava)
 - AWS SDK for Java - Core (from https://aws.amazon.com/sdkforjava)
 - Adapter: RxJava (from https://github.com/square/retrofit)
 - Animal Sniffer Annotations (from https://repo1.maven.org/maven2/org/codehaus/mojo/animal-sniffer-annotations)
@@ -60,10 +58,8 @@ The following software have components provided under the terms of this license:
 - Apache Commons Validator (from http://commons.apache.org/proper/commons-validator/, http://jakarta.apache.org/commons/${pom.artifactId.substring(8)}/, https://repo1.maven.org/maven2/commons-validator/commons-validator)
 - Apache Groovy (from http://groovy-lang.org, http://groovy.codehaus.org/, https://groovy-lang.org)
 - Apache HTTP transport v2 for the Google HTTP Client Library for Java. (from https://repo1.maven.org/maven2/com/google/http-client/google-http-client-apache-v2)
-- Apache HttpClient (from http://hc.apache.org/httpcomponents-client, http://hc.apache.org/httpcomponents-client-ga, https://repo1.maven.org/maven2/org/apache/httpcomponents/client5/httpclient5)
+- Apache HttpClient (from http://hc.apache.org/httpcomponents-client, http://hc.apache.org/httpcomponents-client-ga)
 - Apache HttpClient Cache (from http://hc.apache.org/httpcomponents-client, http://hc.apache.org/httpcomponents-client-ga)
-- Apache HttpComponents Core HTTP/1.1 (from https://repo1.maven.org/maven2/org/apache/httpcomponents/core5/httpcore5)
-- Apache HttpComponents Core HTTP/2 (from https://repo1.maven.org/maven2/org/apache/httpcomponents/core5/httpcore5-h2)
 - Apache HttpCore (from http://hc.apache.org/httpcomponents-core-ga, http://hc.apache.org/httpcomponents-core-ga/, http://hc.apache.org/httpcomponents-core/)
 - Apache Log4j API (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api)
 - Apache Log4j Core (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core)
@@ -259,7 +255,6 @@ The following software have components provided under the terms of this license:
 - Spring Boot Actuator Starter (from http://projects.spring.io/spring-boot/, https://spring.io/projects/spring-boot)
 - Spring Boot AutoConfigure (from https://projects.spring.io/spring-boot/#/spring-boot-parent/spring-boot-autoconfigure, https://spring.io/projects/spring-boot)
 - Spring Boot Data JDBC Starter (from https://projects.spring.io/spring-boot/#/spring-boot-parent/spring-boot-starters/spring-boot-starter-data-jdbc, https://spring.io/projects/spring-boot)
-- Spring Boot Dependencies (from http://projects.spring.io/spring-boot/, https://spring.io/projects/spring-boot)
 - Spring Boot JDBC Starter (from http://projects.spring.io/spring-boot/, https://spring.io/projects/spring-boot)
 - Spring Boot Json Starter (from https://projects.spring.io/spring-boot/#/spring-boot-parent/spring-boot-starters/spring-boot-starter-json, https://spring.io/projects/spring-boot)
 - Spring Boot Log4j 2 Starter (from http://projects.spring.io/spring-boot/, https://projects.spring.io/spring-boot/#/spring-boot-parent/spring-boot-starters/spring-boot-starter-log4j2, https://spring.io/projects/spring-boot)
@@ -635,7 +630,6 @@ MIT
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- AWS Java SDK for AWS Lambda (from https://aws.amazon.com/sdkforjava)
 - Animal Sniffer Annotations (from https://repo1.maven.org/maven2/org/codehaus/mojo/animal-sniffer-annotations)
 - Apache HttpClient Cache (from http://hc.apache.org/httpcomponents-client, http://hc.apache.org/httpcomponents-client-ga)
 - Apache Log4j SLF4J Binding (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-slf4j-impl)
@@ -688,7 +682,6 @@ The following software have components provided under the terms of this license:
 - SLF4J API Module (from http://www.slf4j.org)
 - Spring Data for Azure Cosmos DB SQL API (from https://github.com/Azure/azure-sdk-for-java/tree/master/sdk/cosmos/azure-spring-data-cosmos, https://github.com/Azure/azure-sdk-for-java/tree/master/sdk/spring/azure-spring-data-cosmos)
 - System Stubs Core (from https://repo1.maven.org/maven2/uk/org/webcompere/system-stubs-core)
-- System Stubs JUnit4 (from https://repo1.maven.org/maven2/uk/org/webcompere/system-stubs-junit4)
 - adal4j (from https://github.com/AzureAD/azure-activedirectory-library-for-java)
 - botocore (from https://github.com/boto/botocore)
 - micrometer-commons (from https://github.com/micrometer-metrics/micrometer)
@@ -749,7 +742,6 @@ gpl-2.0-classpath
 The following software have components provided under the terms of this license:
 
 - Jakarta Annotations API (from https://projects.eclipse.org/projects/ee4j.ca)
-- Jakarta Validation API (from https://beanvalidation.org)
 
 ========================================================================
 public-domain

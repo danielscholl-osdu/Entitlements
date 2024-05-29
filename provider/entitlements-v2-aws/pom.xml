@@ -30,12 +30,11 @@
     <version>0.27.0-SNAPSHOT</version>
 
     <properties>
-        <core-lib-aws.version>0.26.0-spring6-rc1</core-lib-aws.version>
+        <core-lib-aws.version>0.26.0-spring6-rc2</core-lib-aws.version>
 		<reactor.netty.version>1.1.15</reactor.netty.version>
         <surefire.version>3.0.0-M5</surefire.version>
-        <jackson.version>2.15.2</jackson.version>
-        <jackson-databind.version>2.15.2</jackson-databind.version>
-        <spring-webmvc.version>6.1.6</spring-webmvc.version>
+        <jackson.version>2.17.1</jackson.version>
+        <jackson-databind.version>2.17.1</jackson-databind.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <guava.version>32.1.2-jre</guava.version>
@@ -50,39 +49,18 @@
             <artifactId>mongodb-driver-sync</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.opengroup.osdu.entitlements.v2</groupId>
-            <artifactId>entitlements-v2-core</artifactId>
-            <version>0.27.0-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-webmvc</artifactId>
-                </exclusion>
-            </exclusions>    
-        </dependency>
-        <dependency>
             <groupId>org.opengroup.osdu.core.aws</groupId>
             <artifactId>os-core-lib-aws</artifactId>
             <version>${core-lib-aws.version}</version>
-        </dependency>
+        </dependency>    
         <dependency>
-            <groupId>org.opengroup.osdu</groupId>
-            <artifactId>os-core-common-spring6</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
+            <groupId>org.opengroup.osdu.entitlements.v2</groupId>
+            <artifactId>entitlements-v2-core</artifactId>
+            <version>0.27.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
@@ -170,11 +148,6 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
             <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${spring-webmvc.version}</version>
         </dependency>
 
 

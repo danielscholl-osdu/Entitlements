@@ -35,7 +35,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.main.basedir>${project.basedir}</project.main.basedir>
-        <core-lib-aws.version>0.26.0</core-lib-aws.version>
+        <core-lib-aws.version>0.26.0-spring6-rc2</core-lib-aws.version>
         <junit.version>4.13.2</junit.version>
         <netty-all.version>4.1.50.Final</netty-all.version>
     </properties>
@@ -65,12 +65,6 @@
             <groupId>org.opengroup.osdu.core.aws</groupId>
             <artifactId>os-core-lib-aws</artifactId>
             <version>${core-lib-aws.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.opengroup.osdu</groupId>
-            <artifactId>os-core-common</artifactId>
-            <version>0.26.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
