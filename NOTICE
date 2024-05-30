@@ -72,6 +72,7 @@ The following software have components provided under the terms of this license:
 - Apache TinkerPop :: Gremlin Groovy (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-groovy)
 - Apache TinkerPop :: Gremlin Language (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-language)
 - Apache TinkerPop :: Gremlin Shaded (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-shaded)
+- Apache TinkerPop :: Gremlin Util (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-util)
 - Apache TinkerPop :: TinkerGraph Gremlin (from https://repo1.maven.org/maven2/org/apache/tinkerpop/tinkergraph-gremlin)
 - AssertJ Core (from https://assertj.github.io/doc/#assertj-core)
 - Asynchronous Http Client (from https://repo1.maven.org/maven2/org/asynchttpclient/async-http-client)
@@ -160,6 +161,7 @@ The following software have components provided under the terms of this license:
 - Java Native Access (from https://github.com/java-native-access/jna, https://github.com/twall/jna)
 - Java Native Access Platform (from https://github.com/java-native-access/jna)
 - JavaBeans Activation Framework (from <http://java.sun.com/javase/technologies/desktop/javabeans/jaf/index.jsp>, http://java.sun.com/javase/technologies/desktop/javabeans/jaf/index.jsp, https://repo1.maven.org/maven2/com/sun/activation/javax.activation)
+- JavaPoet (from http://github.com/square/javapoet/)
 - Javassist (from http://www.javassist.org/, https://www.javassist.org/)
 - JetBrains Java Annotations (from https://github.com/JetBrains/java-annotations)
 - Jetty :: Http Utility (from http://www.eclipse.org/jetty, https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-http)
@@ -311,6 +313,7 @@ The following software have components provided under the terms of this license:
 - io.grpc:grpc-xds (from https://github.com/grpc/grpc-java)
 - jackson-databind (from http://github.com/FasterXML/jackson, http://wiki.fasterxml.com/JacksonHome, https://github.com/FasterXML/jackson)
 - java-cloudant (from https://cloudant.com)
+- javaparser-core (from https://repo1.maven.org/maven2/com/github/javaparser/javaparser-core)
 - javatuples (from http://www.javatuples.org)
 - javax.annotation API (from http://jcp.org/en/jsr/detail?id=250)
 - javax.inject (from http://code.google.com/p/atinject/, https://repo1.maven.org/maven2/org/glassfish/hk2/external/javax.inject)
@@ -328,7 +331,6 @@ The following software have components provided under the terms of this license:
 - org.opentest4j:opentest4j (from https://github.com/ota4j-team/opentest4j)
 - org.xmlunit:xmlunit-core (from http://www.xmlunit.org/, https://www.xmlunit.org/)
 - perfmark:perfmark-api (from https://github.com/perfmark/perfmark)
-- picocli (from https://picocli.info)
 - proto-google-cloud-logging-v2 (from https://github.com/googleapis/java-logging/proto-google-cloud-logging-v2, https://repo1.maven.org/maven2/com/google/api/grpc/proto-google-cloud-logging-v2)
 - proto-google-cloud-pubsub-v1 (from https://github.com/googleapis/googleapis, https://github.com/googleapis/java-pubsub/proto-google-cloud-pubsub-v1)
 - proto-google-common-protos (from https://github.com/googleapis/api-client-staging, https://github.com/googleapis/googleapis, https://github.com/googleapis/java-iam/proto-google-common-protos, https://github.com/googleapis/sdk-platform-java)
@@ -380,6 +382,7 @@ The following software have components provided under the terms of this license:
 - API Common (from https://github.com/googleapis, https://github.com/googleapis/api-common-java, https://repo1.maven.org/maven2/com/google/api/api-common)
 - ASM Core (from http://asm.ow2.io/, http://asm.ow2.org/)
 - Angus Activation Registries (from https://repo1.maven.org/maven2/org/eclipse/angus/angus-activation)
+- Apache Groovy (from http://groovy-lang.org, http://groovy.codehaus.org/, https://groovy-lang.org)
 - AspectJ Weaver (from http://www.aspectj.org, https://www.eclipse.org/aspectj/)
 - DSL Platform JSON (core) (from https://github.com/ngs-doo/dsl-json)
 - FindBugs-jsr305 (from http://findbugs.sourceforge.net/)
@@ -415,8 +418,7 @@ The following software have components provided under the terms of this license:
 - Redisson (from http://redisson.org)
 - Spring Core (from http://www.springframework.org, https://github.com/spring-projects/spring-framework, https://repo1.maven.org/maven2/org/springframework/spring-core)
 - ThreeTen backport (from https://github.com/ThreeTen/threetenbp, https://www.threeten.org/threetenbp)
-- jcabi-log (from https://repo1.maven.org/maven2/com/jcabi/jcabi-log)
-- jcabi-manifests (from https://repo1.maven.org/maven2/com/jcabi/jcabi-manifests)
+- abego TreeLayout Core (from http://code.google.com/p/treelayout/)
 
 ========================================================================
 Beerware
@@ -440,6 +442,7 @@ CC-BY-2.5
 ========================================================================
 The following software have components provided under the terms of this license:
 
+- Apache Groovy (from http://groovy-lang.org, http://groovy.codehaus.org/, https://groovy-lang.org)
 - FindBugs-jsr305 (from http://findbugs.sourceforge.net/)
 - MongoDB Java Driver (from http://mongodb.org/, http://www.mongodb.org, https://www.mongodb.com/)
 
@@ -459,6 +462,7 @@ CC0-1.0
 The following software have components provided under the terms of this license:
 
 - Apache Commons Pool (from https://commons.apache.org/proper/commons-pool/)
+- Apache Groovy (from http://groovy-lang.org, http://groovy.codehaus.org/, https://groovy-lang.org)
 - Caffeine cache (from https://github.com/ben-manes/caffeine)
 - Guava: Google Core Libraries for Java (from http://code.google.com/p/guava-libraries, https://github.com/google/guava, https://repo1.maven.org/maven2/com/google/guava/guava)
 - HdrHistogram (from http://hdrhistogram.github.io/HdrHistogram/)
@@ -619,11 +623,19 @@ The following software have components provided under the terms of this license:
 - Javassist (from http://www.javassist.org/, https://www.javassist.org/)
 
 ========================================================================
+LGPL-3.0-only
+========================================================================
+The following software have components provided under the terms of this license:
+
+- javaparser-core (from https://repo1.maven.org/maven2/com/github/javaparser/javaparser-core)
+
+========================================================================
 LGPL-3.0-or-later
 ========================================================================
 The following software have components provided under the terms of this license:
 
 - H2 Database Engine (from https://h2database.com)
+- javaparser-core (from https://repo1.maven.org/maven2/com/github/javaparser/javaparser-core)
 
 ========================================================================
 MIT
@@ -634,7 +646,6 @@ The following software have components provided under the terms of this license:
 - Apache HttpClient Cache (from http://hc.apache.org/httpcomponents-client, http://hc.apache.org/httpcomponents-client-ga)
 - Apache Log4j SLF4J Binding (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-slf4j-impl)
 - Apache Log4j to SLF4J Adapter (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-to-slf4j)
-- Apache TinkerPop :: Gremlin Groovy (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-groovy)
 - Azure Java Client Authentication Library for AutoRest (from https://github.com/Azure/autorest-clientruntime-for-java)
 - Azure Java Client Runtime for ARM (from https://github.com/Azure/autorest-clientruntime-for-java)
 - Azure Java Client Runtime for AutoRest (from https://github.com/Azure/autorest-clientruntime-for-java)
@@ -748,6 +759,7 @@ public-domain
 ========================================================================
 The following software have components provided under the terms of this license:
 
+- Apache Groovy (from http://groovy-lang.org, http://groovy.codehaus.org/, https://groovy-lang.org)
 - HdrHistogram (from http://hdrhistogram.github.io/HdrHistogram/)
 - JBoss Logging 3 (from http://www.jboss.org)
 - JSON in Java (from https://github.com/douglascrockford/JSON-java)
