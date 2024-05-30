@@ -37,15 +37,15 @@ public class CreateGroupService {
         Set<ParentReference> allExistingParents = groupCacheService.getFromPartitionCache(requesterNode.getNodeId(), createGroupServiceDto.getPartitionId());
         if (allExistingParents.size() >= EntityNode.MAX_PARENTS) {
             log.error(String.format("Identity %s already belong to %d groups", createGroupServiceDto.getRequesterId(), allExistingParents.size()));
-            throw new AppException(HttpStatus.PRECONDITION_FAILED.value(), HttpStatus.PRECONDITION_FAILED.getReasonPhrase(), String.format("%s's group quota hit. Identity can't belong to more than %d groups", createGroupServiceDto.getRequesterId(), EntityNode.MAX_PARENTS));
+            throw new AppException(HttpStatus.PRECONDITION_FAILED.value(), HttpStatus.PRECONDITION_FAILED.getReasonPhrase(), String.format("Identity %s cannot be added to the group %s, as it has reached its group quota of %d groups", createGroupServiceDto.getRequesterId(), groupNode.getNodeId(), EntityNode.MAX_PARENTS));
         }
         if (this.shouldAddDataRootGroupInTheHierarchy(createGroupServiceDto.getPartitionId(), groupNode)) {
             EntityNode dataRootGroupNode = retrieveGroupRepo.groupExistenceValidation(String.format(EntityNode.ROOT_DATA_GROUP_EMAIL_FORMAT, createGroupServiceDto.getPartitionDomain()), createGroupServiceDto.getPartitionId());
             Set<ParentReference> allExistingParentsOfRootDataGroup = retrieveGroupRepo.loadAllParents(dataRootGroupNode).getParentReferences();
             if (allExistingParentsOfRootDataGroup.size() >= dataRootGroupQuota) {
                 log.error(String.format("Identity %s already belong to %d groups", dataRootGroupNode.getNodeId(), allExistingParentsOfRootDataGroup.size()));
-                throw new AppException(HttpStatus.PRECONDITION_FAILED.value(), HttpStatus.PRECONDITION_FAILED.getReasonPhrase(), String.format("%s's group quota hit. Identity can't belong to more than %d groups",
-                        dataRootGroupNode.getNodeId(), dataRootGroupQuota));
+                throw new AppException(HttpStatus.PRECONDITION_FAILED.value(), HttpStatus.PRECONDITION_FAILED.getReasonPhrase(), String.format("Identity %s cannot be added to the group %s, as it has reached its group quota of %d groups",
+                        dataRootGroupNode.getNodeId(), groupNode.getNodeId(), dataRootGroupQuota));
             }
             log.debug(String.format("Creating a group with root group node: %s", dataRootGroupNode.getName()));
             CreateGroupRepoDto createGroupRepoDto = CreateGroupRepoDto.builder()
