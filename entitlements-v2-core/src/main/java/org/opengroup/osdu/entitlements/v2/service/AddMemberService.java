@@ -68,7 +68,7 @@ public class AddMemberService {
                 allExistingParents.stream().filter(ref -> ref.getDataPartitionId().equalsIgnoreCase(addMemberServiceDto.getPartitionId())).collect(Collectors.toSet());
         if (allExistingParentsFilteredByPartition.size() >= EntityNode.MAX_PARENTS) {
             log.error(String.format("Identity %s already belong to %d groups", addMemberDto.getEmail(), allExistingParents.size()));
-            throw new AppException(HttpStatus.PRECONDITION_FAILED.value(), HttpStatus.PRECONDITION_FAILED.getReasonPhrase(), String.format("%s's group quota hit. Identity can't belong to more than %d groups", addMemberDto.getEmail(), EntityNode.MAX_PARENTS));
+            throw new AppException(HttpStatus.PRECONDITION_FAILED.value(), HttpStatus.PRECONDITION_FAILED.getReasonPhrase(), String.format("Identity %s cannot be added to the group %s, as it has reached its group quota of %d groups", addMemberDto.getEmail(), addMemberServiceDto.getGroupEmail(), EntityNode.MAX_PARENTS));
         }
         Set<ParentReference> allParentsOfGroup = retrieveGroupRepo.loadAllParents(existingGroupEntityNode).getParentReferences();
         Set<String> allParentsOfGroupEmails = allParentsOfGroup.stream().map(ref -> ref.getId()).collect(Collectors.toSet());
