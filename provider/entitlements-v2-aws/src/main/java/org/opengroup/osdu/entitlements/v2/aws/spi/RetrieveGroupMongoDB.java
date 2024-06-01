@@ -157,11 +157,12 @@ public class RetrieveGroupMongoDB extends BasicEntitlementsHelper implements Ret
             if (userToCheckParents == null) {
                 return ParentTreeDto.builder().parentReferences(new HashSet<>()).build();
             }
-            Set<IdDoc> allParentIDs = userToCheckParents.getAllParents().stream().map(NodeRelationDoc::getParentId).collect(Collectors.toSet());
-            List<GroupDoc> allParentGroups = groupHelper.getGroups(allParentIDs);
+            Set<GroupDoc> allParentIDs = userToCheckParents.getAllParents().stream().map(NodeRelationDoc::getParentId).map(groupHelper::getById).collect(Collectors.toSet());
+            Set<GroupDoc> allParentGroups = groupHelper.loadAllParents(allParentIDs);
 
             Set<ParentReference> parentReferences = new HashSet<>();
-            addParentReferences(allParentGroups, parentReferences);
+            addParentReferences(allParentGroups, parentReferences); // Add parents of parents (or more)
+            addParentReferences(allParentIDs, parentReferences);    // Add direct parents
             return ParentTreeDto.builder()
                     .parentReferences(parentReferences)
                     .build();
