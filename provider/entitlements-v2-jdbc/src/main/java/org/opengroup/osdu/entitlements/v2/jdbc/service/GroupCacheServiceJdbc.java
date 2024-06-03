@@ -63,7 +63,8 @@ public class GroupCacheServiceJdbc implements GroupCacheService {
     @Override
     public void flushListGroupCacheForUser(String userId, String partitionId) {
         EntityNode node = getNodeByNodeType(userId, partitionId);
-        entityGroupsCache.delete(node.getUniqueIdentifier());
+        entityGroupsCache.delete(getCacheKey(node, true));
+        entityGroupsCache.delete(getCacheKey(node, false));
     }
 
     private EntityNode getNodeByNodeType(String memberId, String partitionId) {
@@ -74,7 +75,7 @@ public class GroupCacheServiceJdbc implements GroupCacheService {
 
     private ParentReferences getFromCacheOrLoadParentReferences(EntityNode entityNode,
         boolean roleRequired) {
-        String cacheKey = entityNode.getUniqueIdentifier() + "-" + roleRequired;
+        String cacheKey = getCacheKey(entityNode, roleRequired);
         ParentReferences parentReferences = this.entityGroupsCache.get(cacheKey);
         if (parentReferences == null) {
             Set<ParentReference> parentReferenceSet = retrieveGroupRepo
@@ -85,5 +86,9 @@ public class GroupCacheServiceJdbc implements GroupCacheService {
             entityGroupsCache.put(cacheKey, parentReferences);
         }
         return parentReferences;
+    }
+
+    private static String getCacheKey(EntityNode entityNode, boolean roleRequired) {
+        return entityNode.getUniqueIdentifier() + "-" + roleRequired;
     }
 }
