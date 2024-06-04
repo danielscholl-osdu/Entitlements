@@ -44,6 +44,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -157,7 +158,11 @@ public class RetrieveGroupMongoDB extends BasicEntitlementsHelper implements Ret
             if (userToCheckParents == null) {
                 return ParentTreeDto.builder().parentReferences(new HashSet<>()).build();
             }
-            Set<GroupDoc> allParentIDs = userToCheckParents.getAllParents().stream().map(NodeRelationDoc::getParentId).map(groupHelper::getById).collect(Collectors.toSet());
+            Set<GroupDoc> allParentIDs = userToCheckParents.getAllParents().stream()
+                .map(NodeRelationDoc::getParentId)
+                .map(groupHelper::getById)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
             Set<GroupDoc> allParentGroups = groupHelper.loadAllParents(allParentIDs);
 
             Set<ParentReference> parentReferences = new HashSet<>();
