@@ -1,6 +1,6 @@
 /*
- * Copyright 2021 Google LLC
- * Copyright 2021 EPAM Systems, Inc
+ * Copyright 2024 Google LLC
+ * Copyright 2024 EPAM Systems, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.acceptance;
 
+import org.junit.Test;
 import org.opengroup.osdu.entitlements.v2.acceptance.GetGroupsTest;
 import org.opengroup.osdu.entitlements.v2.util.JdbcConfigurationService;
 import org.opengroup.osdu.entitlements.v2.util.JdbcTokenService;
@@ -25,5 +26,10 @@ public class GetGroupsJdbcTest extends GetGroupsTest {
 
     public GetGroupsJdbcTest() {
         super(new JdbcConfigurationService(), new JdbcTokenService());
+    }
+
+    @Test
+    public void should200ForGetGroupsWithRoleEnabled() {
+        test200ForGetGroupsWithRoleEnabled();
     }
 }

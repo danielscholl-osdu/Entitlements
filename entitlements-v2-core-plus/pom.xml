@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2021 Google LLC
-  ~ Copyright 2021 EPAM Systems, Inc
+  ~ Copyright 2021-2024 Google LLC
+  ~ Copyright 2021-2024 EPAM Systems, Inc
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <os-core-common.version>0.26.0</os-core-common.version>
+    <postgresql.version>42.7.3</postgresql.version>
   </properties>
 
   <parent>
@@ -65,12 +66,14 @@
       <artifactId>entitlements-v2-core</artifactId>
       <version>0.27.0-SNAPSHOT</version>
     </dependency>
+
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.28</version>
+      <version>1.18.30</version>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.opengroup.osdu</groupId>
       <artifactId>os-core-common-spring6</artifactId>
@@ -97,7 +100,7 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.7.3</version>
+      <version>${postgresql.version}</version>
     </dependency>
     <!--  Vulnerability fixes  -->
     <dependency>
@@ -137,12 +140,6 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.junit.vintage</groupId>
-          <artifactId>junit-vintage-engine</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.powermock</groupId>
@@ -154,12 +151,6 @@
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
       <version>2.0.2-beta</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -183,9 +174,7 @@
               </goals>
               <configuration>
                 <classifier>spring-boot</classifier>
-                <mainClass>
-                  org.springframework.boot.loader.launch.PropertiesLauncher
-                </mainClass>
+                <mainClass>org.springframework.boot.loader.launch.PropertiesLauncher</mainClass>
               </configuration>
             </execution>
           </executions>
@@ -257,13 +246,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.21.0</version>
-        <configuration>
-          <includes>
-            <include>**/*Test.java</include>
-            <include>**/*Tests.java</include>
-          </includes>
-        </configuration>
+        <version>3.2.5</version>
       </plugin>
     </plugins>
   </build>

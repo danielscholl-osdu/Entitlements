@@ -17,27 +17,26 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.opengroup.osdu.core.common.partition.IPartitionProvider;
-import org.opengroup.osdu.entitlements.v2.jdbc.interceptor.authenticator.IAuthenticator;
+import org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.SpiJdbcTestConfig;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@SpringBootTest
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@SpringBootTest(classes = SpiJdbcTestConfig.class)
 @AutoConfigureTestDatabase
-@ExtendWith(SpringExtension.class)
 @Sql(value = {"/sql/schema.sql", "/sql/retrieveGroupRepoTestData.sql"},
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@ExtendWith(SpringExtension.class)
 class GroupRepositoryTest {
 
   private static final String PARTITION_ID = "partition_1";
@@ -46,11 +45,6 @@ class GroupRepositoryTest {
   private static final int COUNT_USERS = 3;
   private static final int COUNT_USERS_MEMBER = 2;
   private static final int COUNT_SUBGROUPS = 1;
-
-  @MockBean
-  IPartitionProvider iPartitionProvider;
-  @MockBean
-  IAuthenticator iAuthenticator;
 
   @Autowired
   private GroupRepository groupRepository;
