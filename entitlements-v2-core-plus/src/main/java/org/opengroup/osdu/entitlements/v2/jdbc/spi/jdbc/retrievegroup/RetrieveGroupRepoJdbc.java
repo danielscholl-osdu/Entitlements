@@ -316,7 +316,6 @@ public class RetrieveGroupRepoJdbc implements RetrieveGroupRepo {
     private static final String COLUMN_DESCRIPTION = "description";
     private static final String COLUMN_PARTITION_ID = "partition_id";
     private static final String COLUMN_ROLE = "role";
-    public static final String EMPTY = "";
 
     private boolean roleRequired;
 
@@ -327,7 +326,7 @@ public class RetrieveGroupRepoJdbc implements RetrieveGroupRepo {
           .name(rs.getString(COLUMN_NAME).toLowerCase())
           .description(rs.getString(COLUMN_DESCRIPTION))
           .dataPartitionId(rs.getString(COLUMN_PARTITION_ID))
-          .role(roleRequired ? rs.getString(COLUMN_ROLE) : EMPTY)
+          .role(roleRequired ? rs.getString(COLUMN_ROLE) : null)
           .build();
     }
   }

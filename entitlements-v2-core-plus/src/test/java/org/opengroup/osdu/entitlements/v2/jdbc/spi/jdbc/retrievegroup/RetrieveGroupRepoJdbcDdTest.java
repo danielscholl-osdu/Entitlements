@@ -17,6 +17,7 @@
 package org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.retrievegroup;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.getCommonGroup;
 import static org.opengroup.osdu.entitlements.v2.jdbc.spi.jdbc.util.JdbcTestDataProvider.getMemberNode;
@@ -85,7 +86,7 @@ class RetrieveGroupRepoJdbcDdTest {
     assertEquals(FOUND_GROUPS_COUNT, res.getParentReferences().size());
 
     res.getParentReferences().forEach(
-        p -> assertTrue(p.getRole().isEmpty())
+        p -> assertNull(p.getRole())
     );
     Map<String, ParentReference> resMap = res.getParentReferences().stream()
         .collect(Collectors.toMap(ParentReference::getId, p -> p));
@@ -118,7 +119,7 @@ class RetrieveGroupRepoJdbcDdTest {
     assertEquals(FOUND_GROUPS_COUNT, res.getParentReferences().size());
 
     res.getParentReferences().forEach(
-        p -> assertTrue(p.getRole().isEmpty())
+        p -> assertNull(p.getRole())
     );
     Set<String> resSet = res.getParentReferences().stream()
         .map(ParentReference::getId)
