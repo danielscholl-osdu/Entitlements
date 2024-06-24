@@ -62,8 +62,14 @@ spec:
         livenessProbe:
           failureThreshold: 3
           httpGet:
-            path: api/entitlements/v2/_ah/liveness_check
-            port: 8080
-          initialDelaySeconds: 120
+            path: /health/liveness
+            port: 8081
+          initialDelaySeconds: 150
+          periodSeconds: 10
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health/readiness
+            port: 8081
           periodSeconds: 10
       serviceAccountName: {{ .Values.data.serviceAccountName | quote }}
