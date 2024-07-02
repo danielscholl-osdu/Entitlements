@@ -113,6 +113,30 @@ class AddMemberRepoGremlinTest {
     }
 
     @Test
+    void addMember_allowsToAdd_withValidation_whenFeatureFlagIsOn() {
+        EntityNode node = new EntityNode();
+        node.setType(NodeType.GROUP);
+        node.setNodeId(GROUP_EMAIL);
+
+        AddMemberRepoDto addMemberDto = mock(AddMemberRepoDto.class);
+        EntityNode userNode = new EntityNode();
+        userNode.setType(NodeType.USER);
+        userNode.setNodeId(USER_OID);
+
+        when(addMemberDto.getMemberNode()).thenReturn(userNode);
+        when(addMemberDto.getRole()).thenReturn(Role.MEMBER);
+        when(featureFlag.isFeatureEnabled(OID_VALIDATION_FEATURE_FLAG)).thenReturn(true);
+
+        ChildrenTreeDto childrenTreeDto = mock(ChildrenTreeDto.class);
+
+        when(retrieveGroupRepo.loadAllChildrenUsers(userNode)).thenReturn(childrenTreeDto);
+
+        sut.addMember(node, addMemberDto);
+
+        verify(graphService, times(0)).isOidValid(any(), any());
+    }
+
+    @Test
     void addMember_throwsAppException_whenInvalidOidIsProvided () {
         EntityNode node = new EntityNode();
         node.setType(NodeType.GROUP);

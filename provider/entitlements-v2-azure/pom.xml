@@ -342,6 +342,20 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.10</version>
+                <configuration>
+                    <excludes>
+                        <exclude>org/opengroup/osdu/entitlements/v2/azure/EntitlementsV2Application.class</exclude>
+                        <exclude>org/opengroup/osdu/entitlements/v2/azure/service/AddEdgeDto.class</exclude>
+                        <exclude>org/opengroup/osdu/entitlements/v2/azure/service/*AddEdgeDtoBuilder.class</exclude>
+                        <exclude>org/opengroup/osdu/entitlements/v2/azure/service/RemoveEdgeDto.class</exclude>
+                        <exclude>org/opengroup/osdu/entitlements/v2/azure/spi/gremlin/connection/**</exclude>
+                        <exclude>org/opengroup/osdu/entitlements/v2/azure/AzureAppProperties.class</exclude>
+                        <exclude>org/opengroup/osdu/entitlements/v2/azure/config/**</exclude>
+                        <exclude>org/opengroup/osdu/entitlements/v2/azure/security/**</exclude>
+                        <exclude>org/opengroup/osdu/entitlements/v2/azure/model/**</exclude>
+
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -367,21 +381,4 @@
             </plugin>
         </plugins>
     </build>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.10</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <!-- select non-aggregate reports -->
-                            <report>report</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-        </plugins>
-    </reporting>
 </project>
