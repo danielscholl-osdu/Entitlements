@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -1009,6 +1010,42 @@ users.x@dp.domain.com  users.y@dp.domain.com    member2@xxx.com -----------
 
         Assert.assertEquals(2, result.getMembersCount());
         Assert.assertEquals("groupId1", result.getGroupEmail());
+    }
+
+    @Test
+    public void shouldReturnEmptySetForGetEntityNodes() {
+        Set<EntityNode> entityNodes = retrieveGroupRepo.getEntityNodes("partitionId1", Arrays.asList("nodeId1"));
+        assertTrue(entityNodes.isEmpty());
+    }
+
+    @Test
+    public void shouldReturnEmptySetForGetAllGroupNodes() {
+        Set<EntityNode> groupNodes = retrieveGroupRepo.getAllGroupNodes("partitionId1", "partitionDomain1");
+        assertTrue(groupNodes.isEmpty());
+    }
+
+    @Test
+    public void shouldReturnEmptySetForGetGroupOwners() {
+        Set<String> groupOwners = retrieveGroupRepo.getGroupOwners("partitionId1", "nodeId1");
+        assertTrue(groupOwners.isEmpty());
+    }
+
+    @Test
+    public void shouldReturnEmptyMapForGetUserPartitionAssociations() {
+        Map<String, Set<String>> userPartitionAssociations = retrieveGroupRepo.getUserPartitionAssociations(Set.of("userId1", "userId2"));
+        assertTrue(userPartitionAssociations.isEmpty());
+    }
+
+   @Test
+    public void shouldReturnEmptyMapForGetAssociationCount() {
+        Map<String, Integer> userAssociations = retrieveGroupRepo.getAssociationCount(List.of("userId1", "userId2"));
+        assertTrue(userAssociations.isEmpty());
+    }
+
+    @Test
+    public void shouldReturnEmptyMapForGetAllUserPartitionAssociations() {
+        Map<String, Integer> userPartitionAssociations = retrieveGroupRepo.getAllUserPartitionAssociations();
+        assertTrue(userPartitionAssociations.isEmpty());
     }
 
     private void addMember(String childNodeId, NodeType typeOfChild, String parentNodeId, Role role) {

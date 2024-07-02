@@ -16,6 +16,7 @@ import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.creategroup.CreateGroupRepoDto;
+import org.opengroup.osdu.entitlements.v2.spi.Operation;
 import org.opengroup.osdu.entitlements.v2.spi.creategroup.CreateGroupRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -132,5 +135,16 @@ public class CreateGroupRepoGremlinTest {
                 .dataPartitionId(dataRootGroupNode.getDataPartitionId()).role(Role.MEMBER).build();
         assertTrue(retrieveGroupRepo.hasDirectChild(entityNode, childrenReferenceOfDataGroup));
         Mockito.verify(auditLogger).createGroup(AuditStatus.SUCCESS, "groupId");
+    }
+
+    @Test
+    public void shouldReturnEmptySet() {
+        Deque<Operation> executedCommandsDeque = new LinkedList<>();
+        EntityNode entityNode = EntityNode.builder().build();
+        CreateGroupRepoDto createGroupRepoDto = CreateGroupRepoDto.builder().build();
+
+        Set<String> impactedUsers = createGroupRepo.createGroup(executedCommandsDeque, entityNode, createGroupRepoDto);
+
+        assertTrue(impactedUsers.isEmpty());
     }
 }

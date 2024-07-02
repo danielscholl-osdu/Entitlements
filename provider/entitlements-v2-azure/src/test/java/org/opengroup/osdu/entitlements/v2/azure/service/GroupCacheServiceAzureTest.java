@@ -155,6 +155,20 @@ public class GroupCacheServiceAzureTest {
     }
 
     @Test
+    public void shouldGetAllParentsFromRepoForTheFirstTimeAndWithoutCacheLock() {
+        when(this.redisGroupCache.get("requesterId1-dp")).thenReturn(null);
+        when(redisGroupCache.getLock(any())).thenReturn(null);
+        when(this.retrieveGroupRepo.loadAllParents(this.requester1, false)).thenReturn(this.parentTreeDto);
+        when(this.parentTreeDto.getParentReferences()).thenReturn(this.parents);
+
+        Set<ParentReference> result = this.sut.getFromPartitionCache("requesterId1", "dp");
+        assertEquals(this.parents, result);
+        verify(this.retrieveGroupRepo).loadAllParents(this.requester1, false);
+        verify(this.redisGroupCache).get("requesterId1-dp");
+        verify(this.redisGroupCache).getLock("lock-requesterId1-dp");
+    }
+
+    @Test
     public void shouldGetAllParentsFromCacheForTheSecondTime() {
         when(this.redisGroupCache.get("requesterId1-dp")).thenReturn(this.parentReferences);
 

@@ -36,6 +36,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class RenameGroupRepoGremlinTest {
@@ -134,6 +137,17 @@ public class RenameGroupRepoGremlinTest {
                 .map(ParentReference::getId)
                 .collect(Collectors.toSet()));
         Mockito.verify(auditLogger).updateGroup(AuditStatus.SUCCESS, "users.x" + "@" + TEST_DOMAIN);
+    }
+
+    @Test
+    public void shouldThrowException() {
+        EntityNode groupNode = EntityNode.builder().name("testGroup").nodeId("testNodeId").build();
+        try {
+            renameGroupRepo.run(groupNode, "users.y");
+            fail("should throw exception");
+        } catch (Exception ex) {
+            assertNotNull(ex);
+        }
     }
 
     private void addTestEdgeAsOwner(String childName, String parentName) {

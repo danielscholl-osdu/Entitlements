@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.opengroup.osdu.core.common.logging.audit.AuditStatus;
 import org.opengroup.osdu.entitlements.v2.azure.config.CacheConfig;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.addmember.AddMemberRepoGremlin;
@@ -15,6 +14,7 @@ import org.opengroup.osdu.entitlements.v2.model.EntityNode;
 import org.opengroup.osdu.entitlements.v2.model.NodeType;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberRepoDto;
+import org.opengroup.osdu.entitlements.v2.spi.Operation;
 import org.opengroup.osdu.entitlements.v2.spi.deletegroup.DeleteGroupRepo;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Set;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -66,10 +71,20 @@ public class DeleteGroupRepoGremlinTest {
         Set<String> impactedUsers = deleteGroupRepo.deleteGroup(groupMemberNode);
 
         Assert.assertFalse(gremlinConnector.getGraphTraversalSource().V().has(VertexPropertyNames.NODE_ID, "groupMemberId").hasNext());
-        Assert.assertTrue(gremlinConnector.getGraphTraversalSource().E().toList().isEmpty());
-        Mockito.verify(auditLogger).deleteGroup(AuditStatus.SUCCESS, "groupMemberId");
+        assertTrue(gremlinConnector.getGraphTraversalSource().E().toList().isEmpty());
+        verify(auditLogger).deleteGroup(AuditStatus.SUCCESS, "groupMemberId");
         Assert.assertEquals(1, impactedUsers.size());
-        Assert.assertTrue(impactedUsers.contains("userId"));
+        assertTrue(impactedUsers.contains("userId"));
+    }
+
+    @Test
+    public void shouldReturnEmptySet() {
+        Deque<Operation> executedCommandsDeque = new LinkedList<>();
+        EntityNode groupMemberNode = EntityNode.builder().name("testGroup").nodeId("testNodeId").build();
+
+        Set<String> impactedUsers = deleteGroupRepo.deleteGroup(executedCommandsDeque, groupMemberNode);
+
+        assertTrue(impactedUsers.isEmpty());
     }
 
     private void createGroup(String nodeId) {
