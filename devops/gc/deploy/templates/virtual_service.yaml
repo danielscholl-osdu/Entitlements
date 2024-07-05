@@ -18,6 +18,23 @@ spec:
     - match:
         - uri:
             prefix: "/api/entitlements/v2"
+      {{- if .Values.istio.corsEnabled }}
+      corsPolicy:
+        allowHeaders:
+          - authorization
+          - content-type
+          - data-partition-id
+          - access-control-allow-origin
+        allowMethods:
+          - POST
+          - GET
+          - DELETE
+          - PATCH
+          - OPTIONS
+        allowOrigins:
+          - exact: "*"
+        maxAge: "24h"
+      {{- end }}
       route:
         - destination:
             port:
