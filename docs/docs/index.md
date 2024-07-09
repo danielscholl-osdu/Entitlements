@@ -22,7 +22,7 @@ For each group you can either be added as an OWNER or a MEMBER. The only differe
  - data-partition-id ∈ {'opendes', 'common', ...}
  - domain ∈ {'contoso.com' ...}
 
- As shown, a group is unique to each data partition. This means that access defined on a per data partition basis i.e. giving a service permission in one data partition does not give that user service permission in another data partition. See below for more information on data partitions.
+ As shown, a group is unique to each data partition. This means that access is defined on a per data partition basis i.e. giving a service permission in one data partition does not give that user service permission in another data partition. See below for more information on data partitions.
 
 #### Group naming convention
 
@@ -49,4 +49,4 @@ Group named _users_ contains all the identities that are allowed access to the d
  To deal with data partitions and to be able to track user identities, OSDU Data Ecosystem introduces two headers:
 
  - **_data-partition-id_** - required header for all OSDU Data Ecosystem APIs used to determine the data partition context for the call.
- - **_correlation-id_** - optional but **recommended** header for all OSDU Data Ecosystem APIs used to trace the API call. If correlation-id value provided in the request, the same value used in the response. If no correlation-id header provided, then entitlements service generates a GUID for this field in the response.
+ - **_correlation-id_** - optional but **recommended** header for all OSDU Data Ecosystem APIs used to trace the API call. If correlation-id value is provided in the request, the same value is used in the response. If no correlation-id header is provided, then entitlements service generates a GUID for this field in the response.
