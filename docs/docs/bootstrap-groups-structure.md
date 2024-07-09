@@ -23,7 +23,7 @@ The following table illustrates all the groups created in the POST /tenant-provi
 | Default data group | data.default.owners <br> data.default.viewers | The default data groups for a partition and all users of the partition can access it |
 | Service groups | service.storage.admin <br> service.storage.creator <br> service.storage.viewer <br> service.search.admin <br> service.search.user <br> service.entitlements.admin <br> service.entitlements.user <br> service.legal.admin <br> service.legal.editor <br> service.legal.user <br> service.plugin.user <br> service.messaging.user <br> service.schema-service.admin <br> service.schema-service.editors <br> service.schema-service.viewers <br> service.file.editors <br> service.file.viewers <br> service.workflow.admin <br> service.workflow.creator <br> service.workflow.viewer <br> service.document.viewer <br> service.index-document.user <br> service.content-extractor.user <br> service.gis-dl-transformation.user <br> service.gis-dl-ingestion.user <br> service.image-classification-classify.user <br> service.image-classification-train.user <br> service.form-extractor.user <br> service.mapping-service.editors <br> service.mapping-service.viewers | Service groups for different OSDU services |
 
-The following table illustrates all and relationships created in the POST /tenant-provisioning API
+The following table illustrates all groups and relationships created in the POST /tenant-provisioning API
 
 | Child group | Parent groups |
 | ----------- | ------------- |
