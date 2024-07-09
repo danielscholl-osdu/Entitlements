@@ -21,7 +21,7 @@ data:
   # Deployments
   bootstrapImage: ""
   bootstrapServiceAccountName: ""
-  requestsCpu: "5m"
+  requestsCpu: "25m"
   requestsMemory: "350Mi"
   limitsCpu: "1"
   limitsMemory: "1G"
