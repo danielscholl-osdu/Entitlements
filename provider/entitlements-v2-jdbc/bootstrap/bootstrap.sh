@@ -5,16 +5,16 @@ set -ex
 bootstrap_entitlements_onprem() {
 
   local DATA_PARTITION_ID=$1
-
-  ID_TOKEN="$(curl --location --silent --globoff --request POST "${OPENID_PROVIDER_URL}/protocol/openid-connect/token" \
-    --header "data-partition-id: ${DATA_PARTITION_ID}" \
-    --header "Content-Type: application/x-www-form-urlencoded" \
-    --data-urlencode "grant_type=client_credentials" \
-    --data-urlencode "scope=openid" \
-    --data-urlencode "client_id=${OPENID_PROVIDER_CLIENT_ID}" \
-    --data-urlencode "client_secret=${OPENID_PROVIDER_CLIENT_SECRET}" | jq -r ".id_token")"
-  export ID_TOKEN
-
+  {
+    ID_TOKEN="$(curl --location --silent --globoff --request POST "${OPENID_PROVIDER_URL}/protocol/openid-connect/token" \
+      --header "data-partition-id: ${DATA_PARTITION_ID}" \
+      --header "Content-Type: application/x-www-form-urlencoded" \
+      --data-urlencode "grant_type=client_credentials" \
+      --data-urlencode "scope=openid" \
+      --data-urlencode "client_id=${OPENID_PROVIDER_CLIENT_ID}" \
+      --data-urlencode "client_secret=${OPENID_PROVIDER_CLIENT_SECRET}" | jq -r ".id_token")"
+    export ID_TOKEN
+  } &> /dev/null
   cat <<EOF >/opt/configuration.json
 {
   "aliasMappings":
@@ -51,12 +51,14 @@ bootstrap_entitlements_onprem() {
 }
 EOF
 
+  set +x
   status_code=$(curl --location --globoff --request POST "${ENTITLEMENTS_HOST}/api/entitlements/v2/tenant-provisioning" \
     --write-out "%{http_code}" --silent --output "output.txt" \
     --header 'Content-Type: application/json' \
     --header "data-partition-id: ${DATA_PARTITION_ID}" \
     --header "Authorization: Bearer ${ID_TOKEN}" \
     --data @/opt/configuration.json)
+  set -x
 
   if [ "$status_code" == 200 ]; then
     echo "Entitlements provisioning completed successfully!"
@@ -71,9 +73,6 @@ EOF
 bootstrap_entitlements_gc_system_partition() {
 
   local DATA_PARTITION_ID=$1
-
-  ACCESS_TOKEN="$(gcloud auth print-access-token)"
-  export ACCESS_TOKEN
 
   cat <<EOF >/opt/system-partition-config.json
 {
@@ -111,12 +110,14 @@ bootstrap_entitlements_gc_system_partition() {
 }
 EOF
 
+  set +x
   status_code=$(curl --location --silent --globoff --request POST "${ENTITLEMENTS_HOST}/api/entitlements/v2/tenant-provisioning" \
     --write-out "%{http_code}" --output "output.txt" \
     --header 'Content-Type: application/json' \
     --header "data-partition-id: ${DATA_PARTITION_ID}" \
-    --header "Authorization: Bearer ${ACCESS_TOKEN}" \
+    --header "Authorization: Bearer $(gcloud auth print-access-token)" \
     --data @/opt/system-partition-config.json)
+  set -x
 
   if [ "$status_code" == 200 ]; then
     echo "Entitlements provisioning completed successfully!"
@@ -131,9 +132,6 @@ EOF
 bootstrap_entitlements_gc_non_system_partition() {
 
   local DATA_PARTITION_ID=$1
-
-  ACCESS_TOKEN="$(gcloud auth print-access-token)"
-  export ACCESS_TOKEN
 
 cat <<EOF >/opt/other-partition-config.json
 {
@@ -171,12 +169,14 @@ cat <<EOF >/opt/other-partition-config.json
 }
 EOF
 
+  set +x
   status_code=$(curl --location --silent --globoff --request POST "${ENTITLEMENTS_HOST}/api/entitlements/v2/tenant-provisioning" \
     --write-out "%{http_code}" --output "output.txt" \
     --header 'Content-Type: application/json' \
     --header "data-partition-id: ${DATA_PARTITION_ID}" \
-    --header "Authorization: Bearer ${ACCESS_TOKEN}" \
+    --header "Authorization: Bearer $(gcloud auth print-access-token)" \
     --data @/opt/other-partition-config.json)
+  set -x
 
   if [ "$status_code" == 200 ]; then
     echo "Entitlements provisioning completed successfully!"
