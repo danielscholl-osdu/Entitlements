@@ -86,7 +86,7 @@ The following software have components provided under the terms of this license:
 - Byte Buddy Java agent (from https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy-agent)
 - Caffeine cache (from https://github.com/ben-manes/caffeine)
 - ClassMate (from http://github.com/cowtowncoder/java-classmate)
-- Cloud Key Management Service (KMS) API v1-rev20240613-2.0.0 (from https://repo1.maven.org/maven2/com/google/apis/google-api-services-cloudkms)
+- Cloud Key Management Service (KMS) API (from https://repo1.maven.org/maven2/com/google/apis/google-api-services-cloudkms)
 - Collections (from https://repo1.maven.org/maven2/commons-collections/commons-collections)
 - Commons Digester (from http://commons.apache.org/digester/)
 - Converter: Jackson (from https://github.com/square/retrofit, https://repo1.maven.org/maven2/com/squareup/retrofit2/converter-jackson)
@@ -140,7 +140,6 @@ The following software have components provided under the terms of this license:
 - JSON Small and Fast Parser (from https://repo1.maven.org/maven2/net/minidev/json-smart, https://urielch.github.io/)
 - JSON library from Android SDK (from http://developer.android.com/sdk)
 - JSONassert (from http://github.com/skyscreamer/yoga, https://github.com/skyscreamer/JSONassert)
-- JSQLParser library (from https://github.com/JSQLParser/JSqlParser)
 - JSR107 API and SPI (from https://github.com/jsr107/jsr107spec)
 - JSpecify annotations (from http://jspecify.org/)
 - Jackson 2 extensions to the Google APIs Client Library for Java (from https://repo1.maven.org/maven2/com/google/api-client/google-api-client-jackson2)
@@ -232,11 +231,11 @@ The following software have components provided under the terms of this license:
 - Plexus Common Utilities (from http://plexus.codehaus.org/plexus-utils, https://codehaus-plexus.github.io/plexus-utils/, https://repo1.maven.org/maven2/org/codehaus/plexus/plexus-utils)
 - PostgreSQL JDBC Driver
 - PowerMock (from http://www.powermock.org, https://repo1.maven.org/maven2/org/powermock/powermock-api-mockito)
-- Prometheus Java Simpleclient (from <https://repo1.maven.org/maven2/io/prometheus/simpleclient>, https://repo1.maven.org/maven2/io/prometheus/simpleclient)
-- Prometheus Java Simpleclient Common (from <https://repo1.maven.org/maven2/io/prometheus/simpleclient_common>, https://repo1.maven.org/maven2/io/prometheus/simpleclient_common)
-- Prometheus Java Span Context Supplier - Common (from <https://repo1.maven.org/maven2/io/prometheus/simpleclient_tracer_common>, https://repo1.maven.org/maven2/io/prometheus/simpleclient_tracer_common)
-- Prometheus Java Span Context Supplier - OpenTelemetry (from <https://repo1.maven.org/maven2/io/prometheus/simpleclient_tracer_otel>, https://repo1.maven.org/maven2/io/prometheus/simpleclient_tracer_otel)
-- Prometheus Java Span Context Supplier - OpenTelemetry Agent (from <https://repo1.maven.org/maven2/io/prometheus/simpleclient_tracer_otel_agent>, https://repo1.maven.org/maven2/io/prometheus/simpleclient_tracer_otel_agent)
+- Prometheus Metrics Config (from https://repo1.maven.org/maven2/io/prometheus/prometheus-metrics-config)
+- Prometheus Metrics Core (from https://repo1.maven.org/maven2/io/prometheus/prometheus-metrics-core)
+- Prometheus Metrics Exposition Formats (from https://repo1.maven.org/maven2/io/prometheus/prometheus-metrics-exposition-formats)
+- Prometheus Metrics Model (from https://repo1.maven.org/maven2/io/prometheus/prometheus-metrics-model)
+- Prometheus Metrics Tracer Common (from https://repo1.maven.org/maven2/io/prometheus/prometheus-metrics-tracer-common)
 - Proton-J (from https://repo1.maven.org/maven2/org/apache/qpid/proton-j)
 - QUIC functionality for the Reactor Netty library (from https://github.com/reactor/reactor-netty)
 - QpidJMS Client (from https://repo1.maven.org/maven2/org/apache/qpid/qpid-jms-client)
@@ -245,6 +244,7 @@ The following software have components provided under the terms of this license:
 - Redisson (from http://redisson.org)
 - Retrofit (from https://github.com/square/retrofit, https://repo1.maven.org/maven2/com/squareup/retrofit2/retrofit)
 - RxJava (from https://github.com/ReactiveX/RxJava)
+- Shaded Protobuf (from https://repo1.maven.org/maven2/io/prometheus/prometheus-metrics-shaded-protobuf)
 - SnakeYAML (from http://code.google.com/p/snakeyaml/, http://www.snakeyaml.org, https://bitbucket.org/snakeyaml/snakeyaml)
 - Spring AOP (from http://www.springframework.org, https://github.com/spring-projects/spring-framework, https://repo1.maven.org/maven2/org/springframework/spring-aop)
 - Spring Beans (from http://www.springframework.org, https://github.com/SpringSource/spring-framework, https://github.com/spring-projects/spring-framework, https://repo1.maven.org/maven2/org/springframework/spring-beans)
@@ -309,6 +309,7 @@ The following software have components provided under the terms of this license:
 - io.grpc:grpc-services (from https://github.com/grpc/grpc-java)
 - io.grpc:grpc-stub (from https://github.com/grpc/grpc-java)
 - io.grpc:grpc-xds (from https://github.com/grpc/grpc-java)
+- ion-java (from https://github.com/amzn/ion-java/, https://github.com/amznlabs/ion-java/)
 - jackson-databind (from http://github.com/FasterXML/jackson, http://wiki.fasterxml.com/JacksonHome, https://github.com/FasterXML/jackson)
 - java-cloudant (from https://cloudant.com)
 - javaparser-core (from https://repo1.maven.org/maven2/com/github/javaparser/javaparser-core)
@@ -335,7 +336,6 @@ The following software have components provided under the terms of this license:
 - proto-google-iam-v1 (from https://github.com/googleapis/googleapis, https://github.com/googleapis/java-iam/proto-google-iam-v1, https://github.com/googleapis/sdk-platform-java)
 - requests (from http://python-requests.org, https://requests.readthedocs.io)
 - resilience4j (from https://github.com/resilience4j/resilience4j, https://resilience4j.readme.io, ttps://resilience4j.readme.io)
-- software.amazon.ion:ion-java (from https://github.com/amzn/ion-java/)
 - spring-boot-loader (from https://spring.io/projects/spring-boot)
 - spring-security-oauth2-client (from http://spring.io/spring-security, https://spring.io/projects/spring-security, https://spring.io/spring-security)
 - spring-security-oauth2-core (from http://spring.io/spring-security, https://spring.io/projects/spring-security, https://spring.io/spring-security)
@@ -413,6 +413,7 @@ The following software have components provided under the terms of this license:
 - Protocol Buffers [Util] (from https://repo1.maven.org/maven2/com/google/protobuf/protobuf-java-util)
 - RE2/J (from http://github.com/google/re2j)
 - Redisson (from http://redisson.org)
+- Shaded Protobuf (from https://repo1.maven.org/maven2/io/prometheus/prometheus-metrics-shaded-protobuf)
 - Spring Core (from http://www.springframework.org, https://github.com/spring-projects/spring-framework, https://repo1.maven.org/maven2/org/springframework/spring-core)
 - ThreeTen backport (from https://github.com/ThreeTen/threetenbp, https://www.threeten.org/threetenbp)
 - abego TreeLayout Core (from http://code.google.com/p/treelayout/)
@@ -464,7 +465,6 @@ The following software have components provided under the terms of this license:
 - Hibernate Validator (from https://repo1.maven.org/maven2/org/hibernate/hibernate-validator, https://repo1.maven.org/maven2/org/hibernate/validator/hibernate-validator)
 - LatencyUtils (from http://latencyutils.github.io/LatencyUtils/)
 - Netty/Common (from https://repo1.maven.org/maven2/io/netty/netty-common)
-- Prometheus Java Simpleclient (from <https://repo1.maven.org/maven2/io/prometheus/simpleclient>, https://repo1.maven.org/maven2/io/prometheus/simpleclient)
 - RabbitMQ Java Client (from http://www.rabbitmq.com, https://www.rabbitmq.com)
 - reactive-streams (from http://www.reactive-streams.org/)
 
@@ -595,6 +595,7 @@ The following software have components provided under the terms of this license:
 
 - JGraphT - Core (from https://repo1.maven.org/maven2/org/jgrapht/jgrapht-core)
 - Java Native Access Platform (from https://github.com/java-native-access/jna)
+- Javassist (from http://www.javassist.org/, https://www.javassist.org/)
 - Logback Classic Module (from http://logback.qos.ch, https://repo1.maven.org/maven2/ch/qos/logback/logback-classic)
 - Logback Contrib :: JSON :: Classic (from https://repo1.maven.org/maven2/ch/qos/logback/contrib/logback-json-classic)
 - Logback Contrib :: JSON :: Core (from https://repo1.maven.org/maven2/ch/qos/logback/contrib/logback-json-core)
@@ -609,7 +610,6 @@ LGPL-2.1-or-later
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- JSQLParser library (from https://github.com/JSQLParser/JSqlParser)
 - Java Native Access (from https://github.com/java-native-access/jna, https://github.com/twall/jna)
 - Java Native Access Platform (from https://github.com/java-native-access/jna)
 - Javassist (from http://www.javassist.org/, https://www.javassist.org/)
@@ -636,8 +636,6 @@ The following software have components provided under the terms of this license:
 
 - Animal Sniffer Annotations (from https://repo1.maven.org/maven2/org/codehaus/mojo/animal-sniffer-annotations)
 - Apache HttpClient Cache (from http://hc.apache.org/httpcomponents-client, http://hc.apache.org/httpcomponents-client-ga)
-- Apache Log4j SLF4J Binding (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-slf4j-impl)
-- Apache Log4j to SLF4J Adapter (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-to-slf4j)
 - Azure Java Client Authentication Library for AutoRest (from https://github.com/Azure/autorest-clientruntime-for-java)
 - Azure Java Client Runtime for ARM (from https://github.com/Azure/autorest-clientruntime-for-java)
 - Azure Java Client Runtime for AutoRest (from https://github.com/Azure/autorest-clientruntime-for-java)
@@ -693,13 +691,6 @@ The following software have components provided under the terms of this license:
 - mockito-junit-jupiter (from https://github.com/mockito/mockito)
 - msal4j (from https://github.com/AzureAD/microsoft-authentication-library-for-java)
 - msal4j-persistence-extension (from https://github.com/AzureAD/microsoft-authentication-extensions-for-java, https://github.com/AzureAD/microsoft-authentication-library-for-java)
-
-========================================================================
-MPL-1.1
-========================================================================
-The following software have components provided under the terms of this license:
-
-- Javassist (from http://www.javassist.org/, https://www.javassist.org/)
 
 ========================================================================
 MPL-2.0

@@ -1,8 +1,7 @@
 package org.opengroup.osdu.entitlements.v2.azure.configuration;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
+import com.azure.security.keyvault.secrets.SecretClient;
+import com.azure.security.keyvault.secrets.models.KeyVaultSecret;
 import org.opengroup.osdu.azure.cache.RedisAzureCache;
 import org.opengroup.osdu.azure.di.RedisAzureConfiguration;
 import org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection.EmbeddedGremlinConnector;
@@ -12,8 +11,8 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
-import com.azure.security.keyvault.secrets.SecretClient;
-import com.azure.security.keyvault.secrets.models.KeyVaultSecret;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @TestConfiguration
 public class AzureTestConfiguration {
@@ -25,6 +24,7 @@ public class AzureTestConfiguration {
                 new RedisAzureConfiguration(0, 3600, 7000, 3600, 5));
     }
 
+    @Primary
     @Bean
     public GremlinConnector gremlinConnector() {
         return new EmbeddedGremlinConnector();
