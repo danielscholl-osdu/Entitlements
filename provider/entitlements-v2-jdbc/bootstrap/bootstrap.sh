@@ -115,7 +115,7 @@ EOF
     --write-out "%{http_code}" --output "output.txt" \
     --header 'Content-Type: application/json' \
     --header "data-partition-id: ${DATA_PARTITION_ID}" \
-    --header "Authorization: Bearer $(gcloud auth print-access-token)" \
+    --header "Authorization: Bearer $(gcloud auth print-identity-token)" \
     --data @/opt/system-partition-config.json)
   set -x
 
@@ -174,7 +174,7 @@ EOF
     --write-out "%{http_code}" --output "output.txt" \
     --header 'Content-Type: application/json' \
     --header "data-partition-id: ${DATA_PARTITION_ID}" \
-    --header "Authorization: Bearer $(gcloud auth print-access-token)" \
+    --header "Authorization: Bearer $(gcloud auth print-identity-token)" \
     --data @/opt/other-partition-config.json)
   set -x
 
@@ -200,7 +200,7 @@ if [[ "${ONPREM_ENABLED}" == "true" ]]; then
   source ./validate-env.sh "OPENID_PROVIDER_CLIENT_SECRET"
   bootstrap_entitlements_onprem "${DATA_PARTITION_ID}"
 elif [[ "${ONPREM_ENABLED}" == "false" ]]; then
-  # Specifying "system" partition for GC installation 
+  # Specifying "system" partition for GC installation
   export SYSTEM_PARTITION_ID="system"
 
   source ./validate-env.sh "PROJECT_ID"
