@@ -38,7 +38,7 @@ conf:
   entitlementsPostgresSecretName: "entitlements-multi-tenant-postgres-secret"
   bootstrapOpenidSecretName: "datafier-secret"
   entitlementsRedisSecretName: "entitlements-redis-secret"
-  replicas: 1
+  replicas: 2
 
 auth:
   keycloakUrl: ""
