@@ -10,12 +10,6 @@ import org.opengroup.osdu.entitlements.v2.acceptance.util.ConfigurationService;
 public class AzureConfigurationService implements ConfigurationService {
     private static String SERVICE_URL;
 
-    private static final String APP_USER_OID1 =
-            System.getProperty("AZURE_AD_VALID_OID_USER1", System.getenv("AZURE_AD_VALID_OID_USER1"));
-
-    private static final String APP_USER_OID2 =
-            System.getProperty("AZURE_AD_VALID_OID_USER2", System.getenv("AZURE_AD_VALID_OID_USER2"));
-
     @Override
     public String getTenantId() {
         String tenantId = System.getProperty("TENANT_NAME", System.getenv("TENANT_NAME"));
@@ -52,14 +46,26 @@ public class AzureConfigurationService implements ConfigurationService {
     }
 
     public String getMemberMailId() {
+        String APP_USER_OID1 = System.getProperty("AZURE_AD_VALID_OID_USER1", System.getenv("AZURE_AD_VALID_OID_USER1"));
+        if (Strings.isNullOrEmpty(APP_USER_OID1)) {
+            return "testMember@test.com";
+        }
         return APP_USER_OID1;
     }
 
     public String getOwnerMailId() {
+        String APP_USER_OID2 = System.getProperty("AZURE_AD_VALID_OID_USER2", System.getenv("AZURE_AD_VALID_OID_USER2"));
+        if (Strings.isNullOrEmpty(APP_USER_OID2)) {
+            return "testmMemberOwner@test.com";
+        }
         return APP_USER_OID2;
     }
 
     public String getMemberMailId_toBeDeleted(long timestamp) {
+        String APP_USER_OID1 = System.getProperty("AZURE_AD_VALID_OID_USER1", System.getenv("AZURE_AD_VALID_OID_USER1"));
+        if (Strings.isNullOrEmpty(APP_USER_OID1)) {
+            return String.format("testMember-%s@test.com", timestamp);
+        }
         return APP_USER_OID1;
     }
 }
