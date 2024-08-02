@@ -68,6 +68,12 @@ public class AddMemberAzureTest extends AddMemberTest {
 
     @Test
     public void addMemberByGroupOID_shouldPassWith200() throws Exception{
+
+        //when variable is unset, test will be ignored
+        Assume.assumeNotNull(isOidValidationTrue);
+        //when its set and false, this test will be ignored
+        Assume.assumeTrue(isOidValidationTrue.equals("true"));
+
         String groupName = "groupName-" + currentTime;
         String memberEmail = GROUP_OID;
         Token token = tokenService.getToken();
