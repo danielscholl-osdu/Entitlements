@@ -3,6 +3,9 @@ package org.opengroup.osdu.entitlements.v2.azure.workflow;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import com.microsoft.applicationinsights.web.internal.RequestTelemetryContext;
+import com.microsoft.applicationinsights.web.internal.ThreadContext;
+
 import io.github.resilience4j.retry.Retry;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,6 +13,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.opengroup.osdu.azure.cache.RedisAzureCache;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
@@ -589,16 +593,19 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 usersGroup2Email}, performListGroupRequest(userA));
 
         // bad request when users group 1 email is updated by users group 2 name
-        mockMvc.perform(patch("/groups/{group_email}", usersGroup1Email)
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8.name())
-                .content(objectMapper.writeValueAsString(Collections.singletonList(getRenameGroupOperation(usersGroup2Name))))
-                .header(DpsHeaders.AUTHORIZATION, "Bearer token")
-                .header(DpsHeaders.USER_ID, servicePrincipal)
-                .header(DpsHeaders.DATA_PARTITION_ID, "common"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().json("{\"code\":400,\"reason\":\"Bad Request\"," +
-                        "\"message\":\"Invalid group name : \\\"users.testusers2.operators\\\", it already exists\"}"));
+        try (MockedStatic<ThreadContext> contextMockedStatic = Mockito.mockStatic(ThreadContext.class)) {
+                contextMockedStatic.when(ThreadContext::getRequestTelemetryContext).thenReturn(new RequestTelemetryContext(System.currentTimeMillis()));
+                mockMvc.perform(patch("/groups/{group_email}", usersGroup1Email)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
+                        .content(objectMapper.writeValueAsString(Collections.singletonList(getRenameGroupOperation(usersGroup2Name))))
+                        .header(DpsHeaders.AUTHORIZATION, "Bearer token")
+                        .header(DpsHeaders.USER_ID, servicePrincipal)
+                        .header(DpsHeaders.DATA_PARTITION_ID, "common"))
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json("{\"code\":400,\"reason\":\"Bad Request\"," +
+                                "\"message\":\"Invalid group name : \\\"users.testusers2.operators\\\", it already exists\"}"));
+        }
 
         // nothing changed
         assertGroupsEquals(new String[]{
@@ -618,16 +625,19 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         String nameOfBootstrappedGroup = "users.datalake.ops";
 
         // bad request when users group 1 email is updated by users group 2 name
-        mockMvc.perform(patch("/groups/{group_email}", existingGroupEmail)
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8.name())
-                .content(objectMapper.writeValueAsString(Collections.singletonList(getRenameGroupOperation(nameOfBootstrappedGroup))))
-                .header(DpsHeaders.AUTHORIZATION, "Bearer token")
-                .header(DpsHeaders.USER_ID, servicePrincipal)
-                .header(DpsHeaders.DATA_PARTITION_ID, "common"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().json("{\"code\":400,\"reason\":\"Bad Request\"," +
-                        "\"message\":\"Invalid group, group update API cannot work with bootstrapped groups\"}"));
+        try (MockedStatic<ThreadContext> contextMockedStatic = Mockito.mockStatic(ThreadContext.class)) {
+                contextMockedStatic.when(ThreadContext::getRequestTelemetryContext).thenReturn(new RequestTelemetryContext(System.currentTimeMillis()));
+                mockMvc.perform(patch("/groups/{group_email}", existingGroupEmail)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
+                        .content(objectMapper.writeValueAsString(Collections.singletonList(getRenameGroupOperation(nameOfBootstrappedGroup))))
+                        .header(DpsHeaders.AUTHORIZATION, "Bearer token")
+                        .header(DpsHeaders.USER_ID, servicePrincipal)
+                        .header(DpsHeaders.DATA_PARTITION_ID, "common"))
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json("{\"code\":400,\"reason\":\"Bad Request\"," +
+                                "\"message\":\"Invalid group, group update API cannot work with bootstrapped groups\"}"));
+        }
 
         // nothing changed
         assertGroupsEquals(new String[]{
@@ -666,16 +676,19 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
         String bootstrappedGroupEmail = "users.datalake.ops@common.contoso.com";
 
         // bad request when users group 1 email is updated by users group 2 name
-        mockMvc.perform(patch("/groups/{group_email}", bootstrappedGroupEmail)
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8.name())
-                .content(objectMapper.writeValueAsString(Collections.singletonList(getRenameGroupOperation(newGroupName))))
-                .header(DpsHeaders.AUTHORIZATION, "Bearer token")
-                .header(DpsHeaders.USER_ID, servicePrincipal)
-                .header(DpsHeaders.DATA_PARTITION_ID, "common"))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().json("{\"code\":400,\"reason\":\"Bad Request\"," +
-                        "\"message\":\"Invalid group, group update API cannot work with bootstrapped groups\"}"));
+        try (MockedStatic<ThreadContext> contextMockedStatic = Mockito.mockStatic(ThreadContext.class)) {
+                contextMockedStatic.when(ThreadContext::getRequestTelemetryContext).thenReturn(new RequestTelemetryContext(System.currentTimeMillis()));
+                mockMvc.perform(patch("/groups/{group_email}", bootstrappedGroupEmail)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
+                        .content(objectMapper.writeValueAsString(Collections.singletonList(getRenameGroupOperation(newGroupName))))
+                        .header(DpsHeaders.AUTHORIZATION, "Bearer token")
+                        .header(DpsHeaders.USER_ID, servicePrincipal)
+                        .header(DpsHeaders.DATA_PARTITION_ID, "common"))
+                        .andExpect(status().isBadRequest())
+                        .andExpect(content().json("{\"code\":400,\"reason\":\"Bad Request\"," +
+                                "\"message\":\"Invalid group, group update API cannot work with bootstrapped groups\"}"));
+        }
 
         // nothing changed
         assertGroupsEquals(new String[]{
@@ -712,7 +725,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     }
 
     private void performCreateGroupRequest(String groupName, String userId) {
-        try {
+        try (MockedStatic<ThreadContext> contextMockedStatic = Mockito.mockStatic(ThreadContext.class)) {
+                contextMockedStatic.when(ThreadContext::getRequestTelemetryContext).thenReturn(new RequestTelemetryContext(System.currentTimeMillis()));
             CreateGroupDto dto = new CreateGroupDto(groupName, groupName + ": description");
             mockMvc.perform(MockMvcRequestBuilders.post("/groups")
                     .contentType(MediaType.APPLICATION_JSON)
@@ -728,7 +742,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     }
 
     private void performDeleteGroupRequest(String groupEmail, String userId) {
-        try {
+        try (MockedStatic<ThreadContext> contextMockedStatic = Mockito.mockStatic(ThreadContext.class)) {
+                contextMockedStatic.when(ThreadContext::getRequestTelemetryContext).thenReturn(new RequestTelemetryContext(System.currentTimeMillis()));
             mockMvc.perform(MockMvcRequestBuilders.delete("/groups/{group_email}", groupEmail)
                     .contentType(MediaType.APPLICATION_JSON)
                     .characterEncoding(StandardCharsets.UTF_8.name())
@@ -742,7 +757,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     }
 
     private void performAddMemberRequest(AddMemberDto dto, String groupEmail, String userId) {
-        try {
+        try (MockedStatic<ThreadContext> contextMockedStatic = Mockito.mockStatic(ThreadContext.class)) {
+                contextMockedStatic.when(ThreadContext::getRequestTelemetryContext).thenReturn(new RequestTelemetryContext(System.currentTimeMillis()));
             mockMvc.perform(MockMvcRequestBuilders.post("/groups/{group_email}/members", groupEmail)
                     .contentType(MediaType.APPLICATION_JSON)
                     .characterEncoding(StandardCharsets.UTF_8.name())
@@ -757,7 +773,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     }
 
     private ListGroupResponseDto performListGroupRequest(String userId) {
-        try {
+        try (MockedStatic<ThreadContext> contextMockedStatic = Mockito.mockStatic(ThreadContext.class)) {
+                contextMockedStatic.when(ThreadContext::getRequestTelemetryContext).thenReturn(new RequestTelemetryContext(System.currentTimeMillis()));
             ResultActions result = mockMvc.perform(MockMvcRequestBuilders.get("/groups")
                     .contentType(MediaType.APPLICATION_JSON)
                     .characterEncoding(StandardCharsets.UTF_8.name())
@@ -774,7 +791,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     }
 
     private ListGroupResponseDto performListGroupsOnBehalfOfRequest(String memberId, String groupType) {
-        try {
+        try (MockedStatic<ThreadContext> contextMockedStatic = Mockito.mockStatic(ThreadContext.class)) {
+                contextMockedStatic.when(ThreadContext::getRequestTelemetryContext).thenReturn(new RequestTelemetryContext(System.currentTimeMillis()));
             ResultActions result = mockMvc.perform(get("/members/{member_email}/groups", memberId)
                     .contentType(MediaType.APPLICATION_JSON)
                     .characterEncoding(StandardCharsets.UTF_8.name())
@@ -792,7 +810,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     }
 
     private ListGroupResponseDto performListGroupsOnBehalfOfRequest(String memberId, String groupType, String appId) {
-        try {
+        try (MockedStatic<ThreadContext> contextMockedStatic = Mockito.mockStatic(ThreadContext.class)) {
+                contextMockedStatic.when(ThreadContext::getRequestTelemetryContext).thenReturn(new RequestTelemetryContext(System.currentTimeMillis()));
             ResultActions result = mockMvc.perform(get("/members/{member_email}/groups", memberId)
                     .contentType(MediaType.APPLICATION_JSON)
                     .characterEncoding(StandardCharsets.UTF_8.name())
@@ -811,7 +830,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     }
 
     private ListMemberResponseDto performListMemberRequest(String groupEmail, String userId) {
-        try {
+        try (MockedStatic<ThreadContext> contextMockedStatic = Mockito.mockStatic(ThreadContext.class)) {
+                contextMockedStatic.when(ThreadContext::getRequestTelemetryContext).thenReturn(new RequestTelemetryContext(System.currentTimeMillis()));
             ResultActions result = mockMvc.perform(get("/groups/{group_email}/members", groupEmail)
                     .contentType(MediaType.APPLICATION_JSON)
                     .characterEncoding(StandardCharsets.UTF_8.name())
@@ -830,7 +850,8 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     }
 
     private ResultActions performRemoveMemberRequest(String groupEmail, String memberEmail, String userId) {
-        try {
+        try (MockedStatic<ThreadContext> contextMockedStatic = Mockito.mockStatic(ThreadContext.class)) {
+                contextMockedStatic.when(ThreadContext::getRequestTelemetryContext).thenReturn(new RequestTelemetryContext(System.currentTimeMillis()));
             return mockMvc.perform(delete("/groups/{group_email}/members/{member_email}", groupEmail, memberEmail)
                     .contentType(MediaType.APPLICATION_JSON)
                     .characterEncoding(StandardCharsets.UTF_8.name())
@@ -844,19 +865,23 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     }
 
     private void performUpdateGroupRequest(List<UpdateGroupOperation> operations, String groupEmail, String userId, List<String> appIds) throws Exception {
-        mockMvc.perform(patch("/groups/{group_email}", groupEmail)
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8.name())
-                .header(DpsHeaders.AUTHORIZATION, "Bearer token")
-                .header(DpsHeaders.DATA_PARTITION_ID, "common")
-                .header(DpsHeaders.USER_ID, userId)
-                .header(DpsHeaders.APP_ID, appIds)
-                .content(objectMapper.writeValueAsString(operations)))
-                .andExpect(status().isOk());
+        try (MockedStatic<ThreadContext> contextMockedStatic = Mockito.mockStatic(ThreadContext.class)) {
+                contextMockedStatic.when(ThreadContext::getRequestTelemetryContext).thenReturn(new RequestTelemetryContext(System.currentTimeMillis()));
+                mockMvc.perform(patch("/groups/{group_email}", groupEmail)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
+                        .header(DpsHeaders.AUTHORIZATION, "Bearer token")
+                        .header(DpsHeaders.DATA_PARTITION_ID, "common")
+                        .header(DpsHeaders.USER_ID, userId)
+                        .header(DpsHeaders.APP_ID, appIds)
+                        .content(objectMapper.writeValueAsString(operations)))
+                        .andExpect(status().isOk());
+        }
     }
 
     private ListGroupResponseDto performListGroupRequestWithAppId(String userId, List<String> appIds) {
-        try {
+        try (MockedStatic<ThreadContext> contextMockedStatic = Mockito.mockStatic(ThreadContext.class)) {
+                contextMockedStatic.when(ThreadContext::getRequestTelemetryContext).thenReturn(new RequestTelemetryContext(System.currentTimeMillis()));
             ResultActions result = mockMvc.perform(MockMvcRequestBuilders.get("/groups")
                     .contentType(MediaType.APPLICATION_JSON)
                     .characterEncoding(StandardCharsets.UTF_8.name())
@@ -874,13 +899,16 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
     }
 
     private void performDeleteMemberRequest(String memberEmail, String userId) throws Exception {
-        mockMvc.perform(delete("/members/{member_email}", memberEmail)
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8.name())
-                .header(DpsHeaders.AUTHORIZATION, "Bearer token")
-                .header(DpsHeaders.USER_ID, userId)
-                .header(DpsHeaders.DATA_PARTITION_ID, "common"))
-                .andExpect(status().isNoContent());
+        try (MockedStatic<ThreadContext> contextMockedStatic = Mockito.mockStatic(ThreadContext.class)) {
+                contextMockedStatic.when(ThreadContext::getRequestTelemetryContext).thenReturn(new RequestTelemetryContext(System.currentTimeMillis()));
+                mockMvc.perform(delete("/members/{member_email}", memberEmail)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding(StandardCharsets.UTF_8.name())
+                        .header(DpsHeaders.AUTHORIZATION, "Bearer token")
+                        .header(DpsHeaders.USER_ID, userId)
+                        .header(DpsHeaders.DATA_PARTITION_ID, "common"))
+                        .andExpect(status().isNoContent());
+        }
     }
 
     private void assertGroupsEquals(String[] expectedGroupEmails, ListGroupResponseDto dto) {
@@ -915,27 +943,30 @@ public class CreateMembershipsWorkflowSinglePartitionTest {
                 .header(DpsHeaders.AUTHORIZATION, "Bearer token")
                 .header(DpsHeaders.USER_ID, servicePrincipal)
                 .header(DpsHeaders.DATA_PARTITION_ID, "common");
-        mockMvc.perform(request).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk());
+        try (MockedStatic<ThreadContext> contextMockedStatic = Mockito.mockStatic(ThreadContext.class)) {
+            contextMockedStatic.when(ThreadContext::getRequestTelemetryContext).thenReturn(new RequestTelemetryContext(System.currentTimeMillis()));
+            mockMvc.perform(request).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk());
+        }
         assertGroupsEquals(new String[]{"users@common.contoso.com",
-                "users.datalake.editors@common.contoso.com", "service.storage.viewer@common.contoso.com",
-                "service.workflow.creator@common.contoso.com", "service.search.user@common.contoso.com",
-                "service.legal.user@common.contoso.com", "service.file.viewers@common.contoso.com",
-                "service.schema-service.admin@common.contoso.com", "service.policy.user@common.contoso.com",
-                "service.plugin.user@common.contoso.com", "service.messaging.user@common.contoso.com",
-                "service.schema-service.editors@common.contoso.com", "service.legal.admin@common.contoso.com",
-                "service.schema-service.viewers@common.contoso.com", "users.data.root@common.contoso.com",
-                "service.workflow.viewer@common.contoso.com", "users.datalake.ops@common.contoso.com",
-                "users.datalake.admins@common.contoso.com", "service.legal.editor@common.contoso.com",
-                "service.entitlements.admin@common.contoso.com", "data.default.owners@common.contoso.com",
-                "service.policy.admin@common.contoso.com", "service.dataset.admin@common.contoso.com",
-                "service.file.admin@common.contoso.com", "service.file.editors@common.contoso.com",
-                "service.entitlements.user@common.contoso.com", "service.search.admin@common.contoso.com",
-                "service.storage.admin@common.contoso.com", "users.datalake.viewers@common.contoso.com",
-                "service.storage.creator@common.contoso.com", "service.workflow.admin@common.contoso.com",
-                "data.default.viewers@common.contoso.com", "service.dataset.editors@common.contoso.com",
-                "service.dataset.viewers@common.contoso.com", "service.secret.editor@common.contoso.com",
-                "service.secret.admin@common.contoso.com", "service.secret.viewer@common.contoso.com",
-                "service.edsdms.user@common.contoso.com"},
-            performListGroupRequest(servicePrincipal));
+                        "users.datalake.editors@common.contoso.com", "service.storage.viewer@common.contoso.com",
+                        "service.workflow.creator@common.contoso.com", "service.search.user@common.contoso.com",
+                        "service.legal.user@common.contoso.com", "service.file.viewers@common.contoso.com",
+                        "service.schema-service.admin@common.contoso.com", "service.policy.user@common.contoso.com",
+                        "service.plugin.user@common.contoso.com", "service.messaging.user@common.contoso.com",
+                        "service.schema-service.editors@common.contoso.com", "service.legal.admin@common.contoso.com",
+                        "service.schema-service.viewers@common.contoso.com", "users.data.root@common.contoso.com",
+                        "service.workflow.viewer@common.contoso.com", "users.datalake.ops@common.contoso.com",
+                        "users.datalake.admins@common.contoso.com", "service.legal.editor@common.contoso.com",
+                        "service.entitlements.admin@common.contoso.com", "data.default.owners@common.contoso.com",
+                        "service.policy.admin@common.contoso.com", "service.dataset.admin@common.contoso.com",
+                        "service.file.admin@common.contoso.com", "service.file.editors@common.contoso.com",
+                        "service.entitlements.user@common.contoso.com", "service.search.admin@common.contoso.com",
+                        "service.storage.admin@common.contoso.com", "users.datalake.viewers@common.contoso.com",
+                        "service.storage.creator@common.contoso.com", "service.workflow.admin@common.contoso.com",
+                        "data.default.viewers@common.contoso.com", "service.dataset.editors@common.contoso.com",
+                        "service.dataset.viewers@common.contoso.com", "service.secret.editor@common.contoso.com",
+                        "service.secret.admin@common.contoso.com", "service.secret.viewer@common.contoso.com",
+                        "service.edsdms.user@common.contoso.com"},
+                        performListGroupRequest(servicePrincipal));
     }
 }

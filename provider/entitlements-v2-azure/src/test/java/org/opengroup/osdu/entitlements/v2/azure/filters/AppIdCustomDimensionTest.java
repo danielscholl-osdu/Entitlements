@@ -1,10 +1,13 @@
 package org.opengroup.osdu.entitlements.v2.azure.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.microsoft.applicationinsights.web.internal.RequestTelemetryContext;
+import com.microsoft.applicationinsights.web.internal.ThreadContext;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.DpsHeaders;
@@ -34,7 +37,7 @@ import java.util.Collections;
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = AddMemberApi.class)
 @ComponentScan({"org.opengroup.osdu.entitlements.v2"})
-public class AppIdCustomDimentionTest {
+public class AppIdCustomDimensionTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -70,14 +73,17 @@ public class AppIdCustomDimentionTest {
     private void performRequest(String appId) throws Exception {
         AddMemberDto dto = new AddMemberDto("a@common.com", Role.OWNER);
         String group = "service.viewers.users@common.contoso.com";
-        mockMvc.perform(MockMvcRequestBuilders.post("/groups/{group_email}/members", group)
-                .contentType(MediaType.APPLICATION_JSON)
-                .characterEncoding(StandardCharsets.UTF_8.toString())
-                .header(DpsHeaders.AUTHORIZATION, "Bearer token")
-                .header(DpsHeaders.DATA_PARTITION_ID, "common")
-                .header(DpsHeaders.USER_ID, "a@b.com")
-                .header(DpsHeaders.APP_ID, appId)
-                .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        try (MockedStatic<ThreadContext> contextMockedStatic = Mockito.mockStatic(ThreadContext.class)) {
+            contextMockedStatic.when(ThreadContext::getRequestTelemetryContext).thenReturn(new RequestTelemetryContext(System.currentTimeMillis()));
+            mockMvc.perform(MockMvcRequestBuilders.post("/groups/{group_email}/members", group)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding(StandardCharsets.UTF_8.toString())
+                            .header(DpsHeaders.AUTHORIZATION, "Bearer token")
+                            .header(DpsHeaders.DATA_PARTITION_ID, "common")
+                            .header(DpsHeaders.USER_ID, "a@b.com")
+                            .header(DpsHeaders.APP_ID, appId)
+                            .content(objectMapper.writeValueAsString(dto)))
+                    .andExpect(MockMvcResultMatchers.status().isOk());
+        }
     }
 }
