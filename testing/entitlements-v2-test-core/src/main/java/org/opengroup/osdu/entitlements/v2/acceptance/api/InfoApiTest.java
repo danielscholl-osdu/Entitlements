@@ -50,6 +50,30 @@ public abstract class InfoApiTest extends AcceptanceBaseTest {
     assertNotNull(responseObject.getCommitMessage());
   }
 
+  @Test
+  public void should_returnInfo_withTrailingSlash() throws Exception {
+    RequestData request =
+        RequestData.builder()
+            .relativePath(getApi()+"/")
+            .method(getHttpMethod())
+            .body(null)
+            .token(tokenService.getToken().getValue())
+            .dataPartitionId(DATA_PARTITION_ID)
+            .build();
+    CloseableHttpResponse response = httpClientService.send(request);
+
+    assertEquals(200, response.getCode());
+    VersionInfo responseObject = versionInfoUtils.getVersionInfoFromResponse(response);
+
+    assertNotNull(responseObject.getGroupId());
+    assertNotNull(responseObject.getArtifactId());
+    assertNotNull(responseObject.getVersion());
+    assertNotNull(responseObject.getBuildTime());
+    assertNotNull(responseObject.getBranch());
+    assertNotNull(responseObject.getCommitId());
+    assertNotNull(responseObject.getCommitMessage());
+  }
+
   @Override
   public void shouldReturn401WhenMakingHttpRequestWithoutToken() {
     // not actual for this case
