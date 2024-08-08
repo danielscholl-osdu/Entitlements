@@ -17,6 +17,7 @@ import org.opengroup.osdu.entitlements.v2.api.AddMemberApi;
 import org.opengroup.osdu.entitlements.v2.auth.AuthorizationService;
 import org.opengroup.osdu.entitlements.v2.azure.AzureAppProperties;
 import org.opengroup.osdu.entitlements.v2.azure.config.CacheConfig;
+import org.opengroup.osdu.entitlements.v2.azure.configuration.TestComponentScan;
 import org.opengroup.osdu.entitlements.v2.model.Role;
 import org.opengroup.osdu.entitlements.v2.model.addmember.AddMemberDto;
 import org.opengroup.osdu.entitlements.v2.service.AddMemberService;
@@ -24,8 +25,8 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -35,8 +36,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
 @RunWith(SpringRunner.class)
+@ContextConfiguration(classes = TestComponentScan.class)
 @WebMvcTest(controllers = AddMemberApi.class)
-@ComponentScan({"org.opengroup.osdu.entitlements.v2"})
 public class AppIdCustomDimensionTest {
     @Autowired
     private MockMvc mockMvc;

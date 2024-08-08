@@ -25,7 +25,6 @@
     <java.version>17</java.version>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.source>${java.version}</maven.compiler.source>
-    <os-core-common.version>0.26.0</os-core-common.version>
     <postgresql.version>42.7.3</postgresql.version>
   </properties>
 
@@ -82,8 +81,8 @@
 
     <dependency>
       <groupId>org.opengroup.osdu</groupId>
-      <artifactId>core-lib-gc-spring6</artifactId>
-      <version>0.26.0</version>
+      <artifactId>core-lib-gc</artifactId>
+      <version>0.27.0-rc7</version>
     </dependency>
 
     <dependency>
@@ -143,12 +142,6 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.opengroup.osdu</groupId>
-      <artifactId>os-core-common-spring6</artifactId>
-      <version>${os-core-common.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>org.powermock</groupId>
       <artifactId>powermock-module-junit4</artifactId>

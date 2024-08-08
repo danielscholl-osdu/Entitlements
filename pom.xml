@@ -3,7 +3,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <os-core-common.version>0.27.0-rc1</os-core-common.version>
         <java.version>17</java.version>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
@@ -61,32 +60,6 @@
                 <version>${spring-security.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.opengroup.osdu</groupId>
-                <artifactId>os-core-common-spring6</artifactId>
-                <version>${os-core-common.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.opengroup.osdu</groupId>
-                <artifactId>os-core-common-spring6</artifactId>
-                <version>${os-core-common.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.elasticsearch.client</groupId>
-                        <artifactId>elasticsearch-rest-client</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.elasticsearch</groupId>
-                        <artifactId>elasticsearch</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.elasticsearch.client</groupId>
-                        <artifactId>elasticsearch-rest-high-level-client</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>net.minidev</groupId>

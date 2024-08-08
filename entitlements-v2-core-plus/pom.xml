@@ -25,7 +25,6 @@
     <java.version>17</java.version>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.source>${java.version}</maven.compiler.source>
-    <os-core-common.version>0.26.0</os-core-common.version>
     <postgresql.version>42.7.3</postgresql.version>
   </properties>
 
@@ -66,18 +65,11 @@
       <artifactId>entitlements-v2-core</artifactId>
       <version>0.28.0-SNAPSHOT</version>
     </dependency>
-
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.30</version>
       <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.opengroup.osdu</groupId>
-      <artifactId>os-core-common-spring6</artifactId>
-      <version>${os-core-common.version}</version>
     </dependency>
     <!-- OpenID Connect -->
     <dependency>
@@ -89,7 +81,7 @@
     <dependency>
       <groupId>org.opengroup.osdu</groupId>
       <artifactId>core-plus-common-lib</artifactId>
-      <version>0.24.0-rc3</version>
+      <version>0.27.0-rc3</version>
     </dependency>
     <dependency>
       <groupId>org.opengroup.osdu</groupId>

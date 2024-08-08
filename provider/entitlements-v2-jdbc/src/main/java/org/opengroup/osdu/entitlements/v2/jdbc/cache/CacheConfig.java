@@ -17,8 +17,8 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc.cache;
 
-import com.lambdaworks.redis.ClientOptions;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
+import io.lettuce.core.ClientOptions;
 import org.opengroup.osdu.core.common.cache.ICache;
 import org.opengroup.osdu.core.common.cache.IRedisCache;
 import org.opengroup.osdu.core.common.cache.VmCache;
@@ -34,7 +34,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CacheConfig {
 
-  private final ClientOptions clientOptions = new ClientOptions.Builder()
+  private final ClientOptions clientOptions = ClientOptions.builder()
           .disconnectedBehavior(ClientOptions.DisconnectedBehavior.REJECT_COMMANDS)
           .build();
 
