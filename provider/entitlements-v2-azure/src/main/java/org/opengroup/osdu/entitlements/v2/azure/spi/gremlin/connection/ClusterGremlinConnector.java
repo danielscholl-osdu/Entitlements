@@ -5,7 +5,7 @@ import org.apache.tinkerpop.gremlin.driver.Client;
 import org.apache.tinkerpop.gremlin.driver.Result;
 import org.apache.tinkerpop.gremlin.driver.ResultSet;
 import org.apache.tinkerpop.gremlin.driver.exception.ResponseException;
-import org.apache.tinkerpop.gremlin.util.message.ResponseStatusCode;
+import org.apache.tinkerpop.gremlin.driver.message.ResponseStatusCode;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
@@ -109,7 +109,7 @@ public class ClusterGremlinConnector implements GremlinConnector {
     }
 
     private List<Result> submitTraversalAsQueryString(Traversal<?, ?> traversal) {
-        String query = GroovyTranslator.of(G).translate(traversal.asAdmin().getBytecode()).getScript();
+        String query = GroovyTranslator.of(G).translate(traversal.asAdmin().getBytecode());
         return getResultList(client.submit(query));
     }
 
