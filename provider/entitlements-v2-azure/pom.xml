@@ -15,7 +15,7 @@
 
     <properties>
         <core-lib-azure-spring6.version>0.27.0-rc7</core-lib-azure-spring6.version>
-        <gremlin.version>3.7.2</gremlin.version>
+        <gremlin.version>3.4.13</gremlin.version>
         <resilience4j.version>2.0.0</resilience4j.version>
         <embedded-resdis.version>0.7.1</embedded-resdis.version>
         <awaitility.version>3.0.0</awaitility.version>
@@ -148,6 +148,13 @@
                 <exclusion>
                     <groupId>org.apache.ivy</groupId>
                     <artifactId>ivy</artifactId>
+                </exclusion>
+                <!--
+               Excluding com.fasterxml.jackson.core:jackson-databind because shows up in container scan
+               -->
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
