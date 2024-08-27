@@ -13,7 +13,7 @@
         <jackson.version>2.14.2</jackson.version>
         <plexus-utils.version>4.0.0</plexus-utils.version>
         <commons-collections.version>3.2.2</commons-collections.version>
-        <os-core-common.version>2.0.0</os-core-common.version>
+        <os-core-common.version>3.0.0</os-core-common.version>
     </properties>
 
     <parent>
