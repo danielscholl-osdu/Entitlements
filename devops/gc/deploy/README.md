@@ -31,8 +31,8 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 | Name | Description | Type | Default |Required |
 |------|-------------|------|---------|---------|
 **global.domain** | your domain for the external endpoint, ex `example.com` | string | - | yes
-**global.onPremEnabled** | whether on-prem is enabled | boolean | false | yes
-**global.limitsEnabled** | whether CPU and memory limits are enabled | boolean | true | yes
+**global.onPremEnabled** | whether on-prem is enabled | boolean | `false` | yes
+**global.limitsEnabled** | whether CPU and memory limits are enabled | boolean | `true` | yes
 **global.dataPartitionId** | partition ID | string | - | yes
 
 ### Configmap variables
@@ -48,7 +48,7 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 **data.registerPubsubIdentity** | service account for communication Register-PubSub-Notification | string | - | yes
 **data.entitlementsDomain** | The name of the domain groups are created for | string | `group` | yes
 **data.redisEntHost** | The host for redis instance. If empty, helm installs an internal redis instance | string | `redis-ent-master` | yes
-**data.redisEntPort** | The port for redis instance | digit | 6379 | yes
+**data.redisEntPort** | The port for redis instance | digit | `6379` | yes
 
 ### Deployment variables
 
@@ -95,7 +95,7 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 **istio.proxyMemoryLimit** | memory limit for Envoy sidecars | string | `256Mi` | yes
 **istio.bootstrapProxyCPU** | CPU request for Envoy sidecars | string | `10m` | yes
 **istio.bootstrapProxyCPULimit** | CPU limit for Envoy sidecars | string | `100m` | yes
-**istio.sidecarInject** | whether Istio sidecar will be injected. Be careful: setting to "false" strongly reduces security, because disables any authentication. | boolean | `true` | yes
+**istio.sidecarInject** | whether Istio sidecar will be injected. Be careful: setting to `false` strongly reduces security, because disables any authentication. | boolean | `true` | yes
 **istio.corsEnabled** | enable CORS | boolean | `false` | no
 
 ## Install the Helm chart
