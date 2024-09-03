@@ -7,7 +7,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
 data:
   GROUP_ID: {{ .Values.data.entitlementsDomain | quote }}
-  LOG_LEVEL: {{ .Values.data.logLevel | quote }}
+  LOG_LEVEL: {{ .Values.data.logLevel | default .Values.global.logLevel | quote }}
   PARTITION_HOST: {{ .Values.data.partitionHost | quote }}
   {{- if .Values.global.onPremEnabled }}
   SPRING_PROFILES_ACTIVE: "anthos"

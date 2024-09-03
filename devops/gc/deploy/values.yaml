@@ -3,13 +3,14 @@ global:
   onPremEnabled: false
   limitsEnabled: true
   dataPartitionId: ""
+  logLevel: "ERROR"
 
 data:
   # Configmaps
   entitlementsHost: "http://entitlements"
   adminUserEmail: ""
   airflowComposerEmail: ""
-  logLevel: "ERROR"
+  logLevel: ""
   partitionHost: "http://partition"
   projectId: ""
   # redis connection. Change it if you want to use external redis
