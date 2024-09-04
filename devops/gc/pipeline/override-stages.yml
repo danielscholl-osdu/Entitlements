@@ -11,3 +11,7 @@ variables:
 gc-baremetal-test:
   variables:
     GC_VENDOR: baremetal
+
+gc-preship-deploy:
+  variables:
+    GC_TENANT: m19 #FIXME: update variable after the m24 release
