@@ -58,7 +58,7 @@ public class GroupCacheServiceAzure implements GroupCacheService {
             cacheKey += "-role";
 
         ParentReferences parentReferences = redisGroupCache.get(cacheKey);
-        if (parentReferences == null) {
+        if (parentReferences == null || parentReferences.getParentReferencesOfUser() == null) {
             String lockKey = String.format("lock-%s", cacheKey);
             RLock cacheEntryLock = redisGroupCache.getLock(lockKey);
             return lockCacheEntryAndRebuild(cacheEntryLock, cacheKey, requesterId, partitionId, roleRequired);

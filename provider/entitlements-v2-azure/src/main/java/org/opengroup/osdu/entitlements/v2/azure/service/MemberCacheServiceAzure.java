@@ -66,7 +66,7 @@ public class MemberCacheServiceAzure implements MemberCacheService {
     public List<ChildrenReference> getFromPartitionCache(String groupId, String partitionId){
         String cacheKey = String.format(REDIS_KEY_FORMAT, groupId, partitionId);
         ChildrenReferences childrenReferences= redisMemberCache.get(cacheKey);
-         if (childrenReferences == null) {
+         if (childrenReferences == null || childrenReferences.getChildReferencesOfGroup() == null) {
             String lockKey = String.format("lock-%s", cacheKey);
             RLock cacheEntryLock = redisMemberCache.getLock(lockKey);
             return lockCacheEntryAndRebuild(cacheEntryLock, cacheKey, groupId, partitionId);
