@@ -4,6 +4,8 @@ global:
   limitsEnabled: true
   dataPartitionId: ""
   logLevel: "ERROR"
+  tier: ""
+  autoscaling: true
 
 data:
   # Configmaps
@@ -55,3 +57,20 @@ istio:
   bootstrapProxyCPULimit: "100m"
   sidecarInject: true
   corsEnabled: false
+
+hpa:
+  minReplicas: 6
+  maxReplicas: 15
+  targetType: "AverageValue"
+  targetValue: 102 #60*0.85*2
+  behaviorScaleUpStabilizationWindowSeconds: 10
+  behaviorScaleUpPoliciesValue: 50
+  behaviorScaleUpPoliciesPeriodSeconds: 15
+  behaviorScaleDownStabilizationWindowSeconds: 60
+  behaviorScaleDownPoliciesValue: 25
+  behaviorScaleDownPoliciesPeriodSeconds: 60
+
+limits:
+  maxTokens: 60
+  tokensPerFill: 60
+  fillInterval: "1s"
