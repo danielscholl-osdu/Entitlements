@@ -79,6 +79,9 @@ public class SpringExceptionMapper extends ResponseEntityExceptionHandler {
         if (e instanceof BeanCreationException beanCreationException && beanCreationException.getBeanName().equalsIgnoreCase("scopedTarget.getTenantInfo")) {
             return this.getErrorResponse(new AppException(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase(), PartitionHeaderValidationService.INVALID_DP_HEADER_ERROR));
         }
+        else if(e instanceof IllegalArgumentException) {
+        	return this.getErrorResponse(new AppException(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), PartitionHeaderValidationService.INVALID_ARGUMENT_ERROR));
+        }
         return this.getErrorResponse(new AppException(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), "An unknown error has occurred", e));
     }
 

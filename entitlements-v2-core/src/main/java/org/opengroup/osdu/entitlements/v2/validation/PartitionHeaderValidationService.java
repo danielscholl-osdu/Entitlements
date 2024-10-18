@@ -12,6 +12,7 @@ import java.util.List;
 public class PartitionHeaderValidationService {
 
     public static final String INVALID_DP_HEADER_ERROR = "Invalid data partition header provided";
+    public static final String INVALID_ARGUMENT_ERROR = "Illegal or inappropriate argument found";
 
     @Autowired
     private JaxRsDpsLog log;
