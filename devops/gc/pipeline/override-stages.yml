@@ -8,10 +8,6 @@ variables:
   GC_VENDOR: jdbc
   GC_HELM_TIMEOUT: "--timeout 10m"
 
-gc-baremetal-test:
-  variables:
-    GC_VENDOR: baremetal
-
 gc-preship-deploy:
   variables:
     GC_TENANT: m19 #FIXME: update variable after the m24 release
