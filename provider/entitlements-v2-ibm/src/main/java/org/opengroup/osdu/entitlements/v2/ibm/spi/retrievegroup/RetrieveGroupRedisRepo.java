@@ -216,8 +216,11 @@ public class RetrieveGroupRedisRepo implements RetrieveGroupRepo {
             commands.select(config.getPartitionParentRef());
             Set<String> parentRef = commands.sunion(nodeId);
             if (parentRef != null) {
-                parentRef.forEach(item->System.out.println(item+"->parentRef"));
-                return parentRef.stream().filter(ref -> Objects.nonNull(ref)).map(ref -> JsonConverter.fromJson(ref, ParentReference.class)).collect(Collectors.toList());
+                return parentRef.stream()
+                        .filter(ref -> Objects.nonNull(ref))
+                        .map(ref -> JsonConverter.fromJson(ref, ParentReference.class))
+                        .filter(parent ->parent.getDataPartitionId().equalsIgnoreCase(partitionId))
+                        .collect(Collectors.toList());
             } else {
                 return new ArrayList<>();
             }
