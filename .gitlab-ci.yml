@@ -28,6 +28,8 @@ variables:
   IBM_HELM_DEPLOY_PATH: devops/ibm/ibm-entitlement-deploy
   IBM_HELM_BOOTSTRAP_PATH: devops/ibm/ibm-entitlement-registration
 
+  ACCEPTANCE_TEST_DIR: "entitlements-v2-acceptance-test"
+
 include:
   - project: "osdu/platform/ci-cd-pipelines"
     file: "standard-setup.yml"
