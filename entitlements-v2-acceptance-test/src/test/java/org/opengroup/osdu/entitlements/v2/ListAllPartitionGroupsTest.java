@@ -30,7 +30,7 @@ import org.opengroup.osdu.entitlements.v2.model.GroupType;
 import org.opengroup.osdu.entitlements.v2.model.Token;
 import org.opengroup.osdu.entitlements.v2.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.model.response.ListGroupInPartitionResponse;
-import org.opengroup.osdu.entitlements.v2.util.AnthosConfigurationService;
+import org.opengroup.osdu.entitlements.v2.util.CommonConfigurationService;
 import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public class ListAllPartitionGroupsTest extends AcceptanceBaseTest {
     private final Token token;
 
     private ListAllPartitionGroupsTest() {
-        super(new AnthosConfigurationService(), new OpenIDTokenProvider());
+        super(new CommonConfigurationService(), new OpenIDTokenProvider());
         token = tokenService.getToken();
     }
 

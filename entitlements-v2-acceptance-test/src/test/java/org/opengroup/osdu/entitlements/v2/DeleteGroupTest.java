@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.opengroup.osdu.entitlements.v2.model.GroupItem;
 import org.opengroup.osdu.entitlements.v2.model.Token;
 import org.opengroup.osdu.entitlements.v2.model.request.RequestData;
-import org.opengroup.osdu.entitlements.v2.util.AnthosConfigurationService;
+import org.opengroup.osdu.entitlements.v2.util.CommonConfigurationService;
 import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
 import org.springframework.http.HttpStatus;
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class DeleteGroupTest extends AcceptanceBaseTest {
     private final Token token = tokenService.getToken();
 
     public DeleteGroupTest() {
-        super(new AnthosConfigurationService(), new OpenIDTokenProvider());
+        super(new CommonConfigurationService(), new OpenIDTokenProvider());
     }
     @Override
     protected RequestData getRequestDataForNoTokenTest() {

@@ -14,14 +14,14 @@ import org.opengroup.osdu.entitlements.v2.model.request.GetGroupsRequestData;
 import org.opengroup.osdu.entitlements.v2.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.model.response.ListGroupResponse;
 import org.opengroup.osdu.entitlements.v2.model.response.ListMemberResponse;
-import org.opengroup.osdu.entitlements.v2.util.AnthosConfigurationService;
+import org.opengroup.osdu.entitlements.v2.util.CommonConfigurationService;
 import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
 
 
 public class RemoveMemberTest extends AcceptanceBaseTest {
 
     public RemoveMemberTest() {
-        super(new AnthosConfigurationService(), new OpenIDTokenProvider());
+        super(new CommonConfigurationService(), new OpenIDTokenProvider());
     }
 
     @Override

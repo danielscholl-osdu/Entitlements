@@ -22,7 +22,7 @@ public class InfoApiTest extends AcceptanceBaseTest {
   private final VersionInfoUtils versionInfoUtils = new VersionInfoUtils();
 
   public InfoApiTest() {
-    super(new AnthosConfigurationService(), new OpenIDTokenProvider());
+    super(new CommonConfigurationService(), new OpenIDTokenProvider());
   }
 
   @Test

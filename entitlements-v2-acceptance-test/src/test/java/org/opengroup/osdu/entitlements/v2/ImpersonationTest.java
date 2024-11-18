@@ -43,8 +43,8 @@ public class ImpersonationTest extends AcceptanceBaseTest {
   private final PartitionService partitionService;
 
   public ImpersonationTest() {
-    super(new AnthosConfigurationService(), new OpenIDTokenProvider());
-    this.partitionService = new org.opengroup.osdu.entitlements.v2.util.PartitionService(new AnthosConfigurationService(), new OpenIDTokenProvider());
+    super(new CommonConfigurationService(), new OpenIDTokenProvider());
+    this.partitionService = new org.opengroup.osdu.entitlements.v2.util.PartitionService(new CommonConfigurationService(), new OpenIDTokenProvider());
   }
 
   @Test

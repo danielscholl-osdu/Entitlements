@@ -26,33 +26,18 @@ Or tokens can be used directly from env variables:
 |----------------------------|------------|-----------------------------|------------|--------|
 | `INTEGRATION_TESTER_TOKEN` | `********` | INTEGRATION_TESTER Token    | yes        | -      |
 | `NO_DATA_ACCESS_TOKEN`     | `********` | NO_DATA_ACCESS_TESTER Token | yes        | -      |
-| `DATA_ROOT_TOKEN`          | `********` | DATA_ROOT_TESTER Token      | yes        | -      |
-
-
-Feature testing is controlled with the following environment variables:
-
-| name                      | value             | description                                                               |
-|---------------------------|-------------------|---------------------------------------------------------------------------|
-| `TEST_REPLAY_ENABLED`     | `true` OR `false` | Controls Replay API tests.                                                |
-| `COLABORATION_ENABLED`    | `true` OR `false` | Controls collaboration feature tests.                                     |
-| `OPA_INTEGRATION_ENABLED` | `true` OR `false` | Used to adjust assertions if integration with OPA\Policy enabled\disabled |
 
 
 
 **Entitlements configuration for integration accounts**
 
-| INTEGRATION_TESTER         | NO_DATA_ACCESS_TESTER     | DATA_ROOT_TESTER          |
-|----------------------------|---------------------------|---------------------------|
-| users                      | users                     | users                     |
-| service.entitlements.user  | service.entitlements.user | users.data.root           |
-| service.entitlements.admin | service.storage.admin     | service.entitlements.user |
-| service.storage.admin      |                           | service.storage.viewer    |
-| service.storage.creator    |                           |                           |
-| service.storage.viewer     |                           |                           |
-| service.legal.admin        |                           |                           |
-| service.legal.editor       |                           |                           |
-| data.test1                 |                           |                           |
-| data.integration.test      |                           |                           |
+| INTEGRATION_TESTER         | NO_DATA_ACCESS_TESTER     |
+|----------------------------|---------------------------|
+| users                      | users                     |
+| service.entitlements.user  | service.entitlements.user | 
+| service.entitlements.admin | service.storage.admin     |
+| users.datalake.delegation  |                           |                           
+
 
 Execute following command to build code and run all the integration tests:
 

@@ -19,7 +19,7 @@ package org.opengroup.osdu.entitlements.v2.util;
 
 import com.google.common.base.Strings;
 
-public class AnthosConfigurationService implements ConfigurationService {
+public class CommonConfigurationService implements ConfigurationService {
 
     private static String SERVICE_URL;
 

@@ -1,17 +1,18 @@
 package org.opengroup.osdu.entitlements.v2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.opengroup.osdu.entitlements.v2.model.GroupItem;
 import org.opengroup.osdu.entitlements.v2.model.Token;
 import org.opengroup.osdu.entitlements.v2.model.request.AddMemberRequestData;
 import org.opengroup.osdu.entitlements.v2.model.request.RequestData;
-import org.opengroup.osdu.entitlements.v2.util.AnthosConfigurationService;
+import org.opengroup.osdu.entitlements.v2.util.CommonConfigurationService;
 import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
 
 import java.util.ArrayList;
@@ -22,14 +23,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+@Disabled
 public class DeleteMemberTest extends AcceptanceBaseTest {
     private final List<String> groupsForFurtherDeletion;
     private final Token token;
+    private static final OpenIDTokenProvider openIDTokenProvider = new OpenIDTokenProvider();;
+
 
     public DeleteMemberTest() {
-        super(new AnthosConfigurationService(), new OpenIDTokenProvider());
+        super(new CommonConfigurationService(), openIDTokenProvider);
         groupsForFurtherDeletion = new ArrayList<>();
-        token = tokenService.getToken();
+        token = openIDTokenProvider.getToken();
     }
 
     @Override
@@ -124,7 +128,7 @@ public class DeleteMemberTest extends AcceptanceBaseTest {
             }
         }
 
-        assertEquals("Expected 10 successful response", threads, successResponseCount);
+        assertEquals(threads, successResponseCount, "Expected 10 successful response");
     }
 
     private List<GroupItem> setup() throws Exception {

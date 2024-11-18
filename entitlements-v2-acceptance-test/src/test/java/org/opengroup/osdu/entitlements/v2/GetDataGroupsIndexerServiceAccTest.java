@@ -33,7 +33,7 @@ import org.opengroup.osdu.entitlements.v2.util.ConfigurationService;
 import org.opengroup.osdu.entitlements.v2.util.EntitlementsV2Service;
 import org.opengroup.osdu.entitlements.v2.util.HttpClientService;
 import org.opengroup.osdu.entitlements.v2.util.TokenService;
-import org.opengroup.osdu.entitlements.v2.util.AnthosConfigurationService;
+import org.opengroup.osdu.entitlements.v2.util.CommonConfigurationService;
 import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -48,18 +48,18 @@ import java.security.cert.X509Certificate;
 
 
 @Slf4j
-public class GetDataGroupsIndexerServiceAccJdbcTest {
+public class GetDataGroupsIndexerServiceAccTest {
 
   private final String baseUrl;
   private final Client client;
   private final TokenService tokenService = new OpenIDTokenProvider();
-  private final ConfigurationService configurationService = new AnthosConfigurationService();
+  private final ConfigurationService configurationService = new CommonConfigurationService();
   private final EntitlementsV2Service entitlementsV2Service;
   private final String indexerServiceAccountEmail;
   private final Gson gson = new Gson();
   private final Boolean dataRootGroupHierarchyEnabled;
 
-  public GetDataGroupsIndexerServiceAccJdbcTest() {
+  public GetDataGroupsIndexerServiceAccTest() {
     this.baseUrl = configurationService.getServiceUrl();
     this.client = getClient();
     this.entitlementsV2Service = new EntitlementsV2Service(configurationService, new HttpClientService(configurationService));

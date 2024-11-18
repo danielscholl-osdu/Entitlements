@@ -13,7 +13,7 @@ import org.opengroup.osdu.entitlements.v2.model.request.AddMemberRequestData;
 import org.opengroup.osdu.entitlements.v2.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.model.response.ErrorResponse;
 import org.opengroup.osdu.entitlements.v2.model.response.ListMemberResponse;
-import org.opengroup.osdu.entitlements.v2.util.AnthosConfigurationService;
+import org.opengroup.osdu.entitlements.v2.util.CommonConfigurationService;
 import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
 
 import java.util.HashMap;
@@ -22,7 +22,7 @@ import java.util.Map;
 public class AddMemberTest extends AcceptanceBaseTest {
 
     public AddMemberTest() {
-        super(new AnthosConfigurationService(), new OpenIDTokenProvider());
+        super(new CommonConfigurationService(), new OpenIDTokenProvider());
     }
 
     @Test

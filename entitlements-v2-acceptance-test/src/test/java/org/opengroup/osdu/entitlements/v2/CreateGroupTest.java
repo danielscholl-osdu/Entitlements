@@ -15,7 +15,7 @@ import org.opengroup.osdu.entitlements.v2.model.Token;
 import org.opengroup.osdu.entitlements.v2.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.model.response.ErrorResponse;
 import org.opengroup.osdu.entitlements.v2.model.response.ListMemberResponse;
-import org.opengroup.osdu.entitlements.v2.util.AnthosConfigurationService;
+import org.opengroup.osdu.entitlements.v2.util.CommonConfigurationService;
 import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
 
 public class CreateGroupTest extends AcceptanceBaseTest {
@@ -23,7 +23,7 @@ public class CreateGroupTest extends AcceptanceBaseTest {
             .message("This group already exists").build();
 
     public CreateGroupTest() {
-        super(new AnthosConfigurationService(), new OpenIDTokenProvider());
+        super(new CommonConfigurationService(), new OpenIDTokenProvider());
     }
 
     private boolean isSecondGroupMemberofFirst(String firstEmail, String secondEmail, String token) throws Exception {
