@@ -8,22 +8,36 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.google.gson.Gson;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opengroup.osdu.entitlements.v2.model.GroupItem;
 import org.opengroup.osdu.entitlements.v2.model.MemberItem;
-import org.opengroup.osdu.entitlements.v2.model.Token;
 import org.opengroup.osdu.entitlements.v2.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.model.response.ErrorResponse;
 import org.opengroup.osdu.entitlements.v2.model.response.ListMemberResponse;
 import org.opengroup.osdu.entitlements.v2.util.CommonConfigurationService;
-import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
+import org.opengroup.osdu.entitlements.v2.util.TokenTestUtils;
 
 public class CreateGroupTest extends AcceptanceBaseTest {
     private final ErrorResponse expectedConflictResponse = ErrorResponse.builder().code(409).reason("Conflict")
             .message("This group already exists").build();
 
     public CreateGroupTest() {
-        super(new CommonConfigurationService(), new OpenIDTokenProvider());
+        super(new CommonConfigurationService());
+    }
+
+    @BeforeEach
+    @Override
+    public void setupTest() throws Exception {
+        this.testUtils = new TokenTestUtils();
+    }
+
+    @AfterEach
+    @Override
+    public void tearTestDown() throws Exception {
+        entitlementsV2Service.deleteGroup(configurationService.getIdOfGroup("groupName-" + currentTime), testUtils.getToken());
+        this.testUtils = null;
     }
 
     private boolean isSecondGroupMemberofFirst(String firstEmail, String secondEmail, String token) throws Exception {
@@ -53,33 +67,25 @@ public class CreateGroupTest extends AcceptanceBaseTest {
     @Test
     public void shouldAddDataRootAsMemberOfNewDataGroup() throws Exception {
         String groupName = "data.groupName-" + currentTime;
-        Token token = tokenService.getToken();
         GroupItem expectedGroup = GroupItem.builder().name(groupName.toLowerCase())
                                            .description("desc")
                                            .email(configurationService.getIdOfGroup(groupName)).build();
 
-        assertEquals(expectedGroup, entitlementsV2Service.createGroup(groupName, token.getValue()));
+        assertEquals(expectedGroup, entitlementsV2Service.createGroup(groupName, testUtils.getToken()));
 
-        verifyRootGroupMembership(expectedGroup, token.getValue());
+        verifyRootGroupMembership(expectedGroup, testUtils.getToken());
     }
 
     @Test
     public void shouldCreateGroupOnlyOneTimeSuccessfully() throws Exception {
         String groupName = "groupName-" + currentTime;
-        Token token = tokenService.getToken();
         GroupItem expectedGroup = GroupItem.builder().name(groupName.toLowerCase())
                 .description("desc")
                 .email(configurationService.getIdOfGroup(groupName)).build();
 
-        assertEquals(expectedGroup, entitlementsV2Service.createGroup(groupName, token.getValue()));
+        assertEquals(expectedGroup, entitlementsV2Service.createGroup(groupName, testUtils.getToken()));
 
-        verifyConflictException(groupName, token.getValue());
-    }
-
-    @Override
-    protected void cleanup() throws Exception {
-        String tokenValue = tokenService.getToken().getValue();
-        entitlementsV2Service.deleteGroup(configurationService.getIdOfGroup("groupName-" + currentTime), tokenValue);
+        verifyConflictException(groupName, testUtils.getToken());
     }
 
     private void verifyConflictException(String groupName, String token) throws Exception {

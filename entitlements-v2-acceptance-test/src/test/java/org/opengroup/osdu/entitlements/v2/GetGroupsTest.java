@@ -9,20 +9,33 @@ import lombok.SneakyThrows;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.opengroup.osdu.entitlements.v2.model.Token;
 import org.opengroup.osdu.entitlements.v2.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.model.response.ListGroupResponse;
 import org.opengroup.osdu.entitlements.v2.util.CommonConfigurationService;
-import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
+import org.opengroup.osdu.entitlements.v2.util.TokenTestUtils;
 
 
 public class GetGroupsTest extends AcceptanceBaseTest {
 
     public GetGroupsTest() {
-        super(new CommonConfigurationService(), new OpenIDTokenProvider());
+        super(new CommonConfigurationService());
     }
 
+    @BeforeEach
+    @Override
+    public void setupTest() throws Exception {
+        this.testUtils = new TokenTestUtils();
+    }
+
+    @AfterEach
+    @Override
+    public void tearTestDown() throws Exception {
+        this.testUtils = null;
+    }
+    
     @Test
     public void should200ForGetGroupsWithRoleEnabled() {
         test200ForGetGroupsWithRoleEnabled();
@@ -30,22 +43,20 @@ public class GetGroupsTest extends AcceptanceBaseTest {
 
     @Test
     public void shouldReturn200WhenMakingValidGetGroupsRequest() throws Exception {
-        Token token = tokenService.getToken();
-        ListGroupResponse listGroupResponse = entitlementsV2Service.getGroups(token.getValue());
-        assertEquals(token.getUserId(), listGroupResponse.getDesId());
-        assertEquals(token.getUserId(), listGroupResponse.getMemberEmail());
+        ListGroupResponse listGroupResponse = entitlementsV2Service.getGroups(testUtils.getToken());
+        assertEquals(testUtils.getUserId(), listGroupResponse.getDesId());
+        assertEquals(testUtils.getUserId(), listGroupResponse.getMemberEmail());
     }
 
     @SneakyThrows
     private void test200ForGetGroupsWithRoleEnabled() {
-        Token token = tokenService.getToken();
         Map<String, String> queryParams = new HashMap<>();
         queryParams.put("roleRequired", "true");
         RequestData getGroupsRequestData = RequestData.builder()
             .method("GET").dataPartitionId(configurationService.getTenantId())
             .relativePath("groups")
             .queryParams(queryParams)
-            .token(token.getValue()).build();
+            .token(testUtils.getToken()).build();
         CloseableHttpResponse response = httpClientService.send(getGroupsRequestData);
         assertEquals(200, response.getCode());
         String getGroupsResponseBody = EntityUtils.toString(response.getEntity());
@@ -53,8 +64,8 @@ public class GetGroupsTest extends AcceptanceBaseTest {
         ListGroupResponse listGroupResponse =
             new Gson().fromJson(getGroupsResponseBody, ListGroupResponse.class);
 
-        assertEquals(token.getUserId(), listGroupResponse.getDesId());
-        assertEquals(token.getUserId(), listGroupResponse.getMemberEmail());
+        assertEquals(testUtils.getUserId(), listGroupResponse.getDesId());
+        assertEquals(testUtils.getUserId(), listGroupResponse.getMemberEmail());
 
         //assert all items contain the role info
         int expectedHasRoleCount = listGroupResponse.getGroups().stream()

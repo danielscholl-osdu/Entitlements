@@ -20,12 +20,12 @@ public class PartitionService {
   private final Gson gson = new Gson();
   private final ConfigurationService configurationService;
   private final HttpClientService httpClientService;
-  private final TokenService tokenService;
+  private TestUtils testUtils = null;
 
-  public PartitionService(ConfigurationService configurationService, TokenService tokenService) {
+  public PartitionService(ConfigurationService configurationService) {
     this.configurationService = configurationService;
     this.httpClientService = new HttpClientService(configurationService);
-    this.tokenService = tokenService;
+    this.testUtils = new TokenTestUtils();
   }
 
   public String getPartitionProperty(String property) throws Exception {
@@ -33,7 +33,7 @@ public class PartitionService {
 
     RequestData requestData = RequestData.builder()
         .url(partitionApi)
-        .token(tokenService.getToken().getValue())
+        .token(testUtils.getToken())
         .relativePath("/partitions/" + configurationService.getTenantId())
         .method("GET")
         .build();
@@ -46,6 +46,7 @@ public class PartitionService {
     Map<String, Property> properties = gson.fromJson(new InputStreamReader(content), parametrizedType);
 
     assertNotNull(properties.get(property));
+    testUtils = null;
     return properties.get(property).getValue().toString();
   }
 }

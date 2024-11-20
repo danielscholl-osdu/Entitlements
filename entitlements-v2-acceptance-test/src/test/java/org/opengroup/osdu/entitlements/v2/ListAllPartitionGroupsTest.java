@@ -24,14 +24,15 @@ import static org.hamcrest.core.Every.everyItem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opengroup.osdu.entitlements.v2.model.GroupItem;
 import org.opengroup.osdu.entitlements.v2.model.GroupType;
-import org.opengroup.osdu.entitlements.v2.model.Token;
 import org.opengroup.osdu.entitlements.v2.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.model.response.ListGroupInPartitionResponse;
 import org.opengroup.osdu.entitlements.v2.util.CommonConfigurationService;
-import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
+import org.opengroup.osdu.entitlements.v2.util.TokenTestUtils;
 
 import java.util.List;
 import java.util.StringJoiner;
@@ -39,11 +40,20 @@ import java.util.stream.Collectors;
 
 public class ListAllPartitionGroupsTest extends AcceptanceBaseTest {
 
-    private final Token token;
-
     private ListAllPartitionGroupsTest() {
-        super(new CommonConfigurationService(), new OpenIDTokenProvider());
-        token = tokenService.getToken();
+        super(new CommonConfigurationService());
+    }
+    
+    @BeforeEach
+    @Override
+    public void setupTest() throws Exception {
+        this.testUtils = new TokenTestUtils();
+    }
+
+    @AfterEach
+    @Override
+    public void tearTestDown() throws Exception {
+        this.testUtils = null;
     }
 
     @Override
@@ -75,7 +85,7 @@ public class ListAllPartitionGroupsTest extends AcceptanceBaseTest {
     public void shouldReturnGroupsWithinLimitIfLimitParamPresent() throws Exception {
         String limitParam = "limit=10";
         String typeParam = "type=service";
-        ListGroupInPartitionResponse serviceGroups = entitlementsV2Service.getGroupsWithinPartition(this.token.getValue(), limitParam, typeParam);
+        ListGroupInPartitionResponse serviceGroups = entitlementsV2Service.getGroupsWithinPartition(testUtils.getToken(), limitParam, typeParam);
         assertThat(serviceGroups.getGroups().size(), is(10));
     }
 
@@ -106,7 +116,7 @@ public class ListAllPartitionGroupsTest extends AcceptanceBaseTest {
         RequestData requestData = RequestData.builder()
             .method("GET").dataPartitionId(configurationService.getTenantId())
             .relativePath("groups/all" + joinedParams)
-            .token(token.getValue())
+            .token(testUtils.getToken())
             .build();
 
         CloseableHttpResponse response = httpClientService.send(requestData);
@@ -115,7 +125,7 @@ public class ListAllPartitionGroupsTest extends AcceptanceBaseTest {
 
     private void sendGetGroupsWithTypeParam(GroupType groupType) throws Exception {
         String groupTypeParam = "type=" + groupType.toString().toLowerCase();
-        ListGroupInPartitionResponse serviceGroups = entitlementsV2Service.getGroupsWithinPartition(this.token.getValue(), groupTypeParam);
+        ListGroupInPartitionResponse serviceGroups = entitlementsV2Service.getGroupsWithinPartition(testUtils.getToken(), groupTypeParam);
         List<String> groupEmails = serviceGroups.getGroups().stream()
             .map(GroupItem::getEmail)
             .collect(Collectors.toList());

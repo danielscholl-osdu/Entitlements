@@ -7,47 +7,54 @@ import java.util.Map;
 import lombok.SneakyThrows;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opengroup.osdu.entitlements.v2.model.GroupItem;
 import org.opengroup.osdu.entitlements.v2.model.GroupType;
-import org.opengroup.osdu.entitlements.v2.model.Token;
 import org.opengroup.osdu.entitlements.v2.model.request.AddMemberRequestData;
 import org.opengroup.osdu.entitlements.v2.model.request.GetGroupsRequestData;
 import org.opengroup.osdu.entitlements.v2.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.model.response.ListGroupResponse;
 import org.opengroup.osdu.entitlements.v2.util.CommonConfigurationService;
-import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.opengroup.osdu.entitlements.v2.util.TokenTestUtils;
 import org.springframework.http.HttpStatus;
-import java.io.IOException;
 
 
 public class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
 
     private static final String URL_TEMPLATE_MEMBERS_GROUPS = "members/%s/groups";
     private final List<String> groupsForFurtherDeletion;
-    private final Token token;
 
     public ListGroupOnBehalfOfTest() {
-        super(new CommonConfigurationService(), new OpenIDTokenProvider());
+        super(new CommonConfigurationService());
         groupsForFurtherDeletion = new ArrayList<>();
-        token = tokenService.getToken();
+    }
+
+    @BeforeEach
+    @Override
+    public void setupTest() throws Exception {
+        this.testUtils = new TokenTestUtils();
+    }
+
+    @AfterEach
+    @Override
+    public void tearTestDown() throws Exception {
+        for (String groupName : groupsForFurtherDeletion) {
+            entitlementsV2Service.deleteGroup(groupName, testUtils.getToken());
+        }
+        this.testUtils = null;
     }
 
     @Test
     public void should200ForGetGroupsOnBehalfOfWithRoleEnabled() {
         test200ForGetGroupsOnBehalfOfWithRoleEnabled();
-    }
-    @Override
-    protected void cleanup() throws Exception {
-        for (String groupName : groupsForFurtherDeletion) {
-            entitlementsV2Service.deleteGroup(groupName, token.getValue());
-        }
     }
 
     @Test
@@ -61,7 +68,7 @@ public class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
                 .type(GroupType.NONE)
                 .build();
         ListGroupResponse groups =
-            entitlementsV2Service.getGroups(getGroupsRequestData, token.getValue());
+            entitlementsV2Service.getGroups(getGroupsRequestData, testUtils.getToken());
 
         assertEquals(memberEmail.toLowerCase(), groups.getDesId());
         assertEquals(memberEmail.toLowerCase(), groups.getMemberEmail());
@@ -85,7 +92,7 @@ public class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
                 .relativePath(String.format(URL_TEMPLATE_MEMBERS_GROUPS,
                     this.configurationService.getMemberMailId()))
                 .dataPartitionId(configurationService.getTenantId())
-                .token(token.getValue())
+                .token(testUtils.getToken())
                 .build();
         CloseableHttpResponse response = httpClientService.send(requestData);
         assertEquals(400, response.getCode());
@@ -99,19 +106,19 @@ public class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
                     this.configurationService.getMemberMailId()))
                 .queryParams(Collections.singletonMap("type", "test"))
                 .dataPartitionId(configurationService.getTenantId())
-                .token(token.getValue())
+                .token(testUtils.getToken())
                 .build();
         CloseableHttpResponse response = httpClientService.send(requestData);
         assertEquals(400, response.getCode());
     }
 
     @Test
-    public void shouldReturnBadRequestWhenMakingHttpRequestWithInvalidUrl() throws IOException {
+    public void shouldReturnBadRequestWhenMakingHttpRequestWithInvalidUrl() throws Exception {
         RequestData requestData = RequestData.builder()
                 .method("GET")
                 .relativePath("members/%3B/groups")
                 .dataPartitionId(configurationService.getTenantId())
-                .token(token.getValue())
+                .token(testUtils.getToken())
                 .build();
 
         CloseableHttpResponse closeableHttpResponse = httpClientService.send(requestData);
@@ -144,7 +151,7 @@ public class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
             .relativePath(String.format(URL_TEMPLATE_MEMBERS_GROUPS, memberEmail))
             .queryParams(queryParams)
             .dataPartitionId(configurationService.getTenantId())
-            .token(token.getValue())
+            .token(testUtils.getToken())
             .build();
 
         CloseableHttpResponse response = httpClientService.send(requestData);
@@ -185,15 +192,15 @@ public class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
         String group2Name = "group2-" + currentTime;
         String group3Name = "group3-" + currentTime;
 
-        GroupItem group1Item = entitlementsV2Service.createGroup(group1Name, token.getValue());
+        GroupItem group1Item = entitlementsV2Service.createGroup(group1Name, testUtils.getToken());
         groupsForFurtherDeletion.add(group1Item.getEmail());
         groups.add(group1Item);
 
-        GroupItem group2Item = entitlementsV2Service.createGroup(group2Name, token.getValue());
+        GroupItem group2Item = entitlementsV2Service.createGroup(group2Name, testUtils.getToken());
         groupsForFurtherDeletion.add(group2Item.getEmail());
         groups.add(group2Item);
 
-        GroupItem group3Item = entitlementsV2Service.createGroup(group3Name, token.getValue());
+        GroupItem group3Item = entitlementsV2Service.createGroup(group3Name, testUtils.getToken());
         groupsForFurtherDeletion.add(group3Item.getEmail());
         groups.add(group3Item);
 
@@ -210,6 +217,6 @@ public class ListGroupOnBehalfOfTest extends AcceptanceBaseTest {
                 .role("MEMBER")
                 .memberEmail(memberEmail)
                 .build();
-        entitlementsV2Service.addMember(addMemberRequestData, token.getValue());
+        entitlementsV2Service.addMember(addMemberRequestData, testUtils.getToken());
     }
 }

@@ -28,6 +28,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opengroup.osdu.entitlements.v2.model.GroupItem;
 import org.opengroup.osdu.entitlements.v2.model.MemberItem;
@@ -43,8 +45,20 @@ public class ImpersonationTest extends AcceptanceBaseTest {
   private final PartitionService partitionService;
 
   public ImpersonationTest() {
-    super(new CommonConfigurationService(), new OpenIDTokenProvider());
-    this.partitionService = new org.opengroup.osdu.entitlements.v2.util.PartitionService(new CommonConfigurationService(), new OpenIDTokenProvider());
+    super(new CommonConfigurationService());
+    this.partitionService = new org.opengroup.osdu.entitlements.v2.util.PartitionService(new CommonConfigurationService());
+  }
+
+  @BeforeEach
+  @Override
+  public void setupTest() throws Exception {
+    this.testUtils = new TokenTestUtils();
+  }
+
+  @AfterEach
+  @Override
+  public void tearTestDown() throws Exception {
+    this.testUtils = null;
   }
 
   @Test
@@ -57,43 +71,42 @@ public class ImpersonationTest extends AcceptanceBaseTest {
         "users@" + configurationService.getTenantId() + "." + configurationService.getDomain();
     String userGroup = "service.entitlements.user@" + configurationService.getTenantId() + "."
         + configurationService.getDomain();
-    String token = tokenService.getToken().getValue();
 
     //check if member in data group, add if not
-    List<String> members = entitlementsV2Service.getMembers(dataGroup, token).getMembers().stream()
+    List<String> members = entitlementsV2Service.getMembers(dataGroup, testUtils.getToken()).getMembers().stream()
         .map(MemberItem::getEmail).collect(Collectors.toList());
     if (!members.contains(memberEmail)) {
       AddMemberRequestData addGroupMemberRequestData = AddMemberRequestData.builder()
           .groupEmail(dataGroup).role("MEMBER").memberEmail(memberEmail).build();
-      entitlementsV2Service.addMember(addGroupMemberRequestData, token);
+      entitlementsV2Service.addMember(addGroupMemberRequestData, testUtils.getToken());
     }
 
     //check if member in impersonation group, add if not
-    members = entitlementsV2Service.getMembers(impersonationGroup, token).getMembers().stream()
+    members = entitlementsV2Service.getMembers(impersonationGroup, testUtils.getToken()).getMembers().stream()
         .map(MemberItem::getEmail).collect(Collectors.toList());
     if (!members.contains(memberEmail)) {
       AddMemberRequestData addGroupMemberRequestData = AddMemberRequestData.builder()
           .groupEmail(impersonationGroup).role("MEMBER").memberEmail(memberEmail).build();
-      entitlementsV2Service.addMember(addGroupMemberRequestData, token);
+      entitlementsV2Service.addMember(addGroupMemberRequestData, testUtils.getToken());
     }
 
     //check if member in user group, add if not
-    members = entitlementsV2Service.getMembers(userGroup, token).getMembers().stream()
+    members = entitlementsV2Service.getMembers(userGroup, testUtils.getToken()).getMembers().stream()
         .map(MemberItem::getEmail).collect(Collectors.toList());
     if (!members.contains(memberEmail)) {
       AddMemberRequestData addGroupMemberRequestData = AddMemberRequestData.builder()
           .groupEmail(userGroup).role("MEMBER").memberEmail(memberEmail).build();
-      entitlementsV2Service.addMember(addGroupMemberRequestData, token);
+      entitlementsV2Service.addMember(addGroupMemberRequestData, testUtils.getToken());
     }
 
     //create control random group and add member
     String groupName = "groupname-" + System.currentTimeMillis();
-    GroupItem groupItem = entitlementsV2Service.createGroup(groupName, token);
+    GroupItem groupItem = entitlementsV2Service.createGroup(groupName, testUtils.getToken());
     AddMemberRequestData addGroupMemberRequestData = AddMemberRequestData.builder()
         .groupEmail(groupItem.getEmail()).role("MEMBER").memberEmail(memberEmail).build();
-    entitlementsV2Service.addMember(addGroupMemberRequestData, token);
+    entitlementsV2Service.addMember(addGroupMemberRequestData, testUtils.getToken());
 
-    CloseableHttpResponse response = sendWithOnBehalfOfHeader("GET", memberEmail, token);
+    CloseableHttpResponse response = sendWithOnBehalfOfHeader("GET", memberEmail, testUtils.getToken());
 
     assertEquals(200, response.getCode());
     String getGroupsResponseBody = new String(response.getEntity().getContent().readAllBytes());
@@ -106,13 +119,12 @@ public class ImpersonationTest extends AcceptanceBaseTest {
     assertTrue(delegationGroup.isPresent());
     assertEquals(groupName, delegationGroup.get());
 
-    entitlementsV2Service.removeMember(groupItem.getEmail(), memberEmail, token);
-    entitlementsV2Service.deleteGroup(groupItem.getEmail(), token);
+    entitlementsV2Service.removeMember(groupItem.getEmail(), memberEmail, testUtils.getToken());
+    entitlementsV2Service.deleteGroup(groupItem.getEmail(), testUtils.getToken());
   }
 
   @Test
   public void shouldFailIfNoImpersonationGroup() throws Exception {
-    String token = tokenService.getToken().getValue();
     String memberEmail = "impersonationtestmemberwithoutgroup@test.com";
     String dataGroup =
         "users@" + configurationService.getTenantId() + "." + configurationService.getDomain();
@@ -121,41 +133,39 @@ public class ImpersonationTest extends AcceptanceBaseTest {
             + configurationService.getDomain();
 
     //check if member in data group, add if not
-    List<String> members = entitlementsV2Service.getMembers(dataGroup, token).getMembers().stream()
+    List<String> members = entitlementsV2Service.getMembers(dataGroup, testUtils.getToken()).getMembers().stream()
         .map(MemberItem::getEmail).collect(Collectors.toList());
     if (!members.contains(memberEmail)) {
       AddMemberRequestData addGroupMemberRequestData = AddMemberRequestData.builder()
           .groupEmail(dataGroup).role("MEMBER").memberEmail(memberEmail).build();
-      entitlementsV2Service.addMember(addGroupMemberRequestData, token);
+      entitlementsV2Service.addMember(addGroupMemberRequestData, testUtils.getToken());
     }
 
     //check if member in impersonation group, remove if yes
-    members = entitlementsV2Service.getMembers(impersonationGroup, token).getMembers().stream()
+    members = entitlementsV2Service.getMembers(impersonationGroup, testUtils.getToken()).getMembers().stream()
         .map(MemberItem::getEmail).collect(Collectors.toList());
     if (members.contains(memberEmail)) {
-      entitlementsV2Service.removeMember(impersonationGroup, memberEmail, token);
+      entitlementsV2Service.removeMember(impersonationGroup, memberEmail, testUtils.getToken());
     }
 
-    CloseableHttpResponse response = sendWithOnBehalfOfHeader("GET", memberEmail, token);
+    CloseableHttpResponse response = sendWithOnBehalfOfHeader("GET", memberEmail, testUtils.getToken());
 
     assertEquals(403, response.getCode());
   }
 
   @Test
   public void shouldFailIfTryToImpersonateTenantServiceAccount() throws Exception {
-    String token = tokenService.getToken().getValue();
     String tenantServiceAccount = partitionService.getPartitionProperty("serviceAccount");
-    CloseableHttpResponse response = sendWithOnBehalfOfHeader("GET", tenantServiceAccount, token);
+    CloseableHttpResponse response = sendWithOnBehalfOfHeader("GET", tenantServiceAccount, testUtils.getToken());
 
     assertEquals(403, response.getCode());
   }
 
   @Test
   public void shouldFailIfNoDelegationGroup() throws Exception {
-    String noDataAccessToken = tokenService.getNoAccToken().getValue();
 
     CloseableHttpResponse response = sendWithOnBehalfOfHeader("GET", "no.matter@user.id",
-        noDataAccessToken);
+            testUtils.getNoDataAccessToken());
 
     assertEquals(403, response.getCode());
   }

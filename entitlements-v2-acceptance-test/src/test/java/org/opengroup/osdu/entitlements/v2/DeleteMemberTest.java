@@ -5,15 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.opengroup.osdu.entitlements.v2.model.GroupItem;
-import org.opengroup.osdu.entitlements.v2.model.Token;
 import org.opengroup.osdu.entitlements.v2.model.request.AddMemberRequestData;
 import org.opengroup.osdu.entitlements.v2.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.util.CommonConfigurationService;
-import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
+import org.opengroup.osdu.entitlements.v2.util.TokenTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,21 +27,25 @@ import java.util.concurrent.TimeUnit;
 @Disabled
 public class DeleteMemberTest extends AcceptanceBaseTest {
     private final List<String> groupsForFurtherDeletion;
-    private final Token token;
-    private static final OpenIDTokenProvider openIDTokenProvider = new OpenIDTokenProvider();;
-
 
     public DeleteMemberTest() {
-        super(new CommonConfigurationService(), openIDTokenProvider);
+        super(new CommonConfigurationService());
         groupsForFurtherDeletion = new ArrayList<>();
-        token = openIDTokenProvider.getToken();
     }
 
+    @BeforeEach
     @Override
-    protected void cleanup() throws Exception {
+    public void setupTest() throws Exception {
+        this.testUtils = new TokenTestUtils();
+    }
+
+    @AfterEach
+    @Override
+    public void tearTestDown() throws Exception {
         for (String groupName : groupsForFurtherDeletion) {
-            entitlementsV2Service.deleteGroup(groupName, token.getValue());
+            entitlementsV2Service.deleteGroup(groupName, testUtils.getToken());
         }
+        this.testUtils = null;
     }
 
     @Override
@@ -65,7 +70,7 @@ public class DeleteMemberTest extends AcceptanceBaseTest {
         assertTrue(isGroupAMemberOfAnotherGroup(groups.get(2).getEmail(), groups.get(0).getEmail()));
         assertTrue(isGroupAMemberOfAnotherGroup(groups.get(2).getEmail(), groups.get(1).getEmail()));
 
-        entitlementsV2Service.deleteMember(groups.get(2).getEmail(), token.getValue());
+        entitlementsV2Service.deleteMember(groups.get(2).getEmail(), testUtils.getToken());
 
         try {
             Thread.sleep(1500);
@@ -87,7 +92,7 @@ public class DeleteMemberTest extends AcceptanceBaseTest {
     public void shouldSuccessfullyDeleteUserMember() throws Exception {
         String member = configurationService.getMemberMailId_toBeDeleted(currentTime);
         List<GroupItem> groups = setupUsers(member);
-        entitlementsV2Service.deleteMember(member, token.getValue());
+        entitlementsV2Service.deleteMember(member, testUtils.getToken());
         // check that the member is not a memberOf the groups (reusing the already written method)
         assertFalse(isGroupAMemberOfAnotherGroup(member, groups.get(0).getEmail()));
         assertFalse(isGroupAMemberOfAnotherGroup(member, groups.get(1).getEmail()));
@@ -104,7 +109,7 @@ public class DeleteMemberTest extends AcceptanceBaseTest {
         for (int i = 0; i < threads; i++) {
             Callable<CloseableHttpResponse> task = () -> {
                 try {
-                    return entitlementsV2Service.deleteMember(groups.get(2).getEmail(), token.getValue());
+                    return entitlementsV2Service.deleteMember(groups.get(2).getEmail(), testUtils.getToken());
                 } catch (Exception e) {
                     return null;
                 }
@@ -138,15 +143,15 @@ public class DeleteMemberTest extends AcceptanceBaseTest {
         String group2Name = "group2-" + currentTime;
         String group3Name = "group3-" + currentTime;
 
-        GroupItem group1Item = entitlementsV2Service.createGroup(group1Name, token.getValue());
+        GroupItem group1Item = entitlementsV2Service.createGroup(group1Name, testUtils.getToken());
         groupsForFurtherDeletion.add(group1Item.getEmail());
         groups.add(group1Item);
 
-        GroupItem group2Item = entitlementsV2Service.createGroup(group2Name, token.getValue());
+        GroupItem group2Item = entitlementsV2Service.createGroup(group2Name, testUtils.getToken());
         groupsForFurtherDeletion.add(group2Item.getEmail());
         groups.add(group2Item);
 
-        GroupItem group3Item = entitlementsV2Service.createGroup(group3Name, token.getValue());
+        GroupItem group3Item = entitlementsV2Service.createGroup(group3Name, testUtils.getToken());
         groupsForFurtherDeletion.add(group3Item.getEmail());
         groups.add(group3Item);
 
@@ -162,11 +167,11 @@ public class DeleteMemberTest extends AcceptanceBaseTest {
         String group1Name = "group1-" + currentTime;
         String group2Name = "group2-" + currentTime;
 
-        GroupItem group1Item = entitlementsV2Service.createGroup(group1Name, token.getValue());
+        GroupItem group1Item = entitlementsV2Service.createGroup(group1Name, testUtils.getToken());
         groupsForFurtherDeletion.add(group1Item.getEmail());
         groups.add(group1Item);
 
-        GroupItem group2Item = entitlementsV2Service.createGroup(group2Name, token.getValue());
+        GroupItem group2Item = entitlementsV2Service.createGroup(group2Name, testUtils.getToken());
         groupsForFurtherDeletion.add(group2Item.getEmail());
         groups.add(group2Item);
 
@@ -183,11 +188,11 @@ public class DeleteMemberTest extends AcceptanceBaseTest {
                 .role("MEMBER")
                 .memberEmail(memberEmail)
                 .build();
-        entitlementsV2Service.addMember(addMemberRequestData, token.getValue());
+        entitlementsV2Service.addMember(addMemberRequestData, testUtils.getToken());
     }
 
     private boolean isGroupAMemberOfAnotherGroup(String groupEmail, String anotherGroupEmail) throws Exception {
-        return entitlementsV2Service.getMembers(anotherGroupEmail, token.getValue()).getMembers().stream()
+        return entitlementsV2Service.getMembers(anotherGroupEmail, testUtils.getToken()).getMembers().stream()
                 .anyMatch(memberItem -> memberItem.getEmail().equals(groupEmail));
     }
 }

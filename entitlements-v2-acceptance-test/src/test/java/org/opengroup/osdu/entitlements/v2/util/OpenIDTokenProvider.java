@@ -35,7 +35,7 @@ import net.minidev.json.JSONObject;
 import org.opengroup.osdu.entitlements.v2.model.Token;
 import org.opengroup.osdu.entitlements.v2.util.conf.OpenIDProviderConfig;
 
-public class OpenIDTokenProvider implements TokenService {
+public class OpenIDTokenProvider {
 
   private static final OpenIDProviderConfig openIDProviderConfig = OpenIDProviderConfig.Instance();
   private static final String ID_TOKEN = "id_token";
@@ -56,7 +56,6 @@ public class OpenIDTokenProvider implements TokenService {
         new Secret(openIDProviderConfig.getNoAccessClientSecret()));
   }
 
-  @Override
   public Token getToken() {
     try {
       String token = requestToken(clientAuthentication);
@@ -66,7 +65,6 @@ public class OpenIDTokenProvider implements TokenService {
     }
   }
 
-  @Override
   public Token getNoAccToken() {
     try {
       String token = requestToken(noAccessClientAuthentication);

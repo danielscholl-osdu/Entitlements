@@ -5,38 +5,50 @@ import static org.junit.Assert.assertEquals;
 import com.google.gson.Gson;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.opengroup.osdu.entitlements.v2.model.Token;
 import org.opengroup.osdu.entitlements.v2.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.model.request.UpdateGroupRequestData;
 import org.opengroup.osdu.entitlements.v2.model.response.UpdateGroupResponse;
 import org.opengroup.osdu.entitlements.v2.util.CommonConfigurationService;
-import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import org.opengroup.osdu.entitlements.v2.util.TokenTestUtils;
 import org.springframework.http.HttpStatus;
-import java.io.IOException;
 
 public class UpdateGroupTest extends AcceptanceBaseTest {
 
-    private final Token token = tokenService.getToken();
-
     public UpdateGroupTest() {
-        super(new CommonConfigurationService(), new OpenIDTokenProvider());
+        super(new CommonConfigurationService());
+    }
+
+    @BeforeEach
+    @Override
+    public void setupTest() throws Exception {
+        this.testUtils = new TokenTestUtils();
+    }
+
+    @AfterEach
+    @Override
+    public void tearTestDown() throws Exception {
+        String token = testUtils.getToken();
+        entitlementsV2Service.deleteGroup(configurationService.getIdOfGroup("newGroupName-" + currentTime), token);
+        entitlementsV2Service.deleteGroup(configurationService.getIdOfGroup("groupName-" + currentTime), token);
+        this.testUtils = null;
     }
 
     @Test
     public void shouldRenameGroupSuccessfully() throws Exception {
-        Token token = tokenService.getToken();
         String oldGroupName = "oldGroupName-" + currentTime;
         String newGroupName = "newGroupName-" + currentTime;
 
-        entitlementsV2Service.createGroup(oldGroupName, token.getValue());
+        entitlementsV2Service.createGroup(oldGroupName, testUtils.getToken());
 
-        CloseableHttpResponse response = httpClientService.send(getRenameGroupRequestData(oldGroupName, newGroupName, token.getValue()));
+        CloseableHttpResponse response = httpClientService.send(getRenameGroupRequestData(oldGroupName, newGroupName, testUtils.getToken()));
         UpdateGroupResponse updateGroupResponse = new Gson().fromJson(EntityUtils.toString(response.getEntity()), UpdateGroupResponse.class);
         assertEquals(200, response.getCode());
         assertEquals(newGroupName.toLowerCase(), updateGroupResponse.getName());
@@ -46,27 +58,19 @@ public class UpdateGroupTest extends AcceptanceBaseTest {
 
     @Test
     public void shouldUpdateAppIdsSuccessfully() throws Exception {
-        Token token = tokenService.getToken();
         String groupName = "groupName-" + currentTime;
         Set<String> newAppIds = new HashSet<>();
         newAppIds.add("app1");
         newAppIds.add("app2");
 
-        entitlementsV2Service.createGroup(groupName, token.getValue());
+        entitlementsV2Service.createGroup(groupName, testUtils.getToken());
 
-        CloseableHttpResponse response = httpClientService.send(getUpdateAppIdsRequestData(groupName, newAppIds, token.getValue()));
+        CloseableHttpResponse response = httpClientService.send(getUpdateAppIdsRequestData(groupName, newAppIds, testUtils.getToken()));
         UpdateGroupResponse updateGroupResponse = new Gson().fromJson(EntityUtils.toString(response.getEntity()), UpdateGroupResponse.class);
         assertEquals(200, response.getCode());
         assertEquals(groupName.toLowerCase(), updateGroupResponse.getName());
         assertEquals(configurationService.getIdOfGroup(groupName).toLowerCase(), updateGroupResponse.getEmail());
         assertEquals(new HashSet<>(updateGroupResponse.getAppIds()), newAppIds);
-    }
-
-    @Override
-    protected void cleanup() throws Exception {
-        Token token = tokenService.getToken();
-        entitlementsV2Service.deleteGroup(configurationService.getIdOfGroup("newGroupName-" + currentTime), token.getValue());
-        entitlementsV2Service.deleteGroup(configurationService.getIdOfGroup("groupName-" + currentTime), token.getValue());
     }
 
     @Override
@@ -107,12 +111,12 @@ public class UpdateGroupTest extends AcceptanceBaseTest {
     }
 
     @Test
-    public void shouldReturnBadRequestWhenMakingHttpRequestWithoutValidUrl() throws IOException {
+    public void shouldReturnBadRequestWhenMakingHttpRequestWithoutValidUrl() throws Exception {
         RequestData requestData = RequestData.builder()
                 .method("PATCH")
                 .relativePath("groups/%25")
                 .dataPartitionId(configurationService.getTenantId())
-                .token(token.getValue())
+                .token(testUtils.getToken())
                 .build();
 
         CloseableHttpResponse closeableHttpResponse = httpClientService.send(requestData);

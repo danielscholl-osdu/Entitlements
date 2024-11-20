@@ -26,15 +26,12 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import lombok.extern.slf4j.Slf4j;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opengroup.osdu.entitlements.v2.model.GroupItem;
 import org.opengroup.osdu.entitlements.v2.model.response.ListGroupResponse;
-import org.opengroup.osdu.entitlements.v2.util.ConfigurationService;
-import org.opengroup.osdu.entitlements.v2.util.EntitlementsV2Service;
-import org.opengroup.osdu.entitlements.v2.util.HttpClientService;
-import org.opengroup.osdu.entitlements.v2.util.TokenService;
-import org.opengroup.osdu.entitlements.v2.util.CommonConfigurationService;
-import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
+import org.opengroup.osdu.entitlements.v2.util.*;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -52,7 +49,7 @@ public class GetDataGroupsIndexerServiceAccTest {
 
   private final String baseUrl;
   private final Client client;
-  private final TokenService tokenService = new OpenIDTokenProvider();
+  private TestUtils testUtils = null;
   private final ConfigurationService configurationService = new CommonConfigurationService();
   private final EntitlementsV2Service entitlementsV2Service;
   private final String indexerServiceAccountEmail;
@@ -67,18 +64,27 @@ public class GetDataGroupsIndexerServiceAccTest {
     dataRootGroupHierarchyEnabled = Boolean.parseBoolean(System.getenv("DATA_ROOT_GROUP_HIERARCHY_ENABLED"));
   }
 
+  @BeforeEach
+  public void setupTest() throws Exception {
+    this.testUtils = new TokenTestUtils();
+  }
+
+  @AfterEach
+  public void tearTestDown() throws Exception {
+    testUtils = null;
+  }
+
   @Test
   public void shouldReturnCreatedDataGroupForIndexerServiceAcc() throws Exception {
     assumeTrue(dataRootGroupHierarchyEnabled);
     String dataGroupName = "data.indexer.test.group";
     String dataGroupEmail = dataGroupName + "@" + configurationService.getTenantId() + "." + configurationService.getDomain();
-    String token = tokenService.getToken().getValue();
 
-    if (isNotDataGroupExist(dataGroupEmail, token)) {
-      entitlementsV2Service.createGroup(dataGroupName, token);
+    if (isNotDataGroupExist(dataGroupEmail, testUtils.getToken())) {
+      entitlementsV2Service.createGroup(dataGroupName, testUtils.getToken());
     }
 
-    ClientResponse successfulResponse = sendGetParentGroupsRequest(token,
+    ClientResponse successfulResponse = sendGetParentGroupsRequest(testUtils.getToken(),
         indexerServiceAccountEmail);
     assertEquals(200, successfulResponse.getStatus());
     String successfulResponseBody = successfulResponse.getEntity(String.class);
@@ -86,8 +92,8 @@ public class GetDataGroupsIndexerServiceAccTest {
     assertTrue(successfulGroupResponse.getGroups().stream().map(GroupItem::getEmail)
         .anyMatch(email1 -> email1.equals(dataGroupEmail)));
 
-    entitlementsV2Service.deleteGroup(dataGroupEmail, token);
-    ClientResponse getIndexerAccGroupsResponse = sendGetParentGroupsRequest(token,
+    entitlementsV2Service.deleteGroup(dataGroupEmail, testUtils.getToken());
+    ClientResponse getIndexerAccGroupsResponse = sendGetParentGroupsRequest(testUtils.getToken(),
         indexerServiceAccountEmail);
     assertEquals(200, getIndexerAccGroupsResponse.getStatus());
     String indexerAccGroupsBody = getIndexerAccGroupsResponse.getEntity(String.class);

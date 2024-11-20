@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.opengroup.osdu.entitlements.v2.AcceptanceBaseTest;
 import org.opengroup.osdu.entitlements.v2.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.util.ConfigurationService;
-import org.opengroup.osdu.entitlements.v2.util.TokenService;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,8 +17,8 @@ public abstract class SwaggerApiTest extends AcceptanceBaseTest {
   private static final String SWAGGER_API_PATH = "swagger";
   private static final String SWAGGER_API_DOCS_PATH = "api-docs";
 
-  private SwaggerApiTest(ConfigurationService configurationService, TokenService tokenService) {
-    super(configurationService, tokenService);
+  private SwaggerApiTest(ConfigurationService configurationService) {
+    super(configurationService);
   }
 
   @Test
@@ -29,7 +28,7 @@ public abstract class SwaggerApiTest extends AcceptanceBaseTest {
                     .relativePath(SWAGGER_API_PATH)
                     .method(HTTP_GET)
                     .body(null)
-                    .token(tokenService.getToken().getValue())
+                    .token(testUtils.getToken())
                     .build();
 
     CloseableHttpResponse response = httpClientService.send(request);
@@ -44,7 +43,7 @@ public abstract class SwaggerApiTest extends AcceptanceBaseTest {
                     .relativePath(SWAGGER_API_DOCS_PATH)
                     .method(HTTP_GET)
                     .body(null)
-                    .token(tokenService.getToken().getValue())
+                    .token(testUtils.getToken())
                     .build();
 
     CloseableHttpResponse response = httpClientService.send(request);

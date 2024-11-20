@@ -5,6 +5,8 @@ import static org.junit.Assert.assertNotNull;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opengroup.osdu.entitlements.v2.AcceptanceBaseTest;
 import org.opengroup.osdu.entitlements.v2.model.VersionInfo;
@@ -22,7 +24,19 @@ public class InfoApiTest extends AcceptanceBaseTest {
   private final VersionInfoUtils versionInfoUtils = new VersionInfoUtils();
 
   public InfoApiTest() {
-    super(new CommonConfigurationService(), new OpenIDTokenProvider());
+    super(new CommonConfigurationService());
+  }
+
+  @BeforeEach
+  @Override
+  public void setupTest() throws Exception {
+    this.testUtils = new TokenTestUtils();
+  }
+
+  @AfterEach
+  @Override
+  public void tearTestDown() throws Exception {
+    this.testUtils = null;
   }
 
   @Test
@@ -32,7 +46,7 @@ public class InfoApiTest extends AcceptanceBaseTest {
             .relativePath(getApi())
             .method(getHttpMethod())
             .body(null)
-            .token(getTokenService().getToken().getValue())
+            .token(testUtils.getToken())
             .dataPartitionId(DATA_PARTITION_ID)
             .build();
     CloseableHttpResponse response = getHttpClientService().send(request);
@@ -56,7 +70,7 @@ public class InfoApiTest extends AcceptanceBaseTest {
             .relativePath(getApi()+"/")
             .method(getHttpMethod())
             .body(null)
-            .token(getTokenService().getToken().getValue())
+            .token(testUtils.getToken())
             .dataPartitionId(DATA_PARTITION_ID)
             .build();
     CloseableHttpResponse response = getHttpClientService().send(request);

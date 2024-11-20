@@ -3,21 +3,31 @@ package org.opengroup.osdu.entitlements.v2;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.opengroup.osdu.entitlements.v2.model.GroupItem;
-import org.opengroup.osdu.entitlements.v2.model.Token;
 import org.opengroup.osdu.entitlements.v2.model.request.RequestData;
 import org.opengroup.osdu.entitlements.v2.util.CommonConfigurationService;
-import org.opengroup.osdu.entitlements.v2.util.OpenIDTokenProvider;
+import org.opengroup.osdu.entitlements.v2.util.TokenTestUtils;
 import org.springframework.http.HttpStatus;
-import java.io.IOException;
 
 public class DeleteGroupTest extends AcceptanceBaseTest {
 
-    private final Token token = tokenService.getToken();
-
     public DeleteGroupTest() {
-        super(new CommonConfigurationService(), new OpenIDTokenProvider());
+        super(new CommonConfigurationService());
+    }
+
+    @BeforeEach
+    @Override
+    public void setupTest() throws Exception {
+        this.testUtils = new TokenTestUtils();
+    }
+
+    @AfterEach
+    @Override
+    public void tearTestDown() throws Exception {
+        this.testUtils = null;
     }
     @Override
     protected RequestData getRequestDataForNoTokenTest() {
@@ -35,11 +45,10 @@ public class DeleteGroupTest extends AcceptanceBaseTest {
      */
     @Test
     public void shouldReturn202WhenMakingValidHttpRequest() throws Exception {
-        Token token = tokenService.getToken();
         String groupName = "groupName-" + currentTime;
-        GroupItem groupItem = entitlementsV2Service.createGroup(groupName, token.getValue());
-        entitlementsV2Service.deleteGroup(groupItem.getEmail(), token.getValue());
-        verifyGroupDoesNotExist(groupItem.getEmail(), token.getValue());
+        GroupItem groupItem = entitlementsV2Service.createGroup(groupName, testUtils.getToken());
+        entitlementsV2Service.deleteGroup(groupItem.getEmail(), testUtils.getToken());
+        verifyGroupDoesNotExist(groupItem.getEmail(), testUtils.getToken());
     }
 
     private void verifyGroupDoesNotExist(String email, String value) throws Exception {
@@ -52,12 +61,12 @@ public class DeleteGroupTest extends AcceptanceBaseTest {
     }
 
     @Test
-    public void shouldReturnBadRequestWhenMakingHttpRequestWithInvalidUrl() throws IOException {
+    public void shouldReturnBadRequestWhenMakingHttpRequestWithInvalidUrl() throws Exception {
         RequestData requestData = RequestData.builder()
                 .method("DELETE")
                 .relativePath("groups/%25")
                 .dataPartitionId(configurationService.getTenantId())
-                .token(token.getValue())
+                .token(testUtils.getToken())
                 .build();
 
         CloseableHttpResponse closeableHttpResponse = httpClientService.send(requestData);
