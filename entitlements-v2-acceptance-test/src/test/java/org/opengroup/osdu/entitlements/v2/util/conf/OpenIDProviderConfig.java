@@ -37,11 +37,11 @@ public class OpenIDProviderConfig {
 
     public static OpenIDProviderConfig Instance() {
         try {
-            openIDProviderConfig.clientId = System.getProperty("TEST_OPENID_PROVIDER_CLIENT_ID", System.getenv("TEST_OPENID_PROVIDER_CLIENT_ID"));
-            openIDProviderConfig.noAccessClientId =  System.getProperty("TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_ID", System.getenv("TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_ID"));
+            openIDProviderConfig.clientId = System.getProperty("PRIVILEGED_USER_OPENID_PROVIDER_CLIENT_ID", System.getenv("PRIVILEGED_USER_OPENID_PROVIDER_CLIENT_ID"));
+            openIDProviderConfig.noAccessClientId =  System.getProperty("NO_ACCESS_USER_OPENID_PROVIDER_CLIENT_ID", System.getenv("NO_ACCESS_USER_OPENID_PROVIDER_CLIENT_ID"));
             openIDProviderConfig.url = System.getProperty("TEST_OPENID_PROVIDER_URL", System.getenv("TEST_OPENID_PROVIDER_URL"));
-            openIDProviderConfig.clientSecret = System.getProperty("TEST_OPENID_PROVIDER_CLIENT_SECRET", System.getenv("TEST_OPENID_PROVIDER_CLIENT_SECRET"));
-            openIDProviderConfig.noAccessClientSecret = System.getProperty("TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_SECRET", System.getenv("TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_SECRET"));
+            openIDProviderConfig.clientSecret = System.getProperty("PRIVILEGED_USER_OPENID_PROVIDER_CLIENT_SECRET", System.getenv("PRIVILEGED_USER_OPENID_PROVIDER_CLIENT_SECRET"));
+            openIDProviderConfig.noAccessClientSecret = System.getProperty("NO_ACCESS_USER_OPENID_PROVIDER_CLIENT_SECRET", System.getenv("NO_ACCESS_USER_OPENID_PROVIDER_CLIENT_SECRET"));
             openIDProviderConfig.intTesterEmail = System.getProperty("INTEGRATION_TESTER_EMAIL", System.getenv("INTEGRATION_TESTER_EMAIL"));
             Issuer issuer = new Issuer(openIDProviderConfig.url);
             OIDCProviderConfigurationRequest request = new OIDCProviderConfigurationRequest(issuer);

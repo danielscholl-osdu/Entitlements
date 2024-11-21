@@ -6,6 +6,7 @@ public class TokenTestUtils extends TestUtils {
 
     public static final String INTEGRATION_TESTER_TOKEN = "PRIVILEGED_USER_TOKEN";
     public static final String NO_DATA_ACCESS_TOKEN = "NO_ACCESS_USER_TOKEN";
+    public static final String INTEGRATION_TESTER_EMAIL = "INTEGRATION_TESTER_EMAIL";
     protected static String token = null;
     protected static String userId = null;
     private OpenIDTokenProvider openIDTokenProvider;
@@ -13,6 +14,7 @@ public class TokenTestUtils extends TestUtils {
     public TokenTestUtils() {
         token = System.getProperty(INTEGRATION_TESTER_TOKEN, System.getenv(INTEGRATION_TESTER_TOKEN));
         noDataAccesstoken = System.getProperty(NO_DATA_ACCESS_TOKEN, System.getenv(NO_DATA_ACCESS_TOKEN));
+        userId = System.getProperty(INTEGRATION_TESTER_EMAIL, System.getenv(INTEGRATION_TESTER_EMAIL));
 
         if (Strings.isNullOrEmpty(token) || Strings.isNullOrEmpty(noDataAccesstoken)) {
             openIDTokenProvider = new OpenIDTokenProvider();

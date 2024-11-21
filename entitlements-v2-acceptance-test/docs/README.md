@@ -12,20 +12,20 @@ You will need to have the following environment variables defined.
 
 Authentication can be provided as OIDC config:
 
-| name                                           | value                                   | description                         | sensitive?                                        | source |
-|------------------------------------------------|-----------------------------------------|-------------------------------------|---------------------------------------------------|--------|
-| `TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_ID`     | `********`                              | NO_DATA_ACCESS_TESTER Client Id     | yes                                               | -      |
-| `TEST_NO_ACCESS_OPENID_PROVIDER_CLIENT_SECRET` | `********`                              | NO_DATA_ACCESS_TESTER Client secret | Client secret for `$NO_ACCESS_INTEGRATION_TESTER` | -      |
-| `TEST_OPENID_PROVIDER_CLIENT_ID`               | `********`                              | INTEGRATION_TESTER Client Id        | yes                                               | -      |
-| `TEST_OPENID_PROVIDER_CLIENT_SECRET`           | `********`                              | INTEGRATION_TESTER Client secret    | Client secret for `$INTEGRATION_TESTER`           | -      |
-| `TEST_OPENID_PROVIDER_URL`                     | `https://keycloak.com/auth/realms/osdu` | OpenID provider url                 | yes                                               | --     |
+| name                                             | value                                   | description                     | sensitive? | source |
+|--------------------------------------------------|-----------------------------------------|---------------------------------|------------|--------|
+| `NO_ACCESS_USER_OPENID_PROVIDER_CLIENT_ID`       | `********`                              | NO_ACCESS_USER Client Id        | yes        | -      |
+| `NO_ACCESS_USER_OPENID_PROVIDER_CLIENT_SECRET`   | `********`                              | NO_ACCESS_USER Client secret    | yes        | -      |
+| `PRIVILEGED_USER_OPENID_PROVIDER_CLIENT_ID`      | `********`                              | PRIVILEGED_USER Client Id       | yes        | -      |
+| `PRIVILEGED_USER_OPENID_PROVIDER_CLIENT_SECRET`  | `********`                              | PRIVILEGED_USER Client secret   | yes        | -      |
+| `TEST_OPENID_PROVIDER_URL`                       | `https://keycloak.com/auth/realms/osdu` | OpenID provider url             | yes        | -      |
 
 Or tokens can be used directly from env variables:
 
-| name                       | value      | description                 | sensitive? | source |
-|----------------------------|------------|-----------------------------|------------|--------|
-| `INTEGRATION_TESTER_TOKEN` | `********` | INTEGRATION_TESTER Token    | yes        | -      |
-| `NO_DATA_ACCESS_TOKEN`     | `********` | NO_DATA_ACCESS_TESTER Token | yes        | -      |
+| name                      | value      | description            | sensitive? | source |
+|---------------------------|------------|------------------------|------------|--------|
+| `PRIVILEGED_USER_TOKEN`   | `********` | PRIVILEGED_USER Token  | yes        | -      |
+| `NO_ACCESS_USER_TOKEN`    | `********` | NO_ACCESS_USER Token   | yes        | -      |
 
 
 
