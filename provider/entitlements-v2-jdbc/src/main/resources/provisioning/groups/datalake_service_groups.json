@@ -1008,6 +1008,16 @@
           "name": "service.workflow.creator"
         }
       ]
+    },
+    {
+      "name": "register.secret.owners",
+      "description": "Owners group for Register to use register secrets",
+      "members": []
+    },
+    {
+      "name": "register.secret.viewers,",
+      "description": "Viewers group for Register to view register secrets",
+      "members": []
     }
   ]
 }
