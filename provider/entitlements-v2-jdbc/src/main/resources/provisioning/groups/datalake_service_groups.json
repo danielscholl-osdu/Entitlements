@@ -1015,7 +1015,7 @@
       "members": []
     },
     {
-      "name": "register.secret.viewers,",
+      "name": "register.secret.viewers",
       "description": "Viewers group for Register to view register secrets",
       "members": []
     }
