@@ -20,6 +20,12 @@
     },
     {
       "groupName": "service.secret.admin"
+    },
+    {
+      "groupName": "register.secret.owners"
+    },
+    {
+      "groupName": "register.secret.viewers"
     }
   ]
 }
