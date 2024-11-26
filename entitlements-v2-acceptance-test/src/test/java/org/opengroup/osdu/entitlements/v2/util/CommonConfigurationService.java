@@ -32,7 +32,7 @@ public class CommonConfigurationService implements ConfigurationService {
     @Override
     public String getServiceUrl() {
         if (Strings.isNullOrEmpty(SERVICE_URL)) {
-            String serviceUrl = System.getProperty("ENTITLEMENT_V2_URL", System.getenv("ENTITLEMENT_V2_URL"));
+            String serviceUrl = System.getProperty("ENTITLEMENTS_URL", System.getenv("ENTITLEMENTS_URL"));
             if (serviceUrl == null || serviceUrl.contains("-null")) {
                 serviceUrl = "http://localhost:8080/api/entitlements/v2/";
             }
@@ -43,7 +43,7 @@ public class CommonConfigurationService implements ConfigurationService {
 
     @Override
     public String getDomain() {
-        String groupId = System.getProperty("GROUP_ID", System.getenv("GROUP_ID"));
+        String groupId = System.getProperty("ENTITLEMENTS_DOMAIN", System.getenv("ENTITLEMENTS_DOMAIN"));
         if (Strings.isNullOrEmpty(groupId)) {
             groupId = "group";
         }

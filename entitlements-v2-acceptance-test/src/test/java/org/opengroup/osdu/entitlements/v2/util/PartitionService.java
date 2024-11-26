@@ -29,12 +29,12 @@ public class PartitionService {
   }
 
   public String getPartitionProperty(String property) throws Exception {
-    String partitionApi = System.getProperty("PARTITION_API", System.getenv("PARTITION_API"));
+    String partitionApi = System.getProperty("PARTITION_URL", System.getenv("PARTITION_URL"));
 
     RequestData requestData = RequestData.builder()
         .url(partitionApi)
-        .token(testUtils.getToken())
-        .relativePath("/partitions/" + configurationService.getTenantId())
+        .token(testUtils.getDataRootToken())
+        .relativePath("partitions/" + configurationService.getTenantId())
         .method("GET")
         .build();
 

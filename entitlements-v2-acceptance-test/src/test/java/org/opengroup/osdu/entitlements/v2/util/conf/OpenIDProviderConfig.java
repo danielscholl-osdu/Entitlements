@@ -27,9 +27,11 @@ public class OpenIDProviderConfig {
 
     private String clientId;
     private String noAccessClientId;
+    private String dataRootClientId;
     private String url;
     private String clientSecret;
     private String noAccessClientSecret;
+    private String dataRootClientSecret;
     private String intTesterEmail;
     private final String[] scopes = {"openid"};
     private static final OpenIDProviderConfig openIDProviderConfig = new OpenIDProviderConfig();
@@ -39,9 +41,11 @@ public class OpenIDProviderConfig {
         try {
             openIDProviderConfig.clientId = System.getProperty("PRIVILEGED_USER_OPENID_PROVIDER_CLIENT_ID", System.getenv("PRIVILEGED_USER_OPENID_PROVIDER_CLIENT_ID"));
             openIDProviderConfig.noAccessClientId =  System.getProperty("NO_ACCESS_USER_OPENID_PROVIDER_CLIENT_ID", System.getenv("NO_ACCESS_USER_OPENID_PROVIDER_CLIENT_ID"));
+            openIDProviderConfig.dataRootClientId =  System.getProperty("ROOT_USER_OPENID_PROVIDER_CLIENT_ID", System.getenv("ROOT_USER_OPENID_PROVIDER_CLIENT_ID"));
             openIDProviderConfig.url = System.getProperty("TEST_OPENID_PROVIDER_URL", System.getenv("TEST_OPENID_PROVIDER_URL"));
             openIDProviderConfig.clientSecret = System.getProperty("PRIVILEGED_USER_OPENID_PROVIDER_CLIENT_SECRET", System.getenv("PRIVILEGED_USER_OPENID_PROVIDER_CLIENT_SECRET"));
             openIDProviderConfig.noAccessClientSecret = System.getProperty("NO_ACCESS_USER_OPENID_PROVIDER_CLIENT_SECRET", System.getenv("NO_ACCESS_USER_OPENID_PROVIDER_CLIENT_SECRET"));
+            openIDProviderConfig.dataRootClientSecret = System.getProperty("ROOT_USER_OPENID_PROVIDER_CLIENT_SECRET", System.getenv("ROOT_USER_OPENID_PROVIDER_CLIENT_SECRET"));
             openIDProviderConfig.intTesterEmail = System.getProperty("INTEGRATION_TESTER_EMAIL", System.getenv("INTEGRATION_TESTER_EMAIL"));
             Issuer issuer = new Issuer(openIDProviderConfig.url);
             OIDCProviderConfigurationRequest request = new OIDCProviderConfigurationRequest(issuer);
@@ -62,13 +66,17 @@ public class OpenIDProviderConfig {
         return noAccessClientId;
     }
 
+    public String getDataRootClientId() {
+        return dataRootClientId;
+    }
+
     public String getClientSecret() {
         return clientSecret;
     }
 
-    public String getNoAccessClientSecret() {
-        return noAccessClientSecret;
-    }
+    public String getNoAccessClientSecret() { return noAccessClientSecret; }
+
+    public String getDataRootClientSecret() { return dataRootClientSecret;}
 
     public String[] getScopes() {
         return scopes;

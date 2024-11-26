@@ -6,6 +6,7 @@ public class TokenTestUtils extends TestUtils {
 
     public static final String INTEGRATION_TESTER_TOKEN = "PRIVILEGED_USER_TOKEN";
     public static final String NO_DATA_ACCESS_TOKEN = "NO_ACCESS_USER_TOKEN";
+    public static final String DATA_ROOT_TOKEN = "ROOT_USER_TOKEN";
     public static final String INTEGRATION_TESTER_EMAIL = "INTEGRATION_TESTER_EMAIL";
     protected static String token = null;
     protected static String userId = null;
@@ -14,11 +15,14 @@ public class TokenTestUtils extends TestUtils {
     public TokenTestUtils() {
         token = System.getProperty(INTEGRATION_TESTER_TOKEN, System.getenv(INTEGRATION_TESTER_TOKEN));
         noDataAccesstoken = System.getProperty(NO_DATA_ACCESS_TOKEN, System.getenv(NO_DATA_ACCESS_TOKEN));
+        dataRootToken = System.getProperty(DATA_ROOT_TOKEN, System.getenv(DATA_ROOT_TOKEN));
         userId = System.getProperty(INTEGRATION_TESTER_EMAIL, System.getenv(INTEGRATION_TESTER_EMAIL));
 
-        if (Strings.isNullOrEmpty(token) || Strings.isNullOrEmpty(noDataAccesstoken)) {
+        if (Strings.isNullOrEmpty(token) || Strings.isNullOrEmpty(noDataAccesstoken) || Strings.isNullOrEmpty(dataRootToken)) {
             openIDTokenProvider = new OpenIDTokenProvider();
             token = openIDTokenProvider.getToken().getValue();
+            noDataAccesstoken = openIDTokenProvider.getNoAccToken().getValue();
+            dataRootToken = openIDTokenProvider.getDataRootToken().getValue();
             userId = openIDTokenProvider.getToken().getUserId();
         }
     }
@@ -46,4 +50,13 @@ public class TokenTestUtils extends TestUtils {
         }
         return noDataAccesstoken;
     }
+
+    @Override
+    public String getDataRootToken() throws Exception {
+        if (Strings.isNullOrEmpty(dataRootToken)) {
+            dataRootToken = openIDTokenProvider.getDataRootToken().getValue();
+        }
+        return dataRootToken;
+    }
+
 }
