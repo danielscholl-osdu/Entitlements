@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2021 Google LLC
-  ~ Copyright 2021 EPAM Systems, Inc
+  ~ Copyright 2020-2024 Google LLC
+  ~ Copyright 2020-2024 EPAM Systems, Inc
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -17,38 +17,40 @@
   -->
 
 <configuration>
-  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-  <logger name="org.opengroup.osdu" level="${LOG_LEVEL}"/>
-  <springProfile name="local">
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-      <encoder>
-        <pattern>%yellow([%thread]) %highlight(| %-5level |) %green(%d) %cyan(| %logger{15} |) %highlight(%msg) %n</pattern>
-        <charset>utf8</charset>
-      </encoder>
-    </appender>
-    <root level="info">
-      <appender-ref ref="CONSOLE"/>
-    </root>
-  </springProfile>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <logger name="org.opengroup.osdu" level="${LOG_LEVEL}"/>
+    <springProfile name="local">
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%yellow([%thread]) %highlight(| %-5level |) %green(%d) %cyan(| %logger{15} |) %highlight(%msg)
+                    %n
+                </pattern>
+                <charset>utf8</charset>
+            </encoder>
+        </appender>
+        <root level="info">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
 
-  <springProfile name="!local">
-    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
-      <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-        <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
-          <timestampFormat>yyyy-MM-dd HH:mm:ss.SSS</timestampFormat>
-          <timestampFormatTimezoneId>Etc/UTC</timestampFormatTimezoneId>
-          <appendLineSeparator>true</appendLineSeparator>
+    <springProfile name="!local">
+        <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+                <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+                    <timestampFormat>yyyy-MM-dd HH:mm:ss.SSS</timestampFormat>
+                    <timestampFormatTimezoneId>Etc/UTC</timestampFormatTimezoneId>
+                    <appendLineSeparator>true</appendLineSeparator>
 
-          <jsonFormatter class="org.opengroup.osdu.core.gcp.logging.formatter.GoogleJsonFormatter">
-            <prettyPrint>false</prettyPrint>
-          </jsonFormatter>
-        </layout>
-      </encoder>
-    </appender>
+                    <jsonFormatter class="org.opengroup.osdu.entitlements.v2.jdbc.formatter.GoogleJsonFormatter">
+                        <prettyPrint>false</prettyPrint>
+                    </jsonFormatter>
+                </layout>
+            </encoder>
+        </appender>
 
-    <root level="info">
-      <appender-ref ref="stdout"/>
-    </root>
-  </springProfile>
+        <root level="info">
+            <appender-ref ref="stdout"/>
+        </root>
+    </springProfile>
 
 </configuration>

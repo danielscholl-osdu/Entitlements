@@ -39,74 +39,11 @@
   <name>entitlements-v2-jdbc</name>
   <version>0.28.0-SNAPSHOT</version>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>com.google.cloud</groupId>
-        <artifactId>libraries-bom</artifactId>
-        <version>26.15.0</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson</groupId>
-        <artifactId>jackson-bom</artifactId>
-        <version>2.15.1</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>io.netty</groupId>
-        <artifactId>netty-bom</artifactId>
-        <version>4.1.92.Final</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
   <dependencies>
     <dependency>
       <groupId>org.opengroup.osdu.entitlements.v2</groupId>
-      <artifactId>entitlements-v2-core</artifactId>
+      <artifactId>entitlements-v2-core-plus</artifactId>
       <version>0.28.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.18.30</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.opengroup.osdu</groupId>
-      <artifactId>core-lib-gc</artifactId>
-      <version>0.27.0-rc7</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.opengroup.osdu</groupId>
-      <artifactId>oqm</artifactId>
-      <version>0.26.0</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>os-core-common</artifactId>
-          <groupId>org.opengroup.osdu</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <!--   JDBC   -->
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>${postgresql.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jdbc</artifactId>
-      <version>3.2.2</version>
     </dependency>
 
     <dependency>
@@ -115,55 +52,11 @@
       <version>0.1.5</version>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-validation</artifactId>
+      <groupId>ch.qos.logback.contrib</groupId>
+      <artifactId>logback-jackson</artifactId>
+      <version>0.1.5</version>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-security</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.micrometer</groupId>
-      <artifactId>micrometer-registry-prometheus</artifactId>
-    </dependency>
-    <!-- Test -->
-    <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-api-mockito2</artifactId>
-      <version>2.0.7</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-module-junit4</artifactId>
-      <version>2.0.7</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <version>2.0.2-beta</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-aop</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <version>2.2.224</version>
-      <scope>test</scope>
-    </dependency>
+
   </dependencies>
   <build>
     <pluginManagement>
@@ -179,7 +72,7 @@
                   </goals>
                   <configuration>
                       <classifier>spring-boot</classifier>
-                      <mainClass>org.opengroup.osdu.entitlements.v2.jdbc.EntitlementsV2Application</mainClass>
+                      <mainClass>org.springframework.boot.loader.launch.PropertiesLauncher</mainClass>
                   </configuration>
               </execution>
           </executions>
