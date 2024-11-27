@@ -11,35 +11,35 @@ import io.lettuce.core.Value;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.opengroup.osdu.core.common.logging.JaxRsDpsLog;
 import org.opengroup.osdu.core.common.model.http.AppException;
+import org.opengroup.osdu.core.common.model.http.DpsHeaders;
+import org.opengroup.osdu.core.common.model.http.RequestInfo;
 import org.opengroup.osdu.entitlements.v2.ibm.IBMAppProperties;
 import org.opengroup.osdu.entitlements.v2.ibm.spi.db.RedisConnectionPool;
 import org.opengroup.osdu.entitlements.v2.ibm.spi.db.RedisConnector;
-import org.opengroup.osdu.entitlements.v2.model.ChildrenReference;
-import org.opengroup.osdu.entitlements.v2.model.ChildrenTreeDto;
-import org.opengroup.osdu.entitlements.v2.model.EntityNode;
-import org.opengroup.osdu.entitlements.v2.model.GroupType;
-import org.opengroup.osdu.entitlements.v2.model.ParentReference;
-import org.opengroup.osdu.entitlements.v2.model.ParentTreeDto;
+import org.opengroup.osdu.entitlements.v2.model.*;
 import org.opengroup.osdu.entitlements.v2.model.listgroup.ListGroupsOfPartitionDto;
+import org.opengroup.osdu.entitlements.v2.service.GroupsProvider;
+import org.opengroup.osdu.entitlements.v2.service.ListGroupService;
 import org.opengroup.osdu.entitlements.v2.spi.retrievegroup.RetrieveGroupRepo;
 import org.opengroup.osdu.entitlements.v2.util.JsonConverter;
+import org.opengroup.osdu.entitlements.v2.util.RequestInfoUtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
-
-import static org.opengroup.osdu.entitlements.v2.ibm.IBMAppProperties.DEFAULT_APPID_KEY;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
+
+import static org.opengroup.osdu.entitlements.v2.ibm.IBMAppProperties.DEFAULT_APPID_KEY;
 
 @Repository
 public class RetrieveGroupRedisRepo implements RetrieveGroupRepo {
@@ -55,6 +55,15 @@ public class RetrieveGroupRedisRepo implements RetrieveGroupRepo {
 
     @Autowired
     private JaxRsDpsLog log;
+
+    @Autowired
+    private RequestInfo requestInfo;
+
+    @Autowired
+    private RequestInfoUtilService requestInfoUtilService;
+
+    @Autowired
+    private GroupsProvider groupsProvider;
 
     @Override
     public EntityNode groupExistenceValidation(String groupId, String partitionId) {
@@ -139,7 +148,35 @@ public class RetrieveGroupRedisRepo implements RetrieveGroupRepo {
 
     @Override
     public ListGroupsOfPartitionDto getGroupsInPartition(String dataPartitionId, GroupType groupType, String cursor, Integer limit) {
-        throw new NotImplementedException();
+        int offsetValue = 0;
+        if (org.springframework.util.StringUtils.hasText(cursor)) {
+            try {
+                offsetValue = Integer.parseInt(cursor);
+            } catch (NumberFormatException e) {
+                throw new AppException(HttpStatus.BAD_REQUEST.value(),
+                        HttpStatus.BAD_REQUEST.getReasonPhrase(), "Malformed cursor, must be integer value");
+            }
+        }
+
+        DpsHeaders dpsHeaders = requestInfo.getHeaders();
+        String requesterId = requestInfoUtilService.getUserId(dpsHeaders);
+        log.info(RetrieveGroupRedisRepo.class.getName(), String.format("requested by %s", requesterId));
+//        log.info("Requested by {}", requesterId);  //This logging will not work
+
+        Set<ParentReference> groupsInContext = groupsProvider.getGroupsInContext(requesterId, dataPartitionId);
+        List<ParentReference> sortedGroups = groupsInContext.stream().sorted((g1, g2) -> g1.getId().compareTo(g2.getId())).filter(group -> group.getName().startsWith(groupType.name().toLowerCase())).collect(Collectors.toList());
+        List<ParentReference> groups = getPaginatedGroups(offsetValue, limit, sortedGroups);
+        if (!CollectionUtils.isEmpty(groups)) {
+            return ListGroupsOfPartitionDto.builder().groups(groups).cursor(cursor.toString()).totalCount((long) groups.size()).build();
+        }
+        return ListGroupsOfPartitionDto.builder().groups(groups).cursor(cursor.toString()).totalCount((long) limit).build();
+    }
+
+    private static List<ParentReference> getPaginatedGroups(Integer offsetValue, Integer limit, List<ParentReference> sortedGroups) {
+        if(!CollectionUtils.isEmpty(sortedGroups) && offsetValue < sortedGroups.size()) {
+            return sortedGroups.subList(offsetValue, Math.min(offsetValue+limit, sortedGroups.size()));
+        }
+        return Collections.emptyList();
     }
 
     @Override
