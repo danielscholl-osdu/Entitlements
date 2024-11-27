@@ -17,16 +17,19 @@
 package org.opengroup.osdu.entitlements.v2.util;
 
 import com.google.common.base.Strings;
-
 import org.opengroup.osdu.entitlements.v2.acceptance.model.Token;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.TokenService;
+
+import static org.opengroup.osdu.entitlements.v2.util.AwsTestUtils.NO_ACCESS_USER;
 
 public class AwsTokenService implements TokenService {
 
 
     AwsTestUtils utils = new AwsTestUtils();
     private static String TOKEN;
+    private static String NO_ACC_TOKEN;
     private static final String SERVICE_PRINCIPAL_EMAIL =  System.getProperty("SERVICE_PRINCIPAL_EMAIL", System.getenv("SERVICE_PRINCIPAL_EMAIL"));
+
     /**
      * Returns token of a service principal
      */
@@ -43,5 +46,17 @@ public class AwsTokenService implements TokenService {
                 .build();
     }
 
+    @Override
+    public synchronized Token getNoAccToken() {
+        if (Strings.isNullOrEmpty(NO_ACC_TOKEN)) {
+            String noAccessToken  = utils.getNoAccessToken();
+            noAccessToken = noAccessToken.replace("Bearer ","");
+            NO_ACC_TOKEN = noAccessToken;
+        }
+        return Token.builder()
+                .value(NO_ACC_TOKEN)
+                .userId(NO_ACCESS_USER)
+                .build();
+    }
 
 }
