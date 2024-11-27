@@ -15,3 +15,7 @@ core-containerize-bootstrap-gitlab:
 core-deploy:
   variables:
     CORE_SERVICE: "entitlements"
+
+core-acceptance-test:
+  variables:
+    PARTITION_URL: "https://osdu.core-dev.gcp.gnrg-osdu.projects.epam.com/api/partition/v1/"
