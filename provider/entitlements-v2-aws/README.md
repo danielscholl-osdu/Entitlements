@@ -33,24 +33,23 @@ The server will start on the default port 27017
 
 In order to run the service locally or remotely, you will need to have the following environment variables defined.
 
-| name | example value | required | description | sensitive? |
-| ---  | ---   | ---         | ---        | ---    |
-| `LOCAL_MODE` | `true` | yes | Set to 'true' to use env vars in place of the k8s variable resolver | no |
-| `APPLICATION_PORT` | `8080` | yes | The port the service will be hosted on. | no |
-| `AWS_REGION` | `us-east-1` | yes | The region where resources needed by the service are deployed | no |
-| `AWS_ACCESS_KEY_ID` | `ASIAXXXXXXXXXXXXXX` | yes | The AWS Access Key for a user with access to Backend Resources required by the service | yes |
-| `AWS_SECRET_ACCESS_KEY` | `super-secret-key==` | yes | The AWS Secret Key for a user with access to Backend Resources required by the service | yes |
-| `AWS_SESSION_TOKEN` | `session-token-xxxxxxxxxx` | no | AWS Session token needed if using an SSO user session to authenticate | yes |
-| `ENVIRONMENT` | `osdu-prefix` | yes | The Resource Prefix defined during deployment | no |
-| `LOG_LEVEL` | `DEBUG` | yes | The Log Level severity to use (https://www.tutorialspoint.com/log4j/log4j_logging_levels.htm) | no |
-| `SSM_ENABLED` | `true` | yes | Set to 'true' to use SSM to resolve config properties, otherwise use env vars | no |
-| `SSL_ENABLED` | `false` | no | Set to 'false' to disable SSL for local development | no |
-| `MONGODB_ENDPOINT` | `localhost` or `https://some-hosted-url` | yes | Specify the base url for mongo server | no |
-| `MONGODB_USE_SRV_ENDPOINT` | `false` or `true` | yes | To run the service locally, set this to false | no | 
-| `MONGODB_PORT` | `27017` | no | Specify the port on which the mongo server is running. Default is 27017 | no |
-| `MONGODB_AUTH_DATABASE` | `admin` | no | Specify the database name | no |
-| `MONGODB_USERNAME` | `admin` | yes | Specify the username on the running mongo server | no |
-| `MONGODB_PASSWORD` | `admin` | yes | Specify the password on the running mongo server | no |
+| name                       | example value                            | required | description                                                                                   | sensitive? |
+|----------------------------|------------------------------------------|----------|-----------------------------------------------------------------------------------------------|------------|
+| `LOCAL_MODE`               | `true`                                   | yes      | Set to 'true' to use env vars in place of the k8s variable resolver                           | no         |
+| `APPLICATION_PORT`         | `8080`                                   | yes      | The port the service will be hosted on.                                                       | no         |
+| `AWS_REGION`               | `us-east-1`                              | yes      | The region where resources needed by the service are deployed                                 | no         |
+| `AWS_ACCESS_KEY_ID`        | `ASIAXXXXXXXXXXXXXX`                     | yes      | The AWS Access Key for a user with access to Backend Resources required by the service        | yes        |
+| `AWS_SECRET_ACCESS_KEY`    | `super-secret-key==`                     | yes      | The AWS Secret Key for a user with access to Backend Resources required by the service        | yes        |
+| `AWS_SESSION_TOKEN`        | `session-token-xxxxxxxxxx`               | no       | AWS Session token needed if using an SSO user session to authenticate                         | yes        |
+| `LOG_LEVEL`                | `DEBUG`                                  | yes      | The Log Level severity to use (https://www.tutorialspoint.com/log4j/log4j_logging_levels.htm) | no         |
+| `SSM_ENABLED`              | `true`                                   | yes      | Set to 'true' to use SSM to resolve config properties, otherwise use env vars                 | no         |
+| `SSL_ENABLED`              | `false`                                  | no       | Set to 'false' to disable SSL for local development                                           | no         |
+| `MONGODB_ENDPOINT`         | `localhost` or `https://some-hosted-url` | yes      | Specify the base url for mongo server                                                         | no         |
+| `MONGODB_USE_SRV_ENDPOINT` | `false` or `true`                        | yes      | To run the service locally, set this to false                                                 | no         | 
+| `MONGODB_PORT`             | `27017`                                  | no       | Specify the port on which the mongo server is running. Default is 27017                       | no         |
+| `MONGODB_AUTH_DATABASE`    | `admin`                                  | no       | Specify the database name                                                                     | no         |
+| `MONGODB_USERNAME`         | `admin`                                  | yes      | Specify the username on the running mongo server                                              | no         |
+| `MONGODB_PASSWORD`         | `admin`                                  | yes      | Specify the password on the running mongo server                                              | no         |
 
 ### Run Locally
 Check that maven is installed:
@@ -99,7 +98,6 @@ java -jar provider/entitlements-v2-aws/target/entitlements-v2-aws-*.*.*-SNAPSHOT
   1. Open a bash shell and set the following environment variables:
  ```
   export AWS_REGION=<YOUR_OSDU_DEPLOYED_REGION> (example:us-east-1)
-  export RESOURCE_PREFIX=<YOUR_OSDU_ENVIRONMENT_RESOURCE_PREFIX>  (example: osdu-deshruchdemo)
   export LOCAL_MODE=true  
   export AWS_BASE_URL=http://localhost:8082  
   export AWS_ACCESS_KEY_ID=<YOUR_AWS_ACCESS_KEY_ID>  
@@ -135,15 +133,20 @@ java -jar provider/entitlements-v2-aws/target/entitlements-v2-aws-*.*.*-SNAPSHOT
   
 * Next, you will need to have the following environment variables defined.
  
- | name | example value | description | sensitive?
- | ---  | ---   | ---         | ---        |
- | `AWS_ACCESS_KEY_ID` | `ASIAXXXXXXXXXXXXXX` | The AWS Access Key for a user with access to Backend Resources required by the service | yes |
- | `AWS_SECRET_ACCESS_KEY` | `super-secret-key==` | The AWS Secret Key for a user with access to Backend Resources required by the service | yes |
- | `AWS_SESSION_TOKEN` | `session-token-xxxxxxxxx` | AWS Session token needed if using an SSO user session to authenticate | yes |
- | `ENTITLEMENT_V2_URL` | `http://localhost:8080/api/entitlements/v2/` or `https:deployed-url` | specify url of entitlements service.  | no |
- | `LOCAL_MODE` | `true` | Set to 'true' to use in local mode | no |
- | `RESOURCE_PREFIX` | `osdu-prefix` | The Resource Prefix defined during deployment. This is used to generate the serviceprincipal token to run tests | no |
- | `AWS_REGION` | `us-east-1` | The region where resources needed by the service are deployed | no |
+ | name                     | example value                                                          | description                                                                            | sensitive? |
+ |--------------------------|------------------------------------------------------------------------|----------------------------------------------------------------------------------------|------------|
+ | `AWS_ACCESS_KEY_ID`      | `ASIAXXXXXXXXXXXXXX`                                                   | The AWS Access Key for a user with access to Backend Resources required by the service | yes        |
+ | `AWS_SECRET_ACCESS_KEY`  | `super-secret-key==`                                                   | The AWS Secret Key for a user with access to Backend Resources required by the service | yes        |
+ | `AWS_SESSION_TOKEN`      | `session-token-xxxxxxxxx`                                              | AWS Session token needed if using an SSO user session to authenticate                  | yes        |
+ | `ENTITLEMENT_V2_URL`     | `http://localhost:8080/api/entitlements/v2/` or `https://deployed-url` | specify url of entitlements service.                                                   | no         |
+ | `PARTITION_BASE_URL`     | `http://localhost:8081/` or `https://deployed-url/`                    | Partition base URL. Needs trailing forward slash.                                      | no         | 
+ | `LOCAL_MODE`             | `true`                                                                 | Set to 'true' to use in local mode                                                     | no         |
+ | `AWS_REGION`             | `us-east-1`                                                            | The region where resources needed by the service are deployed                          | no         |
+ | `COGNITO_NAME`           | `osdu`                                                                 | The name of the instance of Cognito                                                    | no         |
+ | `SERVICE_PRINCIPAL_USER` | `serviceprincipal-osdu@testing.com`                                    | The e-mail of the service principal user                                               | no         |
+ | `USER_NO_ACCESS`         | `noaccess@testing.com`                                                 | The e-mail of the user with limited access for testing priviledge escalation           | no         |
+ | `ADMIN_PASSWORD`         | `secret`                                                               | The password for the no access user                                                    | yes        |
+
  
  **Creating a new user to use for integration tests**
  ```
