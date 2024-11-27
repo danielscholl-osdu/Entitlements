@@ -13,20 +13,23 @@ You will need to have the following environment variables defined.
 | `DATA_ROOT_GROUP_HIERARCHY_ENABLED` | eg. `true`                                         | Depending on the DISABLE_DATA_ROOT_GROUP HIERARCHY feature flag in Partition info, this flag controls whenever data.root groups get access to all data groups. | no         | -                                                            |
 Authentication can be provided as OIDC config:
 
-| name                                             | value                                   | description                     | sensitive? | source |
-|--------------------------------------------------|-----------------------------------------|---------------------------------|------------|--------|
-| `NO_ACCESS_USER_OPENID_PROVIDER_CLIENT_ID`       | `********`                              | NO_ACCESS_USER Client Id        | yes        | -      |
-| `NO_ACCESS_USER_OPENID_PROVIDER_CLIENT_SECRET`   | `********`                              | NO_ACCESS_USER Client secret    | yes        | -      |
-| `PRIVILEGED_USER_OPENID_PROVIDER_CLIENT_ID`      | `********`                              | PRIVILEGED_USER Client Id       | yes        | -      |
-| `PRIVILEGED_USER_OPENID_PROVIDER_CLIENT_SECRET`  | `********`                              | PRIVILEGED_USER Client secret   | yes        | -      |
-| `TEST_OPENID_PROVIDER_URL`                       | `https://keycloak.com/auth/realms/osdu` | OpenID provider url             | yes        | -      |
+| name                                            | value                                   | description                   | sensitive? | source |
+|-------------------------------------------------|-----------------------------------------|-------------------------------|------------|--------|
+| `ROOT_USER_OPENID_PROVIDER_CLIENT_ID`           | `********`                              | ROOT_USER Client Id           | yes        | -      |
+| `ROOT_USER_OPENID_PROVIDER_CLIENT_SECRET`       | `********`                              | ROOT_USER Client secret       | yes        | -      |
+| `NO_ACCESS_USER_OPENID_PROVIDER_CLIENT_ID`      | `********`                              | NO_ACCESS_USER Client Id      | yes        | -      |
+| `NO_ACCESS_USER_OPENID_PROVIDER_CLIENT_SECRET`  | `********`                              | NO_ACCESS_USER Client secret  | yes        | -      |
+| `PRIVILEGED_USER_OPENID_PROVIDER_CLIENT_ID`     | `********`                              | PRIVILEGED_USER Client Id     | yes        | -      |
+| `PRIVILEGED_USER_OPENID_PROVIDER_CLIENT_SECRET` | `********`                              | PRIVILEGED_USER Client secret | yes        | -      |
+| `TEST_OPENID_PROVIDER_URL`                      | `https://keycloak.com/auth/realms/osdu` | OpenID provider url           | yes        | -      |
 
 Or tokens can be used directly from env variables:
 
-| name                      | value      | description            | sensitive? | source |
-|---------------------------|------------|------------------------|------------|--------|
-| `PRIVILEGED_USER_TOKEN`   | `********` | PRIVILEGED_USER Token  | yes        | -      |
-| `NO_ACCESS_USER_TOKEN`    | `********` | NO_ACCESS_USER Token   | yes        | -      |
+| name                    | value      | description           | sensitive? | source |
+|-------------------------|------------|-----------------------|------------|--------|
+| `PRIVILEGED_USER_TOKEN` | `********` | PRIVILEGED_USER Token | yes        | -      |
+| `NO_ACCESS_USER_TOKEN`  | `********` | NO_ACCESS_USER Token  | yes        | -      |
+| `ROOT_USER_TOKEN`       | `********` | ROOT_USER Token       | yes        | -      |
 
 
 
