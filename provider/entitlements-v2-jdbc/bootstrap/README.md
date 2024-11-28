@@ -1,6 +1,6 @@
 # Bootstrap
 
-Below you can find required variables to bootstrap Entitlements Service on Google Cloud and on-prem. They should be passed as environment variables.
+Below you can find required variables to bootstrap Entitlements Service on Google Cloud . They should be passed as environment variables.
 
 ## Common environment variables
 
@@ -16,14 +16,4 @@ Below you can find required variables to bootstrap Entitlements Service on Googl
 
 ```bash
   PROJECT_ID
-  REGISTER_PUBSUB_IDENTITY
-```
-
-## On-prem specific variables
-
-```bash
-  OPENID_PROVIDER_URL
-  OPENID_PROVIDER_CLIENT_ID
-  OPENID_PROVIDER_CLIENT_SECRET
-  ONPREM_ENABLED
 ```

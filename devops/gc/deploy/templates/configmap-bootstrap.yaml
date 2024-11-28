@@ -10,8 +10,5 @@ data:
   ADMIN_USER_EMAIL: {{ .Values.data.adminUserEmail | quote }}
   GROUP_ID: {{ .Values.data.entitlementsDomain | quote }}
   AIRFLOW_COMPOSER_EMAIL: {{ .Values.data.airflowComposerEmail | quote }}
-  {{- if not .Values.global.onPremEnabled }}
   PROJECT_ID: {{ .Values.data.projectId | quote }}
-  {{- end }}
   DATA_PARTITION_ID: {{ .Values.global.dataPartitionId | quote }}
-  ONPREM_ENABLED: {{ .Values.global.onPremEnabled | quote }}

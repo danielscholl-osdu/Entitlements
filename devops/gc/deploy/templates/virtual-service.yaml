@@ -5,9 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
 spec:
   hosts:
-    {{- if and .Values.global.domain .Values.global.onPremEnabled }}
-    - {{ printf "osdu.%s" .Values.global.domain | quote }}
-    {{- else if .Values.global.domain }}
+    {{- if .Values.global.domain }}
     - {{ .Values.global.domain | quote }}
     {{- else }}
     - "*"

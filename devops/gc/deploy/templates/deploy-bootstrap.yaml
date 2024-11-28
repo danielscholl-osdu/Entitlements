@@ -33,10 +33,6 @@ spec:
         envFrom:
         - configMapRef:
             name: {{ printf "%s-bootstrap" .Values.conf.configmap | quote }}
-        {{- if .Values.global.onPremEnabled }}
-        - secretRef:
-            name: {{ .Values.conf.bootstrapOpenidSecretName | quote }}
-        {{- end }}
         securityContext:
           allowPrivilegeEscalation: false
           runAsNonRoot: true

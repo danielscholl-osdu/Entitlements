@@ -57,14 +57,12 @@ spec:
             cpu: {{ .Values.data.limitsCpu | quote }}
             memory: {{ .Values.data.limitsMemory | quote }}
           {{- end }}
-      {{- if not .Values.global.onPremEnabled }}
       - image: "gcr.io/cloudsql-docker/gce-proxy:{{ .Values.data.cloudSqlProxyVersion }}"
         imagePullPolicy: {{ .Values.data.imagePullPolicy | quote }}
         name: cloud-sql-proxy
         command:
           - /cloud_sql_proxy
           - "-instances={{ .Values.data.sqlConnectionString }}=tcp:5432"
-      {{- end }}
         ports:
         - containerPort: 8080
         livenessProbe:
