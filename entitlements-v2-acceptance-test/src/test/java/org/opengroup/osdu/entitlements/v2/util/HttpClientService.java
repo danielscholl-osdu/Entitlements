@@ -39,6 +39,7 @@ public class HttpClientService {
     private ClassicHttpRequest createHttpRequest(RequestData requestData) throws MalformedURLException {
         ClassicRequestBuilder classicRequestBuilder = addRequiredDetails(requestData);
         addOptionalDetails(requestData, classicRequestBuilder);
+        addXUserIdHeaderForLocalMode(classicRequestBuilder);
         return classicRequestBuilder.build();
     }
 
@@ -80,5 +81,13 @@ public class HttpClientService {
     private CloseableHttpClient createHttpClient() {
         PoolingHttpClientConnectionManager cm = createBasicHttpClientConnectionManager();
         return HttpClientBuilder.create().setConnectionManager(cm).setConnectionManagerShared(true).build();
+    }
+
+    private void addXUserIdHeaderForLocalMode(ClassicRequestBuilder classicRequestBuilder) {
+        localMode= Boolean.parseBoolean(System.getenv("LOCAL_MODE"));
+        if (localMode) {
+            header_x_user_id=System.getenv("HEADER_X_USER_ID");
+            classicRequestBuilder.addHeader("x-user-id", header_x_user_id);
+        }
     }
 }
