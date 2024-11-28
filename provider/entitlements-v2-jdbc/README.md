@@ -1,6 +1,6 @@
-# entitlements-v2-jdbc
+# Entitlements V2 JDBC
 
-entitlements-v2-jdbc is a [Spring Boot](https://spring.io/projects/spring-boot) service which hosts CRUD APIs that enable management of user entitlements.
+Entitlements V2 JDBC is a [Spring Boot](https://spring.io/projects/spring-boot) service which hosts CRUD APIs that enable management of user entitlements.
 Data kept in Google Cloud instance of Postgres database.
 
 ### Database structure
@@ -83,9 +83,7 @@ Impersonation won't be allowed if
 - delegation group not found
 ```
 
-### Baremetal Service Configuration
-
-[Baremetal service configuration](docs/baremetal/README.md)
+[JDBC Documentation]: ../../docs/JDBC.md
 
 ##***REMOVED*** Service Configuration
 
@@ -99,14 +97,17 @@ After configuring your environment as specified above, you can follow these step
 # build + test + install core service code
 $ ./mvnw clean install
 
-# run service
-#
-# Note: this assumes that the environment variables for running the service as outlined
-#       above are already exported in your environment.
-$ java -jar $(find provider/entitlements-v2-jdbc/target/ -name '*-spring-boot.jar')
+```
 
-# Alternately you can run using the Maven Task
-$ ./mvnw spring-boot:run -pl provider/entitlements-v2-jdbc
+```bash
+cd provider/entitlements-v2-jdbc
+```
+```bash
+java -Djava.security.egd=file:/dev/./urandom \
+    -Dserver.port=${PORT} -Dlog4j.formatMsgNoLookups=true \
+    --add-opens=java.base/java.time=ALL-UNNAMED \
+    -Dloader.main=org.opengroup.osdu.entitlements.v2.jdbc.GcEntitlementsV2Application \
+    -jar target/entitlements-v2-${PROVIDER}-*-spring-boot.jar
 ```
 
 ### Test the application
@@ -114,10 +115,6 @@ $ ./mvnw spring-boot:run -pl provider/entitlements-v2-jdbc
 ### Integration Tests
 
 In order to run integration tests, you need to have the following environment variables defined:
-
-### Baremetal Service Configuration
-
-[Baremetal service configuration](docs/baremetal/README.md)
 
 ##***REMOVED*** Service Configuration
 
@@ -158,5 +155,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-[JDBC Documentation]: ../../docs/JDBC.md

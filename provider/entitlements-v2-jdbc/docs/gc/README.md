@@ -14,32 +14,32 @@ Must have:
 
 Defined in default application property file but possible to override:
 
-| name                                 | value                                    | description                                                                                                                                                                                  | sensitive? | source   |
-|--------------------------------------|------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|----------|
-| `LOG_PREFIX`                         | `entitlements-v2`                        | Logging prefix                                                                                                                                                                               | no         | -        |
-| `SERVER_SERVLET_CONTEXPATH`          | `/api/entitlements/v2`                   | Register context path                                                                                                                                                                        | no         | -        |
-| `LOG_LEVEL`                          | `INFO`                                   | Logging level                                                                                                                                                                                | no         | -        |
-| `server_port`                        | `8080`                                   | Port of the server                                                                                                                                                                           | no         | -        |
-| `GCP_AUTHENTICATION_MODE`            | `INTERNAL`, `IAP`, `EXTERNAL` or `ISTIO` | `INTERNAL` is used by default for GCP implementation, but there are other modes - `IAP`, `EXTERNAL` and `ISTIO`. More information about each mode you can find [here](#authentication-modes) | no         | -        |
-| `PARTITION_AUTH_ENABLED`             | `true`                                   | Disable or enable auth token provisioning for requests to Partition service                                                                                                                  | no         | -        |
-| `SERVICE_TOKEN_PROVIDER`             | `GCP`                                    | Service account token provider, `GCP` means use Google Service Account `OPEIND` means use OpenId provider like `Keycloak`                                                                    | no         | -        |
-| `OPENID_PROVIDER_URL`                | `https://accounts.google.com`            | OpenID provider                                                                                                                                                                              | no         | -        |
-| `OPENID_PROVIDER_ALGORITHM`          | `RS256`                                  | OpenID token algorithm                                                                                                                                                                       | no         | -        |
-| `OPENID_PROVIDER_USER_ID_CLAIM_NAME` | ex `email`                               | OpenID User ID claim name                                                                                                                                                                    | no         | -        |
-| `REDIS_USER_INFO_HOST`               | ex `127.0.0.1`                           | Redis host                                                                                                                                                                                   | no         | -        |
-| `REDIS_USER_INFO_PORT`               | ex `6379`                                | Redis port                                                                                                                                                                                   | no         | -        |
-| `REDIS_USER_INFO_PASSWORD`           | ex ``                                    | Redis password                                                                                                                                                                               | yes        | -        |
-| `REDIS_USER_INFO_WITH_SSL`           | ex `true` or `false`                     | Redis host SSL config                                                                                                                                                                        | no         |          |
-| `REDIS_USER_GROUPS_HOST`             | ex `127.0.0.1`                           | Redis host                                                                                                                                                                                   | no         | -        |
-| `REDIS_USER_GROUPS_PORT`             | ex `6379`                                | Redis port                                                                                                                                                                                   | no         | -        |
-| `REDIS_USER_GROUPS_PASSWORD`         | ex ``                                    | Redis password                                                                                                                                                                               | yes        | -        |
-| `REDIS_USER_GROUPS_WITH_SSL`         | ex `true` or `false`                     | Redis host SSL config                                                                                                                                                                        | no         |          |
-| `DATASTORE_SCHEMA_NAME`              | ex `entitlements`                        | DB Schema name                                                                                                                                                                               | yes        |          |
-| `DATASTORE_SCHEMA_VERSION`           | ex `1`                                   | DB Schema version                                                                                                                                                                            | yes        |          |
-| `SYSTEM_TENANT`                      | ex `system`                              | System tenant ID, default is `system`                                                                                                                                                        | no         |          |
-| `PARTITION_PROPERTIES_PREFIX`        | ex `entitlements`                        | Prefix for Database connection properties in Partition configuration, default `entitlements`, result `entitlements.datasource.url`                                                           | no         |          |
-| `MANAGEMENT_ENDPOINTS_WEB_BASE`      | ex `/`                                   | Web base for Actuator                                                                                                                                                                        | no         | -        |
-| `MANAGEMENT_SERVER_PORT`             | ex `8081`                                | Port for Actuator                                                                                                                                                                            | no         | -        |
+| name                                 | value                                    | description                                                                                                                                                                                  | sensitive? | source |
+|--------------------------------------|------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|--------|
+| `LOG_PREFIX`                         | `entitlements-v2`                        | Logging prefix                                                                                                                                                                               | no         | -      |
+| `SERVER_SERVLET_CONTEXPATH`          | `/api/entitlements/v2`                   | Register context path                                                                                                                                                                        | no         | -      |
+| `LOG_LEVEL`                          | `INFO`                                   | Logging level                                                                                                                                                                                | no         | -      |
+| `server_port`                        | `8080`                                   | Port of the server                                                                                                                                                                           | no         | -      |
+| `AUTHENTICATION_MODE`                | `INTERNAL`, `IAP`, `EXTERNAL` or `ISTIO` | `INTERNAL` is used by default for GCP implementation, but there are other modes - `IAP`, `EXTERNAL` and `ISTIO`. More information about each mode you can find [here](#authentication-modes) | no         | -      |
+| `PARTITION_AUTH_ENABLED`             | `true`                                   | Disable or enable auth token provisioning for requests to Partition service                                                                                                                  | no         | -      |
+| `SERVICE_TOKEN_PROVIDER`             | `GCP`                                    | Service account token provider, `GCP` means use Google Service Account `OPEIND` means use OpenId provider like `Keycloak`                                                                    | no         | -      |
+| `OPENID_PROVIDER_URL`                | `https://accounts.google.com`            | OpenID provider                                                                                                                                                                              | no         | -      |
+| `OPENID_PROVIDER_ALGORITHM`          | `RS256`                                  | OpenID token algorithm                                                                                                                                                                       | no         | -      |
+| `OPENID_PROVIDER_USER_ID_CLAIM_NAME` | ex `email`                               | OpenID User ID claim name                                                                                                                                                                    | no         | -      |
+| `REDIS_USER_INFO_HOST`               | ex `127.0.0.1`                           | Redis host                                                                                                                                                                                   | no         | -      |
+| `REDIS_USER_INFO_PORT`               | ex `6379`                                | Redis port                                                                                                                                                                                   | no         | -      |
+| `REDIS_USER_INFO_PASSWORD`           | ex ``                                    | Redis password                                                                                                                                                                               | yes        | -      |
+| `REDIS_USER_INFO_WITH_SSL`           | ex `true` or `false`                     | Redis host SSL config                                                                                                                                                                        | no         |        |
+| `REDIS_USER_GROUPS_HOST`             | ex `127.0.0.1`                           | Redis host                                                                                                                                                                                   | no         | -      |
+| `REDIS_USER_GROUPS_PORT`             | ex `6379`                                | Redis port                                                                                                                                                                                   | no         | -      |
+| `REDIS_USER_GROUPS_PASSWORD`         | ex ``                                    | Redis password                                                                                                                                                                               | yes        | -      |
+| `REDIS_USER_GROUPS_WITH_SSL`         | ex `true` or `false`                     | Redis host SSL config                                                                                                                                                                        | no         |        |
+| `DATASTORE_SCHEMA_NAME`              | ex `entitlements`                        | DB Schema name                                                                                                                                                                               | yes        |        |
+| `DATASTORE_SCHEMA_VERSION`           | ex `1`                                   | DB Schema version                                                                                                                                                                            | yes        |        |
+| `SYSTEM_TENANT`                      | ex `system`                              | System tenant ID, default is `system`                                                                                                                                                        | no         |        |
+| `PARTITION_PROPERTIES_PREFIX`        | ex `entitlements`                        | Prefix for Database connection properties in Partition configuration, default `entitlements`, result `entitlements.datasource.url`                                                           | no         |        |
+| `MANAGEMENT_ENDPOINTS_WEB_BASE`      | ex `/`                                   | Web base for Actuator                                                                                                                                                                        | no         | -      |
+| `MANAGEMENT_SERVER_PORT`             | ex `8081`                                | Port for Actuator                                                                                                                                                                            | no         | -      |
 
 ## Postgres Connection configuration
 
@@ -79,11 +79,11 @@ and value should be provided in the service environment variables with that name
 **INTERNAL** Use it when authentication should be processed by entitlements, OpenID provider will be
 used for token validation.
 
-| name                              | value                            | description                                                                  | sensitive? | source |
-|-----------------------------------|----------------------------------|------------------------------------------------------------------------------|------------|--------|
-| `OPENID_PROVIDER_URL`             | ex `https://accounts.google.com` | OpenID provider                                                              | no         | -      |
-| `OPENID_PROVIDER_ALGORITHM`       | ex `RS256`                       | OpenID token algorithm                                                       | no         | -      |
-| `GCP_X_USER_IDENTITY_HEADER_NAME` | ex `x-user-id`                   | The name of the header in which the "id of the authenticated user" is passed | no         | -      |
+| name                        | value                            | description                                                                  | sensitive? | source |
+|-----------------------------|----------------------------------|------------------------------------------------------------------------------|------------|--------|
+| `OPENID_PROVIDER_URL`       | ex `https://accounts.google.com` | OpenID provider                                                              | no         | -      |
+| `OPENID_PROVIDER_ALGORITHM` | ex `RS256`                       | OpenID token algorithm                                                       | no         | -      |
+| `USER_IDENTITY_HEADER_NAME` | ex `x-user-id`                   | The name of the header in which the "id of the authenticated user" is passed | no         | -      |
 
 **IAP** Use it with enabled IAP, this mode use combined authentication with OpenID provider, which
 will be used inside secured perimeter with service to service communication and IAP tokens
@@ -110,7 +110,7 @@ authentication with OpenID provider, if the request will contain both token and 
 |--------------------------------------|----------------------------------|------------------------------------------------------------------------------|------------|--------|
 | `OPENID_PROVIDER_URL`                | ex `https://accounts.google.com` | OpenID provider                                                              | no         | -      |
 | `OPENID_PROVIDER_ALGORITHM`          | ex `RS256`                       | OpenID token algorithm                                                       | no         | -      |
-| `GCP_X_USER_IDENTITY_HEADER_NAME`    | ex `x-user-id`                   | The name of the header in which the "id of the authenticated user" is passed | no         | -      |
+| `USER_IDENTITY_HEADER_NAME`          | ex `x-user-id`                   | The name of the header in which the "id of the authenticated user" is passed | no         | -      |
 | `OPENID_PROVIDER_USER_ID_CLAIM_NAME` | ex `preferred_username`          | OpenID user id claim name                                                    | no         | -      |
 
 **ISTIO** Use it when authentication should not be processed by entitlements, Istio will be used for
@@ -144,3 +144,30 @@ token validation.
 | service.entitlements.user  | service.entitlements.user |
 | service.entitlements.admin |                           |
 | users.datalake.delegation  |                           |
+
+
+#***REMOVED*** service account configuration
+
+TBD
+
+| Required roles |
+|----------------|
+| -              |
+
+## License
+
+Copyright © Google LLC
+Copyright © EPAM Systems
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+[http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+

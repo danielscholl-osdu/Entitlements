@@ -17,24 +17,22 @@
 
 package org.opengroup.osdu.entitlements.v2.jdbc;
 
-import org.opengroup.osdu.entitlements.v2.jdbc.config.properties.EntConfigProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @ComponentScan(
+    value = {"org.opengroup.osdu"},
     excludeFilters = {
       @ComponentScan.Filter(
           type = FilterType.ASSIGNABLE_TYPE,
-          value = {EntitlementsV2Application.class, EntConfigProperties.class})
+          value = {EntitlementsV2Application.class})
     })
 @EnableAsync
-@EnableJdbcRepositories
 @PropertySource("classpath:swagger.properties")
 public class GcEntitlementsV2Application {
 

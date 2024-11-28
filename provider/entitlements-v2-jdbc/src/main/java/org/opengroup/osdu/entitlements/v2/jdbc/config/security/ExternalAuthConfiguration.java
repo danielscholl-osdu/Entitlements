@@ -1,6 +1,6 @@
 /*
- *  Copyright 2020-2021 Google LLC
- *  Copyright 2020-2021 EPAM Systems, Inc
+ *  Copyright 2020-2024 Google LLC
+ *  Copyright 2020-2024 EPAM Systems, Inc
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,24 +30,28 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 
-@ConditionalOnExpression(value = "'${gcp-authentication-mode}'=='IAP' || '${gcp-authentication-mode}'=='EXTERNAL'")
-@ComponentScan(value = {
-    "org.opengroup.osdu.core",
-    "org.opengroup.osdu.jdbc",
-    "org.opengroup.osdu.entitlements.v2"
-}, excludeFilters = {
-    @ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE,
-        value = {AuthorizationFilter.class, Application.class}
-    )
-})
+@ConditionalOnExpression(
+    value = "'${authentication-mode}'=='IAP' || '${authentication-mode}'=='EXTERNAL'")
+@ComponentScan(
+    value = {
+      "org.opengroup.osdu.core",
+      "org.opengroup.osdu.jdbc",
+      "org.opengroup.osdu.entitlements.v2"
+    },
+    excludeFilters = {
+      @ComponentScan.Filter(
+          type = FilterType.ASSIGNABLE_TYPE,
+          value = {AuthorizationFilter.class, Application.class})
+    })
 @Configuration
 public class ExternalAuthConfiguration {
 
-    @Bean
-    public ExternalAuthorizationFilter authorizationFilter(AuthorizationService authService, RequestInfo requestInfo,
-        JaxRsDpsLog log,
-        RequestInfoUtilService requestInfoUtilService) {
-        return new ExternalAuthorizationFilter(authService, requestInfo, log, requestInfoUtilService);
-    }
+  @Bean
+  public ExternalAuthorizationFilter authorizationFilter(
+      AuthorizationService authService,
+      RequestInfo requestInfo,
+      JaxRsDpsLog log,
+      RequestInfoUtilService requestInfoUtilService) {
+    return new ExternalAuthorizationFilter(authService, requestInfo, log, requestInfoUtilService);
+  }
 }
