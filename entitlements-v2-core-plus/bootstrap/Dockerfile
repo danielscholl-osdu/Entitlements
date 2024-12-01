@@ -4,7 +4,7 @@ WORKDIR /opt
 
 RUN apk update && apk add --no-cache jq
 
-COPY ./provider/entitlements-v2-core-plus/bootstrap/ /opt/
+COPY ./entitlements-v2-core-plus/bootstrap/ /opt/
 
 RUN chmod +x bootstrap.sh validate-env.sh
 
