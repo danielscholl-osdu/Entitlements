@@ -24,6 +24,6 @@ import org.opengroup.osdu.entitlements.v2.util.AwsTokenService;
 public class CreateGroupsAwsTest extends CreateGroupTest {
 
     public CreateGroupsAwsTest() {
-        super(new AwsConfigurationService(), new AwsTokenService());
+        super(new AwsConfigurationService(), AwsTokenService.getInstance());
     }
 }

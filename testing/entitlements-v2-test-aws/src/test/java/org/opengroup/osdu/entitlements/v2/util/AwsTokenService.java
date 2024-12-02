@@ -17,26 +17,47 @@
 package org.opengroup.osdu.entitlements.v2.util;
 
 import com.google.common.base.Strings;
+import org.opengroup.osdu.core.aws.cognito.AWSCognitoClient;
+import org.opengroup.osdu.core.aws.entitlements.ServicePrincipal;
 import org.opengroup.osdu.entitlements.v2.acceptance.model.Token;
 import org.opengroup.osdu.entitlements.v2.acceptance.util.TokenService;
 
-import static org.opengroup.osdu.entitlements.v2.util.AwsTestUtils.NO_ACCESS_USER;
 
 public class AwsTokenService implements TokenService {
+    private static volatile AwsTokenService instance;
 
+    private final AWSCognitoClient cognitoClient;
+    ServicePrincipal sp;
 
-    AwsTestUtils utils = new AwsTestUtils();
     private static String TOKEN;
     private static String NO_ACC_TOKEN;
     private static final String SERVICE_PRINCIPAL_EMAIL =  System.getProperty("SERVICE_PRINCIPAL_EMAIL", System.getenv("SERVICE_PRINCIPAL_EMAIL"));
+    public static final String NO_ACCESS_USER = System.getProperty("AWS_COGNITO_AUTH_PARAMS_USER_NO_ACCESS", System.getenv("AWS_COGNITO_AUTH_PARAMS_USER_NO_ACCESS"));
 
+    // Private constructor to prevent direct instantiation
+    private AwsTokenService() {
+        this.cognitoClient = new AWSCognitoClient();
+        this.sp = new ServicePrincipal();
+    }
+
+    // Public method to get the singleton instance
+    public static AwsTokenService getInstance() {
+        if (instance == null) {
+            synchronized (AwsTokenService.class) {
+                if (instance == null) {
+                    instance = new AwsTokenService();
+                }
+            }
+        }
+        return instance;
+    }
     /**
      * Returns token of a service principal
      */
     @Override
     public synchronized Token getToken()  {
         if (Strings.isNullOrEmpty(TOKEN)) {
-            String sptoken  = utils.getAccessToken();
+            String sptoken = sp.getServicePrincipalAccessToken();
             sptoken = sptoken.replace("Bearer ","");
             TOKEN = sptoken;
         }
@@ -49,7 +70,7 @@ public class AwsTokenService implements TokenService {
     @Override
     public synchronized Token getNoAccToken() {
         if (Strings.isNullOrEmpty(NO_ACC_TOKEN)) {
-            String noAccessToken  = utils.getNoAccessToken();
+            String noAccessToken  = cognitoClient.getTokenForUserWithNoAccess();
             noAccessToken = noAccessToken.replace("Bearer ","");
             NO_ACC_TOKEN = noAccessToken;
         }

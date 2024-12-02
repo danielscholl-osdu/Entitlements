@@ -21,6 +21,6 @@ import org.opengroup.osdu.entitlements.v2.util.AwsTokenService;
 
 public class GetMembersCountAwsTest extends GetMembersCountTest{
     public GetMembersCountAwsTest() {
-        super(new AwsConfigurationService(), new AwsTokenService());
+        super(new AwsConfigurationService(), AwsTokenService.getInstance());
     }
 }

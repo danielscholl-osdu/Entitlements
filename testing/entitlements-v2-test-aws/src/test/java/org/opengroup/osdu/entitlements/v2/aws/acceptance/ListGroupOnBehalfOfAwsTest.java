@@ -22,6 +22,6 @@ import org.opengroup.osdu.entitlements.v2.util.AwsTokenService;
 public class ListGroupOnBehalfOfAwsTest extends ListGroupOnBehalfOfTest {
 
     public ListGroupOnBehalfOfAwsTest() {
-        super(new AwsConfigurationService(), new AwsTokenService());
+        super(new AwsConfigurationService(), AwsTokenService.getInstance());
     }
 }
