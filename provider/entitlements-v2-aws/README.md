@@ -143,6 +143,7 @@ java -jar provider/entitlements-v2-aws/target/entitlements-v2-aws-*.*.*-SNAPSHOT
  | `LOCAL_MODE`             | `true`                                                                 | Set to 'true' to use in local mode                                                     | no         |
  | `AWS_REGION`             | `us-east-1`                                                            | The region where resources needed by the service are deployed                          | no         |
  | `COGNITO_NAME`           | `osdu`                                                                 | The name of the instance of Cognito                                                    | no         |
+ | `AWS_COGNITO_CLIENT_ID`  | `4j7sr8v453pamnqfq89q6sndel`                                           | The app client id used for the no access user                                          | no         |
  | `SERVICE_PRINCIPAL_USER` | `serviceprincipal-osdu@testing.com`                                    | The e-mail of the service principal user                                               | no         |
  | `USER_NO_ACCESS`         | `noaccess@testing.com`                                                 | The e-mail of the user with limited access for testing priviledge escalation           | no         |
  | `ADMIN_PASSWORD`         | `secret`                                                               | The password for the no access user                                                    | yes        |

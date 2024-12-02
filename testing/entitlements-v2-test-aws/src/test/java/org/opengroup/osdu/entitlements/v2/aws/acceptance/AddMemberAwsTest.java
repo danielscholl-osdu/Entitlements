@@ -23,6 +23,6 @@ import org.opengroup.osdu.entitlements.v2.util.AwsTokenService;
 public class AddMemberAwsTest extends AddMemberTest {
 
     public AddMemberAwsTest() {
-        super(new AwsConfigurationService(), new AwsTokenService());
+        super(new AwsConfigurationService(), AwsTokenService.getInstance());
     }
 }

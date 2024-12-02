@@ -22,6 +22,6 @@ import org.opengroup.osdu.entitlements.v2.util.AwsTokenService;
 public class DeleteGroupAwsTest extends DeleteGroupTest {
 
     public DeleteGroupAwsTest() {
-        super(new AwsConfigurationService(), new AwsTokenService());
+        super(new AwsConfigurationService(), AwsTokenService.getInstance());
     }
 }

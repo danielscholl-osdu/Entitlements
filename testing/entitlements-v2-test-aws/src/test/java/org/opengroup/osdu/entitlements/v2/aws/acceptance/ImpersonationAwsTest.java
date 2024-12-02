@@ -24,7 +24,7 @@ import org.opengroup.osdu.entitlements.v2.util.AwsTokenService;
 public class ImpersonationAwsTest extends ImpersonationTest {
 
   public ImpersonationAwsTest() {
-    super(new AwsConfigurationService(), new AwsTokenService(),
-        new PartitionService(new AwsConfigurationService(), new AwsTokenService()));
+    super(new AwsConfigurationService(), AwsTokenService.getInstance(),
+        new PartitionService(new AwsConfigurationService(), AwsTokenService.getInstance()));
   }
 }
