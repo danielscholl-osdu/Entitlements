@@ -22,8 +22,8 @@
         <junit.version>4.13.2</junit.version>
         <pact-jvm-provider-junit_2.12.version>3.5.5</pact-jvm-provider-junit_2.12.version>
         <lombok.version>1.18.28</lombok.version>
-        <jackson-databind.version>2.13.2.2</jackson-databind.version>
-        <jackson.version>2.13.2</jackson.version>
+        <jackson-databind.version>2.18.1</jackson-databind.version>
+        <jackson.version>2.18.1</jackson.version>
     </properties>
 
     <dependencies>

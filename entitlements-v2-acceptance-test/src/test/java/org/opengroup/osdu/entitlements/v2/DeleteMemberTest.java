@@ -1,0 +1,198 @@
+package org.opengroup.osdu.entitlements.v2;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.opengroup.osdu.entitlements.v2.model.GroupItem;
+import org.opengroup.osdu.entitlements.v2.model.request.AddMemberRequestData;
+import org.opengroup.osdu.entitlements.v2.model.request.RequestData;
+import org.opengroup.osdu.entitlements.v2.util.CommonConfigurationService;
+import org.opengroup.osdu.entitlements.v2.util.TokenTestUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+@Disabled
+public class DeleteMemberTest extends AcceptanceBaseTest {
+    private final List<String> groupsForFurtherDeletion;
+
+    public DeleteMemberTest() {
+        super(new CommonConfigurationService());
+        groupsForFurtherDeletion = new ArrayList<>();
+    }
+
+    @BeforeEach
+    @Override
+    public void setupTest() throws Exception {
+        this.testUtils = new TokenTestUtils();
+    }
+
+    @AfterEach
+    @Override
+    public void tearTestDown() throws Exception {
+        for (String groupName : groupsForFurtherDeletion) {
+            entitlementsV2Service.deleteGroup(groupName, testUtils.getToken());
+        }
+        this.testUtils = null;
+    }
+
+    @Override
+    protected RequestData getRequestDataForNoTokenTest() {
+        return RequestData.builder()
+                .method("DELETE")
+                .relativePath(String.format("members/%s", this.configurationService.getMemberMailId()))
+                .dataPartitionId(configurationService.getTenantId())
+                .build();
+    }
+
+    /**
+     * 1) Create groups 1, 2 and 3.
+     * 2) Add the group 3 to the groups 1 and 2 as a member.
+     * 3) Delete the member (group 3).
+     * 4) Check that the group 3 is not a member of the groups 1 and 2.
+     */
+    @Test
+    public void shouldSuccessfullyDeleteGroupMember() throws Exception {
+        List<GroupItem> groups = setup();
+
+        assertTrue(isGroupAMemberOfAnotherGroup(groups.get(2).getEmail(), groups.get(0).getEmail()));
+        assertTrue(isGroupAMemberOfAnotherGroup(groups.get(2).getEmail(), groups.get(1).getEmail()));
+
+        entitlementsV2Service.deleteMember(groups.get(2).getEmail(), testUtils.getToken());
+
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        assertFalse(isGroupAMemberOfAnotherGroup(groups.get(2).getEmail(), groups.get(0).getEmail()));
+        assertFalse(isGroupAMemberOfAnotherGroup(groups.get(2).getEmail(), groups.get(1).getEmail()));
+    }
+
+    /**
+     * 1) Create 2 groups.
+     * 2) Add the user member to these 2 groups
+     * 3) Delete the user member
+     * 4) Check that the user member is not part of the 2 groups
+     */
+    @Test
+    public void shouldSuccessfullyDeleteUserMember() throws Exception {
+        String member = configurationService.getMemberMailId_toBeDeleted(currentTime);
+        List<GroupItem> groups = setupUsers(member);
+        entitlementsV2Service.deleteMember(member, testUtils.getToken());
+        // check that the member is not a memberOf the groups (reusing the already written method)
+        assertFalse(isGroupAMemberOfAnotherGroup(member, groups.get(0).getEmail()));
+        assertFalse(isGroupAMemberOfAnotherGroup(member, groups.get(1).getEmail()));
+    }
+
+    @Test
+    public void shouldBeAbleToInvokeApiInParallel() throws Exception {
+        List<GroupItem> groups = setup();
+
+        int threads = 10;
+        ExecutorService executor = Executors.newFixedThreadPool(threads);
+        List<Callable<CloseableHttpResponse>> tasks = new ArrayList<>();
+
+        for (int i = 0; i < threads; i++) {
+            Callable<CloseableHttpResponse> task = () -> {
+                try {
+                    return entitlementsV2Service.deleteMember(groups.get(2).getEmail(), testUtils.getToken());
+                } catch (Exception e) {
+                    return null;
+                }
+            };
+            tasks.add(task);
+        }
+
+        List<Future<CloseableHttpResponse>> responses = executor.invokeAll(tasks);
+        executor.shutdown();
+        //noinspection ResultOfMethodCallIgnored
+        executor.awaitTermination(30, TimeUnit.SECONDS);
+        int successResponseCount = 0;
+        for (Future<CloseableHttpResponse> future : responses) {
+            CloseableHttpResponse closeableHttpResponse = future.get();
+            if (closeableHttpResponse == null) {
+                fail("Failed to get response client response");
+            } else if (204 == closeableHttpResponse.getCode() || 404 == closeableHttpResponse.getCode()) {
+                successResponseCount++;
+            } else {
+                fail(String.format("Inappropriate status code %s from client response", closeableHttpResponse.getCode()));
+            }
+        }
+
+        assertEquals(threads, successResponseCount, "Expected 10 successful response");
+    }
+
+    private List<GroupItem> setup() throws Exception {
+        List<GroupItem> groups = new ArrayList<>();
+
+        String group1Name = "group1-" + currentTime;
+        String group2Name = "group2-" + currentTime;
+        String group3Name = "group3-" + currentTime;
+
+        GroupItem group1Item = entitlementsV2Service.createGroup(group1Name, testUtils.getToken());
+        groupsForFurtherDeletion.add(group1Item.getEmail());
+        groups.add(group1Item);
+
+        GroupItem group2Item = entitlementsV2Service.createGroup(group2Name, testUtils.getToken());
+        groupsForFurtherDeletion.add(group2Item.getEmail());
+        groups.add(group2Item);
+
+        GroupItem group3Item = entitlementsV2Service.createGroup(group3Name, testUtils.getToken());
+        groupsForFurtherDeletion.add(group3Item.getEmail());
+        groups.add(group3Item);
+
+        addMember(group1Item.getEmail(), group3Item.getEmail());
+        addMember(group2Item.getEmail(), group3Item.getEmail());
+
+        return groups;
+    }
+
+    private List<GroupItem> setupUsers(String member) throws Exception {
+        List<GroupItem> groups = new ArrayList<>();
+
+        String group1Name = "group1-" + currentTime;
+        String group2Name = "group2-" + currentTime;
+
+        GroupItem group1Item = entitlementsV2Service.createGroup(group1Name, testUtils.getToken());
+        groupsForFurtherDeletion.add(group1Item.getEmail());
+        groups.add(group1Item);
+
+        GroupItem group2Item = entitlementsV2Service.createGroup(group2Name, testUtils.getToken());
+        groupsForFurtherDeletion.add(group2Item.getEmail());
+        groups.add(group2Item);
+
+        addMember(group1Item.getEmail(), member);
+        addMember(group2Item.getEmail(), member);
+
+        return groups;
+    }
+
+
+    private void addMember(String groupEMail, String memberEmail) throws Exception {
+        AddMemberRequestData addMemberRequestData = AddMemberRequestData.builder()
+                .groupEmail(groupEMail)
+                .role("MEMBER")
+                .memberEmail(memberEmail)
+                .build();
+        entitlementsV2Service.addMember(addMemberRequestData, testUtils.getToken());
+    }
+
+    private boolean isGroupAMemberOfAnotherGroup(String groupEmail, String anotherGroupEmail) throws Exception {
+        return entitlementsV2Service.getMembers(anotherGroupEmail, testUtils.getToken()).getMembers().stream()
+                .anyMatch(memberItem -> memberItem.getEmail().equals(groupEmail));
+    }
+}
