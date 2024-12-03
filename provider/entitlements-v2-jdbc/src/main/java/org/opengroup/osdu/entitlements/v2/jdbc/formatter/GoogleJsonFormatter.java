@@ -1,6 +1,6 @@
 /*
- *  Copyright 2020-2022 Google LLC
- *  Copyright 2020-2022 EPAM Systems, Inc
+ *  Copyright 2020-2024 Google LLC
+ *  Copyright 2020-2024 EPAM Systems, Inc
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,23 +15,20 @@
  *  limitations under the License.
  */
 
-package org.opengroup.osdu.entitlements.v2.jdbc.model;
+package org.opengroup.osdu.entitlements.v2.jdbc.formatter;
 
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.relational.core.mapping.Table;
+import ch.qos.logback.contrib.jackson.JacksonJsonFormatter;
+import java.io.IOException;
+import java.util.Map;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Table("group")
-public class GroupInfoEntityList {
+public class GoogleJsonFormatter extends JacksonJsonFormatter {
 
-    private List<GroupInfoEntity> groupInfoEntities;
-    private Long totalCount;
+  private static final String SEVERITY = "severity";
+  private static final String LEVEL = "level";
 
+  @Override
+  public String toJsonString(Map map) throws IOException {
+    map.put(SEVERITY, map.remove(LEVEL));
+    return super.toJsonString(map);
+  }
 }

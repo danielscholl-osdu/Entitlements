@@ -29,68 +29,59 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 ### Global variables
 
 | Name                       | Description                                             | Type    | Default | Required |
-|----------------------------|---------------------------------------------------------|---------|---------|----------|
+| -------------------------- | ------------------------------------------------------- | ------- | ------- | -------- |
 | **global.domain**          | your domain for the external endpoint, ex `example.com` | string  | -       | yes      |
-| **global.onPremEnabled**   | whether on-prem is enabled                              | boolean | `false` | yes      |
 | **global.limitsEnabled**   | whether CPU and memory limits are enabled               | boolean | `true`  | yes      |
 | **global.dataPartitionId** | partition ID                                            | string  | -       | yes      |
+| **global.logLevel**        | severity of logging level                               | string  | `ERROR` | yes      |
 | **global.tier**            | Only PROD must be used to enable autoscaling            | string  | ""      | no       |
 | **global.autoscaling**     | enables horizontal pod autoscaling, when tier=PROD      | boolean | true    | yes      |
 
 ### Configmap variables
 
-| Name                            | Description                                                                     | Type   | Default               | Required |
-|---------------------------------|---------------------------------------------------------------------------------|--------|-----------------------|----------|
-| **data.logLevel**               | logging level                                                                   | string | `ERROR`               | yes      |
-| **data.entitlementsHost**       | Entitlements service host                                                       | string | `http://entitlements` | yes      |
-| **data.adminUserEmail**         | admin user email                                                                | string | -                     | yes      |
-| **data.airflowComposerEmail**   | airflow composer email                                                          | string | -                     | yes      |
-| **data.partitionHost**          | Partition service host                                                          | string | `http://partition`    | yes      |
-| **data.projectId**              | project ID                                                                      | string | -                     | yes      |
-| **data.registerPubsubIdentity** | service account for communication Register-PubSub-Notification                  | string | -                     | yes      |
-| **data.entitlementsDomain**     | The name of the domain groups are created for                                   | string | `group`               | yes      |
-| **data.redisEntHost**           | The host for redis instance. If empty, helm installs an internal redis instance | string | `redis-ent-master`    | yes      |
-| **data.redisEntPort**           | The port for redis instance                                                     | digit  | `6379`                | yes      |
+| Name                          | Description                                                                     | Type    | Default               | Required                                        |
+| ----------------------------- | ------------------------------------------------------------------------------- | ------- | --------------------- | ----------------------------------------------- |
+| **data.logLevel**             | logging severity level for this service only                                    | string  | -                     | yes, only if differs from the `global.logLevel` |
+| **data.entitlementsHost**     | Entitlements service host                                                       | string  | `http://entitlements` | yes                                             |
+| **data.adminUserEmail**       | admin user email                                                                | string  | -                     | yes                                             |
+| **data.airflowComposerEmail** | airflow composer email                                                          | string  | -                     | yes                                             |
+| **data.partitionHost**        | Partition service host                                                          | string  | `http://partition`    | yes                                             |
+| **data.projectId**            | project ID                                                                      | string  | -                     | yes                                             |
+| **data.entitlementsDomain**   | The name of the domain groups are created for                                   | string  | `group`               | yes                                             |
+| **data.redisEntHost**         | The host for redis instance. If empty, helm installs an internal redis instance | string  | `redis-ent-master`    | yes                                             |
+| **data.redisEntPort**         | The port for redis instance                                                     | integer | `6379`                | yes                                             |
 
 ### Deployment variables
 
-| Name                                 | Description                  | Type   | Default        | Required                               |
-|--------------------------------------|------------------------------|--------|----------------|----------------------------------------|
-| **data.requestsCpu**                 | amount of requested CPU      | string | `10m`          | yes                                    |
-| **data.requestsMemory**              | amount of requested memory   | string | `450Mi`        | yes                                    |
-| **data.limitsCpu**                   | CPU limit                    | string | `1`            | only if `global.limitsEnabled` is true |
-| **data.limitsMemory**                | memory limit                 | string | `1G`           | only if `global.limitsEnabled` is true |
-| **data.serviceAccountName**          | name of your service account | string | `entitlements` | yes                                    |
-| **data.imagePullPolicy**             | when to pull image           | string | `IfNotPresent` | yes                                    |
-| **data.image**                       | service image                | string | -              | yes                                    |
-| **data.redisImage**                  | service image                | string | `redis:7`      | yes                                    |
-| **data.bootstrapImage**              | bootstrap image              | string | -              | yes                                    |
-| **data.bootstrapServiceAccountName** | bootstrap service account    | string | -              | yes                                    |
-| **data.cloudSqlProxyVersion**        | version of Cloud SQL Proxy   | string | `1.32.0`       | yes                                    |
-| **data.sqlConnectionString**         | string for SQL connection    | string | -              | yes                                    |
+| Name                                 | Description                  | Type   | Default                              | Required                               |
+| ------------------------------------ | ---------------------------- | ------ | ------------------------------------ | -------------------------------------- |
+| **data.requestsCpu**                 | amount of requested CPU      | string | `25m`                                | yes                                    |
+| **data.requestsMemory**              | amount of requested memory   | string | `350Mi`                              | yes                                    |
+| **data.limitsCpu**                   | CPU limit                    | string | `1`                                  | only if `global.limitsEnabled` is true |
+| **data.limitsMemory**                | memory limit                 | string | `1G`                                 | only if `global.limitsEnabled` is true |
+| **data.serviceAccountName**          | name of your service account | string | `entitlements`                       | yes                                    |
+| **data.imagePullPolicy**             | when to pull image           | string | `IfNotPresent`                       | yes                                    |
+| **data.image**                       | service image                | string | -                                    | yes                                    |
+| **data.redisImage**                  | service image                | string | `docker.io/library/redis:7.2-alpine` | yes                                    |
+| **data.bootstrapImage**              | bootstrap image              | string | -                                    | yes                                    |
+| **data.bootstrapServiceAccountName** | bootstrap service account    | string | -                                    | yes                                    |
+| **data.cloudSqlProxyVersion**        | version of Cloud SQL Proxy   | string | `1.32.0`                             | yes                                    |
+| **data.sqlConnectionString**         | string for SQL connection    | string | -                                    | yes                                    |
 
 ### Configuration variables
 
-| Name                                    | Description                  | Type   | Default                        | Required |
-|-----------------------------------------|------------------------------|--------|--------------------------------|----------|
-| **conf.appName**                        | Service name                 | string | `entitlements`                 | yes      |
-| **conf.configmap**                      | configmap to be used         | string | `entitlements-config`          | yes      |
-| **conf.entitlementsPostgresSecretName** | entitlements Postgres secret | string | `entitlements-postgres-secret` | yes      |
-| **conf.entitlementsRedisSecretName**    | entitlements Redis secret    | string | `entitlements-redis-secret`    | yes      |
-| **conf.bootstrapOpenidSecretName**      | bootstrap OpenID secret      | string | `datafier-secret`              | yes      |
-
-### Auth variables
-
-| Name                 | Description                                                                                             | Type   | Default    | Required |
-|----------------------|---------------------------------------------------------------------------------------------------------|--------|------------|----------|
-| **auth.keycloakUrl** | endpoint of Keycloak when using an external one, ex `keycloak.com`. For local instance it uses `domain` | string | -          | no       |
-| **auth.localUrl**    | authentication local URL                                                                                | string | `keycloak` | yes      |
-| **auth.realm**       | Keycloak realm                                                                                          | string | `osdu`     | yes      |
+| Name                                    | Description                  | Type    | Default                        | Required |
+| --------------------------------------- | ---------------------------- | ------- | ------------------------------ | -------- |
+| **conf.appName**                        | Service name                 | string  | `entitlements`                 | yes      |
+| **conf.replicas**                       | Default number of replicas   | integer | `2`                            | yes      |
+| **conf.configmap**                      | configmap to be used         | string  | `entitlements-config`          | yes      |
+| **conf.entitlementsPostgresSecretName** | entitlements Postgres secret | string  | `entitlements-postgres-secret` | yes      |
+| **conf.entitlementsRedisSecretName**    | entitlements Redis secret    | string  | `entitlements-redis-secret`    | yes      |
 
 ### Istio variables
 
 | Name                             | Description                                                                                                                            | Type    | Default | Required |
-|----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|---------|---------|----------|
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------- | -------- |
 | **istio.proxyCPU**               | CPU request for Envoy sidecars                                                                                                         | string  | `10m`   | yes      |
 | **istio.proxyCPULimit**          | CPU limit for Envoy sidecars                                                                                                           | string  | `200m`  | yes      |
 | **istio.proxyMemory**            | memory request for Envoy sidecars                                                                                                      | string  | `64Mi`  | yes      |
@@ -103,7 +94,7 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 ### Horizontal Pod Autoscaling (HPA) variables (works only if tier=PROD and autoscaling=true)
 
 | Name                                                | Description                                                                   | Type    | Default        | Required                                                       |
-|-----------------------------------------------------|-------------------------------------------------------------------------------|---------|----------------|----------------------------------------------------------------|
+| --------------------------------------------------- | ----------------------------------------------------------------------------- | ------- | -------------- | -------------------------------------------------------------- |
 | **hpa.minReplicas**                                 | minimum number of replicas                                                    | integer | 6              | only if `global.autoscaling` is true and `global.tier` is PROD |
 | **hpa.maxReplicas**                                 | maximum number of replicas                                                    | integer | 15             | only if `global.autoscaling` is true and `global.tier` is PROD |
 | **hpa.targetType**                                  | type of measurements: AverageValue or Value                                   | string  | "AverageValue" | only if `global.autoscaling` is true and `global.tier` is PROD |
@@ -118,7 +109,7 @@ You need to set variables in **values.yaml** file using any code editor. Some of
 ### Limits variables
 
 | Name                     | Description                                     | Type    | Default | Required                                                       |
-|--------------------------|-------------------------------------------------|---------|---------|----------------------------------------------------------------|
+| ------------------------ | ----------------------------------------------- | ------- | ------- | -------------------------------------------------------------- |
 | **limits.maxTokens**     | maximum number of requests per fillInterval     | integer | 50      | only if `global.autoscaling` is true and `global.tier` is PROD |
 | **limits.tokensPerFill** | number of new tokens allowed every fillInterval | integer | 50      | only if `global.autoscaling` is true and `global.tier` is PROD |
 | **limits.fillInterval**  | time interval                                   | string  | "1s"    | only if `global.autoscaling` is true and `global.tier` is PROD |

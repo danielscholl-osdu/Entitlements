@@ -11,3 +11,26 @@ variables:
 gc-preship-deploy:
   variables:
     GC_TENANT: m19 #FIXME: update variable after the m24 release
+
+download_gc_plugins:
+  image: maven:3.8.3-openjdk-17-slim
+  stage: build
+  variables:
+    GC_OQM_PACKAGE_REGISRTY_URL: "https://community.opengroup.org/api/v4/projects/1477/packages/maven"
+    GC_OQM_VERSION: "0.27.1"
+  artifacts:
+    paths:
+      - ./tmp-gc/*.jar
+    when: always
+    expire_in: 1 days
+  script:
+    - mvn dependency:copy -DrepoUrl=$GC_OQM_PACKAGE_REGISRTY_URL -Dartifact="org.opengroup.osdu:gc-oqm-pubsub:$GC_OQM_VERSION:jar:plugin" -Dtransitive=false -DoutputDirectory="./tmp-gc"
+  only:
+    variables:
+      - $GC == '1'
+
+gc-containerize-gitlab:
+  needs: ["compile-and-unit-test", "download_gc_plugins"]
+
+gc-containerize-gcr:
+  needs: ["compile-and-unit-test", "download_gc_plugins"]

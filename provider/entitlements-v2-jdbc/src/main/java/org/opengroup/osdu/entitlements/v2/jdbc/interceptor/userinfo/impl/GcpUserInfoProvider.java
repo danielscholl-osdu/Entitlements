@@ -1,6 +1,6 @@
 /*
- *  Copyright 2020-2023 Google LLC
- *  Copyright 2020-2023 EPAM Systems, Inc
+ *  Copyright 2020-2024 Google LLC
+ *  Copyright 2020-2024 EPAM Systems, Inc
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ import static com.nimbusds.openid.connect.sdk.claims.ClaimsSet.AUD_CLAIM_NAME;
 
 @Slf4j
 @Component
-@ConditionalOnExpression(value = "'${openid.provider.url}' == 'https://accounts.google.com' && '${gcp-authentication-mode}' != 'ISTIO'")
+@ConditionalOnExpression(value = "'${openid.provider.url}' == 'https://accounts.google.com' && '${authentication-mode}' != 'ISTIO'")
 public class GcpUserInfoProvider extends OpenIdUserInfoProvider {
 
     private static final String USER_INFO_ISSUE_REASON = "Obtaining user info issue";

@@ -5,12 +5,24 @@ ARG PROVIDER_NAME
 ENV PROVIDER_NAME $PROVIDER_NAME
 ARG PORT
 ENV PORT $PORT
+
+ENV LOADER_PATH="gc/"
+
+COPY tmp-gc/gc-oqm-pubsub-*.jar gc/oqm-pubsub.jar
+
 ## Copy the jar to the production image from the builder stage.
 COPY provider/entitlements-v2-${PROVIDER_NAME}/target/entitlements-v2-${PROVIDER_NAME}-*-spring-boot.jar entitlements-${PROVIDER_NAME}.jar
+
 # Add a non-root user
 RUN groupadd -g 10001 -r nonroot \
   && useradd -g 10001 -r -u 10001 nonroot
-# Run as non-root user
+
+  # Run as non-root user
 USER 10001:10001
+
 # Run the web service on container startup.
-CMD java -Djava.security.egd=file:/dev/./urandom -Dserver.port=${PORT} -Dlog4j.formatMsgNoLookups=true -jar entitlements-${PROVIDER_NAME}.jar
+CMD java -Djava.security.egd=file:/dev/./urandom \
+    -Dserver.port=${PORT} -Dlog4j.formatMsgNoLookups=true \
+    --add-opens=java.base/java.time=ALL-UNNAMED \
+    -Dloader.main=org.opengroup.osdu.entitlements.v2.jdbc.GcEntitlementsV2Application \
+    -jar entitlements-${PROVIDER_NAME}.jar
