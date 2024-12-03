@@ -14,7 +14,7 @@
     <version>0.28.0-SNAPSHOT</version>
 
     <properties>
-        <core-lib-azure-spring6.version>0.27.0-rc7</core-lib-azure-spring6.version>
+        <core-lib-azure.version>1.2.0</core-lib-azure.version>
         <gremlin.version>3.4.13</gremlin.version>
         <resilience4j.version>2.0.0</resilience4j.version>
         <embedded-resdis.version>0.7.1</embedded-resdis.version>
@@ -39,27 +39,10 @@
 
         <dependency>
             <groupId>org.opengroup.osdu</groupId>
-            <artifactId>core-lib-azure-spring6</artifactId>
-            <version>${core-lib-azure-spring6.version}</version>
-            <exclusions>
-                <!--
-                Excluding simple-xml because:
-                There’s a library called xpp3 (the Xml Pull Parser) originally developed by Indiana University’s Extreme! Computing group.
-                The licensing is kind of obscure – the problem is that the version we’re using is v1.1.3.3 which has no
-                license traceable information (the original distribution site has been discontinued and the library is
-                at least 16 years old anyway).  The later versions starting with v1.1.4c have clear licensing but legally
-                we’re on shaky ground if we assume the older version is the same.
-                For our purposes, Whitesource identifies this library as a (low-level) dependency of KeePassJava2
-                (except in an IBM package where it comes from minio).  Both KeePassJava2 and minio inherit xpp3 through
-                simple-xml-2.7.1 which, as it turns out, has a high-severity vulnerability with no known fix and
-                no new versions since July 2013.
-                -->
-                <exclusion>
-                    <groupId>org.simpleframework</groupId>
-                    <artifactId>simple-xml</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>core-lib-azure</artifactId>
+            <version>${core-lib-azure.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
