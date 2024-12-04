@@ -11,7 +11,7 @@
         <log4j.version>2.22.0</log4j.version>
         <spring-framework-version>6.1.13</spring-framework-version>
         <spring-boot.version> 3.3.1</spring-boot.version>
-        <spring-security.version>6.3.1</spring-security.version>
+        <spring-security.version>6.3.4</spring-security.version>
     </properties>
 
     <groupId>org.opengroup.osdu.entitlements.v2</groupId>
@@ -41,6 +41,13 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-bom</artifactId>
+                <version>${spring-security.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-framework-bom</artifactId>
                 <version>${spring-framework-version}</version>
@@ -51,13 +58,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-bom</artifactId>
-                <version>${spring-security.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
