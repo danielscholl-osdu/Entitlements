@@ -44,6 +44,21 @@ spec:
             secretKeyRef:
               name: {{ .Values.conf.entitlementsRedisSecretName | quote }}
               key: REDIS_PASSWORD
+        ports:
+          - containerPort: 8080
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health/liveness
+            port: 8081
+          initialDelaySeconds: 150
+          periodSeconds: 10
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health/readiness
+            port: 8081
+          periodSeconds: 10
         securityContext:
           allowPrivilegeEscalation: false
           runAsNonRoot: true
@@ -63,19 +78,4 @@ spec:
         command:
           - /cloud_sql_proxy
           - "-instances={{ .Values.data.sqlConnectionString }}=tcp:5432"
-        ports:
-        - containerPort: 8080
-        livenessProbe:
-          failureThreshold: 3
-          httpGet:
-            path: /health/liveness
-            port: 8081
-          initialDelaySeconds: 150
-          periodSeconds: 10
-        readinessProbe:
-          failureThreshold: 3
-          httpGet:
-            path: /health/readiness
-            port: 8081
-          periodSeconds: 10
       serviceAccountName: {{ .Values.data.serviceAccountName | quote }}
