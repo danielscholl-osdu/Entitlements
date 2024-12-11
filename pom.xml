@@ -130,7 +130,6 @@
             </plugin>
         </plugins>
     </build>
-    
     <repositories>
         <repository>
             <id>${repo.releases.id}</id>
