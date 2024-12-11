@@ -1,355 +1,250 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- mvn clean package -Dtest='!GroupCacheServiceAzureTest,!HealthServiceAzureTest' -Dsurefire.failIfNoSpecifiedTests=false -->
+<!--
+  ~ Copyright © Microsoft Corporation
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <artifactId>entitlements-v2-service</artifactId>
-        <groupId>org.opengroup.osdu.entitlements.v2</groupId>
-        <version>0.28.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
-    </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>entitlements-v2-azure</artifactId>
+  <description>Entitlements V2 service on Azure</description>
+  <packaging>jar</packaging>
 
-    <artifactId>entitlements-v2-azure</artifactId>
+  <parent>
+    <artifactId>entitlements-v2-service</artifactId>
+    <groupId>org.opengroup.osdu.entitlements.v2</groupId>
     <version>0.28.0-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
 
-    <properties>
-        <core-lib-azure.version>1.2.0</core-lib-azure.version>
-        <gremlin.version>3.4.13</gremlin.version>
-        <resilience4j.version>2.0.0</resilience4j.version>
-        <embedded-resdis.version>0.7.1</embedded-resdis.version>
-        <awaitility.version>3.0.0</awaitility.version>
-        <awaitility.proxy.version>3.0.0</awaitility.proxy.version>
-        <jackson.version>2.18.1</jackson.version>
-        <jackson-databind.version>2.18.1</jackson-databind.version>
-        <commons-text.version>1.10.0</commons-text.version>
-        <reactor-core.version>3.6.4</reactor-core.version>
-        <reactor-netty.version>1.1.17</reactor-netty.version>
-        <guava.version>32.1.2-jre</guava.version>
-        <nimbus-jose-jwt.version>9.39.1</nimbus-jose-jwt.version>
-        <okhttp.version>4.12.0</okhttp.version>
-    </properties>
+  <properties>
+    <core-lib-azure.version>2.0.0</core-lib-azure.version>
+    <slf4j.version>2.0.16</slf4j.version>
+    <gremlin.version>3.4.13</gremlin.version>
+    <jackson.version>2.18.2</jackson.version>
+    <!-- Test Versions -->
+    <awaitility-test.version>3.1.6</awaitility-test.version>
+    <embedded-redis-test.version>0.7.3</embedded-redis-test.version>
+    <mockito-test.version>5.14.2</mockito-test.version>
+    <powermock-test.version>2.0.9</powermock-test.version>
+    <!-- Plugin Versions -->
+    <surefire-plugin.version>2.22.2</surefire-plugin.version>
+    <jacoco-plugin.version>0.8.12</jacoco-plugin.version>
+  </properties>
 
+  <dependencyManagement>
     <dependencies>
-        <dependency>
-            <groupId>org.opengroup.osdu.entitlements.v2</groupId>
-            <artifactId>entitlements-v2-core</artifactId>
-            <version>0.28.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.opengroup.osdu</groupId>
-            <artifactId>core-lib-azure</artifactId>
-            <version>${core-lib-azure.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-to-slf4j</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-client</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>oauth2-oidc-sdk</artifactId>
-                    <groupId>com.nimbusds</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-jose</artifactId>
-        </dependency>
-
-        <!-- gremlin dependencies -->
-        <dependency>
-            <groupId>org.apache.tinkerpop</groupId>
-            <artifactId>gremlin-driver</artifactId>
-            <version>${gremlin.version}</version>
-            <exclusions>
-                <!--
-                Excluding org.apache.commons:commons-text:jar:1.9 because it has security bugs
-                -->
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-text</artifactId>
-                </exclusion>
-                <!--
-                Excluding com.fasterxml.jackson.core:jackson-databind because shows up in container scan
-                -->
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-databind</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-configuration2</artifactId>
-            <version>2.10.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tinkerpop</groupId>
-            <artifactId>gremlin-groovy</artifactId>
-            <version>${gremlin.version}</version>
-            <exclusions>
-                <!--
-                Excluding org.apache.ivy:ivy:jar:2.3.0 because it has security bugs
-                -->
-                <exclusion>
-                    <groupId>org.apache.ivy</groupId>
-                    <artifactId>ivy</artifactId>
-                </exclusion>
-                <!--
-               Excluding com.fasterxml.jackson.core:jackson-databind because shows up in container scan
-               -->
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-databind</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>${commons-text.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.resilience4j</groupId>
-            <artifactId>resilience4j-retry</artifactId>
-            <version>${resilience4j.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.28</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.projectreactor.netty</groupId>
-            <artifactId>reactor-netty</artifactId>
-            <version>${reactor-netty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.projectreactor.netty</groupId>
-            <artifactId>reactor-netty-core</artifactId>
-            <version>${reactor-netty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.projectreactor.netty</groupId>
-            <artifactId>reactor-netty-http</artifactId>
-            <version>${reactor-netty.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-core</artifactId>
-            <version>${reactor-core.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-            <version>${nimbus-jose-jwt.version}</version>
-        </dependency>
-        <!-- test scope dependencies -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>android-json</artifactId>
-                    <groupId>com.vaadin.external.google</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito2</artifactId>
-            <version>2.0.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>2.0.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>3.12.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>it.ozimov</groupId>
-            <artifactId>embedded-redis</artifactId>
-            <version>${embedded-resdis.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tinkerpop</groupId>
-            <artifactId>tinkergraph-gremlin</artifactId>
-            <version>${gremlin.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.awaitility</groupId>
-            <artifactId>awaitility</artifactId>
-            <version>${awaitility.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.awaitility</groupId>
-            <artifactId>awaitility-proxy</artifactId>
-            <version>${awaitility.proxy.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson-databind.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-        </dependency>
-		<dependency>
-		    <groupId>com.squareup.okhttp3</groupId>
-		    <artifactId>okhttp</artifactId>
-		    <version>${okhttp.version}</version>
-		</dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>12.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.36</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.14</version>
-        </dependency>
+      <!-- Core Azure Library -->
+      <dependency>
+        <groupId>org.opengroup.osdu</groupId>
+        <artifactId>core-lib-azure</artifactId>
+        <version>${core-lib-azure.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
     </dependencies>
+  </dependencyManagement>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.2.2</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>spring-boot</classifier>
-                            <mainClass>org.opengroup.osdu.entitlements.v2.azure.EntitlementsV2Application</mainClass>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.10</version>
-                <configuration>
-                    <excludes>
-                        <exclude>org/opengroup/osdu/entitlements/v2/azure/EntitlementsV2Application.class</exclude>
-                        <exclude>org/opengroup/osdu/entitlements/v2/azure/service/AddEdgeDto.class</exclude>
-                        <exclude>org/opengroup/osdu/entitlements/v2/azure/service/*AddEdgeDtoBuilder.class</exclude>
-                        <exclude>org/opengroup/osdu/entitlements/v2/azure/service/RemoveEdgeDto.class</exclude>
-                        <exclude>org/opengroup/osdu/entitlements/v2/azure/spi/gremlin/connection/**</exclude>
-                        <exclude>org/opengroup/osdu/entitlements/v2/azure/AzureAppProperties.class</exclude>
-                        <exclude>org/opengroup/osdu/entitlements/v2/azure/config/**</exclude>
-                        <exclude>org/opengroup/osdu/entitlements/v2/azure/security/**</exclude>
-                        <exclude>org/opengroup/osdu/entitlements/v2/azure/model/**</exclude>
 
-                    </excludes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.21.0</version>
-                <configuration>
-                    <argLine>@{argLine} --add-opens java.base/java.lang=ALL_UNNAMED</argLine>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+  <dependencies>
+    <!-- OSDU Dependencies -->
+    <dependency>
+      <groupId>org.opengroup.osdu.entitlements.v2</groupId>
+      <artifactId>entitlements-v2-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.opengroup.osdu</groupId>
+      <artifactId>core-lib-azure</artifactId>
+      <version>${core-lib-azure.version}</version>
+    </dependency>
+
+    <!-- Spring Dependencies -->
+    <!-- Versions managed by parent pom -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <exclusions>
+          <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+    </dependency>
+
+      <!-- Project Dependencies -->
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tinkerpop</groupId>
+        <artifactId>gremlin-driver</artifactId>
+        <version>${gremlin.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+
+      <!-- Test Scoped Dependencies -->
+      <!-- Versions managed by parent pom unless otherwise specified -->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.awaitility</groupId>
+        <artifactId>awaitility</artifactId>
+        <version>${awaitility-test.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.awaitility</groupId>
+        <artifactId>awaitility-proxy</artifactId>
+        <version>${awaitility-test.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>it.ozimov</groupId>
+        <artifactId>embedded-redis</artifactId>
+        <version>${embedded-redis-test.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.tinkerpop</groupId>
+        <artifactId>tinkergraph-gremlin</artifactId>
+        <version>${gremlin.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito-test.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-api-mockito2</artifactId>
+        <version>${powermock-test.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-module-junit4</artifactId>
+        <version>${powermock-test.version}</version>
+        <scope>test</scope>
+      </dependency>
+  </dependencies>
+
+  <!-- Build Configuration -->
+  <build>
+    <plugins>
+      <!-- Spring Boot Maven Plugin -->
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+            <configuration>
+              <classifier>spring-boot</classifier>
+              <mainClass>org.opengroup.osdu.entitlements.v2.azure.EntitlementsV2Application</mainClass>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Surefire Plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${surefire-plugin.version}</version>
+        <configuration>
+          <argLine>@{argLine} --add-opens java.base/java.lang=ALL_UNNAMED</argLine>
+        </configuration>
+      </plugin>
+
+      <!-- JaCoCo Plugin -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco-plugin.version}</version>
+        <configuration>
+          <excludes>
+            <exclude>org/opengroup/osdu/entitlements/v2/azure/EntitlementsV2Application.class</exclude>
+            <exclude>org/opengroup/osdu/entitlements/v2/azure/service/AddEdgeDto.class</exclude>
+            <exclude>org/opengroup/osdu/entitlements/v2/azure/service/*AddEdgeDtoBuilder.class</exclude>
+            <exclude>org/opengroup/osdu/entitlements/v2/azure/service/RemoveEdgeDto.class</exclude>
+            <exclude>org/opengroup/osdu/entitlements/v2/azure/spi/gremlin/connection/**</exclude>
+            <exclude>org/opengroup/osdu/entitlements/v2/azure/AzureAppProperties.class</exclude>
+            <exclude>org/opengroup/osdu/entitlements/v2/azure/config/**</exclude>
+            <exclude>org/opengroup/osdu/entitlements/v2/azure/security/**</exclude>
+            <exclude>org/opengroup/osdu/entitlements/v2/azure/model/**</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
