@@ -31,7 +31,7 @@
   </parent>
 
   <properties>
-    <core-lib-azure.version>2.0.0</core-lib-azure.version>
+    <core-lib-azure.version>2.0.1</core-lib-azure.version>
     <slf4j.version>2.0.16</slf4j.version>
     <gremlin.version>3.4.13</gremlin.version>
     <jackson.version>2.18.2</jackson.version>
@@ -52,6 +52,13 @@
         <groupId>org.opengroup.osdu</groupId>
         <artifactId>core-lib-azure</artifactId>
         <version>${core-lib-azure.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>${jackson.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -113,17 +120,14 @@
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
-        <version>${jackson.version}</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <version>${jackson.version}</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
-        <version>${jackson.version}</version>
       </dependency>
 
       <!-- Test Scoped Dependencies -->
