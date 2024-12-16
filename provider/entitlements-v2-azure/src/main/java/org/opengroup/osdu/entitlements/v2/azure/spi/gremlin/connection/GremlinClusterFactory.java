@@ -1,7 +1,7 @@
 package org.opengroup.osdu.entitlements.v2.azure.spi.gremlin.connection;
 
 import org.apache.tinkerpop.gremlin.driver.Cluster;
-import org.apache.tinkerpop.gremlin.driver.ser.Serializers;
+import org.apache.tinkerpop.gremlin.util.ser.GraphSONMessageSerializerV2;
 import org.opengroup.osdu.core.common.model.http.AppException;
 import org.opengroup.osdu.entitlements.v2.azure.AzureAppProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class GremlinClusterFactory extends AbstractFactoryBean<Cluster> {
                     .maxSimultaneousUsagePerConnection(MAX_IN_PROCESS)
                     .maxInProcessPerConnection(MAX_IN_PROCESS)
                     .maxContentLength(MAX_CONTENT_LENGTH)
-                    .serializer(Serializers.GRAPHSON_V2D0.toString())
+                    .serializer(new GraphSONMessageSerializerV2())
                     .keepAliveInterval(KEEP_ALIVE_TIME)
                     .create();
         } catch (IllegalArgumentException e) {

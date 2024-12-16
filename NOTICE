@@ -19,6 +19,7 @@ The following software have components provided under the terms of this license:
 
 - AMQP 1.0 JMS Spring Boot AutoConfiguration (from https://repo1.maven.org/maven2/org/amqphub/spring/amqp-10-jms-spring-boot-autoconfigure)
 - AMQP 1.0 JMS Spring Boot Starter (from https://repo1.maven.org/maven2/org/amqphub/spring/amqp-10-jms-spring-boot-starter)
+- ANTLR 4 Runtime (from https://repo1.maven.org/maven2/org/antlr/antlr4-runtime)
 - ASM based accessors helper used by json-smart (from https://urielch.github.io/)
 - AWS Java SDK for AWS KMS (from https://aws.amazon.com/sdkforjava)
 - AWS Java SDK for AWS STS (from https://aws.amazon.com/sdkforjava)
@@ -32,13 +33,15 @@ The following software have components provided under the terms of this license:
 - AWS Java SDK for the AWS Simple Systems Management (SSM) Service (from https://aws.amazon.com/sdkforjava)
 - AWS SDK for Java - Core (from https://aws.amazon.com/sdkforjava)
 - Adapter: RxJava (from https://github.com/square/retrofit)
+- Apache Commons BeanUtils (from http://commons.apache.org/proper/commons-beanutils/, https://commons.apache.org/proper/commons-beanutils/, https://repo1.maven.org/maven2/commons-beanutils/commons-beanutils)
 - Apache Commons Codec (from http://commons.apache.org/proper/commons-codec/, https://commons.apache.org/proper/commons-codec/)
 - Apache Commons Compress (from http://commons.apache.org/compress/, http://commons.apache.org/proper/commons-compress/, https://commons.apache.org/proper/commons-compress/)
-- Apache Commons Configuration (from http://commons.apache.org/configuration/, http://commons.apache.org/proper/commons-configuration/)
+- Apache Commons Configuration (from http://commons.apache.org/proper/commons-configuration/, https://commons.apache.org/proper/commons-configuration/)
 - Apache Commons IO (from http://commons.apache.org/io/, https://commons.apache.org/proper/commons-io/, https://repo1.maven.org/maven2/commons-io/commons-io)
 - Apache Commons Lang (from https://commons.apache.org/proper/commons-lang/)
 - Apache Commons Logging (from http://commons.apache.org/logging/, http://commons.apache.org/proper/commons-logging/, https://commons.apache.org/proper/commons-logging/)
 - Apache Commons Pool (from https://commons.apache.org/proper/commons-pool/)
+- Apache Commons Text (from http://commons.apache.org/proper/commons-text, http://commons.apache.org/proper/commons-text/, https://commons.apache.org/proper/commons-text)
 - Apache HttpClient (from http://hc.apache.org/httpcomponents-client, http://hc.apache.org/httpcomponents-client-ga)
 - Apache HttpClient Cache (from http://hc.apache.org/httpcomponents-client, http://hc.apache.org/httpcomponents-client-ga)
 - Apache HttpCore (from http://hc.apache.org/httpcomponents-core-ga, http://hc.apache.org/httpcomponents-core-ga/, http://hc.apache.org/httpcomponents-core/)
@@ -50,7 +53,9 @@ The following software have components provided under the terms of this license:
 - Apache Log4j to SLF4J Adapter (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-to-slf4j)
 - Apache TinkerPop :: Gremlin Core (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-core)
 - Apache TinkerPop :: Gremlin Driver (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-driver)
+- Apache TinkerPop :: Gremlin Language (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-language)
 - Apache TinkerPop :: Gremlin Shaded (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-shaded)
+- Apache TinkerPop :: Gremlin Util (from https://repo1.maven.org/maven2/org/apache/tinkerpop/gremlin-util)
 - Apache TinkerPop :: TinkerGraph Gremlin (from https://repo1.maven.org/maven2/org/apache/tinkerpop/tinkergraph-gremlin)
 - AssertJ Core (from https://assertj.github.io/doc/#assertj-core)
 - Asynchronous Http Client (from https://repo1.maven.org/maven2/org/asynchttpclient/async-http-client)
@@ -64,7 +69,6 @@ The following software have components provided under the terms of this license:
 - Byte Buddy Java agent (from https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy-agent)
 - ClassMate (from http://github.com/cowtowncoder/java-classmate)
 - Collections (from https://repo1.maven.org/maven2/commons-collections/commons-collections)
-- Commons Lang (from http://commons.apache.org/lang/)
 - Converter: Jackson (from https://github.com/square/retrofit, https://repo1.maven.org/maven2/com/squareup/retrofit2/converter-jackson)
 - Core functionality for the Reactor Netty library (from https://github.com/reactor/reactor-netty)
 - FindBugs-jsr305 (from http://findbugs.sourceforge.net/)
@@ -279,6 +283,7 @@ BSD-2-Clause
 ========================================================================
 The following software have components provided under the terms of this license:
 
+- ANTLR 4 Runtime (from https://repo1.maven.org/maven2/org/antlr/antlr4-runtime)
 - Apache Log4j Core (from https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core)
 - Hamcrest Core (from http://hamcrest.org/, http://hamcrest.org/JavaHamcrest/, https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core)
 - HdrHistogram (from http://hdrhistogram.github.io/HdrHistogram/)
@@ -319,8 +324,6 @@ The following software have components provided under the terms of this license:
 - Redisson (from http://redisson.org, https://redisson.pro)
 - ReflectASM (from https://github.com/EsotericSoftware/reflectasm)
 - Spring Core (from http://www.springframework.org, https://github.com/spring-projects/spring-framework, https://repo1.maven.org/maven2/org/springframework/spring-core)
-- jcabi-log (from https://repo1.maven.org/maven2/com/jcabi/jcabi-log)
-- jcabi-manifests (from https://repo1.maven.org/maven2/com/jcabi/jcabi-manifests)
 
 ========================================================================
 CC-BY-2.5

@@ -5,7 +5,8 @@ import org.apache.tinkerpop.gremlin.driver.Client;
 import org.apache.tinkerpop.gremlin.driver.Result;
 import org.apache.tinkerpop.gremlin.driver.ResultSet;
 import org.apache.tinkerpop.gremlin.driver.exception.ResponseException;
-import org.apache.tinkerpop.gremlin.driver.message.ResponseStatusCode;
+import org.apache.tinkerpop.gremlin.util.message.ResponseStatusCode;
+import org.apache.tinkerpop.gremlin.process.traversal.Bytecode;
 import org.apache.tinkerpop.gremlin.process.traversal.Traversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
@@ -36,7 +37,6 @@ public class ClusterGremlinConnector implements GremlinConnector {
     private static final String RETRIEVING_RESULT_SET_ERROR_MESSAGE = "Error retrieving ResultSet object";
     private static final String COSMOS_DB_RATE_LIMIT_ERROR_MESSAGE = "Request rate to Cosmos DB is too large";
     private static final String RESOURCE_NOT_FOUND_ERROR_MESSAGE = "Resource Not Found";
-    private static final String G = "g";
 
     @Autowired
     private VertexUtilService vertexUtilService;
@@ -109,7 +109,13 @@ public class ClusterGremlinConnector implements GremlinConnector {
     }
 
     private List<Result> submitTraversalAsQueryString(Traversal<?, ?> traversal) {
-        String query = GroovyTranslator.of(G).translate(traversal.asAdmin().getBytecode());
+        // Obtain the bytecode from the traversal
+        Bytecode bytecode = traversal.asAdmin().getBytecode();
+
+        // Translate bytecode to a Groovy string using GroovyTranslator
+        String query = GroovyTranslator.of("g").translate(bytecode).getScript();
+
+        // Submit the query using the Gremlin client and return the results
         return getResultList(client.submit(query));
     }
 
