@@ -35,7 +35,7 @@
     <slf4j.version>2.0.16</slf4j.version>
     <gremlin.version>3.7.3</gremlin.version>
     <netty.version>4.1.115.Final</netty.version>
-    <jackson.version>2.18.2</jackson.version>
+    <commons-configuration2.version>2.10.1</commons-configuration2.version>
     <!-- Test Versions -->
     <awaitility-test.version>3.1.6</awaitility-test.version>
     <embedded-redis-test.version>0.7.3</embedded-redis-test.version>
@@ -56,22 +56,16 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson</groupId>
-        <artifactId>jackson-bom</artifactId>
-        <version>${jackson.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
       <!-- Dependencies, after the BOMs -->
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-configuration2</artifactId>
-        <version>2.10.1</version>
+        <version>${commons-configuration2.version}</version>
+        <!-- Overriding version to fix CVE-2024-29131
+              Gremlin Driver 3.7.3 is vulnerable to CVE-2024-29131 -->
       </dependency>
     </dependencies>
   </dependencyManagement>
-
 
   <dependencies>
     <!-- OSDU Dependencies -->
@@ -113,95 +107,93 @@
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
     </dependency>
 
-      <!-- Project Dependencies -->
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${slf4j.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.tinkerpop</groupId>
-        <artifactId>gremlin-driver</artifactId>
-        <version>${gremlin.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.tinkerpop</groupId>
-        <artifactId>gremlin-util</artifactId>
-        <version>${gremlin.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.netty</groupId>
-        <artifactId>netty-all</artifactId>
-        <version>${netty.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-core</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-annotations</artifactId>
-      </dependency>
+    <!-- Project Dependencies -->
+    <!-- Versions Typically managed by azure core library -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tinkerpop</groupId>
+      <artifactId>gremlin-driver</artifactId>
+      <version>${gremlin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tinkerpop</groupId>
+      <artifactId>gremlin-util</artifactId>
+      <version>${gremlin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <!-- Version managed by azure core library -->
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <!-- Version managed by azure core library -->
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <!-- Version managed by azure core library -->
+    </dependency>
 
-      <!-- Test Scoped Dependencies -->
-      <!-- Versions managed by parent pom unless otherwise specified -->
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-test</artifactId>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.awaitility</groupId>
-        <artifactId>awaitility</artifactId>
-        <version>${awaitility-test.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.awaitility</groupId>
-        <artifactId>awaitility-proxy</artifactId>
-        <version>${awaitility-test.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>it.ozimov</groupId>
-        <artifactId>embedded-redis</artifactId>
-        <version>${embedded-redis-test.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.tinkerpop</groupId>
-        <artifactId>tinkergraph-gremlin</artifactId>
-        <version>${gremlin.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>${mockito-test.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.powermock</groupId>
-        <artifactId>powermock-api-mockito2</artifactId>
-        <version>${powermock-test.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.powermock</groupId>
-        <artifactId>powermock-module-junit4</artifactId>
-        <version>${powermock-test.version}</version>
-        <scope>test</scope>
-      </dependency>
-
+    <!-- Test Scoped Dependencies -->
+    <!-- Versions managed by parent pom unless otherwise specified -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.awaitility</groupId>
+      <artifactId>awaitility</artifactId>
+      <version>${awaitility-test.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.awaitility</groupId>
+      <artifactId>awaitility-proxy</artifactId>
+      <version>${awaitility-test.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>it.ozimov</groupId>
+      <artifactId>embedded-redis</artifactId>
+      <version>${embedded-redis-test.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tinkerpop</groupId>
+      <artifactId>tinkergraph-gremlin</artifactId>
+      <version>${gremlin.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${mockito-test.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito2</artifactId>
+      <version>${powermock-test.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>${powermock-test.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <!-- Build Configuration -->
