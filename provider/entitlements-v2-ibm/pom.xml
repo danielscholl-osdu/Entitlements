@@ -7,7 +7,7 @@
         <os-core-lib-ibm.version>0.26.0</os-core-lib-ibm.version>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
-		<jackson-databind.version>2.18.1</jackson-databind.version>
+		<jackson.version>2.18.1</jackson.version>
 	</properties>
 
     <parent>
@@ -47,9 +47,19 @@
 		<version>0.28.0-SNAPSHOT</version>
 	</dependency>
 	<dependency>
+		<groupId>com.fasterxml.jackson.core</groupId>
+		<artifactId>jackson-core</artifactId>
+		<version>${jackson.version}</version>
+	</dependency>
+	<dependency>
     	<groupId>com.fasterxml.jackson.core</groupId>
     	<artifactId>jackson-databind</artifactId>
-   		<version>${jackson-databind.version}</version>
+   		<version>${jackson.version}</version>
+	</dependency>
+	<dependency>
+		<groupId>com.fasterxml.jackson.core</groupId>
+		<artifactId>jackson-annotations</artifactId>
+		<version>${jackson.version}</version>
 	</dependency>
 	<dependency>
 		<groupId>org.projectlombok</groupId>
