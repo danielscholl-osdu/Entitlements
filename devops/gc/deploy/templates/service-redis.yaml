@@ -9,6 +9,7 @@ spec:
   - port: {{ .Values.data.redisEntPort }}
     protocol: TCP
     targetPort: 6379
+    name: {{ printf "redis-%s-port" .Values.conf.appName | quote }}
   selector:
     app: {{ printf "redis-%s" .Values.conf.appName | quote }}
 {{ end }}
