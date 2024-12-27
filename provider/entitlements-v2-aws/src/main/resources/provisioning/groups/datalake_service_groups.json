@@ -794,6 +794,48 @@
           "name": "users.datalake.ops"
         }
       ]
+    },
+    {
+      "name": "service.gcz.viewer",
+      "description": "The viewer of the GCZ service",
+      "members": [
+        {
+          "name": "users.datalake.viewers"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.gcz.creator",
+      "description": "Datalake GCZ creators",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.editors"
+        }
+      ]
+    },
+    {
+      "name": "service.gcz.admin",
+      "description": "Datalake GCZ admins",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
     }
   ]
 }

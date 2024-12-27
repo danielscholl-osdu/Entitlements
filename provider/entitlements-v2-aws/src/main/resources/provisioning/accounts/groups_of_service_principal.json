@@ -127,15 +127,6 @@
       "groupName": "service.reservoir-dms.owners"
     },
     {
-      "groupName": "service.binarydms.admin"
-    },
-    {
-      "groupName": "service.binarydms.creator"
-    },
-    {
-      "groupName": "service.binarydms.viewer"
-    },
-    {
       "groupName": "service.edsdms.admin"
     },
     {
@@ -164,6 +155,15 @@
     },
     {
       "groupName": "service.delivery.viewer"
+    },
+    {
+      "groupName": "service.gcz.viewer"
+    },
+    {
+      "groupName": "service.gcz.creator"
+    },
+    {
+      "groupName": "service.gcz.admin"
     },
     {
       "groupName": "cron.job"
