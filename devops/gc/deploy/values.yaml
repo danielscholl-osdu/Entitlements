@@ -52,10 +52,10 @@ istio:
   corsEnabled: false
 
 hpa:
-  minReplicas: 6
+  minReplicas: 3
   maxReplicas: 15
   targetType: "AverageValue"
-  targetValue: 102 #60*0.85*2
+  targetValue: 330
   behaviorScaleUpStabilizationWindowSeconds: 10
   behaviorScaleUpPoliciesValue: 50
   behaviorScaleUpPoliciesPeriodSeconds: 15
@@ -64,6 +64,6 @@ hpa:
   behaviorScaleDownPoliciesPeriodSeconds: 60
 
 limits:
-  maxTokens: 60
-  tokensPerFill: 60
+  maxTokens: 390
+  tokensPerFill: 390
   fillInterval: "1s"
