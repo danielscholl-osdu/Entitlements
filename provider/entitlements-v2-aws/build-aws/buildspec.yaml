@@ -91,7 +91,6 @@ phases:
       - echo "Building integration testing assemblies and gathering artifacts..."
       - ./testing/entitlements-v2-test-aws/build-aws/prepare-dist.sh
 
-      - sed -i "s|__CONTAINER__|$ECR_IMAGE|"  devops/aws/chart/values.yaml
       - ./devops/aws/prepare-dist.sh
 
       - echo "Build and push docker image..."
