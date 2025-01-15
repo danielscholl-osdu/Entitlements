@@ -49,7 +49,7 @@ public class RemoveMemberService {
      * @return a set of ids of impacted users
      */
     public Set<String> removeMember(RemoveMemberServiceDto removeMemberServiceDto) {
-        log.info(String.format("requested by %s", removeMemberServiceDto.getRequesterId()));
+        log.debug(String.format("requested by %s", removeMemberServiceDto.getRequesterId()));
         String groupEmail = removeMemberServiceDto.getGroupEmail();
         String memberEmail = removeMemberServiceDto.getMemberEmail();
         String partitionId = removeMemberServiceDto.getPartitionId();

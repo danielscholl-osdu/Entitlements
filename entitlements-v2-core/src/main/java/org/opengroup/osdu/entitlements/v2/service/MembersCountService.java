@@ -26,7 +26,7 @@ public class MembersCountService {
     private final RequestInfo requestInfo;
 
     public MembersCountResponseDto getMembersCount(MembersCountServiceDto membersCountServiceDto) {
-        log.info(String.format("requested by %s", membersCountServiceDto.getRequesterId()));
+        log.debug(String.format("requested by %s", membersCountServiceDto.getRequesterId()));
         EntityNode groupNode = retrieveGroupRepo.groupExistenceValidation(membersCountServiceDto.getGroupId(), membersCountServiceDto.getPartitionId());
         EntityNode requesterNode = EntityNode.createMemberNodeForRequester(membersCountServiceDto.getRequesterId(), membersCountServiceDto.getPartitionId());
         if (!permissionService.hasOwnerPermissionOf(requesterNode, groupNode) && !isCallerHasAdminPermissions()) {

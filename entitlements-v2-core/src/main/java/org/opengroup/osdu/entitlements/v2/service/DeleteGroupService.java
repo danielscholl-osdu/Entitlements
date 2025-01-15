@@ -37,7 +37,7 @@ public class DeleteGroupService {
     private Boolean eventPublishingEnabled;
 
     public void run(EntityNode groupNode, DeleteGroupServiceDto deleteGroupServiceDto) {
-        log.info(String.format("requested by %s", deleteGroupServiceDto.getRequesterId()));
+        log.debug(String.format("requested by %s", deleteGroupServiceDto.getRequesterId()));
         Optional<EntityNode> existingGroupEntityNode = retrieveGroupRepo.getEntityNode(groupNode.getNodeId(), deleteGroupServiceDto.getPartitionId());
         if (!existingGroupEntityNode.isPresent()) {
             return;

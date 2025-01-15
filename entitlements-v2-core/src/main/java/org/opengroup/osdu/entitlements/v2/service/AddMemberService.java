@@ -50,7 +50,7 @@ public class AddMemberService {
      */
 
     public void run(AddMemberDto addMemberDto, AddMemberServiceDto addMemberServiceDto) {
-        log.info(String.format("requested by %s", addMemberServiceDto.getRequesterId()));
+        log.debug(String.format("requested by %s", addMemberServiceDto.getRequesterId()));
         String memberDesId = addMemberDto.getEmail();
         EntityNode memberNode = retrieveGroupRepo.getEntityNode(memberDesId, addMemberServiceDto.getPartitionId()).orElseGet(
                 () -> createNewMemberNode(addMemberDto.getEmail(), memberDesId, addMemberServiceDto.getPartitionId()));
