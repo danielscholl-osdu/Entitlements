@@ -22,7 +22,7 @@ public class ListGroupService {
     public Set<ParentReference> getGroups(ListGroupServiceDto listGroupServiceDto) {
         log.debug(String.format("ListGroupService#run timestamp: %d", System.currentTimeMillis()));
         String requesterId = listGroupServiceDto.getRequesterId();
-        log.info(ListGroupService.class.getName(), String.format("requested by %s", requesterId));
+        log.debug(ListGroupService.class.getName(), String.format("requested by %s", requesterId));
         Set<ParentReference> groups = new HashSet<>();
         listGroupServiceDto.getPartitionIds().forEach(partitionId ->
                 groups.addAll(groupsProvider.getGroupsInContext(requesterId, partitionId, listGroupServiceDto.getRoleRequired())));

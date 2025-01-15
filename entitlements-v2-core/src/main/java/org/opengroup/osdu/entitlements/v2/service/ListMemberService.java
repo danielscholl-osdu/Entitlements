@@ -30,7 +30,7 @@ public class ListMemberService {
     private static final String NOT_AUTHORIZED_MESSAGE = "Not authorized to manage members";
 
     public List<ChildrenReference> run(ListMemberServiceDto listMemberServiceDto) {
-        log.info(String.format("requested by %s", listMemberServiceDto.getRequesterId()));
+        log.debug(String.format("requested by %s", listMemberServiceDto.getRequesterId()));
         EntityNode groupNode = retrieveGroupRepo.groupExistenceValidation(listMemberServiceDto.getGroupId(), listMemberServiceDto.getPartitionId());
         EntityNode requesterNode = EntityNode.createMemberNodeForRequester(listMemberServiceDto.getRequesterId(), listMemberServiceDto.getPartitionId());
         if (!isCallerHasAdminPermissions() && !permissionService.hasOwnerPermissionOf(requesterNode, groupNode)) {

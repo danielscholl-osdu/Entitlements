@@ -32,7 +32,7 @@ public class CreateGroupService {
     private final PartitionFeatureFlagService partitionFeatureFlagService;
 
     public EntityNode run(EntityNode groupNode, CreateGroupServiceDto createGroupServiceDto) {
-        log.info(String.format("requested by %s", createGroupServiceDto.getRequesterId()));
+        log.debug(String.format("requested by %s", createGroupServiceDto.getRequesterId()));
         EntityNode requesterNode = EntityNode.createMemberNodeForRequester(createGroupServiceDto.getRequesterId(), createGroupServiceDto.getPartitionId());
         Set<ParentReference> allExistingParents = groupCacheService.getFromPartitionCache(requesterNode.getNodeId(), createGroupServiceDto.getPartitionId());
         if (allExistingParents.size() >= EntityNode.MAX_PARENTS) {
