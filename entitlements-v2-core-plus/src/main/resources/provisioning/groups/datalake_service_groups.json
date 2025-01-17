@@ -1018,6 +1018,51 @@
       "name": "register.secret.viewers",
       "description": "Viewers group for Register to view register secrets",
       "members": []
+    },
+    {
+      "name": "service.gcz.viewer",
+      "description": "Viewers group for GCZ service",
+      "members": [
+        {
+          "name": "users.datalake.viewers"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        },
+        {
+          "name": "users.datalake.ops"
+        }
+      ]
+    },
+    {
+      "name": "service.gcz.creator",
+      "description": "Creators group for GCZ service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.editors"
+        },
+        {
+          "name": "users.datalake.admins"
+        }
+      ]
+    },
+    {
+      "name": "service.gcz.admin",
+      "description": "Admin group for GCZ service",
+      "members": [
+        {
+          "name": "users.datalake.ops"
+        },
+        {
+          "name": "users.datalake.admins"
+        }
+      ]
     }
   ]
 }
