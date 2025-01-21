@@ -79,3 +79,8 @@ spec:
           - /cloud_sql_proxy
           - "-instances={{ .Values.data.sqlConnectionString }}=tcp:5432"
       serviceAccountName: {{ .Values.data.serviceAccountName | quote }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 0
