@@ -41,7 +41,7 @@ export TENANT='opendes'
 export HEADER_X_USER_ID=$SERVICE_PRINCIPAL_USER
 export LOCAL_MODE="${LOCAL_MODE:=false}"
 export HEADER_X_USER_ID=$SERVICE_PRINCIPAL_USER
-export JAVA_HOME='/usr/lib/jvm/java-17-openjdk-amd64'
+export JAVA_HOME=$JAVA17_HOME
 ### RUN INTEGRATION TEST #########################################################################
 
 mvn -ntp test -f "$SCRIPT_SOURCE_DIR"/../pom.xml
