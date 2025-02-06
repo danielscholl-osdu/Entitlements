@@ -89,7 +89,7 @@ public class ListGroupsApiTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF8")
                 .header(DpsHeaders.AUTHORIZATION, "Bearer token")
-                .header(DpsHeaders.USER_ID,"a@b.com")
+                .header(DpsHeaders.USER_ID,"A@b.com")
                 .header(DpsHeaders.DATA_PARTITION_ID, partitionId));
     }
 }
