@@ -57,7 +57,7 @@ public class ListGroupApi {
         DpsHeaders dpsHeaders = requestInfo.getHeaders();
         List<String> partitionIdList = requestInfoUtilService.getPartitionIdList(dpsHeaders);
         partitionHeaderValidationService.validateIfSpecialListGroupPartitionIsProvided(partitionIdList);
-        String userId = requestInfoUtilService.getUserId(dpsHeaders);
+        String userId = requestInfoUtilService.getUserId(dpsHeaders).toLowerCase();
         ListGroupServiceDto listGroupServiceDto = ListGroupServiceDto.builder()
                 .requesterId(userId)
                 .appId(requestInfoUtilService.getAppId(dpsHeaders))
