@@ -64,7 +64,6 @@ The following software have components provided under the terms of this license:
 - Awaitility Proxy (from http://awaitility.org)
 - BSON (from http://bsonspec.org, https://bsonspec.org)
 - BSON Record Codec (from <https://www.mongodb.com/>, https://www.mongodb.com/)
-- Bean Validation API (from http://beanvalidation.org)
 - Byte Buddy (without dependencies) (from https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy)
 - Byte Buddy Java agent (from https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy-agent)
 - ClassMate (from http://github.com/cowtowncoder/java-classmate)
@@ -236,7 +235,7 @@ The following software have components provided under the terms of this license:
 - Standard Uri Template (from https://std-uritemplate.github.io/)
 - Swagger UI (from <http://webjars.org>, http://webjars.org, https://www.webjars.org)
 - Vavr (from http://vavr.io, https://www.vavr.io)
-- Vavr Match (from http://vavr.io)
+- Vavr Match (from http://vavr.io, https://vavr.io)
 - boto3 (from https://github.com/boto/boto3)
 - botocore (from https://github.com/boto/botocore)
 - embedded-redis (from https://github.com/ozimov/embedded-redis)
@@ -267,9 +266,7 @@ The following software have components provided under the terms of this license:
 - springdoc-openapi-starter-webmvc-ui (from https://repo1.maven.org/maven2/org/springdoc/springdoc-openapi-starter-webmvc-ui)
 - swagger-annotations (from https://repo1.maven.org/maven2/io/swagger/core/v3/swagger-annotations, https://repo1.maven.org/maven2/io/swagger/swagger-annotations)
 - swagger-annotations-jakarta (from https://repo1.maven.org/maven2/io/swagger/core/v3/swagger-annotations-jakarta)
-- swagger-core (from https://repo1.maven.org/maven2/io/swagger/core/v3/swagger-core, https://repo1.maven.org/maven2/io/swagger/swagger-core)
 - swagger-core-jakarta (from https://repo1.maven.org/maven2/io/swagger/core/v3/swagger-core-jakarta)
-- swagger-jaxrs (from https://repo1.maven.org/maven2/io/swagger/swagger-jaxrs)
 - swagger-models (from https://repo1.maven.org/maven2/io/swagger/core/v3/swagger-models, https://repo1.maven.org/maven2/io/swagger/swagger-models)
 - swagger-models-jakarta (from https://repo1.maven.org/maven2/io/swagger/core/v3/swagger-models-jakarta)
 - tomcat-annotations-api (from http://tomcat.apache.org/, https://tomcat.apache.org/)
@@ -482,7 +479,6 @@ MIT
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- Apache HttpClient Cache (from http://hc.apache.org/httpcomponents-client, http://hc.apache.org/httpcomponents-client-ga)
 - Azure Java Client Authentication Library for AutoRest (from https://github.com/Azure/autorest-clientruntime-for-java)
 - Azure Java Client Runtime for ARM (from https://github.com/Azure/autorest-clientruntime-for-java)
 - Azure Java Client Runtime for AutoRest (from https://github.com/Azure/autorest-clientruntime-for-java)
@@ -563,13 +559,6 @@ SAX-PD
 The following software have components provided under the terms of this license:
 
 - Old JAXB Core (from <https://eclipse-ee4j.github.io/jaxb-ri/>, https://eclipse-ee4j.github.io/jaxb-ri/, https://repo1.maven.org/maven2/com/sun/xml/bind/jaxb-impl)
-
-========================================================================
-WTFPL
-========================================================================
-The following software have components provided under the terms of this license:
-
-- Reflections (from http://code.google.com/p/reflections/, http://github.com/ronmamo/reflections)
 
 ========================================================================
 cc-pd

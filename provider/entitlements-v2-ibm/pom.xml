@@ -4,7 +4,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <os-core-lib-ibm.version>0.26.0</os-core-lib-ibm.version>
+        <os-core-lib-ibm.version>0.28.0-SNAPSHOT</os-core-lib-ibm.version>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
 		<jackson.version>2.18.1</jackson.version>
@@ -76,11 +76,6 @@
 				<artifactId>netty-codec</artifactId>
 			</exclusion>
 		</exclusions>
-	</dependency>
-	<dependency>
-		<groupId>io.netty</groupId>
-		<artifactId>netty-codec</artifactId>
-		<version>4.1.86.Final</version>
 	</dependency>
 	<dependency>
 		<groupId>org.springframework.boot</groupId>
@@ -184,7 +179,22 @@
 			<artifactId>spring-core</artifactId>
 		</dependency>
     </dependencies>
-     <build>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- https://mvnrepository.com/artifact/io.netty/netty-bom -->
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-bom</artifactId>
+				<version>4.1.118.Final</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

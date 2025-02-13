@@ -51,7 +51,7 @@
       <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-bom</artifactId>
-        <version>4.1.92.Final</version>
+        <version>4.1.118.Final</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -76,6 +76,17 @@
       <groupId>com.nimbusds</groupId>
       <artifactId>oauth2-oidc-sdk</artifactId>
       <version>10.8</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.nimbusds</groupId>
+          <artifactId>nimbus-jose-jwt</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.nimbusds</groupId>
+      <artifactId>nimbus-jose-jwt</artifactId>
+      <version>9.37.2</version>
     </dependency>
     <!-- Core Plus dependencies -->
     <dependency>
