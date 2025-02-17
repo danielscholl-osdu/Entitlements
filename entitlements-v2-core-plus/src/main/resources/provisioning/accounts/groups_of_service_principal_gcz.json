@@ -1,0 +1,52 @@
+{
+  "users": [
+    {
+      "email": "SERVICE_PRINCIPAL_GCZ",
+      "role": "MEMBER"
+    }
+  ],
+  "membersOf": [
+    {
+      "groupName": "users"
+    },
+    {
+      "groupName": "service.policy.user"
+    },
+    {
+      "groupName": "service.entitlements.user"
+    },
+    {
+      "groupName": "service.search.user"
+    },
+    {
+      "groupName": "service.schema-service.viewers"
+    },
+    {
+      "groupName": "service.dataset.editors"
+    },
+    {
+      "groupName": "service.storage.viewer"
+    },
+    {
+      "groupName": "service.legal.user"
+    },
+    {
+      "groupName": "service.gcz.admin"
+    },
+    {
+      "groupName": "service.gcz.creator"
+    },
+    {
+      "groupName": "service.gcz.viewer"
+    },
+    {
+      "groupName": "service.secret.viewer"
+    },
+    {
+      "groupName": "service.register.user"
+    },
+    {
+      "groupName": "service.edsdms.user"
+    }
+  ]
+}
