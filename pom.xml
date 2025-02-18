@@ -31,15 +31,6 @@
     </license>
   </licenses>
 
-  <modules>
-    <module>entitlements-v2-core</module>
-    <module>provider/entitlements-v2-azure</module>
-    <module>provider/entitlements-v2-aws</module>
-    <module>provider/entitlements-v2-ibm</module>
-    <module>provider/entitlements-v2-jdbc</module>
-    <module>entitlements-v2-core-plus</module>
-  </modules>
-
   <properties>
     <java.version>17</java.version>
     <maven.compiler.target>17</maven.compiler.target>
@@ -178,6 +169,40 @@
         <publish.snapshots.url>https://community.opengroup.org/api/v4/projects/400/packages/maven</publish.snapshots.url>
         <publish.releases.url>https://community.opengroup.org/api/v4/projects/400/packages/maven</publish.releases.url>
       </properties>
+    </profile>
+    <profile>
+      <id>core</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>entitlements-v2-core</module>
+        <module>entitlements-v2-core-plus</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>aws</id>
+      <modules>
+        <module>provider/entitlements-v2-aws</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>azure</id>
+      <modules>
+        <module>provider/entitlements-v2-azure</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>ibm</id>
+      <modules>
+        <module>provider/entitlements-v2-ibm</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>gc</id>
+      <modules>
+        <module>provider/entitlements-v2-jdbc</module>
+      </modules>
     </profile>
   </profiles>
 
