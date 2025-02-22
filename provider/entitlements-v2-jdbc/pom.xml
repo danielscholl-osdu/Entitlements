@@ -32,19 +32,19 @@
   <parent>
     <groupId>org.opengroup.osdu.entitlements.v2</groupId>
     <artifactId>entitlements-v2-service</artifactId>
-    <version>0.28.0-SNAPSHOT</version>
+    <version>0.29.0-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
   <artifactId>entitlements-v2-jdbc</artifactId>
   <name>entitlements-v2-jdbc</name>
-  <version>0.28.0-SNAPSHOT</version>
+  <version>0.29.0-SNAPSHOT</version>
 
   <dependencies>
     <dependency>
       <groupId>org.opengroup.osdu.entitlements.v2</groupId>
       <artifactId>entitlements-v2-core-plus</artifactId>
-      <version>0.28.0-SNAPSHOT</version>
+      <version>0.29.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
