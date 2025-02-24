@@ -1,0 +1,39 @@
+# This file contains the essential configs for the osdu on azure helm chart
+global:
+
+  # Service(s) Replica Count
+  replicaCount: 2
+  maxReplicaCount: 30
+  minReplicaCount: 4
+  nodepool: services
+  isAutoscalingEnabled: false
+
+################################################################################
+# Specify the Gitlab branch being used for image creation
+# ie: community.opengroup.org:5555/osdu/platform/security-and-compliance/entitlements-v2/{{ .Values.global.branch }}/entitlements-v2:latest
+#
+image:
+  repository: #{container-registry}#.azurecr.io
+  branch: #{ENVIRONMENT_NAME}#
+  tag: #{Build.SourceVersion}#
+
+config:
+  quota:
+    group:
+      data:
+        root: #{ROOT_DATA_GROUP_QUOTA}#
+  domain: #{DOMAIN}#
+  redis:
+    ttl:
+      seconds: #{ENTV2_REDIS_TTL_SECONDS}#
+
+istioDnsHost: #{ISTIO_DNS_HOST}#
+
+env: #{ENVIRONMENT_NAME}#
+
+featureFlag:
+  resourceLimits:
+    enabledEnvs:
+    - demo
+  hpa:
+    enabledEnvs: []

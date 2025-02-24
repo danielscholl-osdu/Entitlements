@@ -1,0 +1,62 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    {{- include "entitlements-registration.labels" . | nindent 4 }}
+  annotations:
+  name: {{ include "entitlements-registration.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  template:
+    spec:
+      activeDeadlineSeconds: 1800
+      initContainers:
+        - name: {{ .Values.initimage.name }}
+          image: {{ .Values.initimage.initrepository }}:{{ .Values.initimage.tag }}
+          imagePullPolicy: {{ .Values.initimage.pullPolicy }}
+          command: ['sh', '-c', './health_probe.sh $(HEALTH_URI)/info && sleep 5']
+          env:
+            - name: HEALTH_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: entitlements-config
+                  key: PARTITION_API      
+      containers:
+        - image: {{ include "entitlements-registration.image" .Values.image }}
+          env:
+            - name: keycloak_hostname
+              valueFrom:
+                configMapKeyRef:
+                  key: partition.keycloak.url
+                  name: partition-config
+            - name: osdu_login_secret
+              valueFrom:
+                secretKeyRef:
+                  key: osdu_login_secret_data
+                  name: props-secret-generated-password
+            - name: RELEASE_NAME 
+              value: {{ .Release.Name }}
+          command:
+            - /bin/bash
+            - -c
+            - |
+              # Execute script
+              /scripts/entitlements_post.sh
+          imagePullPolicy: Always
+          name: {{ include "entitlements-registration.fullname" . }}
+          volumeMounts:
+            - mountPath: "/scripts"
+              name: projected-scripts
+              readOnly: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: OnFailure
+      serviceAccount: {{ include "entitlements-registration.fullname" . }}
+      serviceAccountName: {{ include "entitlements-registration.fullname" . }}
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: projected-scripts
+          projected:
+            defaultMode: 0755
+            sources:
+              - configMap:
+                  name: {{ include "entitlements-registration.fullname" . }}

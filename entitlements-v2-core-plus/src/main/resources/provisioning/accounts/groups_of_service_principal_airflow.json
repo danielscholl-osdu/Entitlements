@@ -1,0 +1,55 @@
+{
+  "users": [
+    {
+      "email": "SERVICE_PRINCIPAL_AIRFLOW",
+      "role": "MEMBER"
+    }
+  ],
+  "membersOf": [
+    {
+      "groupName": "users"
+    },
+    {
+      "groupName": "service.storage.admin"
+    },
+    {
+      "groupName": "service.entitlements.user"
+    },
+    {
+      "groupName": "service.file.editors"
+    },
+    {
+      "groupName": "service.search.user"
+    },
+    {
+      "groupName": "service.legal.user"
+    },
+    {
+      "groupName": "service.workflow.admin"
+    },
+    {
+      "groupName": "service.workflow.creator"
+    },
+    {
+      "groupName": "service.schema-service.viewers"
+    },
+    {
+      "groupName": "service.schema-service.editors"
+    },
+    {
+      "groupName": "service.secret.viewer"
+    },
+    {
+      "groupName": "service.policy.user"
+    },
+    {
+      "groupName": "service.dataset.viewers"
+    },
+    {
+      "groupName": "service.dataset.editors"
+    },
+    {
+      "groupName": "users.datalake.delegation"
+    }
+  ]
+}

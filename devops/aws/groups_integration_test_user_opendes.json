@@ -1,0 +1,19 @@
+{
+  "Users": ["users","users.data.root","users.datalake.ops","users.datalake.admins","users.datalake.editors","users.datalake.viewers"],
+  "Entitlements":["service.entitlements.admin","service.entitlements.user"],
+  "Storage": ["service.storage.admin","service.storage.creator","service.storage.viewer","data.test1","data.integration.test"],
+  "Search":["service.search.admin","service.search.user"],
+  "Legal":["service.legal.admin","service.legal.editor","service.legal.user"],
+  "Indexer":["service.indexer.admin","service.indexer.creator","service.indexer.viewer"],
+  "Schema":["service.schema-service.editors","service.schema-service.viewers"],
+  "Unit": ["service.unit.admin","service.unit.creator","service.unit.viewer"],
+  "DataWorkflow":["service.workflow.admin","service.workflow.creator","service.workflow.viewer"],
+  "Ingestion":["service.ingest.admin","service.ingest.creator","service.ingest.viewer"],
+  "SeismicStore":["service.seismic-store.admin","service.seismic-store.creator","service.seismic-store.viewer"],
+  "BinaryDMS":["service.binarydms.admin","service.binarydms.creator","service.binarydms.viewer"],
+  "CSVParser":["service.csv-parser.admin","service.csv-parser.creator","service.csv-parser.viewer"],
+  "EDSDMS":["service.edsdms.admin","service.edsdms.creator","service.edsdms.viewer"],
+  "File":["service.file.editors","service.file.viewers"],
+  "Policy":["service.policy.admin","service.policy.user"],
+  "Other":["cron.job"]   
+}

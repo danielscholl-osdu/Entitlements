@@ -1,0 +1,39 @@
+{{ if not .Values.data.redisEntHost }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ printf "redis-%s" .Values.conf.appName | quote }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    type: infra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ printf "redis-%s" .Values.conf.appName | quote }}
+  template:
+    metadata:
+      labels:
+        app: {{ printf "redis-%s" .Values.conf.appName | quote }}
+      annotations:
+        sidecar.istio.io/proxyCPU: 10m
+        sidecar.istio.io/proxyMemory: 64Mi
+    spec:
+      containers:
+      - args:
+        - --requirepass
+        - $(REDIS_PASSWORD)
+        envFrom:
+        - secretRef:
+            name: {{ .Values.conf.entitlementsRedisSecretName | quote }}
+        image: {{ .Values.data.redisImage | quote }}
+        imagePullPolicy: {{ .Values.data.imagePullPolicy | quote }}
+        name: {{ printf "redis-%s" .Values.conf.appName | quote }}
+        ports:
+        - containerPort: 6379
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 5m
+            memory: 15Mi
+{{ end }}

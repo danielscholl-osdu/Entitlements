@@ -1,0 +1,69 @@
+global:
+  domain: ""
+  limitsEnabled: true
+  dataPartitionId: ""
+  logLevel: "ERROR"
+  tier: ""
+  autoscaling: true
+
+data:
+  # Configmaps
+  entitlementsHost: "http://entitlements"
+  adminUserEmail: ""
+  airflowComposerEmail: ""
+  logLevel: ""
+  partitionHost: "http://partition"
+  projectId: ""
+  # redis connection. Change it if you want to use external redis
+  redisEntHost: ""
+  redisEntPort: 6379
+  redisImage: "docker.io/library/redis:7.2-alpine"
+  # Don't change or use the parameter unless necessary
+  entitlementsDomain: "group"
+  # Deployments
+  bootstrapImage: ""
+  bootstrapServiceAccountName: ""
+  requestsCpu: "25m"
+  requestsMemory: "350Mi"
+  limitsCpu: "1"
+  limitsMemory: "1G"
+  serviceAccountName: "entitlements"
+  image: ""
+  imagePullPolicy: "IfNotPresent"
+  cloudSqlProxyVersion: "1.32.0"
+  sqlConnectionString: ""
+  javaOptions: "-XX:MaxDirectMemorySize=512M"
+
+conf:
+  configmap: "entitlements-config"
+  appName: "entitlements"
+  entitlementsPostgresSecretName: "entitlements-multi-tenant-postgres-secret"
+  entitlementsRedisSecretName: "entitlements-redis-secret"
+  replicas: 2
+
+istio:
+  proxyCPU: "5m"
+  proxyCPULimit: "200m"
+  proxyMemory: "64Mi"
+  proxyMemoryLimit: "256Mi"
+  bootstrapProxyCPU: "5m"
+  bootstrapProxyCPULimit: "100m"
+  sidecarInject: true
+  corsEnabled: false
+
+hpa:
+  minReplicas: 3
+  maxReplicas: 15
+  targetType: "AverageValue"
+  targetValue: 330
+  behaviorScaleUpStabilizationWindowSeconds: 10
+  behaviorScaleUpPoliciesValue: 50
+  behaviorScaleUpPoliciesPeriodSeconds: 15
+  behaviorScaleDownStabilizationWindowSeconds: 60
+  behaviorScaleDownPoliciesValue: 25
+  behaviorScaleDownPoliciesPeriodSeconds: 60
+
+limits:
+  maxTokens: 390
+  tokensPerFill: 390
+  fillInterval: "1s"

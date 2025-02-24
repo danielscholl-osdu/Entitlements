@@ -1,1 +1,13 @@
-.aider*
+**/.idea
+**/target
+**/.gradle
+**/out
+**/*.iml
+**/dependency-reduced-pom.xml
+**/*.pyc
+/dist/
+**/.prefs
+**/.settings
+**/.factorypath
+**/.classpath
+**/.project

@@ -1,0 +1,21 @@
+variables:
+  CORE_SERVICE: entitlements-v2
+  CORE_BUILD_PATH: "entitlements-v2-core-plus/cloudbuild/Dockerfile"
+  CORE_BUILD_BOOTSTRAP_PATH: "entitlements-v2-core-plus/bootstrap/Dockerfile"
+  CORE_HELM_PACKAGE_NAME: core-plus-entitlements-deploy
+  CORE_ENABLE_BOOTSTRAP: "true"
+  CORE_HELM_TIMEOUT: "--timeout 20m"
+  CORE_TEST_SUBDIR: "testing/entitlements-v2-test-baremetal"
+  CORE_TEST_PROJECT: "entitlements-v2-test-core,entitlements-v2-test-baremetal"
+
+core-containerize-bootstrap-gitlab:
+  variables:
+    CORE_IMAGE_BOOTSTRAP_NAME: "core-plus-bootstrap-entitlements-v2"
+
+core-deploy:
+  variables:
+    CORE_SERVICE: "entitlements"
+
+core-acceptance-test:
+  variables:
+    PARTITION_URL: "https://osdu.core-dev.gcp.gnrg-osdu.projects.epam.com/api/partition/v1/"

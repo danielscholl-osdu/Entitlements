@@ -1,0 +1,30 @@
+run-test-pages:
+  stage: build
+  image: python:latest
+  script:
+    - cd docs
+    - pip install mkdocs-material
+    - pip install mkdocs-git-revision-date-plugin
+    - mkdocs build --site-dir ../test
+  allow_failure: true
+  artifacts:
+    paths:
+    - test
+  when: manual
+
+pages:
+  stage: publish
+  image: python:latest
+  tags: ["osdu-medium"]
+  script:
+    - cd docs
+    - pip install --default-timeout=1000 mkdocs-material
+    - pip install mkdocs-git-revision-date-plugin
+    - mkdocs build --site-dir ../public
+  allow_failure: true
+  needs: []
+  artifacts:
+    paths:
+      - public
+#  rules:
+#    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'

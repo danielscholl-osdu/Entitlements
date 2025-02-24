@@ -1,0 +1,31 @@
+{
+  "users": [
+    {
+      "email": "SERVICE_PRINCIPAL_REGISTER",
+      "role": "MEMBER"
+    }
+  ],
+  "membersOf": [
+    {
+      "groupName": "users"
+    },
+    {
+      "groupName": "notification.pubsub"
+    },
+    {
+      "groupName": "service.entitlements.user"
+    },
+    {
+      "groupName": "service.secret.viewer"
+    },
+    {
+      "groupName": "service.secret.admin"
+    },
+    {
+      "groupName": "register.secret.owners"
+    },
+    {
+      "groupName": "register.secret.viewers"
+    }
+  ]
+}

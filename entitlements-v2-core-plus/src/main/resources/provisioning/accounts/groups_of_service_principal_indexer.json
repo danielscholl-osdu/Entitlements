@@ -1,0 +1,37 @@
+{
+  "users": [
+    {
+      "email": "SERVICE_PRINCIPAL_INDEXER",
+      "role": "MEMBER"
+    }
+  ],
+  "membersOf": [
+    {
+      "groupName": "users"
+    },
+    {
+      "groupName": "users.data.root"
+    },
+    {
+      "groupName": "data.default.viewers"
+    },
+    {
+      "groupName": "service.storage.admin"
+    },
+    {
+      "groupName": "service.search.admin"
+    },
+    {
+      "groupName": "service.entitlements.user"
+    },
+    {
+      "groupName": "service.schema-service.viewers"
+    },
+    {
+      "groupName": "service.legal.user"
+    },
+    {
+      "groupName": "service.policy.user"
+    }
+  ]
+}
