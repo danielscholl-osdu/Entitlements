@@ -3,7 +3,7 @@ updates:
 
   # 1) TOP-LEVEL AGGREGATOR
   #    Scans the root POM, but ignores any dependencies physically declared in
-  #    testing/**, <service>-acceptance-test/**, etc.
+  #    testing/**, entitlements-v2-acceptance-test/**, etc.
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
@@ -19,8 +19,8 @@ updates:
       - dependency-name: "*"
         paths:
           - "testing/**"
-          - "<service>-acceptance-test/**"
-          - "<service>-core-plus/**"
+          - "entitlements-v2-acceptance-test/**"
+          - "entitlements-v2-core-plus/**"
     groups:
       spring:
         patterns:
@@ -72,9 +72,9 @@ updates:
           - "minor"
           - "patch"
 
-  # 2) <service> CORE
+  # 2) entitlements-v2 CORE
   - package-ecosystem: "maven"
-    directory: "/<service>-core"
+    directory: "/entitlements-v2-core"
     schedule:
       interval: "weekly"
       day: "sunday"
@@ -95,7 +95,7 @@ updates:
 
   # 3) SPI AZURE
   - package-ecosystem: "maven"
-    directory: "/provider/<service>-azure"
+    directory: "/provider/entitlements-v2-azure"
     schedule:
       interval: "weekly"
       day: "sunday"
@@ -112,9 +112,9 @@ updates:
           - "minor"
           - "patch"
 
-  # 4) SPI AWS (corrected directory to /provider/<service>-aws)
+  # 4) SPI AWS (corrected directory to /provider/entitlements-v2-aws)
   - package-ecosystem: "maven"
-    directory: "/provider/<service>-aws"
+    directory: "/provider/entitlements-v2-aws"
     schedule:
       interval: "never"
     ignore:
@@ -122,7 +122,7 @@ updates:
 
   # 5) SPI GC
   - package-ecosystem: "maven"
-    directory: "/provider/<service>-gc"
+    directory: "/provider/entitlements-v2-jdbc"
     schedule:
       interval: "never"
     ignore:
@@ -130,23 +130,23 @@ updates:
 
   # 6) SPI IBM
   - package-ecosystem: "maven"
-    directory: "/provider/<service>-ibm"
+    directory: "/provider/entitlements-v2-ibm"
     schedule:
       interval: "never"
     ignore:
       - dependency-name: "*"
 
-  # 7) <service> CORE PLUS
+  # 7) entitlements-v2 CORE PLUS
   - package-ecosystem: "maven"
-    directory: "/<service>-core-plus"
+    directory: "/entitlements-v2-core-plus"
     schedule:
       interval: "never"
     ignore:
       - dependency-name: "*"
 
-  # 8) <service> ACCEPTANCE TEST
+  # 8) entitlements-v2 ACCEPTANCE TEST
   - package-ecosystem: "maven"
-    directory: "/<service>-acceptance-test"
+    directory: "/entitlements-v2-acceptance-test"
     schedule:
       interval: "never"
     ignore:
@@ -160,43 +160,43 @@ updates:
     ignore:
       - dependency-name: "*"
   - package-ecosystem: "maven"
-    directory: "/testing/<service>-test-core-plus"
+    directory: "/testing/entitlements-v2-test-core-plus"
     schedule:
       interval: "never"
     ignore:
       - dependency-name: "*"
   - package-ecosystem: "maven"
-    directory: "/testing/<service>-test-baremetal"
+    directory: "/testing/entitlements-v2-test-baremetal"
     schedule:
       interval: "never"
     ignore:
       - dependency-name: "*"
   - package-ecosystem: "maven"
-    directory: "/testing/<service>-test-azure"
+    directory: "/testing/entitlements-v2-test-azure"
     schedule:
       interval: "never"
     ignore:
       - dependency-name: "*"
   - package-ecosystem: "maven"
-    directory: "/testing/<service>-test-core"
+    directory: "/testing/entitlements-v2-test-core"
     schedule:
       interval: "never"
     ignore:
       - dependency-name: "*"
   - package-ecosystem: "maven"
-    directory: "/testing/<service>-test-ibm"
+    directory: "/testing/entitlements-v2-test-ibm"
     schedule:
       interval: "never"
     ignore:
       - dependency-name: "*"
   - package-ecosystem: "maven"
-    directory: "/testing/<service>-test-aws"
+    directory: "/testing/entitlements-v2-test-aws"
     schedule:
       interval: "never"
     ignore:
       - dependency-name: "*"
   - package-ecosystem: "maven"
-    directory: "/testing/<service>-test-gc"
+    directory: "/testing/entitlements-v2-test-jdbc"
     schedule:
       interval: "never"
     ignore:
